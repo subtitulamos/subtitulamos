@@ -21,17 +21,20 @@ class Langs
         "es-lat" => "Español (Latinoamérica)"
     ];
 
-    public static function existsId(int $langId) {
+    public static function existsId(int $langId)
+    {
         return isset(self::LANG_LIST[$langId]);
     }
 
-    public static function existsCode(string $langCode) {
+    public static function existsCode(string $langCode)
+    {
         return self::getLangId($langCode) !== -1;
     }
     
-    public static function getLangId(string $langCode) {
+    public static function getLangId(string $langCode)
+    {
         foreach (self::LANG_LIST as $id => $code) {
-            if($code == $langCode) {
+            if ($code == $langCode) {
                 return $id;
             }
         }
@@ -39,11 +42,13 @@ class Langs
         return -1;
     }
 
-    public static function getLangCode(int $langId) {
+    public static function getLangCode(int $langId)
+    {
         return isset(self::LANG_LIST[$langId]) ? self::LANG_LIST[$langId] : "err-err";
     }
 
-    public static function getLocalizedName($code) {
+    public static function getLocalizedName($code)
+    {
         return self::LANG_NAMES[$code];
     }
 }

@@ -27,7 +27,7 @@ class RestrictedMiddleware
     {
         $this->container = $container;
 
-        if(\is_string($roles)) {
+        if (\is_string($roles)) {
             $roles = [$roles];
         }
 
@@ -45,11 +45,11 @@ class RestrictedMiddleware
         $auth = $this->container->get('App\Services\Auth');
 
         $allowed = false;
-        foreach($this->allowedRoles as $role) {
+        foreach ($this->allowedRoles as $role) {
             $allowed = $allowed || $auth->hasRole($role);
         }
         
     
-    	return $allowed ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/login');
+        return $allowed ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/login');
     }
 }

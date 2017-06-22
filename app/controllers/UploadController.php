@@ -6,6 +6,7 @@
  */
 
 namespace App\Controllers;
+
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\RequestInterface;
 
@@ -41,55 +42,58 @@ class UploadController
         $comments = $request->getParam("comments", "");
         
         $errors = [];
-        if(!\App\Services\Langs::existsCode($langCode)) {
+        if (!\App\Services\Langs::existsCode($langCode)) {
             $errors[] = "Elige un idioma válido";
         }
 
-        if(!v::numeric()->positive()->between(0, 99)->validate($season) || !v::numeric()->positive()->between(0, 99)->validate($epNumber)) {
+        if (!v::numeric()->positive()->between(0, 99)->validate($season) || !v::numeric()->positive()->between(0, 99)->validate($epNumber)) {
             $errors[] = "La temporada o episodio deben estar en el rango [0, 99]";
         }
 
-        if(!v::notEmpty()->validate($epName)) {
+        if (!v::notEmpty()->validate($epName)) {
             $errors[] = "El nombre del episodio no puede estar vacío";
         }
 
-        if(!v::notEmpty()->validate($versionName) || !v::notEmpty()->validate($comments)) {
+        if (!v::notEmpty()->validate($versionName) || !v::notEmpty()->validate($comments)) {
             $errors[] = "Ni el nombre de la versión ni los comentarios pueden estar vacíos";
         }
 
         $uploadList = $request->getUploadedFiles();
-        if(isset($uploadList['sub'])) {
+        if (isset($uploadList['sub'])) {
             $srt = new \App\Services\Srt\SrtParser($uploadList['sub']->file);
-            if(!$srt->isValid()) {
+            if (!$srt->isValid()) {
                 $errors[] = $srt->getErrorDesc();
             }
         }
 
         $show = null;
-        if($showId != "NEW") {
-            if(!v::numeric()->positive()->validate($showId)) {
+        if ($showId != "NEW") {
+            if (!v::numeric()->positive()->validate($showId)) {
                 $errors[] = "Elige una serie de la lista";
             } else {
                 $show = $em->getRepository('App:Show')->find((int)$showId);
-                if(!$show) {
+                if (!$show) {
                     $errors[] = "La serie que has elegido no existe";
                 }
             }
             
-            if(empty($errors)) {
+            if (empty($errors)) {
                 // Since the show already exists, we have to make sure that
                 // the an episode with this number doesn't already exist, too
                 $e = $em->createQuery("SELECT e FROM App:Episode e WHERE e.show = :showid AND e.season = :season AND e.number = :num")
-                    ->setParameter('showid', $show->getId())->setParameter('season', $season)->setParameter('num', $epNumber)->getResult();
-                if($e != null) {
+                        ->setParameter('showid', $show->getId())
+                        ->setParameter('season', $season)
+                        ->setParameter('num', $epNumber)
+                        ->getResult();
+                        
+                if ($e != null) {
                     $errors[] = sprintf("El episodio %dx%d de la serie %s ya existe", $season, $epNumber, $show->getName());
                 }
             }
-
         } else {
             // Create a new show!
             $showName = $request->getParam("new-show");
-            if(v::notEmpty()->length(1, 100)->validate($showName)) {
+            if (v::notEmpty()->length(1, 100)->validate($showName)) {
                 $show = new Show();
                 $show->setName($showName);
                 $show->setZeroTolerance(false);
@@ -101,7 +105,7 @@ class UploadController
             }
         }
 
-        if(!empty($errors)) {
+        if (!empty($errors)) {
             // TODO: Properly present errors via flash messages or something alike
             return $response->withJson($errors, 412);
         }
@@ -132,11 +136,15 @@ class UploadController
         $sequences = $srt->getSequences();
         foreach ($sequences as $k => $sequence) {
             $sequence->setSubtitle($subtitle);
+            $sequence->setAuthor($auth->getUser());
+
             $em->persist($sequence);
         }
 
         $em->flush();
 
-        return $response->withStatus(302)->withHeader('Location', $router->pathFor("episode", ["id" => $episode->getId()]));
+        return $response
+                ->withStatus(302)
+                ->withHeader('Location', $router->pathFor("episode", ["id" => $episode->getId()]));
     }
 }

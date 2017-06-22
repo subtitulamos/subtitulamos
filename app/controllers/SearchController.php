@@ -6,6 +6,7 @@
  */
 
 namespace App\Controllers;
+
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\RequestInterface;
 
@@ -24,7 +25,7 @@ class SearchController
         $episodes = $em->createQuery("SELECT e FROM App:Episode e ORDER BY e.downloads DESC")->setMaxResults(5)->getResult();
         
         $epList = [];
-        foreach($episodes as $ep) {
+        foreach ($episodes as $ep) {
             $fullName = $ep->getFullName();
 
             $epList[] = [
@@ -45,7 +46,7 @@ class SearchController
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.isDirectUpload = 1 ORDER BY s.uploadTime DESC")->setMaxResults(5)->getResult();
         
         $epList = [];
-        foreach($subs as $sub) {
+        foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
             $fullName = $ep->getFullName();
 

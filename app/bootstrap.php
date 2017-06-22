@@ -11,7 +11,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
 // Load env variables from file
-if(getenv('ENVIRONMENT') !== 'production') {
+if (getenv('ENVIRONMENT') !== 'production') {
     $dotenv = new Dotenv\Dotenv(__DIR__.'/..');
     $dotenv->load();
 }

@@ -6,11 +6,13 @@
  */
 
 namespace App\Controllers;
+
 use \Slim\Views\Twig;
 
 class HomeController
 {
-    public function view($response, Twig $twig) {
+    public function view($response, Twig $twig)
+    {
         return $twig->render($response, 'index.twig', []);
     }
 }

@@ -6,10 +6,10 @@
  */
 
 namespace App\Services\Srt;
+
 use \ForceUTF8\Encoding;
 use App\Entities\Sequence;
 use App\Services\Clock;
-
 
 const PARSING_STATE_SEQUENCE = 0;
 const PARSING_STATE_TIME = 1;
@@ -70,13 +70,12 @@ class SrtParser
 
         $sequences = [];
         $sequence = null;
-        foreach($flines as $line)
-        {
+        foreach ($flines as $line) {
             $line = trim(self::removeUtf8Bom($line));
-            if(empty($line)) {
-                if($parsingState == PARSING_STATE_TEXT) {
+            if (empty($line)) {
+                if ($parsingState == PARSING_STATE_TEXT) {
                     // We're done with this line
-                    if($sequence) {
+                    if ($sequence) {
                         $sequences[] = $sequence;
                         $sequence = null;
                     }
@@ -87,11 +86,11 @@ class SrtParser
                 continue;
             }
 
-            switch($parsingState)
-            {
+            switch ($parsingState) {
                 case PARSING_STATE_SEQUENCE:
-                    if (!is_numeric($line))
+                    if (!is_numeric($line)) {
                         break;
+                    }
                     
                     $sequence = new Sequence();
                     $sequence->setNumber(++$this->seqNum);
@@ -136,7 +135,7 @@ class SrtParser
 
                 case PARSING_STATE_TEXT:
                     $line = Encoding::toUTF8(strip_tags($line));
-                    if(empty($sequence->getText())) {
+                    if (empty($sequence->getText())) {
                         $sequence->setText($line);
                     } else {
                         $sequence->setText($sequence->getText()."\n".$line);

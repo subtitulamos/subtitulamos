@@ -52,6 +52,11 @@ class Subtitle
      * @ORM\Column(type="datetime", name="upload_time", options={"default": 0})
      */
     private $uploadTime;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $progress;
     
     /**
      * Constructor
@@ -193,7 +198,7 @@ class Subtitle
     /**
      * Get isDirectUpload
      *
-     * @return boolean 
+     * @return boolean
      */
     public function isDirectUpload()
     {
@@ -216,7 +221,7 @@ class Subtitle
     /**
      * Get uploadTime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUploadTime()
     {
@@ -239,10 +244,33 @@ class Subtitle
     /**
      * Get isDirectUpload
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsDirectUpload()
     {
         return $this->isDirectUpload;
+    }
+
+    /**
+     * Set progress
+     *
+     * @param float $progress
+     * @return Subtitle
+     */
+    public function setProgress($progress)
+    {
+        $this->progress = $progress;
+
+        return $this;
+    }
+
+    /**
+     * Get progress
+     *
+     * @return float 
+     */
+    public function getProgress()
+    {
+        return $this->progress;
     }
 }

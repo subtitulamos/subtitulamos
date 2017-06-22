@@ -44,28 +44,35 @@
 
             {% verbatim %}
                 <template v-for="seq in sequences">
-                    <tr :class="seq.locked ? 'locked' : (seq.verified ? 'verified' : '')">
-                        <td>{{ seq.number }}</td>
-                        <td class="user"><a href='#'>{{ seq.author.name }}</a></td>
-                        <td class="time">{{ seq.tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ seq.tend | nice_time }}</td>
-                        <td><pre>{{ seq.secondaryText }}</pre></td>
-                        <td><pre>{{ seq.translation }}</pre></td>
-                        <td class="actions">
-                            <i class="fa" data-action="toggleVerified" :class="seq.verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!seq.locked"></i>
-                            <i class="fa" data-action="toggleLock" :class="seq.locked ? 'fa-lock' : 'fa-unlock-alt'"></i>
-                        </td>
-                    </tr>
+                    <sequence v-for="hseq in seq.history" 
+                        :key="seq.id"
 
-                    <tr v-for="hseq in seq.history" class="history">
-                        <td></td>
-                        <td class="user"><a href='#'>{{ hseq.author.name }}</a></td>
-                        <td class="time">{{ hseq.tstart }} <i class="fa fa-long-arrow-right"></i> {{ hseq.tend }}</td>
-                        <td><pre>{{ seq.secondaryText }}</pre></td>
-                        <td><pre>{{ hseq.translation }}</pre></td>
-                        <td class="actions">
-                            <i class="fa fa-undo" aria-hidden="true"></i>
-                        </td>
-                    </tr>
+                        :id="hseq.id"
+                        :number="seq.number"
+                        :p-locked="false"
+                        :p-verified="false"
+                        :author="hseq.author"
+                        :tstart="hseq.tstart"
+                        :tend="hseq.tend"
+                        :secondary-text="seq.secondary_text"
+                        :base-text="hseq.text"
+                        :history="true">
+                    ></sequence>
+                    
+                    <sequence 
+                        :key="seq.id"
+                        
+                        :id="seq.id"
+                        :number="seq.number"
+                        :p-locked="seq.locked"
+                        :p-verified="seq.verified"
+                        :author="seq.author"
+                        :tstart="seq.tstart"
+                        :tend="seq.tend"
+                        :secondary-text="seq.secondary_text"
+                        :base-text="seq.text"
+                        :history="false"
+                    ></sequence>
                 </template>
             {% endverbatim %}
         </table>
@@ -86,109 +93,233 @@
 </div>
 
 <script type="text/javascript">
+    let subID = {{ sub.id }};
     let pageCount = {{ page_count }};
-
-    function loadPage(pageNum, seqList, pageListTop, pageListBottom) {
+    let availSecondaryLangs = {{ avail_secondary_langs|raw }};
+    
+    function loadPage(pageNum, seqView, pageListTop, pageListBottom, secondaryLang) {
+        let secondaryFrag = secondaryLang > 0 ? '?secondaryLang='+secondaryLang : '';
         $.ajax({
-            url: '/translate/{{ sub.id }}/page/'+pageNum,
+            url: '/translate/{{ sub.id }}/page/' + pageNum + secondaryFrag,
             method: 'GET'
         }).done(function(pageData) {
             // Prepare sequences
             let sequences = [];
-            for(let i = 0; i < pageData.length; ++i) {
-                let sequence = {
-                    number: pageData[i].number,
-                    author: {
-                        id: 0,
-                        name: "ModBot"
-                    },
-                    locked: pageData[i].locked,
-                    verified: pageData[i].verified,
-                    secondaryText: pageData[i].text,
-                    tstart: pageData[i].tstart,
-                    tend: pageData[i].tend,
-                    translation: pageData[i].text,
-                    history: []
-                };
+            Object.keys(pageData).forEach(function(k) {
+                let sequence = pageData[k];
 
+                // Add some state variables
+                sequence.editing = false;
+                sequence.canSave = false;
+                sequence.lineCounters = [];
+                
                 sequences.push(sequence);
-            }
+            });
 
-            seqList.sequences = sequences;
+            seqView.sequences = sequences;
 
             // Update pagelist
             pageListTop.curPage = pageNum;
             pageListBottom.curPage = pageNum;
         });
     }
-    
-    let seqList;
-    $(function() {
-        seqList = new Vue({
-            el: '#sequences',
-            data: {
-                sequences: []
-            },
-            filters: {
-                nice_time: function (ms) {
-                    if (!ms)
-                        return '00:00:00.000';
 
-                    let h = 0, m = 0, s = 0;
-                    s = Math.floor(ms/1000);
+    {# FIXME: The template string breaks compatibility for certain browsers (http://caniuse.com/#search=template%20literal) #}
+    {% verbatim %}
+    Vue.component('sequence', {
+        template: `
+            <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
+                <td><span v-if="!history">{{ number }}</span></td>
+                <td class="user"><a :href="'/user/' + author.id">{{ author.name }}</a></td>
+                <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
+                <td><pre>{{ secondaryText }}</pre></td>
+                <td class="translatable" @click="editSequence">
+                    <pre v-if="!editing">{{ text }}</pre>
 
-                    h = Math.floor(s/3600);
-                    s -= h * 3600;
-                    m = Math.floor(s/60);
-                    s -= m * 60;
+                    <textarea v-model.trim="text" v-if="editing"></textarea>
+                    <div class="line-status" v-if="editing">
+                        <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 30 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
+                        <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 30 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
+                    </div>
+                </td>
+                <td class="actions">
+                    <div v-if="!history && editing">
+                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save"></i>
+                        <i class="fa fa-times-circle-o" @click="discard"></i>
+                    </div>
 
-                    ms -= (s + m * 60 + h * 3600)*1000;
+                    <div v-if="!history && !editing">
+                        <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
+                        <i class="fa" @click="toggleLock" :class="locked ? 'fa-lock' : 'fa-unlock-alt'"></i>
+                    </div>
 
-                    let stime = "";
-                    if(h < 10) stime += "0";
-                    stime += h+":";
-                    if(m < 10) stime += "0";
-                    stime += m+":";
-                    if(s < 10) stime += "0";
-                    stime += s+".";
-                    if(ms < 100) stime += "0";
-                    if(ms < 10) stime += "0";
-                    stime += ms;
-
-                    return stime;
-                }
-            }
-        });
-
-        let pageListTop = new Vue({
-            el: '#pagination-top',
-            data: {
-                curPage: 1,
-                pages: []
-            },
-        });
-
-        let pageListBottom = new Vue({
-            el: '#pagination-bottom',
-            data: {
-                curPage: 1,
-                pages: []
-            },
-        });
-
-        for(let p = 1; p < pageCount + 1; ++p) {
-            pageListTop.pages.push(p);
-            pageListBottom.pages.push(p);
-        }
+                    <div v-if="false && history">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+                </td>
+            </tr>
+            `,
         
-        $("#translation").on("click", '[data-page]', function(e) {
-            loadPage($(this).data("page"), seqList, pageListTop, pageListBottom);
-        })
+        props: ['id', 'pLocked', 'pVerified', 'number', 'author', 'tstart', 'tend', 'secondaryText', 'baseText', 'history'],
+        data: function() {
+            return {
+                text: this.baseText,
+                locked: this.pLocked,
+                verified: this.pVerified,
+                editing: false
+            }
+        },
+        filters: {
+            nice_time: function (ms) {
+                if (!ms)
+                    return '00:00:00.000';
 
-        /**
-        * Boot
-        */
-        loadPage(1, seqList, pageListTop, pageListBottom); // Load first page by default
+                let h = 0, m = 0, s = 0;
+                s = Math.floor(ms/1000);
+
+                h = Math.floor(s/3600);
+                s -= h * 3600;
+                m = Math.floor(s/60);
+                s -= m * 60;
+
+                ms -= (s + m * 60 + h * 3600)*1000;
+
+                let stime = "";
+                if(h < 10) stime += "0";
+                stime += h+":";
+                if(m < 10) stime += "0";
+                stime += m+":";
+                if(s < 10) stime += "0";
+                stime += s+".";
+                if(ms < 100) stime += "0";
+                if(ms < 10) stime += "0";
+                stime += ms;
+
+                return stime;
+            }
+        },
+        computed: {
+            lineCounters: function() {
+                let lines = this.text.split("\n");
+                let lineCounters = [];
+
+                for(let i = 0; i < lines.length; ++i) {
+                    lineCounters[i] = lines[i].trim().length;
+                }
+                
+                return lineCounters;
+            },
+
+            canSave: function() {
+                return !this.history && this.lineCounters.length > 0 && this.lineCounters[0] > 0 && this.lineCounters[0] <= 40
+                         && (!this.lineCounters[1] || this.lineCounters[1] <= 40);
+            }
+        },
+        methods: {
+            editSequence: function() {         
+                if(this.editing || this.history) {
+                    return true; // Already , no effect
+                }
+
+                $.ajax({
+                    url: '/translate/'+subID+'/open',
+                    method: 'POST',
+                    data: {
+                        seqID: this.id
+                    }
+                }).done(function(reply) {
+                    if(reply.ok) {
+                        this.editing = true;
+                        this.curText = this.text;
+                    } else {
+                        alertify.error(reply.msg);
+                    }
+                }.bind(this));
+            },
+
+            save: function() {
+                if(!this.canSave)
+                    return false;
+
+                $.ajax({
+                    url: '/translate/'+subID+'/save',
+                    method: 'POST',
+                    data: {
+                        seqID: this.id,
+                        text: this.text,
+                    }
+                }).fail(function() {
+                    alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
+                    this.editing = true;
+                });
+
+                this.editing = false;
+            },
+
+            discard: function() {
+                // Discard sequence changes
+                this.text = this.curText;
+                this.editing = false;
+            },
+
+            toggleLock: function() {
+                let preLock = this.locked;
+                this.locked = !this.locked;
+
+                $.ajax({
+                    url: '/translate/'+subID+'/lock',
+                    method: 'POST',
+                    data: {
+                        seqID: this.id
+                    }
+                }).fail(function() {
+                    // Only revert if the request failed
+                    this.locked = preLock;
+                });
+            }
+        },
     });
+    {% endverbatim %}
+
+    let seqView = new Vue({
+        el: '#sequences',
+        data: {
+            sequences: []
+        },
+    });
+
+    /**************************
+    *        PAGINATION
+    ***************************/
+    let pageListTop = new Vue({
+        el: '#pagination-top',
+        data: {
+            curPage: 1,
+            pages: []
+        },
+    });
+
+    let pageListBottom = new Vue({
+        el: '#pagination-bottom',
+        data: {
+            curPage: 1,
+            pages: []
+        },
+    });
+
+    for(let p = 1; p < pageCount + 1; ++p) {
+        pageListTop.pages.push(p);
+        pageListBottom.pages.push(p);
+    }
+    
+    $("#translation").on("click", '[data-page]', function(e) {
+        // TODO: Do this properly via Vue events
+        loadPage($(this).data("page"), seqView, pageListTop, pageListBottom, availSecondaryLangs[0]);
+    });
+
+    /**
+    * Boot
+    */
+    loadPage(1, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]); // Load first page by default
 </script>
 {% endblock %}

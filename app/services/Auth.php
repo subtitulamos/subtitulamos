@@ -47,11 +47,11 @@ class Auth
      *
      * @param string $token
      * @return boolean
-     */ 
+     */
     public function logByToken(string $token)
     {
         $user = $this->em->getRepository('App:User')->findOneByRememberToken($token);
-        if(!$user) {
+        if (!$user) {
             return false;
         }
 
@@ -65,15 +65,15 @@ class Auth
      *
      * @param string $id
      * @return boolean
-     */ 
+     */
     public function loadUser(string $id)
     {
-        if(!(int)$id) {
+        if (!(int)$id) {
             return false;
         }
 
         $user = $this->em->getRepository('App:User')->find((int)$id);
-        if(!$user) {
+        if (!$user) {
             return false;
         }
 
@@ -95,7 +95,7 @@ class Auth
         $_SESSION['uid'] = $user->getId();
         $this->user = $user;
         
-        if($remember) {
+        if ($remember) {
             $this->regenerateRememberToken();
         }
     }
@@ -110,7 +110,7 @@ class Auth
      */
     public function hasRole($role)
     {
-        return $role == 'ROLE_GUEST' || 
+        return $role == 'ROLE_GUEST' ||
                 ($this->user !== null && \in_array($role, $this->user->getRoles()));
     }
 
@@ -127,7 +127,7 @@ class Auth
 
     public function logout()
     {
-        if($this->user) {
+        if ($this->user) {
             $this->user->setRememberToken('');
             $this->em->flush();
         }

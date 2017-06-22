@@ -6,6 +6,7 @@
  */
 
 namespace App\Controllers;
+
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\RequestInterface;
 
@@ -13,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 
 use \Slim\Views\Twig;
 use App\Entities\Episode;
+use App\Services\Langs;
 
 class EpisodeController
 {
@@ -22,15 +24,15 @@ class EpisodeController
                    ->setParameter("id", $id)
                    ->getOneOrNullResult();
         
-        if(!$ep) {
+        if (!$ep) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
         $langs = [];
-        foreach($ep->getVersions() as $version) {
-            foreach($version->getSubtitles() as $sub) {
-                $lang = \App\Services\Langs::getLangCode($sub->getLang());
-                if(!isset($langs[$lang])) {
+        foreach ($ep->getVersions() as $version) {
+            foreach ($version->getSubtitles() as $sub) {
+                $lang = Langs::getLangCode($sub->getLang());
+                if (!isset($langs[$lang])) {
                     $langs[$lang] = [];
                 }
 

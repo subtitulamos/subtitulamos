@@ -23,7 +23,7 @@
 	<title>{% block title %}Subtitulamos.tv{% endblock %}</title>
 </head>
 <body>
-	{% if not auth.is_logged %}
+	{% if not auth.logged %}
 		<div id="login_registry" class="hidden bounce">
 			<div id="display_notification" class="error_upon_loginregistry fade_slide_in hidden">
 				<span></span> <div id="close_notification">(OK!)</div>
@@ -97,7 +97,7 @@
 			</div>		
 			
 			<div id="signing">
-				{% if not auth.is_logged %}
+				{% if not auth.logged %}
 					<div class="signing" id="login">INICIAR SESIÓN</div> 
 					<div class="signing" id="register">REGISTRO</div>
 				{% else %}

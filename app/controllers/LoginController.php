@@ -6,6 +6,7 @@
  */
 
 namespace App\Controllers;
+
 use \Psr\Container\ContainerInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Message\ResponseInterface;
@@ -17,8 +18,6 @@ use \Respect\Validation\Validator as v;
 use \App\Services\Auth;
 use \App\Entities\User;
 
-
-
 class LoginController
 {
     // TODO: Export to some config file
@@ -28,7 +27,8 @@ class LoginController
     protected $container;
 
     // constructor receives container instance
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
@@ -45,17 +45,17 @@ class LoginController
         $password = $request->getParam('password', '');
         $remember = $request->getParam('remember', '') == 'on';
 
-        if(!$username || !$password) {
+        if (!$username || !$password) {
             return $response->withStatus(400);
         }
         
         $user = $em->getRepository("App:User")->findOneByUsername($username);
-        if(!$user || !\password_verify($password, $user->getPassword())) {
+        if (!$user || !\password_verify($password, $user->getPassword())) {
             return $response->withJson(['Usuario o contraseña incorrectos'], 403);
         }
 
         $auth->log($user, $remember);
-        if($remember) {
+        if ($remember) {
             $response = FigResponseCookies::set($response, SetCookie::create('remember')->withValue($auth->getUser()->getRememberToken())->rememberForever());
         }
 
@@ -71,29 +71,29 @@ class LoginController
         $terms = $request->getParam('terms', false);
 
         $errors = [];
-        if(!$terms) {
+        if (!$terms) {
             $errors[] = ["terms" => "Debes aceptar los términos y condiciones"];
         }
 
-        if(!v::alnum()->noWhitespace()->length(3, 24)->validate($username)) {
+        if (!v::alnum()->noWhitespace()->length(3, 24)->validate($username)) {
             $errors[] = ["username" => "El nombre de usuario no puede tener caracteres especiales o espacios, y debe tener entre 3 y 24 caracteres"];
-        } elseif($em->getRepository("App:User")->findByUsername($username) != null) {
+        } elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
             $errors[] = ["username" => "El nombre de usuario ya está en uso"];
         }
 
-        if(!v::email()->validate($email)) {
+        if (!v::email()->validate($email)) {
             $errors[] = ["email" => "El correo electrónico no tiene un formato válido"];
-        } elseif($em->getRepository("App:User")->findByEmail($email) != null) {
+        } elseif ($em->getRepository("App:User")->findByEmail($email) != null) {
             $errors[] = ["email" => "El correo electrónico ya está en uso"];
         }
         
-        if(!v::length(8, 80)->validate($password)) {
+        if (!v::length(8, 80)->validate($password)) {
             $errors[] = ["password" => "La contraseña debe tener 8 caracters como mínimo"];
-        } elseif($password != $password_confirmation) {
+        } elseif ($password != $password_confirmation) {
             $errors[] = ["password_confirmation" => "Las contraseñas no coinciden"];
         }
 
-        if(!empty($errors)) {
+        if (!empty($errors)) {
             return $response->withJson($errors, 400);
         }
 

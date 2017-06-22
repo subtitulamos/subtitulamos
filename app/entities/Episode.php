@@ -230,6 +230,4 @@ class Episode
     {
         return $this->versions;
     }
-
-    
 }

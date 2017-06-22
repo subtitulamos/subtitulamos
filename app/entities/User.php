@@ -8,6 +8,7 @@
 namespace App\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
@@ -43,7 +44,7 @@ class User
      */
     private $versions;
 
-    /** 
+    /**
      * @ORM\Column(type="boolean")
      */
     private $banned;
@@ -223,7 +224,7 @@ class User
     /**
      * Get roles
      *
-     * @return array 
+     * @return array
      */
     public function getRoles()
     {
@@ -246,7 +247,7 @@ class User
     /**
      * Get rememberToken
      *
-     * @return string 
+     * @return string
      */
     public function getRememberToken()
     {
