@@ -1,0 +1,366 @@
+#subtitle_content {
+   padding-top: 80px;
+   padding-bottom: 80px;   /* Height of the footer + 150 */
+   background-color: #e9e7e7 !important;
+}
+/*Styling for episode
+ subtitle details */ 
+ 
+#subtitle_content_title_container{
+   text-align: center;
+   width: 980px;
+   margin-right: auto;
+   margin-left: auto;
+   margin-bottom: 30px;
+   padding: 10px 10px 5px 10px;
+   border-radius: 5px;
+   background-color: rgba(255, 255, 255, 0.3);
+}
+#previous_season, #previous_episode{
+   float: left;
+   margin-right: 5px;
+}
+#next_season, #next_episode{
+   float: right;
+   margin-left:5px;
+}
+#previous_episode, #next_episode{
+   background-color: #218dff;
+}
+#previous_episode:hover, #next_episode:hover{
+   background-color: #3999ff;
+}
+#previous_season, #next_season{
+   background-color: #4480bb;
+}
+#previous_season:hover, #next_season:hover{
+   background-color: #518fcc;
+}
+.clips_pages_button{
+   height: 36px;
+   width: 40px;
+   border-radius: 5px;
+   color: #FFF;
+   text-align: center;
+   display: inline-block;
+   font-size: 16pt;
+   padding-top: 4px;
+   cursor: pointer;
+}
+#episode_title{   
+   font-weight: 600;   
+   font-size: 17px;
+   text-align: center;
+   display: inline-block;
+   margin-top: -15px;
+   color: #315d88;
+   width: 780px;
+   position: relative;
+   top: -9px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+#season_number{
+   color: #4480bb;
+   text-align: center;
+   text-decoration: underline;
+   margin: 3px;
+}
+#episode_number{
+   color: #218dff;
+   text-align: center;
+   text-decoration: underline;
+   margin: 3px;
+}
+#subtitle_details{
+   width: 940px;
+   margin-left: auto;
+   margin-right: auto;
+   background-color: #f0eeee;
+   padding: 20px 30px 20px 30px;
+   border-radius: 5px;
+}
+#subtitle_uploader{
+   font-size: 9pt;
+   margin-bottom: 25px;
+   float:right;
+   padding-top: 3px;
+   margin-right: 8px;
+   vertical-align: center;
+   font-size: 9pt;
+   color: #585858;
+}
+.uploader_name{
+   font-weight: 700;
+   color: #518fcc;
+   cursor: pointer;
+   font-size: 10pt;
+}
+#subtitle_triangle_up{
+   width: 0;
+   height: 0;
+   border-left: 5px solid transparent;
+   border-right: 5px solid transparent;
+   border-bottom: 5px solid rgba(255,255,255,0.7);
+   margin-left: 5px;
+}
+#subtitle_comment{
+   background-color: rgba(255,255,255,0.7);
+   white-space: none;
+   color: rgba(0,0,0,0.8);
+   font-size: 9pt;
+   border-radius: 4px;  
+   padding: 2px 5px 2px 6px;
+   display: inline-block;
+   margin-left: -3px;
+   margin-bottom: 15px;
+}
+
+#progress_buttons_row{
+   margin-top: -6px;
+   width: 910px;
+   margin-left: 20px;
+   margin-right: auto;
+   margin-bottom: 10px;
+}
+.subtitle_language{
+   color: rgba(0,0,0,0.8);
+   font-size: 0.9em; 
+   font-weight: 600;
+
+   margin-top: 10px;
+   margin-left: 8px;
+   margin-bottom: 7px;
+}
+.subtitle_buttons{
+   display: inline-block;   
+   vertical-align: middle;
+   margin-left: 5px;
+}
+.resyncreq_subtitle, .download_subtitle, .translate_subtitle, .edit_subtitle, .delete_subtitle, .antitroll_subtitle{
+   width: 40px;
+   height: 40px;
+   border-radius: 4px;
+   display: inline-block;
+   vertical-align: middle;
+   text-align: center;
+   cursor: pointer;
+   color: rgba(0,0,0,0.5);
+   -webkit-box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
+    -moz-box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
+    box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
+   margin: 0px 0px 0px 5px;
+}
+
+.edit_subtitle:hover{
+   background-color: #94e81f;
+   color: white;
+   -webkit-box-shadow:none;
+   -moz-box-shadow:none;
+   box-shadow:none;
+}
+.delete_subtitle:hover{
+   background-color: #ff2157;
+   color: white;
+   -webkit-box-shadow:none;
+   -moz-box-shadow:none;
+   box-shadow:none;
+}
+.resyncreq_subtitle:hover{
+   background-color: #ecb908;
+   color: white;
+   -webkit-box-shadow:none;
+   -moz-box-shadow:none;
+   box-shadow:none;
+}
+.download_subtitle:hover{
+   background-color: #0cdc5d;
+   color: white;
+   -webkit-box-shadow:none;
+   -moz-box-shadow:none;
+   box-shadow:none;
+}
+.translate_subtitle:hover{
+   background-color: #ec1bdf;
+   color: white;
+   -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    box-shadow:none;
+}
+.antitroll_subtitle:hover{
+   background-color: #6039af;
+   color: white;
+   -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    box-shadow:none;
+}
+
+.download_subtitle  .fa-download{
+   padding-top: 10px;
+   font-size: 16pt;
+}
+.translate_subtitle .fa-plus-circle{
+   padding-top: 9px;
+   font-size: 16pt;
+}
+.resyncreq_subtitle .fa-refresh{
+   padding-top: 10px;
+   font-size: 15pt;
+}
+.edit_subtitle .fa-file-text{
+   padding-top: 12px;
+   font-size: 14pt;
+}
+.delete_subtitle .fa-times{
+   padding-top: 8px;
+   font-size: 17pt;
+}
+.antitroll_subtitle .fa-gavel{
+   padding-top: 9px;
+   font-size: 16pt;
+}
+
+#translation_progress_bar {
+   height: 29px;
+   width: 600px;
+   border-radius: 2px;
+   background-color: rgba(255,255,255,0.8);
+   display: inline-block;
+   vertical-align: middle;
+   line-height: 25px;
+}
+
+.progress {
+   width: 100%;
+   height: inherit;
+}
+
+#progress_1{
+   width: 80%;
+   height: inherit;
+}
+#progress_2{
+   width: 12%;
+   height: inherit;
+}
+.progress_percentage{
+   float:right;
+   padding-top: 3px;
+   margin-right: 8px;
+   vertical-align: center;
+   font-size: 10pt;
+   color: white;
+   font-weight: 600;
+}
+.progress_original_subtitle{
+   background-color: #dadada;
+   border-radius: 3px;
+}
+.progress_100{
+   background-color: #33c53c;
+   border-radius: 3px;
+}
+.progress_9099{
+   background-color: #7ac533;
+   border-radius: 3px 0px 0px 3px;
+}
+.progress_8089{
+   background-color: #a9c533;
+   border-radius: 3px 0px 0px 3px;
+}
+.progress_7079{
+   background-color: #bec533;
+   border-radius: 3px 0px 0px 3px;
+}
+.progress_5069{
+   background-color: #c5b833;
+   border-radius: 3px 0px 0px 3px;
+}
+.progress_2049{
+   background-color: #d29d2e;
+   border-radius: 3px 0px 0px 3px;
+}
+.progress_019{
+   background-color: #d2522e;
+   border-radius: 3px 0px 0px 3px;
+}
+
+.version_name {
+    font-size: 12px;
+    line-height: 25px;
+    display: inline-block;
+    text-align: center;
+    min-width: 140px;
+    padding: 2px;
+    /*background-color: #7285a2;*/
+    background-color: #5592ad;
+    border-radius: 2px;
+    color: white;
+}
+
+.version_comments p {
+    font-size: 12px;
+    background: rgb(227, 226, 226);
+    border-radius: 2px 2px 6px 6px;
+    width: 78%;
+    color: #656565;
+    padding: 4px 10px 4px 10px;
+    margin: 0px;
+}
+
+.version_comments p i {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+#subtitle-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+/** Compact version overrides */
+.compact .download_subtitle .fa-download{
+   padding-top: 10px;
+   font-size: 14pt;
+}
+.compact .translate_subtitle .fa-plus-circle{
+    padding-top: 7px;
+    font-size: 17pt;
+}
+.compact .resyncreq_subtitle .fa-refresh{
+    padding-top: 8px;
+    font-size: 16pt;
+}
+.compact .edit_subtitle .fa-file-text{
+   padding-top: 10px;
+   font-size: 12pt;
+}
+.compact .delete_subtitle .fa-times{
+   padding-top: 8px;
+   font-size: 15pt;
+}
+.compact .antitroll_subtitle .fa-gavel{
+   padding-top: 9px;
+   font-size: 14pt;
+}
+
+.compact .resyncreq_subtitle, .compact .download_subtitle, .compact .translate_subtitle, .compact .edit_subtitle, .compact .delete_subtitle, .compact .antitroll_subtitle{
+   width: 35px;
+   height: 35px;
+}
+
+.compact #translation_progress_bar {
+   width: 550px;
+}
+
+.compact .version_comments p {
+    width: 72%;
+    margin-left: 22px;
+    margin-top: -2px;
+}
+
+#new-translation, #new-translation-opts {
+    display: inline-block;
+}

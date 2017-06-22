@@ -1,0 +1,83 @@
+{% extends "base.twig" %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="css/upload.css"/>
+{% endblock %}
+
+{% block content %}
+    <div id="search_bar_container">
+        <div id="white_logo_searchbar" class="white_logo"></div>
+        <input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
+        <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+    </div>
+</div>
+
+<div id="upload">
+    <h2>Subir subtítulo</h2>
+
+    <form name="" action="" method="POST" enctype="multipart/form-data">
+        {#{% for error in errors.all() %}
+            <li>{{ error }}</li>
+        {% endfor %}#}
+
+        <div id="show" class="form-group">
+            <label for="showId">Serie</label>
+            <select id="showId" name="showId" class="form_input">
+                <option value="0" disabled selected>Selecciona una serie</option>
+                {% for show in shows %}
+                    <option value="{{ show.id }}">{{ show.name }}</option>
+                {% endfor %}
+                <option value="NEW">[Nueva serie]</option>
+            </select>
+            <div class="hidden">
+                <label for='new-show'></label>
+                <input id="new-show" name="new-show" value="" placeholder="Nombre de la serie a añadir" class="form_input"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="season">Nombre y temporada</label>
+            <input id="season" type="number" placeholder="0" name="season" required> x <input id="episode" type="number" placeholder="00" name="episode" required> -
+            <input type="text" placeholder="Título" name="title" class="form_input" required><br/>
+        </div>
+        <div class="form-group">
+            <label for="lang">Idioma</label> 
+            <select name="lang" id="lang" class="form_input">
+                <option value="none" disabled selected>Selecciona un idioma</option>
+                <option value="en-en">English</option>
+                <option value="es-es">Español (España)</option>
+                <option value="es-lat">Español (Latinoamérica)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Archivo SRT</label>
+            <input type="file" name="sub" required/>
+        </div>
+        <div class="form-group">
+            <label>Versión del vídeo</label>
+            <input id="version" name="version" type="text" required="required" class="form_input">
+        </div>
+        <div class="form-group">
+            <label>Comentarios</label>
+            <textarea id="comments" name="comments" maxlength="255" cols="80" required="required" class="form_input"></textarea>
+        </div>
+        <div class='form-group'>
+            <button type="submit" class='button'>SUBIR</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(function() {
+            let $newShow = $("#new-show");
+            $("#showId").on("change", function(){
+                let val = $(this).val();
+                $newShow.parent().toggleClass("hidden", val != "NEW");
+                if(val == "NEW") {
+                    $newShow.focus();
+                }
+            })
+        })
+    </script>
+{% endblock %}

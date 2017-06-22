@@ -1,0 +1,194 @@
+{% extends "base.twig" %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="css/translate.css"/>
+{% endblock %}
+
+{% block content %}
+    <div id="search_bar_container">
+        <div id="white_logo_searchbar" class="white_logo"></div>
+        <input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
+        <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+    </div>
+</div>
+
+<div id="translation">
+    {#<div id="episode_title">
+        {{ show_name }} <span id="season_number">{% if episode.season < 10 %}0{% endif %}{{ episode.season }}</span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span> - {{ episode.name }}
+    </div>#}
+    <div id="translation-details">
+        <div class="page-wrapper">
+            <ul class="pagination" id="pagination-top">
+                <li class="change-page disabled"><a href="#!"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" :data-page="page">{{ page }}</li>{% endverbatim %}
+                {#
+                    TODO: Handle the fact that pages might not all fit at the same time?
+                    <li class="expand-pages">...</li>
+                    <li class="target-page" data-page="40">40</li>
+                #}
+                <li class="change-page"><a href="#!"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+            </ul>
+        </div>
+
+        <table id="sequences">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Autor</th>
+                    <th>Tiempos</th>
+                    <th>Idioma secundario: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i></th>
+                    <th>Traducción al <span id='target-language-name'>Español (España)</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            {% verbatim %}
+                <template v-for="seq in sequences">
+                    <tr :class="seq.locked ? 'locked' : (seq.verified ? 'verified' : '')">
+                        <td>{{ seq.number }}</td>
+                        <td class="user"><a href='#'>{{ seq.author.name }}</a></td>
+                        <td class="time">{{ seq.tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ seq.tend | nice_time }}</td>
+                        <td><pre>{{ seq.secondaryText }}</pre></td>
+                        <td><pre>{{ seq.translation }}</pre></td>
+                        <td class="actions">
+                            <i class="fa" data-action="toggleVerified" :class="seq.verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!seq.locked"></i>
+                            <i class="fa" data-action="toggleLock" :class="seq.locked ? 'fa-lock' : 'fa-unlock-alt'"></i>
+                        </td>
+                    </tr>
+
+                    <tr v-for="hseq in seq.history" class="history">
+                        <td></td>
+                        <td class="user"><a href='#'>{{ hseq.author.name }}</a></td>
+                        <td class="time">{{ hseq.tstart }} <i class="fa fa-long-arrow-right"></i> {{ hseq.tend }}</td>
+                        <td><pre>{{ seq.secondaryText }}</pre></td>
+                        <td><pre>{{ hseq.translation }}</pre></td>
+                        <td class="actions">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </td>
+                    </tr>
+                </template>
+            {% endverbatim %}
+        </table>
+
+        <div class="page-wrapper">
+            <ul class="pagination" id="pagination-bottom">
+                <li class="change-page disabled"><a href="#!"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" :data-page="page">{{ page }}</li>{% endverbatim %}
+                {#
+                    TODO: Handle the fact that pages might not all fit at the same time?
+                    <li class="expand-pages">...</li>
+                    <li class="target-page" data-page="40">40</li>
+                #}
+                <li class="change-page"><a href="#!"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let pageCount = {{ page_count }};
+
+    function loadPage(pageNum, seqList, pageListTop, pageListBottom) {
+        $.ajax({
+            url: '/translate/{{ sub.id }}/page/'+pageNum,
+            method: 'GET'
+        }).done(function(pageData) {
+            // Prepare sequences
+            let sequences = [];
+            for(let i = 0; i < pageData.length; ++i) {
+                let sequence = {
+                    number: pageData[i].number,
+                    author: {
+                        id: 0,
+                        name: "ModBot"
+                    },
+                    locked: pageData[i].locked,
+                    verified: pageData[i].verified,
+                    secondaryText: pageData[i].text,
+                    tstart: pageData[i].tstart,
+                    tend: pageData[i].tend,
+                    translation: pageData[i].text,
+                    history: []
+                };
+
+                sequences.push(sequence);
+            }
+
+            seqList.sequences = sequences;
+
+            // Update pagelist
+            pageListTop.curPage = pageNum;
+            pageListBottom.curPage = pageNum;
+        });
+    }
+    
+    let seqList;
+    $(function() {
+        seqList = new Vue({
+            el: '#sequences',
+            data: {
+                sequences: []
+            },
+            filters: {
+                nice_time: function (ms) {
+                    if (!ms)
+                        return '00:00:00.000';
+
+                    let h = 0, m = 0, s = 0;
+                    s = Math.floor(ms/1000);
+
+                    h = Math.floor(s/3600);
+                    s -= h * 3600;
+                    m = Math.floor(s/60);
+                    s -= m * 60;
+
+                    ms -= (s + m * 60 + h * 3600)*1000;
+
+                    let stime = "";
+                    if(h < 10) stime += "0";
+                    stime += h+":";
+                    if(m < 10) stime += "0";
+                    stime += m+":";
+                    if(s < 10) stime += "0";
+                    stime += s+".";
+                    if(ms < 100) stime += "0";
+                    if(ms < 10) stime += "0";
+                    stime += ms;
+
+                    return stime;
+                }
+            }
+        });
+
+        let pageListTop = new Vue({
+            el: '#pagination-top',
+            data: {
+                curPage: 1,
+                pages: []
+            },
+        });
+
+        let pageListBottom = new Vue({
+            el: '#pagination-bottom',
+            data: {
+                curPage: 1,
+                pages: []
+            },
+        });
+
+        for(let p = 1; p < pageCount + 1; ++p) {
+            pageListTop.pages.push(p);
+            pageListBottom.pages.push(p);
+        }
+        
+        $("#translation").on("click", '[data-page]', function(e) {
+            loadPage($(this).data("page"), seqList, pageListTop, pageListBottom);
+        })
+
+        /**
+        * Boot
+        */
+        loadPage(1, seqList, pageListTop, pageListBottom); // Load first page by default
+    });
+</script>
+{% endblock %}

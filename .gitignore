@@ -1,0 +1,6 @@
+.env
+vendor/
+tmp/
+/.vscode
+/logs/*.log
+*~
