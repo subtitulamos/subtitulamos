@@ -153,8 +153,7 @@ class TranslationController
 
         $seq = $em->getRepository("App:Sequence")->find($seqID);
         if (!$seq) {
-            $response->getBody()->write("Sequence does not exist");
-            return $response->withStatus(400);
+            throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
         if ($text == $seq->getText()) {
@@ -181,8 +180,7 @@ class TranslationController
         $seqID = $request->getParsedBodyParam('seqID', 0);
         $seq = $em->getRepository("App:Sequence")->find($seqID);
         if (!$seq) {
-            $response->getBody()->write("Sequence does not exist");
-            return $response->withStatus(400);
+            throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
         $seq->setLocked(!$seq->getLocked());
