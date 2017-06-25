@@ -253,7 +253,7 @@
                 }).fail(function() {
                     alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
                     this.editing = true;
-                });
+                }.bind(this));
 
                 this.editing = false;
             },
@@ -281,7 +281,7 @@
                 }).fail(function() {
                     // Only revert if the request failed
                     this.locked = preLock;
-                });
+                }.bind(this));
             }
         },
     });
