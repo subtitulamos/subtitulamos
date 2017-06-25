@@ -94,6 +94,7 @@
 
 <script type="text/javascript">
     let subID = {{ sub.id }};
+    let canLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
     let pageCount = {{ page_count }};
     let availSecondaryLangs = {{ avail_secondary_langs|raw }};
     
@@ -150,7 +151,7 @@
 
                     <div v-if="!history && !editing">
                         <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
-                        <i class="fa" @click="toggleLock" :class="locked ? 'fa-lock' : 'fa-unlock-alt'"></i>
+                        <i class="fa" @click="toggleLock" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
                     </div>
 
                     <div v-if="false && history">
@@ -166,6 +167,7 @@
                 text: this.baseText,
                 locked: this.pLocked,
                 verified: this.pVerified,
+                canLock: canLock,
                 editing: false
             }
         },
@@ -263,6 +265,10 @@
             },
 
             toggleLock: function() {
+                if(!canLock) {
+                    return false;
+                }
+
                 let preLock = this.locked;
                 this.locked = !this.locked;
 

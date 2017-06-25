@@ -97,7 +97,7 @@ $app->get('/translate/{id}/page/{page}', ['\App\Controllers\TranslationControlle
 $app->post('/translate/{id}/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRoles('ROLE_USER'));
-$app->post('/translate/{id}/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_USER'));
+$app->post('/translate/{id}/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_TH'));
 
 $app->get('/download/{id}', ['\App\Controllers\DownloadController', 'download']);
 

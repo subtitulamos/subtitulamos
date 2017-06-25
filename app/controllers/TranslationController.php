@@ -162,6 +162,10 @@ class TranslationController
             return $response->withStatus(200);
         }
 
+        if ($seq->getLocked() && !$auth->hasRole('ROLE_TH')) {
+            return $response->withStatus(403);
+        }
+
         // Generate a copy of this sequence, we don't edit the original
         $nseq = clone $seq;
         $nseq->incRevision();
