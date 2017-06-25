@@ -267,7 +267,7 @@ class Subtitle
     /**
      * Get progress
      *
-     * @return float 
+     * @return float
      */
     public function getProgress()
     {

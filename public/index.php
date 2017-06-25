@@ -99,6 +99,7 @@ $app->post('/translate/{id}/close', ['\App\Controllers\TranslationController', '
 $app->post('/translate/{id}/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_USER'));
 
+$app->get('/download/{id}', ['\App\Controllers\DownloadController', 'download']);
 
 $app->post('/login', ['\App\Controllers\LoginController', 'login']);
 $app->post('/register', ['\App\Controllers\LoginController', 'register']);
