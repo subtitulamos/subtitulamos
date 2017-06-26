@@ -44,9 +44,9 @@ class Subtitle
     private $sequences;
 
     /**
-     * @ORM\Column(type="boolean", name="is_direct_upload")
+     * @ORM\Column(type="boolean", name="direct_upload")
      */
-    private $isDirectUpload;
+    private $directUpload;
 
     /**
      * @ORM\Column(type="datetime", name="upload_time", options={"default": 0})
@@ -188,9 +188,9 @@ class Subtitle
      * @param boolean $isDirectUpload
      * @return Subtitle
      */
-    public function setDirectUpload($isDirectUpload)
+    public function setDirectUpload($directUpload)
     {
-        $this->isDirectUpload = $isDirectUpload;
+        $this->directUpload = $directUpload;
 
         return $this;
     }
@@ -202,7 +202,7 @@ class Subtitle
      */
     public function isDirectUpload()
     {
-        return $this->isDirectUpload;
+        return $this->directUpload;
     }
 
     /**
