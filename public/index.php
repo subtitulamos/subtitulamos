@@ -36,8 +36,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 return new Cocur\Slugify\Slugify();
             },
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
-                $twig = new \Slim\Views\Twig(__DIR__.'/../resources/templates', [
-                    'cache' => __DIR__.'/../tmp',
+                $twig = new \Slim\Views\Twig(__DIR__ . '/../resources/templates', [
+                    'cache' => __DIR__ . '/../tmp',
                     'strict_variables' => getenv('TWIG_STRICT') || true,
                     'debug' => DEBUG
                 ]);
@@ -69,7 +69,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                     {
                         return $this->auth->getUser();
                     }
-                });
+                }
+                );
                 return $twig;
             },
 
@@ -92,11 +93,14 @@ $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUp
 
 $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
 
-$app->get('/translate/{id}', ['\App\Controllers\TranslationController', 'view'])->add($needsRoles('ROLE_USER'));
+$app->post('/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRoles('ROLE_USER'));
+
+$app->get('/translate/{id}', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRoles('ROLE_USER'));
 $app->get('/translate/{id}/page/{page}', ['\App\Controllers\TranslationController', 'listSequences'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRoles('ROLE_USER'));
+$app->post('/translate/{id}/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_TH'));
 
 $app->get('/download/{id}', ['\App\Controllers\DownloadController', 'download']);

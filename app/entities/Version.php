@@ -48,6 +48,7 @@ class Version
      * @ORM\OneToMany(targetEntity="Subtitle", mappedBy="version")
      */
     private $subtitles;
+
     /**
      * Constructor
      */
@@ -55,7 +56,7 @@ class Version
     {
         $this->subtitles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Get id
      *

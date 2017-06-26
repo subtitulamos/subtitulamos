@@ -133,8 +133,8 @@
                 <td><span v-if="!history">{{ number }}</span></td>
                 <td class="user"><a :href="'/user/' + author.id">{{ author.name }}</a></td>
                 <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
-                <td><pre>{{ secondaryText }}</pre></td>
-                <td class="translatable" @click="editSequence">
+                <td class="text"><pre>{{ secondaryText }}</pre></td>
+                <td class="text" @click="editSequence" :class="{'translatable': !history}">
                     <pre v-if="!editing">{{ text }}</pre>
 
                     <textarea v-model.trim="text" v-if="editing"></textarea>
@@ -149,7 +149,7 @@
                         <i class="fa fa-times-circle-o" @click="discard"></i>
                     </div>
 
-                    <div v-if="!history && !editing">
+                    <div v-if="translated && !history && !editing">
                         <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
                         <i class="fa" @click="toggleLock" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
                     </div>
@@ -215,6 +215,10 @@
             canSave: function() {
                 return !this.history && this.lineCounters.length > 0 && this.lineCounters[0] > 0 && this.lineCounters[0] <= 40
                          && (!this.lineCounters[1] || this.lineCounters[1] <= 40);
+            },
+
+            translated: function() {
+                return this.id != 0
             }
         },
         methods: {
@@ -243,17 +247,33 @@
                 if(!this.canSave)
                     return false;
 
-                $.ajax({
-                    url: '/translate/'+subID+'/save',
-                    method: 'POST',
-                    data: {
-                        seqID: this.id,
-                        text: this.text,
-                    }
-                }).fail(function() {
-                    alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                    this.editing = true;
-                }.bind(this));
+                if(this.id) {
+                    // Editing a sequence, save the changes
+                    $.ajax({
+                        url: '/translate/'+subID+'/save',
+                        method: 'POST',
+                        data: {
+                            seqID: this.id,
+                            text: this.text,
+                        }
+                    }).fail(function() {
+                        alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
+                        this.editing = true;
+                    }.bind(this));
+                } else {
+                    // Translating a sequence for the first time
+                    $.ajax({
+                        url: '/translate/'+subID+'/create',
+                        method: 'POST',
+                        data: {
+                            number: this.number,
+                            text: this.text
+                        }
+                    }).fail(function() {
+                        alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
+                        this.editing = true;
+                    }.bind(this));
+                }
 
                 this.editing = false;
             },

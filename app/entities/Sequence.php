@@ -80,8 +80,8 @@ class Sequence implements \JsonSerializable
             "verified" => $this->verified,
             "text" => $this->text,
             "author" => [
-                "id" => $this->author->getId(),
-                "name" => $this->author->getUsername(),
+                "id" => $this->author ? $this->author->getId() : 0,
+                "name" => $this->author ? $this->author->getUsername() : '',
             ]
         ];
     }

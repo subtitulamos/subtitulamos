@@ -176,19 +176,23 @@
     padding-left: 0px;
 }
 
-#translation .translatable {
-    cursor: pointer;
-}
-
 #translation textarea {    
     width: 90%;
     margin-top: 5px;
     padding: 7px;
+    height: 100%;
+}
+
+#translation .text {
+    min-width: 375px;
+}
+
+#translation .translatable {
+    cursor: pointer;
 }
 
 #translation pre {
     font-family: "Open Sans";
-    min-width: 375px;
     height: 100%;
     display:table-cell;
     vertical-align:middle;
