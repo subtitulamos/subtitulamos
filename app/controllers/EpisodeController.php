@@ -31,7 +31,7 @@ class EpisodeController
         $langs = [];
         foreach ($ep->getVersions() as $version) {
             foreach ($version->getSubtitles() as $sub) {
-                $lang = Langs::getLangCode($sub->getLang());
+                $lang = Langs::getLocalizedName(Langs::getLangCode($sub->getLang()));
                 if (!isset($langs[$lang])) {
                     $langs[$lang] = [];
                 }
