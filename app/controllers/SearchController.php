@@ -43,7 +43,7 @@ class SearchController
 
     public function listRecentUploads(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.isDirectUpload = 1 ORDER BY s.uploadTime DESC")->setMaxResults(5)->getResult();
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 ORDER BY s.uploadTime DESC")->setMaxResults(5)->getResult();
         
         $epList = [];
         foreach ($subs as $sub) {
