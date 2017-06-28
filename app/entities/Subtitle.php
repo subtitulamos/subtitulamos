@@ -57,6 +57,11 @@ class Subtitle
      * @ORM\Column(type="float")
      */
     private $progress;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SubtitleComment", mappedBy="episode")
+     */
+    private $comments;
     
     /**
      * Constructor
@@ -229,29 +234,6 @@ class Subtitle
     }
 
     /**
-     * Set isDirectUpload
-     *
-     * @param boolean $isDirectUpload
-     * @return Subtitle
-     */
-    public function setIsDirectUpload($isDirectUpload)
-    {
-        $this->isDirectUpload = $isDirectUpload;
-
-        return $this;
-    }
-
-    /**
-     * Get isDirectUpload
-     *
-     * @return boolean
-     */
-    public function getIsDirectUpload()
-    {
-        return $this->isDirectUpload;
-    }
-
-    /**
      * Set progress
      *
      * @param float $progress
@@ -272,5 +254,48 @@ class Subtitle
     public function getProgress()
     {
         return $this->progress;
+    }
+
+    /**
+     * Get directUpload
+     *
+     * @return boolean 
+     */
+    public function getDirectUpload()
+    {
+        return $this->directUpload;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \App\Entities\SubtitleComment $comments
+     * @return Subtitle
+     */
+    public function addComment(\App\Entities\SubtitleComment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \App\Entities\SubtitleComment $comments
+     */
+    public function removeComment(\App\Entities\SubtitleComment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

@@ -30,7 +30,7 @@
             <i class="fa fa-angle-double-right" aria-hidden="true"></i>
         </div></span>			
     </div>
-    <div id="subtitle_details" >
+    <div id="subtitle_details">
 
         {% for lang, subs in langs %}
             <div class="subtitle_language">{{ lang }}</div>
@@ -112,18 +112,103 @@
             </div>
         </div>
     </div>
+    <div id="subtitle-comments">
+        <h4>Comentarios</h4>
+
+        <template v-for="comment in comments">
+            <comment
+                :key="comment.id"
+
+                :id="comment.id"
+                :user="comment.user"
+                :text="comment.text"
+            >
+            </comment>
+        </template>
+
+        <div class='newcomment-box'>
+            <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
+            <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript">
+        let epId = {{ episode.id }};
         let $newTranslationButton = $(".translate_subtitle");
         $newTranslationButton.on("click", function() {
             $("#new-translation-opts").toggleClass("hidden");
         });
 
-        $("#open-translation").on("click", function() {
-
+        {% verbatim %}
+        Vue.component('comment', {
+            template: `
+                <article class='comment'>
+                    <header>
+                        <ul>
+                            <li class='comment-user'>
+                                <a :href="'/user/' + user.id">{{ user.name }}</a>
+                            </li>
+                            <li class='comment-time'>
+                                10 hours ago
+                            </li>
+                        </ul>
+                    </header>
+                    <section class='comment-body'>
+                        {{ text }}
+                    </section>
+                    <section class='comment-actions'>
+                    </section>
+                </article>
+                `,
+            
+            props: ['user', 'text']
         });
+        {% endverbatim %}
+        
+        let comments = new Vue({
+            el: '#subtitle-comments',
+            data: {
+                newComment: '',
+                comments: [
+                ]
+            },
+            methods: {
+                publishComment: function() {
+                    let comment = this.newComment;
+                    this.newComment = '';
+
+                    $.ajax({
+                        url: '/episodes/'+epId+'/comments/create',
+                        method: 'POST',
+                        data: {
+                            text: comment
+                        }
+                    }).done(function() {
+                        // Cheap solution: reload the entire comment box
+                        loadComments();
+                    }).fail(function() {
+                        alertify.error("Ha ocurrido un error al enviar tu comentario");
+                    });
+                }
+            }
+        });
+
+        function loadComments()
+        {
+            $.ajax({
+                url: '/episodes/'+epId+'/comments',
+                method: 'GET'
+            }).done(function(reply) {
+                comments.comments = reply;
+            }).fail(function() {
+                alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
+            })
+        }
+
+        // Start by loading the comments
+        loadComments();
     </script>
 {% endblock %}

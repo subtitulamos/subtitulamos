@@ -45,6 +45,16 @@ class User
     private $versions;
 
     /**
+     * @ORM\OneToMany(targetEntity="EpisodeComment", mappedBy="user")
+     */
+    private $epComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SubtitleComment", mappedBy="user")
+     */
+    private $subComments;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $banned;
@@ -66,6 +76,8 @@ class User
     {
         $this->versions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->pauses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->subComments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->epComments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -252,5 +264,71 @@ class User
     public function getRememberToken()
     {
         return $this->rememberToken;
+    }
+
+    /**
+     * Add epComments
+     *
+     * @param \App\Entities\EpisodeComment $epComments
+     * @return User
+     */
+    public function addEpComment(\App\Entities\EpisodeComment $epComments)
+    {
+        $this->epComments[] = $epComments;
+
+        return $this;
+    }
+
+    /**
+     * Remove epComments
+     *
+     * @param \App\Entities\EpisodeComment $epComments
+     */
+    public function removeEpComment(\App\Entities\EpisodeComment $epComments)
+    {
+        $this->epComments->removeElement($epComments);
+    }
+
+    /**
+     * Get epComments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEpComments()
+    {
+        return $this->epComments;
+    }
+
+    /**
+     * Add subComments
+     *
+     * @param \App\Entities\SubtitleComment $subComments
+     * @return User
+     */
+    public function addSubComment(\App\Entities\SubtitleComment $subComments)
+    {
+        $this->subComments[] = $subComments;
+
+        return $this;
+    }
+
+    /**
+     * Remove subComments
+     *
+     * @param \App\Entities\SubtitleComment $subComments
+     */
+    public function removeSubComment(\App\Entities\SubtitleComment $subComments)
+    {
+        $this->subComments->removeElement($subComments);
+    }
+
+    /**
+     * Get subComments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSubComments()
+    {
+        return $this->subComments;
     }
 }

@@ -24,7 +24,6 @@ $app = new class() extends \DI\Bridge\Slim\App {
             'settings.displayErrorDetails' => true
         ]);
 
-        // Instantiate and add Twig to the application
         $builder->addDefinitions([
             \Doctrine\ORM\EntityManager::class => function (ContainerInterface $c) use ($entityManager) {
                 return $entityManager;
@@ -91,10 +90,7 @@ $app->post('/upload', ['\App\Controllers\UploadController', 'do'])->add($needsRo
 $app->get('/search/popular', ['\App\Controllers\SearchController', 'listPopular']);
 $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUploads']);
 
-$app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
-
 $app->post('/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRoles('ROLE_USER'));
-
 $app->get('/translate/{id}', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRoles('ROLE_USER'));
 $app->get('/translate/{id}/page/{page}', ['\App\Controllers\TranslationController', 'listSequences'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRoles('ROLE_USER'));
@@ -102,6 +98,23 @@ $app->post('/translate/{id}/close', ['\App\Controllers\TranslationController', '
 $app->post('/translate/{id}/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{id}/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_TH'));
+
+$app->get('/translate/{subId}/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRoles('ROLE_USER'));
+$app->post('/translate/{subId}/comments/create', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRoles('ROLE_USER'));
+/*
+$app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
+$app->post('/translate/{subId}/comments/{cId}/delete', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
+*/
+
+$app->get('/episodes/{id}[-{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
+
+$app->get('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);
+$app->post('/episodes/{epId}/comments/create', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRoles('ROLE_USER'));
+/*
+$app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
+$app->post('/episodes/{epId}/comments/{cId}/delete', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
+$app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRoles('ROLE_MOD'));
+*/
 
 $app->get('/download/{id}', ['\App\Controllers\DownloadController', 'download']);
 
