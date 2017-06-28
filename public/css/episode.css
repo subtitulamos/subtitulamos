@@ -3,6 +3,11 @@
    padding-bottom: 80px;   /* Height of the footer + 150 */
    background-color: #e9e7e7 !important;
 }
+
+a {
+    color: inherit;
+}
+
 /*Styling for episode
  subtitle details */ 
  
