@@ -101,6 +101,7 @@
                 :id="comment.id"
                 :user="comment.user"
                 :text="comment.text"
+                :published-at="comment.published_at"
             >
             </comment>
         </template>
@@ -112,6 +113,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="js/timeago.min.js"></script>
 <script type="text/javascript">
     let subID = {{ sub.id }};
     let canLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
@@ -378,7 +380,7 @@
                             <a :href="'/user/' + user.id">{{ user.name }}</a>
                         </li>
                         <li class='comment-time'>
-                            10 hours ago
+                            {{ date }}
                         </li>
                     </ul>
                 </header>
@@ -390,7 +392,21 @@
             </article>
             `,
         
-        props: ['user', 'text']
+        props: ['user', 'text', 'published-at'],
+        data: function() {
+            return {
+                date: '',
+            }
+        },
+        created: function() {
+            this.update = setInterval(this.updateDate, 10000);
+            this.updateDate();
+        },
+        methods: {
+            updateDate: function() {
+                this.date = timeago().format(this.publishedAt, 'es')
+            }
+        }
     });
     {% endverbatim %}
     
@@ -438,6 +454,8 @@
     * Boot
     */
     loadPage(1, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]); // Load first page by default
+
     loadComments();
+    setInterval('loadComments', 30);
 </script>
 {% endblock %}

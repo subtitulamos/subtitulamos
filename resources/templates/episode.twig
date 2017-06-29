@@ -124,6 +124,7 @@
                 :id="comment.id"
                 :user="comment.user"
                 :text="comment.text"
+                :published-at="comment.published_at"
             >
             </comment>
         </template>
@@ -137,6 +138,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript" src="js/timeago.min.js"></script>
     <script type="text/javascript">
         let epId = {{ episode.id }};
         let $newTranslationButton = $(".translate_subtitle");
@@ -154,7 +156,7 @@
                                 <a :href="'/user/' + user.id">{{ user.name }}</a>
                             </li>
                             <li class='comment-time'>
-                                10 hours ago
+                                {{ date }}
                             </li>
                         </ul>
                     </header>
@@ -166,7 +168,21 @@
                 </article>
                 `,
             
-            props: ['user', 'text']
+            props: ['user', 'text', 'published-at'],
+            data: function() {
+                return {
+                    date: '',
+                }
+            },
+            created: function() {
+                this.update = setInterval(this.updateDate, 10000);
+                this.updateDate();
+            },
+            methods: {
+                updateDate: function() {
+                    this.date = timeago().format(this.publishedAt, 'es')
+                }
+            }
         });
         {% endverbatim %}
         
@@ -210,7 +226,8 @@
             })
         }
 
-        // Start by loading the comments
+        // Start by loading the comments, and set a timer to do so frequently
         loadComments();
+        setInterval('loadComments', 60);
     </script>
 {% endblock %}
