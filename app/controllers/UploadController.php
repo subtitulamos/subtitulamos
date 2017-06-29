@@ -128,7 +128,8 @@ class UploadController
         $subtitle->setVersion($version);
         $subtitle->setUploadTime(new \DateTime());
         $subtitle->setDirectUpload(true);
-
+        $subtitle->setProgress(100);
+        
         // Persist
         $em->persist($episode);
         $em->persist($version);

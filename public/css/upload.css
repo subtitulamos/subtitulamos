@@ -4,10 +4,6 @@
     font-size: 0.9em;
 }
 
-h2 {
-    color: #545252;
-}
-
 .form-group {
     padding: 3px;
 }
@@ -36,8 +32,15 @@ h2 {
 }
 
 #upload h2 {
+    color: #545252;
     text-align: center;
     font-size: 25px;
+}
+
+#upload h3 {
+    text-align: center;
+    margin-top: -20px;
+    color: #636363;
 }
 
 #upload button {

@@ -40,7 +40,7 @@
                         <div class="version_name">{{ sub.version.name }}</div>
                         <div id="translation_progress_bar">
                             <div class="progress progress_original_subtitle">
-                                <div id="subtitle_uploader">subtítulo original subido por <a href="/user/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>, hace 10 días</div>
+                                <div id="subtitle_uploader">subtítulo original subido por <a href="/user/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
                             </div>
                         </div>
                         <div class="subtitle_buttons">
@@ -91,7 +91,9 @@
         {% endfor %}
 
         <div id="subtitle-actions">
-            <div class="resyncreq_subtitle"><i class="fa fa-refresh" aria-hidden="true"></i></div> 
+            <a href='/episodes/{{ episode.id }}/resync'>
+                <div class="resyncreq_subtitle"><i class="fa fa-refresh" aria-hidden="true"></i></div>
+            </a>
             <div id="new-translation">
                 <div class="translate_subtitle" {# TODO: class should be button wrapper or something! #}>
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
