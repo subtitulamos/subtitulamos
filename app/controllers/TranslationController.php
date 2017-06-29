@@ -15,11 +15,11 @@ use App\Entities\Subtitle;
 use App\Entities\Sequence;
 use App\Services\Auth;
 use App\Services\Langs;
+use App\Services\Translation;
 
 use Respect\Validation\Validator as v;
 
 // TODO: Extract half this logic into a translation service
-
 class TranslationController
 {
     /**
@@ -52,7 +52,12 @@ class TranslationController
             return $response->withStatus(412);
         }
 
+        $base = null;
         foreach ($version->getSubtitles() as $sub) {
+            if ($sub->isDirectUpload()) {
+                $base = $sub;
+            }
+
             if ($sub->getLang() == $lang) {
                 // Lang already started!
                 $response->getBody()->write("This version already has this lang");
@@ -64,9 +69,33 @@ class TranslationController
         $sub = new Subtitle();
         $sub->setLang($lang);
         $sub->setVersion($version);
-        $sub->setProgress(0);
+        $sub->setProgress(0); // TODO: This progress could be more than 0% if sequences are autofilled
         $sub->setDirectUpload(false);
         $sub->setUploadTime(new \DateTime());
+
+        // Autofill sequences
+        foreach ($base->getSequences() as $sequence) {
+            if (Translation::containsCreditsText($sequence->getText())) {
+                // Autoblock and replace with our credits
+                $nseq = clone $sequence;
+                $nseq->setSubtitle($sub);
+                //$nseq->setAuthor(null); // TODO: Change author to ModBot
+                $nseq->setText('CREDITS AUTOREPLACE');
+                $nseq->setLocked(true);
+                $em->persist($nseq);
+            } else {
+                $blankSequence = Translation::getBlankSequenceConfidence($sequence);
+
+                if ($blankSequence > 0) {
+                    $nseq = clone $sequence;
+                    //$nseq->setAuthor(null); // TODO: Change author to ModBot
+                    $nseq->setSubtitle($sub);
+                    $nseq->setText(' '); //Blank
+                    $nseq->setLocked($blankSequence >= 95 ? 1 : 0); // Only lock if we're sure
+                    $em->persist($nseq);
+                }
+            }
+        }
 
         $em->persist($sub);
         $em->flush();
