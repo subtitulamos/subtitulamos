@@ -59,8 +59,7 @@
 				episodes: [],
 			}, methods: {
 				subURI: function(ep) {
-					let e = ep.episode_num >= 10 ? ep.episode_num : "0"+ep.episode_num;
-					return "/episodes/"+ep.id+"/"+ep.show_name_slug+"-"+ep.season+"x"+e;
+					return "/episodes/"+ep.id+"/"+ep.slug;
 				},
 
 				update: function() {
@@ -110,7 +109,7 @@
 	{% verbatim %}
 		<script id='uploaded-row-tpl' type='x-tmpl-mustache'>
 			<table class="clip_global_info">
-				<tr class="clip_info_row fade_slide_in" data-target="/episodes/{{ id }}/{{ url_show_name }}-{{ season }}x{{ episode }}">
+				<tr class="clip_info_row fade_slide_in" data-target="/episodes/{{ id }}">
 					<td class="clip_activity_since">
 						<div class="clip_row_text_faded">hace</div>
 						<div class="clip_row_time">{{ time_ago }}</div>

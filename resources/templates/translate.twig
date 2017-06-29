@@ -407,7 +407,7 @@
                 this.newComment = '';
                 
                 $.ajax({
-                    url: '/translate/'+subID+'/comments/create',
+                    url: '/translate/'+subID+'/comments/submit',
                     method: 'POST',
                     data: {
                         text: comment

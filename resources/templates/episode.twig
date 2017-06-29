@@ -181,7 +181,7 @@
                     this.newComment = '';
 
                     $.ajax({
-                        url: '/episodes/'+epId+'/comments/create',
+                        url: '/episodes/'+epId+'/comments/submit',
                         method: 'POST',
                         data: {
                             text: comment
