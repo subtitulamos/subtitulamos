@@ -145,5 +145,7 @@ $app->post('/login', ['\App\Controllers\LoginController', 'login']);
 $app->post('/register', ['\App\Controllers\LoginController', 'register']);
 $app->get('/logout', ['\App\Controllers\LoginController', 'logout']);
 
+$app->get('/rules[/{type}]', ['\App\Controllers\RulesController', 'view']);
+
 // Run app
 $app->run();

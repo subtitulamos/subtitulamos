@@ -1,0 +1,143 @@
+#rules-content {
+   padding-top: 10px;
+   padding-bottom: 80px;   /* Height of the footer + 150 */
+   background-color: #e9e7e7 !important;
+}
+
+#rules {
+   margin: 0 auto;
+   max-width: 1200px;
+}
+
+#rules-content h2 {
+    text-align: center;
+}
+ 
+#rules-content .line-number, #rules-content .detail {
+    color: #737373;
+
+}
+
+#rules-content ol {
+	counter-reset:li;
+}
+
+#rules-content ol > li {
+	position:relative;
+	margin:0 0 6px 2em; 
+    padding: 5px 6px 12px 6px;
+	list-style:none; /* Disable the normal item numbering */
+    border-top: 2px solid #4b847c;
+}
+#rules-content ol > li:before {
+	content:counter(li); /* Use the counter as content */
+	counter-increment:li; /* Increment the counter by 1 */
+    
+	position:absolute;
+	top:-2px;
+	left:-2em;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	width:2em;
+	margin-right:8px;
+	padding:4px;
+    border-top: 2px solid #4b847c;
+    color: #fff;
+    background: #45a09d;
+	font-weight:bold;
+	text-align:center;
+}
+
+#rules-content li ol, #rules-content li ul {margin-top:6px;}
+#rules-content ol ol li:last-child {margin-bottom:0;}
+
+#rules-content .example {
+    background-color: #dadada;
+    padding: 10px;
+    line-height: 24px;
+    max-width: 400px;
+    margin: 5px;
+    display: inline-block; 
+}
+
+#rules-content .example .correct {
+    color: green;
+    font-weight: bold;
+}
+
+#rules-content .example .incorrect {
+    color: red;
+    font-weight: bold;
+}
+
+
+.rule-tabs {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 48px;
+    margin: 0 auto;
+	white-space: nowrap;
+}
+
+.rule-tabs li {
+    cursor: pointer;
+    list-style-type: none;
+    
+    display: inline-block;
+    text-align: center;
+    line-height: 48px;
+    height: 48px;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.rule-tabs a {
+    box-sizing: border-box;
+
+    color: #315d88;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0 24px;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.rule-tabs .current {
+    border-bottom: 2px solid #3f83c5;
+    background-color: transparent;
+    color: #3796cc;
+    font-weight: bold;
+}
+
+.spoiler-content
+{
+    display: none;
+    
+    padding: 0 20px 10px 20px;
+}
+
+.spoiler-wrapper {
+	display:block;
+	margin-bottom:4px;
+	border-bottom: 1px dotted #0f0f0f;
+	background-color: #c3c3c3;
+	margin-top: 10px;
+    cursor: pointer;
+}
+
+.spoiler-wrapper .spoiler-name {
+	
+	text-transform:uppercase;
+	color:#100123;
+	font-weight: bold;
+	padding:5px;
+	font-size:13px;
+	text-align: center;
+	
+}

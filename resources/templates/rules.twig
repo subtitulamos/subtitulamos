@@ -1,0 +1,33 @@
+{% extends "base.twig" %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="css/rules.css"/>
+{% endblock %}
+
+{% block content %}
+    <div id="rules-content">
+        <div id='rules'>
+            <div>
+                <ul class="rule-tabs">
+                    <li><a href="/rules" class="{% if rules_type == 'main' %}current{% endif %}">Normas de traducción</a></li>
+                    <li><a href="/rules/community" class="{% if rules_type == 'community' %}current{% endif %}">Normas de la comunidad</a></li>
+                    <li><a href="/rules/upload" class="{% if rules_type == 'upload' %}current{% endif %}">Normas de subida de subtítulos</a></li>
+                </ul>
+            </div>
+            
+            {% include "rules/rules_" ~ rules_type ~ ".twig" %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(".spoiler-wrapper").on("click", function() {
+            let $this = $(this);
+            let $spoiler = $this.find('.spoiler-content');
+            $this.find('i').toggleClass('fa-caret-down').toggleClass('fa-caret-up');
+
+            $spoiler.css('display', $spoiler.css('display') == 'none' ? 'block' : 'none');
+        });
+    </script>
+{% endblock %}
