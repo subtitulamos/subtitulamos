@@ -129,6 +129,7 @@ $app->get('/show/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view
 
 $app->get('/download/{id}', ['\App\Controllers\DownloadController', 'download']);
 
+$app->get('/login', ['\App\Controllers\LoginController', 'viewLogin']);
 $app->post('/login', ['\App\Controllers\LoginController', 'login']);
 $app->post('/register', ['\App\Controllers\LoginController', 'register']);
 $app->get('/logout', ['\App\Controllers\LoginController', 'logout']);

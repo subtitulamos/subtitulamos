@@ -123,4 +123,10 @@ class LoginController
 
         return $response->withHeader('Location', '/');
     }
+
+    public function viewLogin($response)
+    {
+        $response->getBody()->write("Necesitas estar indentificado para acceder a esta sección. <a href='/'>Ir a la página principal</a>");
+        return $response;
+    }
 }
