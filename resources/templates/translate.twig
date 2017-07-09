@@ -5,13 +5,6 @@
 {% endblock %}
 
 {% block content %}
-    <div id="search_bar_container">
-        <div id="white_logo_searchbar" class="white_logo"></div>
-        <input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
-        <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
-    </div>
-</div>
-
 <div id="translation">
     {#<div id="episode_title">
         {{ show_name }} <span id="season_number">{% if episode.season < 10 %}0{% endif %}{{ episode.season }}</span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span> - {{ episode.name }}

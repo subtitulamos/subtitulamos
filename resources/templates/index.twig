@@ -1,54 +1,58 @@
 {% extends "base.twig" %}
+{% block search %}{# Do not display top search here #}{% endblock %}
+
 {% block content %}
-	<div id="main_state">
-		<div id="logo"></div>
-		<div id="company_name">SUBTITULAMOS.TV</div>
-		<div id="company_title">LEMA O VACÍO</div>
-	</div>
-	<div id="search_bar_container">
-		<div id="white_logo_searchbar" class="white_logo hidden"></div>
-		<input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
-		<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
-	</div>
-	<div id="category_navigation_list">
-		<div id="category_navigation_title">...o explora las siguientes categorías</div>
-		<span class="hint--top hint--bounce hint--rounded" data-hint="Los subtítulos más buscados"><div class="category_navigation_item" id="most_downloaded">Lo más descargado</div></span>
-		<span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos"><div class="category_navigation_item" id="last_uploaded">Últimas subidas</div></span>
-		<span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas"><div class="category_navigation_item" id="last_completed">Últimas traducciones</div></span>
-		<span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones"><div class="category_navigation_item" id="last_edited">Últimas ediciones</div></span>
-	</div>
-	{% verbatim %}
-	<div id="incategory_state" class="hidden">
-		<div id="incategory_board">
-			<table class="clip_global_info" v-for="ep in episodes">
-				<tr class="clip_info_row fade_slide_in" :data-target="subURI(ep)">
-					<td class="clip_downloads" v-if="ep.download_count">
-						<div class="clip_downloads_times">{{ ep.download_count }}</div>
-						<div class="clip_downloads_text">descargas</div>
-					</td>
-					<td class="clip_activity_since" v-if="ep.upload_time">
-						<div class="clip_row_text_faded">hace</div>
-						<div class="clip_row_time">{{ ep.time_ago }}</div>
-						<div class="clip_row_text">{{ ep.time_unit }}</div>
-					</td>
-					<td class="visual_separator"></td>						
-					<td class="clip_title_row">
-						<div class="clip_title">{{ ep.name }}</div>
-						<div class="clip_add_details">
-							<div class="clip_language">{{ ep.lang_name }}</div>
-							<div class="new_season" v-if="ep.new_season">Nueva Temporada</div>
-							<div class="new_series" v-if="ep.new_series">Nueva Serie</div>
-						</div>
-					</td>
-				</tr>			
-				<div class="clip_social_reactions fade_in_reactions">						
-					<span class="hint--top hint--bounce hint--rounded" data-hint="Me gusta"><div class="love_reaction"></div></span>
-					<span class="hint--top hint--bounce hint--rounded" data-hint="Compartir"><div class="share_reaction"></div></span>
-				</div>
-			</table>
+	<div class='main_container'>
+		<div id="main_state">
+			<div id="logo"></div>
+			<div id="company_name">SUBTITULAMOS.TV</div>
+			<div id="company_title">LEMA O VACÍO</div>
 		</div>
+		<div id="search_bar_container">
+			<div id="white_logo_searchbar" class="white_logo hidden"></div>
+			<input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
+			<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+		</div>
+		<div id="category_navigation_list">
+			<div id="category_navigation_title">...o explora las siguientes categorías</div>
+			<span class="hint--top hint--bounce hint--rounded" data-hint="Los subtítulos más buscados"><div class="category_navigation_item" id="most_downloaded">Lo más descargado</div></span>
+			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos"><div class="category_navigation_item" id="last_uploaded">Últimas subidas</div></span>
+			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas"><div class="category_navigation_item" id="last_completed">Últimas traducciones</div></span>
+			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones"><div class="category_navigation_item" id="last_edited">Últimas ediciones</div></span>
+		</div>
+		{% verbatim %}
+		<div id="incategory_state" class="hidden">
+			<div id="incategory_board">
+				<table class="clip_global_info" v-for="ep in episodes">
+					<tr class="clip_info_row fade_slide_in" :data-target="subURI(ep)">
+						<td class="clip_downloads" v-if="ep.download_count">
+							<div class="clip_downloads_times">{{ ep.download_count }}</div>
+							<div class="clip_downloads_text">descargas</div>
+						</td>
+						<td class="clip_activity_since" v-if="ep.upload_time">
+							<div class="clip_row_text_faded">hace</div>
+							<div class="clip_row_time">{{ ep.time_ago }}</div>
+							<div class="clip_row_text">{{ ep.time_unit }}</div>
+						</td>
+						<td class="visual_separator"></td>						
+						<td class="clip_title_row">
+							<div class="clip_title">{{ ep.name }}</div>
+							<div class="clip_add_details">
+								<div class="clip_language">{{ ep.lang_name }}</div>
+								<div class="new_season" v-if="ep.new_season">Nueva Temporada</div>
+								<div class="new_series" v-if="ep.new_series">Nueva Serie</div>
+							</div>
+						</td>
+					</tr>			
+					<div class="clip_social_reactions fade_in_reactions">						
+						<span class="hint--top hint--bounce hint--rounded" data-hint="Me gusta"><div class="love_reaction"></div></span>
+						<span class="hint--top hint--bounce hint--rounded" data-hint="Compartir"><div class="share_reaction"></div></span>
+					</div>
+				</table>
+			</div>
+		</div>
+		{% endverbatim %}
 	</div>
-	{% endverbatim %}
 {% endblock %}
 
 {% block scripts %}

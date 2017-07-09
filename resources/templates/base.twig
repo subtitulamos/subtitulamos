@@ -124,9 +124,19 @@
 				{% endif %}
 			</div>
 		</div>
-		<div id="main_container">
-			{% block content %}{% endblock %}
+		<div class="main_container">
+			{% block search %}
+				<div id="search_bar_container">
+					<div id="white_logo_searchbar" class="white_logo"></div>
+					<input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
+					<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+				</div>
+			{% endblock %}
 		</div>
+		
+		{# TODO: This should be inside main container! #}
+		{% block content %}{% endblock %}
+		
 		<div id="footer">
 			<div id="footer_section_1">
 				<div id="tv">
