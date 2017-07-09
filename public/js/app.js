@@ -206,13 +206,18 @@ function doLogin() {
 	}).done(function(data) {
 		window.location.reload(true);
 	}).fail(function(data) {
+		let $loginErrors = $("#login-errors");
 		try {
+			$loginErrors.html("Ha ocurrido un error al intentar acceder a la web:");
+			$loginErrors.append("<ul>");
+			let $errList = $loginErrors.find("ul");
 			let d = JSON.parse(data.responseText);
 			Object.keys(d).forEach(function(k) {
-				alertify.error(d[k]);
+				$errList.append("<li>"+d[k]+"</li>");
 			}, this);
+			
 		} catch (e) {
-			alertify.error("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
+			$loginErrors.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
 		}
 	});
 }
@@ -262,16 +267,21 @@ function register() {
 	}).done(function(data) {
 		window.location.reload(true);
 	}).fail(function(data) {
+		let $regErrors = $("#reg-errors");
 		try {
+			$regErrors.html("Se han encontrado los siguientes errores en el registro:");
+			$regErrors.append("<ul>");
+			let $errList = $regErrors.find("ul");
+
 			let d = JSON.parse(data.responseText);
 			Object.keys(d).forEach(function(k) {
-				d[k].forEach(function(err){
-					alertify.error(err);
-				});
+				Object.keys(d[k]).forEach(function(k2) {
+					$errList.append("<li>"+d[k][k2]+"</li>");
+				})
+				
 			}, this);
 		} catch (e) {
-			alertify.error("Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo.");
-			alertify.error(data.responseText);
+			$regErrors.html("Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo.");
 		}
 	});
 }

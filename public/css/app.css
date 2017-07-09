@@ -1017,3 +1017,16 @@ navigation buttons */
 #footer_disclaimer a:hover {
   color: #5490d0;
 }
+
+#reg-errors, #login-errors {
+      margin: 0 auto;
+    width: 100%;
+    margin-left: 125px;
+    font-size: 0.8em;
+    color: #d86666;
+    font-weight: bold;
+}
+
+#login-errors {
+  margin-left: 90px;
+}

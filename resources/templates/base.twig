@@ -9,7 +9,7 @@
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
 	<link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
-	<link rel="stylesheet" href="css/app.css"/>
+	<link rel="stylesheet" href="css/app.css?v=0.0.1"/>
 	<link rel="stylesheet" href="css/hint.css">
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/browser_specific.css">
@@ -18,7 +18,7 @@
 	{% block css %}{% endblock %}
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="js/vue.js"></script>
-	<script type="text/javascript" src="js/app.js?v=0.0.1" async defer></script>
+	<script type="text/javascript" src="js/app.js?v=0.0.2" async defer></script>
 	<script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async defer></script>
 
 	<title>{% block title %}Subtitulamos.tv{% endblock %}</title>
@@ -31,6 +31,10 @@
 			</div>
 			<div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
 			<div id="login_form" class="hidden">
+				<div id='login-errors'>
+					<ul></ul>
+				</div>
+
 				<table>
 					<tr class="registry_line"> 
 						<td class="form_text">Usuario o correo electrónico</td>
@@ -49,6 +53,9 @@
 			</div>
 			<div id="register_form" class="hidden">
 				<form id="fregister" action="">
+					<div id='reg-errors'>
+						<ul></ul>
+					</div>
 					<button type="submit" style="display:none"></button> {# For javascript trickery only #}
 
 					<table>

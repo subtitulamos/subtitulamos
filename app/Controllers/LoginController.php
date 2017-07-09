@@ -76,7 +76,7 @@ class LoginController
         }
 
         if (!v::alnum('_')->noWhitespace()->length(3, 24)->validate($username)) {
-            $errors[] = ["username" => "El nombre de usuario no puede tener caracteres especiales o espacios, y debe tener entre 3 y 24 caracteres"];
+            $errors[] = ["username" => "El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos"];
         } elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
             $errors[] = ["username" => "El nombre de usuario ya está en uso"];
         }
