@@ -80,7 +80,7 @@ class TranslationController
                 $nseq = clone $sequence;
                 $nseq->setSubtitle($sub);
                 //$nseq->setAuthor(null); // TODO: Change author to ModBot
-                $nseq->setText('CREDITS AUTOREPLACE');
+                $nseq->setText('subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
             } else {
