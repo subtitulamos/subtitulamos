@@ -183,7 +183,7 @@
                 text: this.baseText,
                 locked: this.pLocked,
                 verified: this.pVerified,
-                canLock: canLock,
+                canLock: canLock && this.id,
                 editing: false
             }
         },
