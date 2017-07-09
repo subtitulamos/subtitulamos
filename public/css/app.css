@@ -300,7 +300,7 @@ input, button { border:none; }
 .signing{
    display: inline-block;
    cursor: pointer;
-   margin-right: 80px;
+   margin-right: 40px;
 }
 .signing:hover{
    border-bottom: solid 1px;
@@ -1032,7 +1032,6 @@ navigation buttons */
    display: inline-block;
 }
 #website_navigator table {            
-   color:rgba(255,255,255,0.5);
    font-size: 9pt;
 }
 #website_navigator td:hover{
@@ -1042,4 +1041,12 @@ navigation buttons */
    padding-right: 60px;
    padding-bottom: 5px;
    cursor: pointer;
+   color:rgba(255,255,255,0.5);
+}
+#website_navigator a, #footer_disclaimer a {
+  color: inherit;
+}
+
+#footer_disclaimer a:hover {
+  color: #5490d0;
 }
