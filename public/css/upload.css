@@ -47,3 +47,8 @@
     background-color: #08a762;
     font-weight: bold;
 }
+
+#upload form {
+    width: 890px;
+    margin: 0 auto;
+}
