@@ -75,7 +75,7 @@ class LoginController
             $errors[] = ["terms" => "Debes aceptar los términos y condiciones"];
         }
 
-        if (!v::alnum()->noWhitespace()->length(3, 24)->validate($username)) {
+        if (!v::alnum('_')->noWhitespace()->length(3, 24)->validate($username)) {
             $errors[] = ["username" => "El nombre de usuario no puede tener caracteres especiales o espacios, y debe tener entre 3 y 24 caracteres"];
         } elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
             $errors[] = ["username" => "El nombre de usuario ya está en uso"];
