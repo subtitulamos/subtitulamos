@@ -19,7 +19,7 @@ if (getenv('ENVIRONMENT') !== 'production') {
 define('DEBUG', getenv('DEBUG') == 'true');
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__."/entities"], DEBUG, null, null, false);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__."/Entities"], DEBUG, null, null, false);
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => getenv('DATABASE_NAME'),
