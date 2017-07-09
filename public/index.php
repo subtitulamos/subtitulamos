@@ -104,7 +104,7 @@ $app->post('/translate/{subId}/comments/submit', ['\App\Controllers\SubtitleComm
 /*
 $app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{subId}/comments/{cId}/delete', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
-*/
+ */
 
 $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRoles('ROLE_USER'));
@@ -114,9 +114,10 @@ $app->post('/episodes/{epId}/comments/submit', ['\App\Controllers\EpisodeComment
 $app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{epId}/comments/{cId}/delete', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRoles('ROLE_MOD'));
-*/
+ */
 $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
 
+$app->get('/show/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view']);
 
 $app->get('/download/{id}', ['\App\Controllers\DownloadController', 'download']);
 

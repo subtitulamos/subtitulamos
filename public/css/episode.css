@@ -228,14 +228,6 @@ a {
    height: inherit;
 }
 
-#progress_1{
-   width: 80%;
-   height: inherit;
-}
-#progress_2{
-   width: 12%;
-   height: inherit;
-}
 .progress_percentage{
    float:right;
    padding-top: 3px;
