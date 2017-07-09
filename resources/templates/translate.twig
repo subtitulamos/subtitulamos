@@ -60,15 +60,15 @@
                     <sequence 
                         :key="seq.id"
                         
-                        :id="seq.id"
+                        :original-id="seq.id"
                         :number="seq.number"
                         :p-locked="seq.locked"
                         :p-verified="seq.verified"
-                        :author="seq.author"
+                        :original-author="seq.author"
                         :tstart="seq.tstart"
                         :tend="seq.tend"
                         :secondary-text="seq.secondary_text"
-                        :base-text="seq.text"
+                        :original-text="seq.text"
                         :history="false"
                     ></sequence>
                 </template>
@@ -118,6 +118,8 @@
     let pageCount = {{ page_count }};
     let availSecondaryLangs = {{ avail_secondary_langs|raw }};
     let textFilter = "";
+    let myId = {{ auth.user.id }};
+    let myName = "{{ auth.user.username }}";
 
     $("#apply").on("click", function() {
         let newFilter = $("#text-filter").val();
@@ -196,10 +198,12 @@
             </tr>
             `,
         
-        props: ['id', 'pLocked', 'pVerified', 'number', 'author', 'tstart', 'tend', 'secondaryText', 'baseText', 'history'],
+        props: ['originalId', 'pLocked', 'pVerified', 'number', 'originalAuthor', 'tstart', 'tend', 'secondaryText', 'originalText', 'history'],
         data: function() {
             return {
-                text: this.baseText,
+                id: this.originalId,
+                author: this.originalAuthor,
+                text: this.originalText,
                 locked: this.pLocked,
                 verified: this.pVerified,
                 canLock: canLock && this.id,
@@ -285,7 +289,8 @@
             save: function() {
                 if(!this.canSave)
                     return false;
-
+                
+                let pthis = this;
                 if(this.id) {
                     // Editing a sequence, save the changes
                     $.ajax({
@@ -295,10 +300,13 @@
                             seqID: this.id,
                             text: this.text,
                         }
-                    }).fail(function() {
+                    }).done(function(newId){
+                        pthis.id = newId;
+                    })
+                    .fail(function() {
                         alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                        this.editing = true;
-                    }.bind(this));
+                        pthis.editing = true;
+                    });
                 } else {
                     // Translating a sequence for the first time
                     $.ajax({
@@ -308,10 +316,17 @@
                             number: this.number,
                             text: this.text
                         }
-                    }).fail(function() {
+                    }).done(function(newId){
+                        pthis.id = newId;
+                        pthis.author = {
+                            id: myId,
+                            name: myName
+                        };
+                    })
+                    .fail(function() {
                         alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                        this.editing = true;
-                    }.bind(this));
+                        pthis.editing = true;
+                    });
                 }
 
                 this.editing = false;
