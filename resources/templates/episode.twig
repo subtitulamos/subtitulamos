@@ -62,7 +62,7 @@
                         {% set progress_class = '8089' %}
                     {% elseif sub.progress < 100 %}
                         {% set progress_class = '9099' %}
-                    {% elseif sub.progress == 100 %}
+                    {% elseif sub.progress >= 100 %}
                         {% set progress_class = '100' %}
                     {% endif %}
 

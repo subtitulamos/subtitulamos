@@ -260,7 +260,7 @@ class TranslationController
         $seqID = $request->getParsedBodyParam('seqID', 0);
 
         $res = ['ok' => true];
-        // TODO: Implement open lock
+        // TODO: Implement open lock restrictions
 
         return $response->withJSON($res);
     }
@@ -350,7 +350,7 @@ class TranslationController
             // TODO: Log
             return $response->withStatus(500);
         }
-
+        
         $seq = new Sequence();
         $seq->setSubtitle($curSub);
         $seq->setNumber($baseSeq->getNumber());
@@ -361,10 +361,22 @@ class TranslationController
         $seq->setText($text);
         $seq->setLocked(false);
         $seq->setVerified(false);
-
         $em->persist($seq);
-        $em->flush();
 
+        // Update progress
+        $baseSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+                              ->setParameter('sub', $baseSubId)
+                              ->getSingleScalarResult();
+        
+        $ourSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+                              ->setParameter('sub', $curSub->getId())
+                              ->getSingleScalarResult();
+
+        $curSub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
+        $em->persist($curSub);
+
+        // Flush and end
+        $em->flush();
         $response->getBody()->write($seq->getId());
         return $response->withStatus(200);
     }
