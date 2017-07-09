@@ -6,20 +6,21 @@
 
 {% block content %}
 <div id="translation">
-    {#<div id="episode_title">
-        {{ show_name }} <span id="season_number">{% if episode.season < 10 %}0{% endif %}{{ episode.season }}</span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span> - {{ episode.name }}
-    </div>#}
+    <header>
+        Traduciendo <span id="episode-title">{{ full_name }}</span>
+    </header>
+
     <div id="translation-details">
         <div class="page-wrapper">
             <ul class="pagination" id="pagination-top">
-                <li class="change-page disabled"><a href="#!"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
-                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" :data-page="page">{{ page }}</li>{% endverbatim %}
+                <li class="change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></li>
+                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" @click="toPage(page)">{{ page }}</li>{% endverbatim %}
                 {#
                     TODO: Handle the fact that pages might not all fit at the same time?
                     <li class="expand-pages">...</li>
                     <li class="target-page" data-page="40">40</li>
                 #}
-                <li class="change-page"><a href="#!"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+                <li class="change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
             </ul>
         </div>
 
@@ -27,7 +28,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Autor</th>
+                    <th>Autor: <span id='author-filter-name'>Todos</span> <i class="fa fa-caret-down" aria-hidden="true"></i></th>
                     <th>Tiempos</th>
                     <th>Idioma secundario: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i></th>
                     <th>Traducción al <span id='target-language-name'>Español (España)</span></th>
@@ -72,14 +73,14 @@
 
         <div class="page-wrapper">
             <ul class="pagination" id="pagination-bottom">
-                <li class="change-page disabled"><a href="#!"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
-                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" :data-page="page">{{ page }}</li>{% endverbatim %}
+                <li class="change-page disabled"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                {% verbatim %}<li v-for="page in pages" class="target-page" :class="curPage == page ? 'active' : ''" :data-page="page">{{ page }}</li>{% endverbatim %}
                 {#
                     TODO: Handle the fact that pages might not all fit at the same time?
                     <li class="expand-pages">...</li>
                     <li class="target-page" data-page="40">40</li>
                 #}
-                <li class="change-page"><a href="#!"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+                <li class="change-page"><i class="fa fa-chevron-right" aria-hidden="true"></i></li>
             </ul>
         </div>
     </div>
@@ -341,8 +342,25 @@
         el: '#pagination-top',
         data: {
             curPage: 1,
-            pages: []
+            pages: [],
+            lastPage: pageCount
         },
+        methods: {
+            nextPage: function() {
+                if(this.curPage < pageCount)
+                    this.toPage(this.curPage + 1);
+            },
+
+            prevPage: function() {
+                if(this.curPage > 1)
+                    this.toPage(this.curPage - 1);
+            },
+
+            toPage: function(page) {
+                loadPage(page, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]);
+                this.curPage = page;
+            }
+        }
     });
 
     let pageListBottom = new Vue({
@@ -358,11 +376,6 @@
         pageListBottom.pages.push(p);
     }
     
-    $("#translation").on("click", '[data-page]', function(e) {
-        // TODO: Do this properly via Vue events
-        loadPage($(this).data("page"), seqView, pageListTop, pageListBottom, availSecondaryLangs[0]);
-    });
-
    /**************************
     *        COMMENTS
     ***************************/

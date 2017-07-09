@@ -1,6 +1,6 @@
 #translation {
-   padding-top: 80px;
-   padding-bottom: 80px;   /* Height of the footer + 150 */
+   padding-top: 20px;
+   padding-bottom: 40px;   /* Height of the footer + 150 */
    background-color: #e9e7e7 !important;
 }
 
@@ -143,7 +143,7 @@
     color: #ffffff;
 }
 
-#secondary-language-name, #target-language-name {
+#secondary-language-name, #target-language-name, #author-filter-name {
     color: #964646
 }
 
@@ -294,4 +294,13 @@
 #translation .untranslated {
     font-size: 0.9em;
     font-style: italic;
+}
+
+#translation > header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#translation #episode-title {
+    font-weight: bold;
 }

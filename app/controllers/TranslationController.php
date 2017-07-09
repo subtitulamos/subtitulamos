@@ -138,7 +138,8 @@ class TranslationController
             'sub' => $sub,
             'avail_secondary_langs' => json_encode($langs),
             'episode' => $sub->getVersion()->getEpisode(),
-            'page_count' => ceil($seqCount / self::SEQUENCES_PER_PAGE)
+            'page_count' => ceil($seqCount / self::SEQUENCES_PER_PAGE),
+            "full_name" => $sub->getVersion()->getEpisode()->getFullName()
         ]);
     }
 

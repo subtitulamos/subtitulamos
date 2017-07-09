@@ -367,7 +367,7 @@ input, button { border:none; }
    text-align:center;
 }
 #search_bar_container{
-   margin: 20px auto 40px auto;
+   margin: 20px auto 20px auto;
    background-color: #366fa7;
    height: 53px;
    padding-top: 11px;
@@ -419,7 +419,7 @@ input, button { border:none; }
     vertical-align: middle;
     text-align: center;
     z-index: 3;
-    margin-top: 20px;
+    margin: 20px 0 40px 0;
 }
 
 #category_navigation_title{
@@ -454,7 +454,7 @@ input, button { border:none; }
 #incategory_board{
    position: relative;
     width: 1000px;
-    margin: 25px auto 0 auto;
+    margin: 0 auto 40px auto;
    background-color: #5a93ca;
    padding: 20px 20px 12px 20px;
    border-radius: 5px;
