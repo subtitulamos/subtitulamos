@@ -13,6 +13,12 @@ require '../app/bootstrap.php';
 // Start session & boot app
 session_start();
 
+function feature_on($name)
+{
+    $v = getenv($name."_ENABLED");
+    return $v == 'true' || $v == '1' || $v == 'yes';
+}
+
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
 $app = new class() extends \DI\Bridge\Slim\App {
     protected function configureContainer(\DI\ContainerBuilder $builder)
@@ -68,8 +74,10 @@ $app = new class() extends \DI\Bridge\Slim\App {
                     {
                         return $this->auth->getUser();
                     }
-                }
-                );
+                });
+
+                $twig->getEnvironment()->addFunction(new Twig_Function('feature_on', 'feature_on'));
+
                 return $twig;
             },
 
