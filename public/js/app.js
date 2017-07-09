@@ -271,6 +271,7 @@ function register() {
 			}, this);
 		} catch (e) {
 			alertify.error("Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo.");
+			alertify.error(data.responseText);
 		}
 	});
 }
