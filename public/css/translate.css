@@ -290,3 +290,8 @@
     min-width: 130px;
     border-radius: 3px;
 }
+
+#translation .untranslated {
+    font-size: 0.9em;
+    font-style: italic;
+}
