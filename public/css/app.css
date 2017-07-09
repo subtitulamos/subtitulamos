@@ -341,23 +341,23 @@ input, button { border:none; }
    margin-bottom: 10px;
 }
 #logo{
-   background-image: url("../img/logo.png");
-   width: 465px;
-   height: 296px;
+   background-image: url("../img/logo_notext.png");
+   width: 180px;
+   height: 180px;
    margin-left: auto;
    margin-right: auto;
 }
-#company_name{
+#website_name{
    font-size: 40px;
    font-style: normal;
    font-variant: normal;
    font-weight: 700;
    color: #FFFFFF;
    text-align:center;
-   margin-top:30px;
+   margin-top:10px;
    margin-bottom: 10px;
 }
-#company_title{
+#website_title{
    font-size: 17px;
    font-style: normal;
    font-variant: normal;
@@ -713,28 +713,6 @@ navigation buttons */
 }
 
 /* Styling for footer */
-#disclaimer_background{
-   background-image: url('../img/pattern.png');
-   background-repeat: repeat-x;
-   width:100%;
-   height: 163px;
-   position: absolute;
-   z-index: 1;
-   opacity: 0.1;
-   margin-top: -61px;
-}
-#gradient{
-   width:100%;
-   height: 166px;
-   position: absolute;
-   z-index: 2;
-   margin-top: -57px;
-   background: -moz-linear-gradient(left,  rgba(40,43,48,1) 0%, rgba(40,43,48,0.9) 20%, rgba(255,255,255,0) 36%, rgba(41,137,216,0) 50%, rgba(255,255,255,0) 64%, rgba(40,43,48,0.9) 80%, rgba(40,43,48,1) 100%); /* FF3.6-15 */
-   background: -webkit-linear-gradient(left,  rgba(40,43,48,1) 0%,rgba(40,43,48,0.9) 20%,rgba(255,255,255,0) 36%,rgba(41,137,216,0) 50%,rgba(255,255,255,0) 64%,rgba(40,43,48,0.9) 80%,rgba(40,43,48,1) 100%); /* Chrome10-25,Safari5.1-6 */
-   background: linear-gradient(to right,  rgba(40,43,48,1) 0%,rgba(40,43,48,0.9) 20%,rgba(255,255,255,0) 36%,rgba(41,137,216,0) 50%,rgba(255,255,255,0) 64%,rgba(40,43,48,0.9) 80%,rgba(40,43,48,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#282b30', endColorstr='#282b30',GradientType=1 ); /* IE6-9 */
-}
-
 /* Styling for the TV BOX */
 
 #tv{
@@ -978,8 +956,9 @@ navigation buttons */
    width: 800px;
 }
 .white_logo{
-   background-image: url("../img/logo_white.png");
-   width: 62px;
+   background-image: url("../img/logo_notext_sm.png");
+   background-repeat: no-repeat;
+   width: 40px;
    height: 40px;
    display: inline-block;
    vertical-align: middle;
