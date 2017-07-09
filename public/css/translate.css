@@ -304,3 +304,25 @@
 #translation #episode-title {
     font-weight: bold;
 }
+
+#translation #filters {
+    font-size: 0.9em;
+    width: 1109px;
+    padding-top: 20px;
+    margin: 0 auto;
+}
+
+#translation #filters input {
+    font-size: 10pt;
+    padding: 4px 4px 4px 7px;
+    width: 450px;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+#translation #filters #apply {
+    background-color: #4887d2;
+    color: white;
+    width: 150px;
+    padding: 4px;
+    margin: 3px;
+}

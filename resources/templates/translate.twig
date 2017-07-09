@@ -11,6 +11,10 @@
     </header>
 
     <div id="translation-details">
+        <div id='filters'>
+            Filtrar por cadena: <input type="text" id="text-filter" /><button type="submit" id="apply">Aplicar</button>
+        </div>
+
         <div class="page-wrapper">
             <ul class="pagination" id="pagination-top">
                 <li class="change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></li>
@@ -113,12 +117,26 @@
     let canLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
     let pageCount = {{ page_count }};
     let availSecondaryLangs = {{ avail_secondary_langs|raw }};
-    
+    let textFilter = "";
+
+    $("#apply").on("click", function() {
+        let newFilter = $("#text-filter").val();
+        if(newFilter == textFilter) {
+            return;
+        }
+        
+        textFilter = newFilter;
+        loadPage(1, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]);
+    });
+
     function loadPage(pageNum, seqView, pageListTop, pageListBottom, secondaryLang) {
-        let secondaryFrag = secondaryLang > 0 ? '?secondaryLang='+secondaryLang : '';
         $.ajax({
-            url: '/translate/{{ sub.id }}/page/' + pageNum + secondaryFrag,
-            method: 'GET'
+            url: '/translate/{{ sub.id }}/page/' + pageNum,
+            method: 'GET',
+            data: {
+                textFilter: textFilter,
+                secondaryLang: secondaryLang
+            }
         }).done(function(pageData) {
             // Prepare sequences
             let sequences = [];

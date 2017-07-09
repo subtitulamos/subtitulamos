@@ -154,16 +154,32 @@ class TranslationController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number <= :last ORDER BY sq.number ASC, sq.revision DESC")
-            ->setParameter("id", $id)
-            ->setParameter("first", $firstNum)
-            ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE)
-            ->getResult();
+        if ($request->getQueryParam("textFilter")) {
+            $textFilter = $request->getQueryParam("textFilter");
+            $textFilter = "%".str_replace("%", "", trim($textFilter))."%";
+            
+            $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id WHERE sq.text LIKE :tx ORDER BY sq.number ASC, sq.revision DESC")
+                ->setParameter("id", $id)
+                ->setParameter("tx", $textFilter)
+                ->getResult();
+
+            $snumbers = [];
+        } else {
+            $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number <= :last ORDER BY sq.number ASC, sq.revision DESC")
+                ->setParameter("id", $id)
+                ->setParameter("first", $firstNum)
+                ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE)
+                ->getResult();
+        }
         
         $sequences = [];
         foreach ($seqList as $seq) {
             $snum = $seq->getNumber();
 
+            if (isset($snumbers)) {
+                $snumbers[] = $snum;
+            }
+            
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
             } else {
@@ -192,10 +208,16 @@ class TranslationController
                                ->setParameter("ver", $sub->getVersion())
                                ->getResult();
             
-            $altSeqList = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :ssub AND sq.number >= :first AND sq.number <= :last ORDER BY sq.id ASC")
+            if (!isset($snumbers)) {
+                $snumbers = [];
+                for ($i = $firstNum; $i < $firstNum + self::SEQUENCES_PER_PAGE; ++$i) {
+                    $snumbers[] = $i;
+                }
+            }
+            
+            $altSeqList = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :ssub AND sq.number IN (:snumbers) ORDER BY sq.id ASC")
                 ->setParameter("ssub", $secondarySub)
-                ->setParameter("first", $firstNum)
-                ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE)
+                ->setParameter("snumbers", $snumbers)
                 ->getResult();
             
             // Now we have to *filter* out old revisions, since we only care about the text in the latest revision.
