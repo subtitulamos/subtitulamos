@@ -43,7 +43,7 @@
             {% verbatim %}
                 <template v-for="seq in sequences">
                     <sequence v-for="hseq in seq.history" 
-                        :key="seq.id"
+                        :key="seq.id + 'hist' + seq.number"
 
                         :id="hseq.id"
                         :number="seq.number"
@@ -58,7 +58,7 @@
                     ></sequence>
                     
                     <sequence 
-                        :key="seq.id"
+                        :key="seq.id + '' + seq.number"
                         
                         :original-id="seq.id"
                         :number="seq.number"
