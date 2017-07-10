@@ -39,6 +39,7 @@ class EpisodeCommentsController
         $comment->setUser($auth->getUser());
         $comment->setPublishTime(new \DateTime());
         $comment->setEditTime(new \DateTime());
+        $comment->setSoftDeleted(false);
         
         $em->persist($comment);
         $em->flush();
@@ -47,9 +48,28 @@ class EpisodeCommentsController
         return $response->withStatus(200);
     }
 
-    public function list($epId, $request, $response, EntityManager $em)
+    public function list($epId, $response, EntityManager $em)
     {
-        $comments = $em->getRepository("App:EpisodeComment")->findBy(["episode" => (int)$epId]);
+        $comments = $em->createQuery("SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0")
+                   ->setParameter("id", $epId)
+                   ->getResult();
         return $response->withJson($comments);
+    }
+
+    public function delete($epId, $cId, $request, $response, EntityManager $em)
+    {
+        $comment = $em->getRepository("App:EpisodeComment")->find($cId);
+        if (!$comment) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        if ($comment->getEpisode()->getId() != $epId) {
+            $response->withStatus(400);
+        }
+
+        $comment->setSoftDeleted(true);
+        $em->flush();
+
+        return $response;
     }
 }

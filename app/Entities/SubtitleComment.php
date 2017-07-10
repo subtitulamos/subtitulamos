@@ -49,6 +49,12 @@ class SubtitleComment implements \JsonSerializable
      */
     private $editTime;
 
+    /**
+     * @ORM\Column(type="boolean", name="soft_deleted")
+     */
+    private $softDeleted;
+
+
     public function jsonSerialize()
     {
         return [
@@ -188,5 +194,28 @@ class SubtitleComment implements \JsonSerializable
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set softDeleted
+     *
+     * @param boolean $softDeleted
+     * @return SubtitleComment
+     */
+    public function setSoftDeleted($softDeleted)
+    {
+        $this->softDeleted = $softDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get softDeleted
+     *
+     * @return boolean 
+     */
+    public function getSoftDeleted()
+    {
+        return $this->softDeleted;
     }
 }

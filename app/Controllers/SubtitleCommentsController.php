@@ -38,6 +38,7 @@ class SubtitleCommentsController
         $comment->setUser($auth->getUser());
         $comment->setPublishTime(new \DateTime());
         $comment->setEditTime(new \DateTime());
+        $comment->setSoftDeleted(false);
         
         $em->persist($comment);
         $em->flush();
@@ -48,7 +49,27 @@ class SubtitleCommentsController
 
     public function list($subId, $request, $response, EntityManager $em)
     {
-        $comments = $em->getRepository("App:SubtitleComment")->findBy(["subtitle" => (int)$subId]);
+        $comments = $em->createQuery("SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0")
+                   ->setParameter("id", $subId)
+                   ->getResult();
+                   
         return $response->withJson($comments);
+    }
+
+    public function delete($subId, $cId, $request, $response, EntityManager $em)
+    {
+        $comment = $em->getRepository("App:SubtitleComment")->find($cId);
+        if (!$comment) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        if ($comment->getSubtitle()->getId() != $subId) {
+            $response->withStatus(400);
+        }
+
+        $comment->setSoftDeleted(true);
+        $em->flush();
+
+        return $response;
     }
 }

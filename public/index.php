@@ -109,18 +109,20 @@ $app->post('/translate/{id}/lock', ['\App\Controllers\TranslationController', 'l
 
 $app->get('/translate/{subId}/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRoles('ROLE_USER'));
 $app->post('/translate/{subId}/comments/submit', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRoles('ROLE_USER'));
+$app->delete('/translate/{subId}/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRoles('ROLE_MOD'));
 /*
-$app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
-$app->post('/translate/{subId}/comments/{cId}/delete', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
+$app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
  */
 
 $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRoles('ROLE_USER'));
 $app->get('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);
 $app->post('/episodes/{epId}/comments/submit', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRoles('ROLE_USER'));
+
+$app->delete('/episodes/{epId}/comments/{cId}', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
 /*
 $app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
-$app->post('/episodes/{epId}/comments/{cId}/delete', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
+
 $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRoles('ROLE_MOD'));
  */
 $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');

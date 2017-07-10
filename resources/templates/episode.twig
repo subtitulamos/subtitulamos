@@ -136,6 +136,8 @@
     <script type="text/javascript">
         let epId = {{ episode.id }};
         let $newTranslationButton = $(".translate_subtitle");
+        let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+
         $newTranslationButton.on("click", function() {
             $("#new-translation-opts").toggleClass("hidden");
         });
@@ -152,6 +154,9 @@
                             <li class='comment-time'>
                                 {{ date }}
                             </li>
+                            <li class='comment-actions' v-if="canDelete">
+                                <i class="fa fa-times" aria-hidden="true" @click="remove"></i>
+                            </li>
                         </ul>
                     </header>
                     <section class='comment-body'>
@@ -162,10 +167,11 @@
                 </article>
                 `,
             
-            props: ['user', 'text', 'published-at'],
+            props: ['id', 'user', 'text', 'published-at'],
             data: function() {
                 return {
                     date: '',
+                    canDelete: canDeleteComments
                 }
             },
             created: function() {
@@ -175,6 +181,15 @@
             methods: {
                 updateDate: function() {
                     this.date = timeago().format(this.publishedAt, 'es')
+                },
+
+                remove: function() {
+                    $.ajax({
+                        url: '/episodes/'+epId+'/comments/'+this.id,
+                        method: 'DELETE'
+                    }).done(function() {
+                        loadComments();
+                    })
                 }
             }
         });
