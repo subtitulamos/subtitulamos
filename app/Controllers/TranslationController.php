@@ -134,12 +134,14 @@ class TranslationController
             ->setParameter("sub", $baseSub)
             ->getSingleScalarResult();
 
+        $lang = Langs::getLocalizedName($sub->getLang());
         return $twig->render($response, 'translate.twig', [
             'sub' => $sub,
             'avail_secondary_langs' => json_encode($langs),
             'episode' => $sub->getVersion()->getEpisode(),
             'page_count' => ceil($seqCount / self::SEQUENCES_PER_PAGE),
-            "full_name" => $sub->getVersion()->getEpisode()->getFullName()
+            "full_name" => $sub->getVersion()->getEpisode()->getFullName(),
+            'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang()))
         ]);
     }
 
