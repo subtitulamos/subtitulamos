@@ -86,10 +86,14 @@
 
         <div id="subtitle-actions">
             <a href='/episodes/{{ episode.id }}/resync'>
-                <div class="resyncreq_subtitle"><i class="fa fa-refresh" aria-hidden="true"></i></div>
+                <div class="resyncreq_subtitle hint--bottom hint--rounded"
+                    data-hint="Subir una resincronización">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </div>
             </a>
             <div id="new-translation">
-                <div class="translate_subtitle" {# TODO: class should be button wrapper or something! #}>
+                <div class="translate_subtitle hint--bottom hint--rounded"
+                    data-hint="Abrir una nueva traducción"> {# TODO: class should be button wrapper or something! #}
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 </div>
 
