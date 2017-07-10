@@ -45,15 +45,15 @@
                     <sequence v-for="hseq in seq.history" 
                         :key="seq.id + 'hist' + seq.number"
 
-                        :id="hseq.id"
+                        :original-id="hseq.id"
                         :number="seq.number"
                         :p-locked="false"
                         :p-verified="false"
-                        :author="hseq.author"
+                        :original-author="hseq.author"
                         :tstart="hseq.tstart"
                         :tend="hseq.tend"
                         :secondary-text="seq.secondary_text"
-                        :base-text="hseq.text"
+                        :original-text="hseq.text"
                         :history="true">
                     ></sequence>
                     
@@ -207,7 +207,6 @@
                 text: this.originalText,
                 locked: this.pLocked,
                 verified: this.pVerified,
-                canLock: canLock && this.id,
                 editing: false
             }
         },
@@ -257,6 +256,11 @@
                          && (!this.lineCounters[1] || this.lineCounters[1] <= 40);
             },
 
+            
+            canLock: function() {
+                return canLock && !this.history && this.id;
+            },
+
             translated: function() {
                 return this.id != 0
             },
@@ -264,6 +268,7 @@
             author_name: function() {
                 return this.author.name ? this.author.name : " - ";
             }
+
         },
         methods: {
             editSequence: function() {         
