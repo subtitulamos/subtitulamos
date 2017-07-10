@@ -20,7 +20,7 @@
         <div id='episodes'>
             {% for episode in episodes %}
                 <div class='episode'>
-                    <div class="episode-name"><a href='/episode/{{ episode.id }}'>{{ episode.name }}</a></div>
+                    <div class="episode-name"><a href='/episodes/{{ episode.id }}'>{{ episode.name }}</a></div>
                     {% for lname, lang in episode.langs %}
                         <div class="subtitle-language">{{ lname }}</div>
                         <div class='subtitle'>
