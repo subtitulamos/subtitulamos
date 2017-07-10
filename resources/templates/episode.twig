@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <div class="subtitle_buttons">
-                            <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><a href="/download/{{ sub.id }}"><i class="fa fa-download" aria-hidden="true"></i></a></div>
+                            <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><a href="/download/{{ sub.id }}" download><i class="fa fa-download" aria-hidden="true"></i></a></div>
                             <div class="edit_subtitle" {# TODO: class should be button wrapper or something! #}><a href="/translate/{{ sub.id }}"><i class="fa fa-file-text" aria-hidden="true"></i></a></div> 
                             {% if auth.has_role('ROLE_MOD') %}
                                 <div class="delete_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-times" aria-hidden="true"></i></div>

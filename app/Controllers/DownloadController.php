@@ -40,7 +40,7 @@ class DownloadController
         $sequenceNumber = 1;
 
         $response = $response->withHeader('Content-Type', 'text/srt');
-        $response = $response->withHeader('Content-Disposition', sprintf("attachment; filename=%s.srt", $sub->getVersion()->getEpisode()->getFullName()));
+        $response = $response->withHeader('Content-Disposition', sprintf("attachment; filename=\"%s.srt\"", $sub->getVersion()->getEpisode()->getFullName()));
         
         foreach ($sequences as $seq) {
             $file .= $sequenceNumber."\r\n";
