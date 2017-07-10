@@ -12,13 +12,18 @@ class Langs
     const LANG_LIST = [
         1 => "en-en",
         5 => "es-es",
-        6 => "es-lat"
+        6 => "es-lat",
+        12 => "ca-es",
+        15 => "gl-es"
+        
     ];
 
     const LANG_NAMES = [
         "en-en" => "English",
         "es-es" => "Español (España)",
-        "es-lat" => "Español (Latinoamérica)"
+        "es-lat" => "Español (Latinoamérica)",
+        "ca-es" => "Català",
+        "gl-es" => "Galego"
     ];
 
     public static function existsId(int $langId)
