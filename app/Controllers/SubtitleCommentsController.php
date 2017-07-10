@@ -49,7 +49,7 @@ class SubtitleCommentsController
 
     public function list($subId, $request, $response, EntityManager $em)
     {
-        $comments = $em->createQuery("SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0")
+        $comments = $em->createQuery("SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0 ORDER BY sc.id DESC")
                    ->setParameter("id", $subId)
                    ->getResult();
                    
