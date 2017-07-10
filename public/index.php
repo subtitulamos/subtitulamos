@@ -27,7 +27,7 @@ $app = new class() extends \DI\Bridge\Slim\App {
         
         // Slim configuration
         $builder->addDefinitions([
-            'settings.displayErrorDetails' => true
+            'settings.displayErrorDetails' => DEBUG
         ]);
 
         $builder->addDefinitions([
