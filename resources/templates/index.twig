@@ -34,7 +34,7 @@
 							<div class="clip_row_time">{{ ep.time_ago }}</div>
 							<div class="clip_row_text">{{ ep.time_unit }}</div>
 						</td>
-						<td class="visual_separator"></td>						
+						<td class="visual_separator"></td>
 						<td class="clip_title_row">
 							<div class="clip_title">{{ ep.name }}</div>
 							<div class="clip_add_details">
@@ -43,11 +43,7 @@
 								<div class="new_series" v-if="ep.new_series">Nueva Serie</div>
 							</div>
 						</td>
-					</tr>			
-					<div class="clip_social_reactions fade_in_reactions">						
-						<span class="hint--top hint--bounce hint--rounded" data-hint="Me gusta"><div class="love_reaction"></div></span>
-						<span class="hint--top hint--bounce hint--rounded" data-hint="Compartir"><div class="share_reaction"></div></span>
-					</div>
+					</tr>
 				</table>
 			</div>
 		</div>
@@ -110,34 +106,4 @@
 		});
 
 	</script>
-	{% verbatim %}
-		<script id='uploaded-row-tpl' type='x-tmpl-mustache'>
-			<table class="clip_global_info">
-				<tr class="clip_info_row fade_slide_in" data-target="/episodes/{{ id }}">
-					<td class="clip_activity_since">
-						<div class="clip_row_text_faded">hace</div>
-						<div class="clip_row_time">{{ time_ago }}</div>
-						<div class="clip_row_text">{{ time_unit }}</div>
-					</td>	
-					<td class="visual_separator"></td>						
-					<td class="clip_title_row">
-						<div class="clip_title">{{ sub_name }}</div>
-						<div class="clip_add_details">
-							<div class="clip_language">{{ lang_name }}</div>
-							{{#new_season}}
-								<div class="new_season">+ Nueva Temporada</div>
-							{{/new_season}}
-							{{#new_series}}
-								<div class="new_series">+ Nueva Serie</div>
-							{{/new_series}}
-						</div>
-					</td>
-				</tr>			
-				<div class="clip_social_reactions fade_in_reactions">						
-					<span class="hint--top hint--bounce hint--rounded" data-hint="Me gusta"><div class="love_reaction"></div></span>
-					<span class="hint--top hint--bounce hint--rounded" data-hint="Compartir"><div class="share_reaction"></div></span>
-				</div>
-			</table>
-		</script>
-	{% endverbatim %}
 {% endblock %}
