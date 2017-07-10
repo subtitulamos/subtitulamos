@@ -76,6 +76,10 @@ class SrtParser
                 if ($parsingState == PARSING_STATE_TEXT) {
                     // We're done with this line
                     if ($sequence) {
+                        if (!$sequence->getText()) {
+                            $sequence->setText(" ");
+                        }
+
                         $sequences[] = $sequence;
                         $sequence = null;
                     }
