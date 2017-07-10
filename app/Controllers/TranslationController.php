@@ -270,11 +270,12 @@ class TranslationController
         $seqID = $request->getParsedBodyParam('seqID', 0);
         $text = trim($request->getParsedBodyParam('text', ""));
 
+        // Remove multiple spaces concatenated
+        $text = preg_replace('/\s+/', ' ', $text);
         if (empty($text)) {
-            $response->getBody()->write("Text cannot be empty");
-            return $response->withStatus(400);
+            $text = " "; // At least one space
         }
-
+        
         // TODO: Better validate text (multiline etc) + multiline trim
 
         $seq = $em->getRepository("App:Sequence")->find($seqID);
@@ -313,9 +314,10 @@ class TranslationController
         $seqNum = $request->getParsedBodyParam('number', 0);
         $text = trim($request->getParsedBodyParam('text', ""));
 
+        // Remove multiple spaces concatenated
+        $text = preg_replace('/\s+/', ' ', $text);
         if (empty($text)) {
-            $response->getBody()->write("Text cannot be empty");
-            return $response->withStatus(400);
+            $text = " "; // At least one space
         }
 
         // TODO: Better validate text (multiline etc) + multiline trim

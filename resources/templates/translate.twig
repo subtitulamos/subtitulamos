@@ -175,7 +175,7 @@
                     <pre v-if="!editing && text">{{ text }}</pre>
                     <pre v-if="!editing && !text" class="untranslated">- Sin traducir -</pre>
 
-                    <textarea v-model.trim="text" v-if="editing"></textarea>
+                    <textarea v-model="text" v-if="editing"></textarea>
                     <div class="line-status" v-if="editing">
                         <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 30 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
                         <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 30 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
@@ -245,7 +245,12 @@
                 let lineCounters = [];
 
                 for(let i = 0; i < lines.length; ++i) {
-                    lineCounters[i] = lines[i].trim().length;
+                    let text = lines[i].replace(/\s+/g,' ');
+                    if(text.trim().length > 0) {
+                        lineCounters[i] = text.trim().length;
+                    } else {
+                        lineCounters[i] = text.length;
+                    }
                 }
                 
                 return lineCounters;
@@ -308,6 +313,10 @@
                         }
                     }).done(function(newId){
                         pthis.id = newId;
+                        pthis.text = pthis.text.trim().replace(/\s+/g,' ');
+                        if(!pthis.text) {
+                            pthis.text = " ";
+                        }
                     })
                     .fail(function() {
                         alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
@@ -324,6 +333,11 @@
                         }
                     }).done(function(newId){
                         pthis.id = newId;
+                        pthis.text = pthis.text.trim().replace(/\s+/g,' ');
+                        if(!pthis.text) {
+                            pthis.text = " ";
+                        }
+                        
                         pthis.author = {
                             id: myId,
                             name: myName
