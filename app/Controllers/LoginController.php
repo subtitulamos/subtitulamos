@@ -49,9 +49,17 @@ class LoginController
             return $response->withStatus(400);
         }
         
-        $user = $em->getRepository("App:User")->findOneByUsername($username);
+        if (\filter_var($username, \FILTER_VALIDATE_EMAIL)) {
+            // Logging in with email
+            $user = $em->getRepository("App:User")->findOneByEmail($username);
+            $loginName = "Correo electrónico";
+        } else {
+            $user = $em->getRepository("App:User")->findOneByUsername($username);
+            $loginName = "Usuario";
+        }
+
         if (!$user || !\password_verify($password, $user->getPassword())) {
-            return $response->withJson(['Usuario o contraseña incorrectos'], 403);
+            return $response->withJson([$loginName.' o contraseña incorrectos'], 403);
         }
 
         $auth->log($user, $remember);
