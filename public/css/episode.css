@@ -68,13 +68,15 @@ a {
 #season_number{
    color: #4480bb;
    text-align: center;
-   text-decoration: underline;
    margin: 3px;
 }
+#season_number:hover {
+   text-decoration: underline;
+}
+
 #episode_number{
    color: #218dff;
    text-align: center;
-   text-decoration: underline;
    margin: 3px;
 }
 #subtitle_details{
