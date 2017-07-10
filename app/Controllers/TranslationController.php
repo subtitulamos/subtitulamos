@@ -147,7 +147,7 @@ class TranslationController
     {
         $secondaryLang = $request->getQueryParam("secondaryLang", 0);
         $page = max((int)$page, 1);
-        $firstNum = ($page - 1) * self::SEQUENCES_PER_PAGE;
+        $firstNum = ($page - 1) * self::SEQUENCES_PER_PAGE + 1;
 
         $sub = $em->getRepository("App:Subtitle")->find($id);
         if (!$sub) {
