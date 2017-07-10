@@ -128,8 +128,12 @@
         </template>
 
         <div class='newcomment-box'>
-            <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-            <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+            {% if auth.logged %}
+                <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
+                <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+            {% else %}
+                <textarea id="new-comment" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
+            {% endif %}
         </div>
     </div>
 </div>
