@@ -134,7 +134,6 @@ class TranslationController
             ->setParameter("sub", $baseSub)
             ->getSingleScalarResult();
 
-        $lang = Langs::getLocalizedName($sub->getLang());
         return $twig->render($response, 'translate.twig', [
             'sub' => $sub,
             'avail_secondary_langs' => json_encode($langs),
@@ -167,7 +166,7 @@ class TranslationController
 
             $snumbers = [];
         } else {
-            $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number <= :last ORDER BY sq.number ASC, sq.revision DESC")
+            $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number < :last ORDER BY sq.number ASC, sq.revision DESC")
                 ->setParameter("id", $id)
                 ->setParameter("first", $firstNum)
                 ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE)
