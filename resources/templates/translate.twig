@@ -245,7 +245,7 @@
                 let lineCounters = [];
 
                 for(let i = 0; i < lines.length; ++i) {
-                    let text = lines[i].replace(/\s+/g,' ');
+                    let text = lines[i].replace(/ +/g,' ');
                     if(text.trim().length > 0) {
                         lineCounters[i] = text.trim().length;
                     } else {
@@ -313,7 +313,7 @@
                         }
                     }).done(function(newId){
                         pthis.id = newId;
-                        pthis.text = pthis.text.trim().replace(/\s+/g,' ');
+                        pthis.text = pthis.text.trim().replace(/ +/g,' ');
                         if(!pthis.text) {
                             pthis.text = " ";
                         }
@@ -333,7 +333,7 @@
                         }
                     }).done(function(newId){
                         pthis.id = newId;
-                        pthis.text = pthis.text.trim().replace(/\s+/g,' ');
+                        pthis.text = pthis.text.trim().replace(/ +/g,' ');
                         if(!pthis.text) {
                             pthis.text = " ";
                         }

@@ -271,7 +271,7 @@ class TranslationController
         $text = trim($request->getParsedBodyParam('text', ""));
 
         // Remove multiple spaces concatenated
-        $text = preg_replace('/\s+/', ' ', $text);
+        $text = preg_replace('/ +/', ' ', $text);
         if (empty($text)) {
             $text = " "; // At least one space
         }
@@ -315,7 +315,7 @@ class TranslationController
         $text = trim($request->getParsedBodyParam('text', ""));
 
         // Remove multiple spaces concatenated
-        $text = preg_replace('/\s+/', ' ', $text);
+        $text = preg_replace('/ +/', ' ', $text);
         if (empty($text)) {
             $text = " "; // At least one space
         }
