@@ -31,7 +31,7 @@ class UploadController
         ]);
     }
 
-    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth, \Elasticsearch\Client $client)
     {
         $showId = $request->getParam("showId", 0);
         $season = $request->getParam("season", -1);
@@ -40,7 +40,7 @@ class UploadController
         $epName = $request->getParam("title", "");
         $versionName = $request->getParam("version", "");
         $comments = $request->getParam("comments", "");
-        
+
         $errors = [];
         if (!\App\Services\Langs::existsCode($langCode)) {
             $errors[] = "Elige un idioma válido";
@@ -70,37 +70,42 @@ class UploadController
         if ($showId != "NEW") {
             if (!v::numeric()->positive()->validate($showId)) {
                 $errors[] = "Elige una serie de la lista";
-            } else {
+            }
+            else {
                 $show = $em->getRepository('App:Show')->find((int)$showId);
                 if (!$show) {
                     $errors[] = "La serie que has elegido no existe";
                 }
             }
-            
+
             if (empty($errors)) {
                 // Since the show already exists, we have to make sure that
                 // the an episode with this number doesn't already exist, too
                 $e = $em->createQuery("SELECT e FROM App:Episode e WHERE e.show = :showid AND e.season = :season AND e.number = :num")
-                        ->setParameter('showid', $show->getId())
-                        ->setParameter('season', $season)
-                        ->setParameter('num', $epNumber)
-                        ->getResult();
-                        
+                    ->setParameter('showid', $show->getId())
+                    ->setParameter('season', $season)
+                    ->setParameter('num', $epNumber)
+                    ->getResult();
+
                 if ($e != null) {
                     $errors[] = sprintf("El episodio %dx%d de la serie %s ya existe", $season, $epNumber, $show->getName());
                 }
             }
-        } else {
+        }
+        else {
             // Create a new show!
-            $showName = $request->getParam("new-show");
-            if (v::notEmpty()->length(1, 100)->validate($showName)) {
+            $newShowName = $request->getParam("new-show");
+            if (v::notEmpty()->length(1, 100)->validate($newShowName)) {
+                // TODO: Prevent duplicated name shows from being created!
+
                 $show = new Show();
-                $show->setName($showName);
+                $show->setName($newShowName);
                 $show->setZeroTolerance(false);
                 $em->persist($show);
-
-                // TODO: Log
-            } else {
+                
+                /* TODO: Log */
+            }
+            else {
                 $errors[] = "El nombre de la serie no puede estar vacío";
             }
         }
@@ -144,8 +149,20 @@ class UploadController
 
         $em->flush();
 
+        // Index the new show if it was just created
+        if (isset($newShowName)) {
+            $client->index([
+                'index' => 'shows',
+                'type' => 'show',
+                'id' => $show->getId(),
+                'body' => [
+                    'name' => $show->getName()
+                ]
+            ]);
+        }
+
         return $response
-                ->withStatus(302)
-                ->withHeader('Location', $router->pathFor("episode", ["id" => $episode->getId()]));
+            ->withStatus(302)
+            ->withHeader('Location', $router->pathFor("episode", ["id" => $episode->getId()]));
     }
 }

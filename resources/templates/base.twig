@@ -5,7 +5,7 @@
 	
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>			 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" type="image/png" href="/favicon.png"/>
+	<link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
 	<link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
@@ -134,10 +134,12 @@
 		</div>
 		<div class="main_container">
 			{% block search %}
-				<div id="search_bar_container">
+				<div id="search">
 					<a href="/"><div id="white_logo_searchbar" class="white_logo"></div></a>
-					<input type="text" placeholder="Busca un episodio o serie..." id="search_bar" />
+					<input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" />
 					<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+					
+					<ul id="search-results" class='hidden'></ul>
 				</div>
 			{% endblock %}
 		</div>
@@ -208,4 +210,5 @@
 	</div>
 
 	{% block scripts %}{% endblock %}
+	<script type='text/javascript' src='js/search.js'></script>
 </body>

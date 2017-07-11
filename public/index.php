@@ -15,12 +15,13 @@ session_start();
 
 function feature_on($name)
 {
-    $v = getenv($name."_ENABLED");
+    $v = getenv($name . "_ENABLED");
     return $v == 'true' || $v == '1' || $v == 'yes';
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class() extends \DI\Bridge\Slim\App {
+$app = new class () extends \DI\Bridge\Slim\App
+{
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -40,6 +41,9 @@ $app = new class() extends \DI\Bridge\Slim\App {
             \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
                 return new Cocur\Slugify\Slugify();
             },
+            \Elasticsearch\Client::class => function (ContainerInterface $c) {
+                return \Elasticsearch\ClientBuilder::create()->build();
+            },
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
                 $twig = new \Slim\Views\Twig(__DIR__ . '/../resources/templates', [
                     'cache' => __DIR__ . '/../tmp',
@@ -54,7 +58,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 ));
 
                 $auth = $c->get('App\Services\Auth');
-                $twig->getEnvironment()->addGlobal("auth", new class($auth) {
+                $twig->getEnvironment()->addGlobal("auth", new class ($auth)
+                {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;
@@ -74,7 +79,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                     {
                         return $this->auth->getUser();
                     }
-                });
+                }
+                );
 
                 $twig->getEnvironment()->addFunction(new Twig_Function('feature_on', 'feature_on'));
 
@@ -95,6 +101,7 @@ $app->get('/', ['\App\Controllers\HomeController', 'view']);
 $app->get('/upload', ['\App\Controllers\UploadController', 'view'])->add($needsRoles('ROLE_USER'));
 $app->post('/upload', ['\App\Controllers\UploadController', 'do'])->add($needsRoles('ROLE_USER'));
 
+$app->get('/search/query', ['\App\Controllers\SearchController', 'query']);
 $app->get('/search/popular', ['\App\Controllers\SearchController', 'listPopular']);
 $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUploads']);
 

@@ -133,7 +133,7 @@ function openCategory(){
 	let $mainState = $("#main_state");
 	let $incategoryState = $("#incategory_state");
 	let $categoryNavTitle = $("#category_navigation_title");
-	let $searchBar = $("#search_bar_container");
+	let $searchBarContainer = $("#search");
 	let $categoryNavList = $("#category_navigation_list");
 	let $whiteLogoSearchBar = $("#white_logo_searchbar");
 	
@@ -151,13 +151,13 @@ function openCategory(){
 		
 		$mainState.toggleClass("fade_out", true);
 
-		$searchBar.toggleClass("move_up_searchbar",true);
+		$searchBarContainer.toggleClass("move_up_searchbar",true);
 		$categoryNavList.toggleClass("move_up_searchbar",true).toggleClass("fade_in", true);
 		$incategoryState.toggleClass("move_up_searchbar",true).toggleClass("fade_in", true);
 		$whiteLogoSearchBar.toggleClass("hidden", false);
 		setTimeout(function(){		
 			$mainState.toggleClass("hidden", true);
-			$searchBar.toggleClass("move_up_searchbar", false);
+			$searchBarContainer.toggleClass("move_up_searchbar", false);
 			$categoryNavList.toggleClass("move_up_searchbar", false).toggleClass("fade_in", false);
 			$incategoryState.toggleClass("move_up_searchbar", false).toggleClass("fade_in", false);
 		}, 580);
