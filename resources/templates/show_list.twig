@@ -45,7 +45,7 @@
                                 <div class='progress_bar'>
                                     <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 12) }}%"><div class="progress_percentage">{{ sub.progress // 1}}%</div></div>
                                 </div>
-                                <div class="download-subtitle"><a href="/download/{{ sub.id }}"><i class="fa fa-download" aria-hidden="true"></i></a></div>
+                                <div class="download-subtitle"><a href="/subtitles/{{ sub.id }}/download"><i class="fa fa-download" aria-hidden="true"></i></a></div>
                             {% endfor %}
                         </div>
                     {% endfor %}

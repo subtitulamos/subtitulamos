@@ -134,7 +134,7 @@
 
     function loadPage(pageNum, seqView, pageListTop, pageListBottom, secondaryLang) {
         $.ajax({
-            url: '/translate/{{ sub.id }}/page/' + pageNum,
+            url: '/subtitles/{{ sub.id }}/translate/page/' + pageNum,
             method: 'GET',
             data: {
                 textFilter: textFilter,
@@ -282,7 +282,7 @@
                 }
 
                 $.ajax({
-                    url: '/translate/'+subID+'/open',
+                    url: '/subtitles/'+subID+'/translate/open',
                     method: 'POST',
                     data: {
                         seqID: this.id
@@ -305,7 +305,7 @@
                 if(this.id) {
                     // Editing a sequence, save the changes
                     $.ajax({
-                        url: '/translate/'+subID+'/save',
+                        url: '/subtitles/'+subID+'/translate/save',
                         method: 'POST',
                         data: {
                             seqID: this.id,
@@ -325,7 +325,7 @@
                 } else {
                     // Translating a sequence for the first time
                     $.ajax({
-                        url: '/translate/'+subID+'/create',
+                        url: '/subtitles/'+subID+'/translate/create',
                         method: 'POST',
                         data: {
                             number: this.number,
@@ -367,7 +367,7 @@
                 this.locked = !this.locked;
 
                 $.ajax({
-                    url: '/translate/'+subID+'/lock',
+                    url: '/subtitles/'+subID+'/translate/lock',
                     method: 'POST',
                     data: {
                         seqID: this.id
@@ -477,7 +477,7 @@
 
             remove: function() {
                 $.ajax({
-                    url: '/translate/'+subID+'/comments/'+this.id,
+                    url: '/subtitles/'+subID+'/translate/comments/'+this.id,
                     method: 'DELETE'
                 }).done(function() {
                     loadComments();
@@ -500,7 +500,7 @@
                 this.newComment = '';
                 
                 $.ajax({
-                    url: '/translate/'+subID+'/comments/submit',
+                    url: '/subtitles/'+subID+'/translate/comments/submit',
                     method: 'POST',
                     data: {
                         text: comment
@@ -518,7 +518,7 @@
     function loadComments()
     {
         $.ajax({
-            url: '/translate/'+subID+'/comments',
+            url: '/subtitles/'+subID+'/translate/comments',
             method: 'GET'
         }).done(function(reply) {
             comments.comments = reply;

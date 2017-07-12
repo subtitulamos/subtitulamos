@@ -57,10 +57,10 @@
                         {% endif %}
                     </div>
                     <div class="subtitle_buttons">
-                        <a href="/download/{{ sub.id }}">
+                        <a href="/subtitles/{{ sub.id }}/download">
                             <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-download" aria-hidden="true"></i></div>
                         </a>
-                        <a href="/translate/{{ sub.id }}"><div class="edit_subtitle hint--bottom hint--rounded" {# TODO: class should be button wrapper or something! #}
+                        <a href="/subtitles/{{ sub.id }}/translate"><div class="edit_subtitle hint--bottom hint--rounded" {# TODO: class should be button wrapper or something! #}
                                 data-hint="Colaborar en la traducción">
                                 <i class="fa fa-file-text" aria-hidden="true"></i>
                             </div> 
@@ -96,7 +96,7 @@
                 </div>
 
                 <div id="new-translation-opts" class="hidden">
-                    <form action="/translate" method="POST">
+                    <form action="/subtitles/translate" method="POST">
                         <input type="hidden" name="episode" value="{{ episode.id }}" />
                         <select name="lang" id="translate-to-lang">
                             <option value="1">English</option>
