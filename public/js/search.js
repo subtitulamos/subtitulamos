@@ -2,6 +2,7 @@ $(function(){
     let $searchBar = $("#search_bar");
     let $searchResults = $("#search-results");
     let searchTimerHandle = null;
+    let lastSearchedText = "";
 
     function zeropad(n, width) {
         n = n + '';
@@ -10,11 +11,14 @@ $(function(){
 
     function search() {
         searchTimerHandle = null;
-        if($searchBar.val() == '') {
-            return;
-        }
 
         let q = $searchBar.val();
+        if(q == '' || q == lastSearchedText) {
+            return;
+        }
+        
+        lastSearchedText = q;
+
         $.ajax({
             url: '/search/query',
             method: 'GET',
