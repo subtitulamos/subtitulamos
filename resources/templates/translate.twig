@@ -12,7 +12,7 @@
 
     <div id="translation-details">
         <div id='filters'>
-            Filtrar por cadena: <input type="text" id="text-filter" /><button type="submit" id="apply">Aplicar</button>
+            Filtrar por cadena: <input type="text" id="text-filter" /><button type="submit" id="apply" @click="applyFilter">Aplicar</button>
         </div>
 
         <div class="page-wrapper">
@@ -103,16 +103,6 @@
     let myId = {{ auth.user.id }};
     let myName = "{{ auth.user.username }}";
     let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-
-    $("#apply").on("click", function() {
-        let newFilter = $("#text-filter").val();
-        if(newFilter == textFilter) {
-            return;
-        }
-        
-        textFilter = newFilter;
-        loadPage(1, availSecondaryLangs[0]);
-    });
 
     function loadPage(pageNum, secondaryLang) {
         $.ajax({
@@ -504,6 +494,17 @@
             pages: [],
             curPage: 0,
             lastPage: pageCount
+        },
+        methods: {
+            applyFilter: function() {
+                let newTextFilter = $("#text-filter").val();
+                if(newTextFilter == textFilter) {
+                    return;
+                }
+                
+                textFilter = newTextFilter;
+                loadPage(1, availSecondaryLangs[0]);
+            }
         }
     });
 
