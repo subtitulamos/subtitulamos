@@ -96,14 +96,17 @@ class UploadController
             // Create a new show!
             $newShowName = $request->getParam("new-show");
             if (v::notEmpty()->length(1, 100)->validate($newShowName)) {
-                // TODO: Prevent duplicated name shows from being created!
-
-                $show = new Show();
-                $show->setName($newShowName);
-                $show->setZeroTolerance(false);
-                $em->persist($show);
-                
-                /* TODO: Log */
+                if ($em->getRepository("App:Show")->findByName($newShowName)) {
+                    $errors[] = "La serie no se ha podido crear puesto que ya existe. Por favor, selecciónala en el desplegable";
+                }
+                else {
+                    $show = new Show();
+                    $show->setName($newShowName);
+                    $show->setZeroTolerance(false);
+                    $em->persist($show);
+                    
+                    /* TODO: Log */
+                }
             }
             else {
                 $errors[] = "El nombre de la serie no puede estar vacío";
