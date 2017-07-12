@@ -29,66 +29,56 @@
         {% for lang, subs in langs %}
             <div class="subtitle_language">{{ lang }}</div>
             {% for sub in subs %}
-                {% if sub.directUpload %}
-                    <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
-                        <div class="version_name">{{ sub.version.name }}</div>
-                        <div id="translation_progress_bar">
+                {% if sub.progress < 20 %}
+                    {% set progress_class = '019' %}
+                {% elseif sub.progress < 50 %}
+                    {% set progress_class = '2049' %}
+                {% elseif sub.progress < 70 %}
+                    {% set progress_class = '5069' %}
+                {% elseif sub.progress < 80 %}
+                    {% set progress_class = '7079' %}
+                {% elseif sub.progress < 90 %}
+                    {% set progress_class = '8089' %}
+                {% elseif sub.progress < 100 %}
+                    {% set progress_class = '9099' %}
+                {% elseif sub.progress >= 100 %}
+                    {% set progress_class = '100' %}
+                {% endif %}
+
+                <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
+                    <div class="version_name">{{ sub.version.name }}</div>		
+                    <div id="translation_progress_bar">
+                        {% if sub.directUpload %}
                             <div class="progress progress_original_subtitle">
                                 <div id="subtitle_uploader">subtítulo original subido por <a href="/user/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
                             </div>
-                        </div>
-                        <div class="subtitle_buttons">
-                            <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><a href="/download/{{ sub.id }}" download><i class="fa fa-download" aria-hidden="true"></i></a></div>
-                            <div class="edit_subtitle" {# TODO: class should be button wrapper or something! #}><a href="/translate/{{ sub.id }}"><i class="fa fa-file-text" aria-hidden="true"></i></a></div> 
-                            {% if auth.has_role('ROLE_MOD') %}
+                        {% else %}
+                            <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%"><div class="progress_percentage">{{ sub.progress // 1}}%</div></div>
+                        {% endif %}
+                    </div>
+                    <div class="subtitle_buttons">
+                        <a href="/download/{{ sub.id }}">
+                            <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-download" aria-hidden="true"></i></div>
+                        </a>
+                        <a href="/translate/{{ sub.id }}"><div class="edit_subtitle hint--bottom hint--rounded" {# TODO: class should be button wrapper or something! #}
+                                data-hint="Colaborar en la traducción">
+                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                            </div> 
+                        </a>
+                        {% if auth.has_role('ROLE_MOD') %}
+                            <a href="/subtitles/{{ sub.id }}/delete">
                                 <div class="delete_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-times" aria-hidden="true"></i></div>
-                                <div class="antitroll_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
-                            {% endif %}
-                        </div>
+                            </a>
+                            <div class="antitroll_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
+                        {% endif %}
+                    </div>
+
+                    {% if sub.directUpload %}
                         <div class="version_comments">
                             <p><i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}</p>
                         </div>
-                    </div>
-                {% else %}
-                    {% if sub.progress < 20 %}
-                        {% set progress_class = '019' %}
-                    {% elseif sub.progress < 50 %}
-                        {% set progress_class = '2049' %}
-                    {% elseif sub.progress < 70 %}
-                        {% set progress_class = '5069' %}
-                    {% elseif sub.progress < 80 %}
-                        {% set progress_class = '7079' %}
-                    {% elseif sub.progress < 90 %}
-                        {% set progress_class = '8089' %}
-                    {% elseif sub.progress < 100 %}
-                        {% set progress_class = '9099' %}
-                    {% elseif sub.progress >= 100 %}
-                        {% set progress_class = '100' %}
                     {% endif %}
-
-                    <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
-                        <div class="version_name">{{ sub.version.name }}</div>		
-                        <div id="translation_progress_bar">
-                            <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%"><div class="progress_percentage">{{ sub.progress // 1}}%</div></div>
-                        </div>
-                        <div class="subtitle_buttons">
-                            <a href="/download/{{ sub.id }}">
-                                <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-download" aria-hidden="true"></i></div>
-                            </a>
-                            <a href="/translate/{{ sub.id }}"><div class="edit_subtitle hint--bottom hint--rounded" {# TODO: class should be button wrapper or something! #}
-                                    data-hint="Colaborar en la traducción">
-                                    <i class="fa fa-file-text" aria-hidden="true"></i>
-                                </div> 
-                            </a>
-                            {% if auth.has_role('ROLE_MOD') %}
-                                <a href="#">
-                                    <div class="delete_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-times" aria-hidden="true"></i></div>
-                                </a>
-                                <div class="antitroll_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
+                </div>
             {% endfor %}
         {% endfor %}
 
