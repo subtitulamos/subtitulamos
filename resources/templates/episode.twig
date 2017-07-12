@@ -15,7 +15,7 @@
             <i class="fa fa-angle-left" aria-hidden="true"></i>	
         </div></span>
         <div id="episode_title">
-            <a href='/show/{{ episode.show.id }}'>{{ episode.show.name }}</a> <span id="season_number"><a href='/show/{{ episode.show.id }}/{{ episode.season }}'>{{ episode.season }}</a></span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span>- {{ episode.name }}
+            <a href='/shows/{{ episode.show.id }}'>{{ episode.show.name }}</a> <span id="season_number"><a href='/shows/{{ episode.show.id }}/{{ episode.season }}'>{{ episode.season }}</a></span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span>- {{ episode.name }}
         </div>	
         <span class="hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio"><div id="next_episode" class="clips_pages_button">
             <i class="fa fa-angle-right" aria-hidden="true"></i>	

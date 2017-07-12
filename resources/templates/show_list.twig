@@ -12,7 +12,7 @@
         <div>
             <ul class="season-tabs">
                 {% for season in seasons %}
-                    <li><a href="/show/{{ id }}/{{ season }}" class="{% if cur_season == season %}current{% endif %}">Temporada {{ season }}</a></li>
+                    <li><a href="/shows/{{ id }}/{{ season }}" class="{% if cur_season == season %}current{% endif %}">Temporada {{ season }}</a></li>
                 {% endfor %}
             </ul>
         </div>

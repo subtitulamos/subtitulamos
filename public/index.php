@@ -134,7 +134,7 @@ $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationCo
  */
 $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
 
-$app->get('/show/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view']);
+$app->get('/shows/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
 
 $app->get('/subtitles/{id}/download', ['\App\Controllers\DownloadController', 'download']);
 
