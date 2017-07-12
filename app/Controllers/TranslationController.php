@@ -119,7 +119,7 @@ class TranslationController
         // Determine which secondary languages we can use
         $langRes = $em->createQuery("SELECT DISTINCT(s.lang) FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100")
             ->setParameter("ver", $sub->getVersion())
-            ->getOneOrNullResult();
+            ->getResult();
 
         $langs = [];
         foreach ($langRes as $lang) {
