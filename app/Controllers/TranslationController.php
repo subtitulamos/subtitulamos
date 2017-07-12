@@ -83,7 +83,8 @@ class TranslationController
                 $nseq->setText('subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            } else {
+            }
+            else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -101,8 +102,8 @@ class TranslationController
         $em->flush();
 
         return $response
-                ->withStatus(200)
-                ->withHeader('Location', $router->pathFor("translation", ["id" => $sub->getId()]));
+            ->withStatus(200)
+            ->withHeader('Location', $router->pathFor("translation", ["id" => $sub->getId()]));
     }
 
     public function view($id, $request, $response, EntityManager $em, Twig $twig)
@@ -117,8 +118,8 @@ class TranslationController
         
         // Determine which secondary languages we can use
         $langRes = $em->createQuery("SELECT DISTINCT(s.lang) FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100")
-                      ->setParameter("ver", $sub->getVersion())
-                      ->getOneOrNullResult();
+            ->setParameter("ver", $sub->getVersion())
+            ->getOneOrNullResult();
 
         $langs = [];
         foreach ($langRes as $lang) {
@@ -127,8 +128,8 @@ class TranslationController
         
         // Calculate sequence number for the main subtitle version
         $baseSub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
-                      ->setParameter('v', $sub->getVersion())
-                      ->getOneOrNullResult();
+            ->setParameter('v', $sub->getVersion())
+            ->getOneOrNullResult();
 
         $seqCount = $em->createQuery("SELECT COUNT(s.id) FROM App:Sequence s WHERE s.subtitle = :sub")
             ->setParameter("sub", $baseSub)
@@ -157,22 +158,23 @@ class TranslationController
 
         if ($request->getQueryParam("textFilter")) {
             $textFilter = $request->getQueryParam("textFilter");
-            $textFilter = "%".str_replace("%", "", trim($textFilter))."%";
-            
+            $textFilter = "%" . str_replace("%", "", trim($textFilter)) . "%";
+
             $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id WHERE sq.text LIKE :tx ORDER BY sq.number ASC, sq.revision DESC")
                 ->setParameter("id", $id)
                 ->setParameter("tx", $textFilter)
                 ->getResult();
 
             $snumbers = [];
-        } else {
+        }
+        else {
             $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number < :last ORDER BY sq.number ASC, sq.revision DESC")
                 ->setParameter("id", $id)
                 ->setParameter("first", $firstNum)
                 ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE)
                 ->getResult();
         }
-        
+
         $sequences = [];
         foreach ($seqList as $seq) {
             $snum = $seq->getNumber();
@@ -180,10 +182,11 @@ class TranslationController
             if (isset($snumbers)) {
                 $snumbers[] = $snum;
             }
-            
+
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            } else {
+            }
+            else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -201,21 +204,21 @@ class TranslationController
                 ];
             }
         }
-    
+
         if ($secondaryLang > 0) {
             // Also load stuff from the base lang
             $secondarySub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.progress = 100 AND sb.version = :ver AND sb.lang = :lang")
-                               ->setParameter("lang", $secondaryLang)
-                               ->setParameter("ver", $sub->getVersion())
-                               ->getResult();
-            
+                ->setParameter("lang", $secondaryLang)
+                ->setParameter("ver", $sub->getVersion())
+                ->getResult();
+
             if (!isset($snumbers)) {
                 $snumbers = [];
                 for ($i = $firstNum; $i < $firstNum + self::SEQUENCES_PER_PAGE; ++$i) {
                     $snumbers[] = $i;
                 }
             }
-            
+
             $altSeqList = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :ssub AND sq.number IN (:snumbers) ORDER BY sq.id ASC")
                 ->setParameter("ssub", $secondarySub)
                 ->setParameter("snumbers", $snumbers)
@@ -225,7 +228,8 @@ class TranslationController
             // This is actually hard to do in SQL and it requires some tricks, so we do in code instead.
             $altSeqs = [];
             foreach ($altSeqList as $altSeq) {
-                $altSeqs[$altSeq->getNumber()] = $altSeq; // because they're oredered by revision, this will always overwrite the old version
+                // because they're oredered by revision, this will always overwrite the old version
+                $altSeqs[$altSeq->getNumber()] = $altSeq;
             }
 
             // Now, apply this alt language information to the main sequence list, filling in
@@ -274,7 +278,8 @@ class TranslationController
         // Remove multiple spaces concatenated
         $text = preg_replace('/ +/', ' ', $text);
         if (empty($text)) {
-            $text = " "; // At least one space
+            // At least one space
+            $text = " ";
         }
         
         // TODO: Better validate text (multiline etc) + multiline trim
@@ -318,15 +323,16 @@ class TranslationController
         // Remove multiple spaces concatenated
         $text = preg_replace('/ +/', ' ', $text);
         if (empty($text)) {
-            $text = " "; // At least one space
+            // At least one space
+            $text = " ";
         }
 
         // TODO: Better validate text (multiline etc) + multiline trim
-                      
+
         $seq = $em->createQuery("SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num")
-                  ->setParameter('sub', $id)
-                  ->setParameter('num', $seqNum)
-                  ->getSingleScalarResult();
+            ->setParameter('sub', $id)
+            ->setParameter('num', $seqNum)
+            ->getSingleScalarResult();
 
         if ($seq != 0) {
             // A sequence for this number already exists, but it shouldnt
@@ -340,20 +346,20 @@ class TranslationController
         }
 
         $baseSubId = $em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
-                        ->setParameter('v', $curSub->getVersion())
-                        ->getSingleScalarResult();
-        
+            ->setParameter('v', $curSub->getVersion())
+            ->getSingleScalarResult();
+
         $baseSeq = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC")
-                      ->setParameter("sub", $baseSubId)
-                      ->setParameter("num", $seqNum)
-                      ->setMaxResults(1)
-                      ->getOneOrNullResult();
-        
+            ->setParameter("sub", $baseSubId)
+            ->setParameter("num", $seqNum)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+
         if (!$baseSeq) {
             // TODO: Log
             return $response->withStatus(500);
         }
-        
+
         $seq = new Sequence();
         $seq->setSubtitle($curSub);
         $seq->setNumber($baseSeq->getNumber());
@@ -368,13 +374,14 @@ class TranslationController
 
         // Update progress
         $baseSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
-                              ->setParameter('sub', $baseSubId)
-                              ->getSingleScalarResult();
-        
-        $ourSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
-                              ->setParameter('sub', $curSub->getId())
-                              ->getSingleScalarResult();
+            ->setParameter('sub', $baseSubId)
+            ->getSingleScalarResult();
 
+        $ourSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+            ->setParameter('sub', $curSub->getId())
+            ->getSingleScalarResult();
+
+        $ourSubSeqCount++; // Since this one we just translated wasn't counted (flush not called)
         $curSub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
         $em->persist($curSub);
 
