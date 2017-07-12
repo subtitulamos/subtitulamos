@@ -16,16 +16,7 @@
         </div>
 
         <div class="page-wrapper">
-            <ul class="pagination" id="pagination-top">
-                <li class="change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></li>
-                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" @click="toPage(page)">{{ page }}</li>{% endverbatim %}
-                {#
-                    TODO: Handle the fact that pages might not all fit at the same time?
-                    <li class="expand-pages">...</li>
-                    <li class="target-page" data-page="40">40</li>
-                #}
-                <li class="change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
-            </ul>
+            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage"></pagelist>
         </div>
 
         <table id="sequences">
@@ -76,16 +67,7 @@
         </table>
 
         <div class="page-wrapper">
-            <ul class="pagination" id="pagination-bottom">
-                <li class="change-page disabled"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
-                {% verbatim %}<li v-for="page in pages" class="target-page" :class="curPage == page ? 'active' : ''" :data-page="page">{{ page }}</li>{% endverbatim %}
-                {#
-                    TODO: Handle the fact that pages might not all fit at the same time?
-                    <li class="expand-pages">...</li>
-                    <li class="target-page" data-page="40">40</li>
-                #}
-                <li class="change-page"><i class="fa fa-chevron-right" aria-hidden="true"></i></li>
-            </ul>
+            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage"></pagelist>
         </div>
     </div>
 
@@ -129,10 +111,10 @@
         }
         
         textFilter = newFilter;
-        loadPage(1, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]);
+        loadPage(1, availSecondaryLangs[0]);
     });
 
-    function loadPage(pageNum, seqView, pageListTop, pageListBottom, secondaryLang) {
+    function loadPage(pageNum, secondaryLang) {
         $.ajax({
             url: '/subtitles/{{ sub.id }}/translate/page/' + pageNum,
             method: 'GET',
@@ -154,11 +136,10 @@
                 sequences.push(sequence);
             });
 
-            seqView.sequences = sequences;
+            translation.sequences = sequences;
 
             // Update pagelist
-            pageListTop.curPage = pageNum;
-            pageListBottom.curPage = pageNum;
+            translation.curPage = pageNum;
         });
     }
 
@@ -381,26 +362,26 @@
     });
     {% endverbatim %}
 
-    let seqView = new Vue({
-        el: '#sequences',
-        data: {
-            sequences: []
-        },
-    });
-
     /**************************
     *        PAGINATION
     ***************************/
-    let pageListTop = new Vue({
-        el: '#pagination-top',
-        data: {
-            curPage: 1,
-            pages: [],
-            lastPage: pageCount
-        },
+    Vue.component('pagelist', {
+        template: `
+            <ul class="pagination">
+                <li class="change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></li>
+                {% verbatim %}<li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" @click="toPage(page)">{{ page }}</li>{% endverbatim %}
+                {#
+                    TODO: Handle the fact that pages might not all fit at the same time?
+                    <li class="expand-pages">...</li>
+                    <li class="target-page" data-page="40">40</li>
+                #}
+                <li class="change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+            </ul>
+        `,
+        props: ["curPage", "pages", "lastPage"],
         methods: {
             nextPage: function() {
-                if(this.curPage < pageCount)
+                if(this.curPage < this.lastPage)
                     this.toPage(this.curPage + 1);
             },
 
@@ -410,24 +391,10 @@
             },
 
             toPage: function(page) {
-                loadPage(page, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]);
-                this.curPage = page;
+                loadPage(page, availSecondaryLangs[0]);
             }
         }
     });
-
-    let pageListBottom = new Vue({
-        el: '#pagination-bottom',
-        data: {
-            curPage: 1,
-            pages: []
-        },
-    });
-
-    for(let p = 1; p < pageCount + 1; ++p) {
-        pageListTop.pages.push(p);
-        pageListBottom.pages.push(p);
-    }
     
    /**************************
     *        COMMENTS
@@ -530,8 +497,21 @@
     /**
     * Boot
     */
-    loadPage(1, seqView, pageListTop, pageListBottom, availSecondaryLangs[0]); // Load first page by default
+    let translation = new Vue({
+        el: '#translation-details',
+        data: {
+            sequences: [],
+            pages: [],
+            curPage: 0,
+            lastPage: pageCount
+        }
+    });
 
+    for(let p = 1; p < pageCount + 1; ++p) {
+        translation.pages.push(p);
+    }
+
+    loadPage(1, availSecondaryLangs[0]); // Load first page by default
     loadComments();
     setInterval(loadComments, 30000);
 </script>
