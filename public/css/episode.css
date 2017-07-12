@@ -421,3 +421,11 @@ a {
     min-width: 130px;
     border-radius: 3px;
 }
+
+#open-translation {
+    background-color: #4887d2;
+    color: white;
+    width: 150px;
+    padding: 4px;
+    margin: 3px;
+}
