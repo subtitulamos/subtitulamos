@@ -72,13 +72,18 @@
                             <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%"><div class="progress_percentage">{{ sub.progress // 1}}%</div></div>
                         </div>
                         <div class="subtitle_buttons">
-                            <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><a href="/download/{{ sub.id }}"><i class="fa fa-download" aria-hidden="true"></i></a></div>
-                            <div class="edit_subtitle hint--bottom hint--rounded" {# TODO: class should be button wrapper or something! #}
-                                data-hint="Colaborar en la traducción">
-                                <a href="/translate/{{ sub.id }}"><i class="fa fa-file-text" aria-hidden="true"></i></a>
-                            </div> 
+                            <a href="/download/{{ sub.id }}">
+                                <div class="download_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-download" aria-hidden="true"></i></div>
+                            </a>
+                            <a href="/translate/{{ sub.id }}"><div class="edit_subtitle hint--bottom hint--rounded" {# TODO: class should be button wrapper or something! #}
+                                    data-hint="Colaborar en la traducción">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>
+                                </div> 
+                            </a>
                             {% if auth.has_role('ROLE_MOD') %}
-                                <div class="delete_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-times" aria-hidden="true"></i></div>
+                                <a href="#">
+                                    <div class="delete_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-times" aria-hidden="true"></i></div>
+                                </a>
                                 <div class="antitroll_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
                             {% endif %}
                         </div>
