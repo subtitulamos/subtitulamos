@@ -13,6 +13,8 @@ class HomeController
 {
     public function view($response, Twig $twig)
     {
-        return $twig->render($response, 'index.twig', []);
+        return $twig->render($response, 'index.twig', [
+            'catchphrase' => ''
+        ]);
     }
 }
