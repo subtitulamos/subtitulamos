@@ -35,6 +35,8 @@ class DownloadController
             }
         }
 
+        ksort($sequences);
+
         // Build the actual downloadable file
         $file = "";
         $sequenceNumber = 1;
@@ -47,10 +49,8 @@ class DownloadController
             $file .= Clock::intToTimeStr($seq->getStartTime()) . " --> " . Clock::intToTimeStr($seq->getEndTime()) . "\r\n";
             
             $text = str_replace("\n", "\r\n", str_replace("\r\r", "\r", $seq->getText()));
-            /* ^^^ TODO:
-                if user has "utf8_download" preference unset then
-                    sequence_text = utf8_decode(sequence_text);
-            */
+            /* TODO:allow user to configure a "utf8_download" preference */
+            $text = utf8_decode($text);
 
             $file .= $text;
             if (substr($text, strlen($text) - 1) != "\n") {
