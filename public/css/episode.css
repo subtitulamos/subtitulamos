@@ -155,11 +155,22 @@ a {
    margin: 0px 0px 0px 2px;
 }
 
-.subtitle-action:hover {
+.subtitle-action:not(.unavailable):hover {
    color: white;
    -webkit-box-shadow:none;
    -moz-box-shadow:none;
    box-shadow:none;
+}
+.unavailable:hover {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='grey' stroke-width='6'/></svg>");
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: 100% 100%, auto;
+    cursor: default;
+}
+.revision-clarify {
+    border-bottom: 1px dotted white;
+    line-height: 16px;
 }
 
 .edit_subtitle:hover{
@@ -184,7 +195,7 @@ a {
 .resyncreq_subtitle:hover{
    background-color: #ecb908;
 }
-.download_subtitle:hover{
+.download_subtitle:not(.unavailable):hover{
    background-color: #0cdc5d;
 }
 .translate_subtitle:hover{

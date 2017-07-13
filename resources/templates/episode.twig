@@ -44,6 +44,7 @@
                 {% endif %}
 
                 {% set pause_class = sub.pause ? 'paused' : '' %}
+                {% set can_download = auth.has_role('ROLE_TH') or (not sub.pause and sub.progress == 100) %}
 
                 <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
                     <div class="version_name">{{ sub.version.name }}</div>		
@@ -57,7 +58,9 @@
                                 <div class="progress_percentage">
                                     {{ sub.progress // 1}}%
                                     {% if sub.pause and sub.progress >= 90 %}
-                                        (En revisión)
+                                        <span class='revision-clarify hint--rounded hint--top' data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
+                                            (En revisión)
+                                        </span>
                                     {% endif %}
                                 </div></div>
                         {% endif %}
@@ -75,9 +78,9 @@
                             {% endif %}
                         {% endif %}
 
-                        <a href="/subtitles/{{ sub.id }}/download">
-                            <div class="subtitle-action download_subtitle"><i class="fa fa-download" aria-hidden="true"></i></div>
-                        </a>
+                        {% if can_download %}<a href="/subtitles/{{ sub.id }}/download">{% endif %}
+                            <div class="subtitle-action download_subtitle {% if not can_download %}unavailable{% endif %}"><i class="fa fa-download" aria-hidden="true"></i></div>
+                        {% if can_download %}</a>{% endif %}
 
                         <a href="/subtitles/{{ sub.id }}/translate"><div class="subtitle-action edit_subtitle hint--bottom hint--rounded"
                                 data-hint="Colaborar en la traducción">
