@@ -64,7 +64,7 @@
                             </div> 
                         </a>
                         {% if auth.has_role('ROLE_MOD') %}
-                            <a href="/subtitles/{{ sub.id }}/delete">
+                            <a data-action="delete" data-id="{{ sub.id }}">
                                 <div class="delete_subtitle" {# TODO: class should be button wrapper or something! #}><i class="fa fa-times" aria-hidden="true"></i></div>
                             </a>
                             <div class="antitroll_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
@@ -151,6 +151,14 @@
         $("a[disabled]").on("click", function(e) {
             e.preventDefault();
             return false;
+        });
+
+        $("a[data-action='delete']").on("click", function(e) {
+            let subId = $(this).data("id");
+            alertify.confirm("¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.", function() {
+                window.location = "/subtitles/"+subId+"/delete";
+            })
+            
         });
 
         {% verbatim %}
