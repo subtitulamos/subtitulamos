@@ -51,14 +51,23 @@ a {
    padding-top: 4px;
    cursor: pointer;
 }
+
+#subtitle_content_title_container a[disabled] > div {
+    cursor: default;
+}
+
+#subtitle_content_title_container a[disabled] > div {
+    background-color: grey;
+}
+
 #episode_title{   
    font-weight: 600;   
    font-size: 17px;
    text-align: center;
    display: inline-block;
-   margin-top: -15px;
+   margin-top: 17px;
    color: #315d88;
-   width: 780px;
+   width: 885px;
    position: relative;
    top: -9px;
    white-space: nowrap;

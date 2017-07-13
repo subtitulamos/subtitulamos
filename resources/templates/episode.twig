@@ -1,28 +1,26 @@
 {% extends "base.twig" %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="css/episode.css?v=0.0.2"/>
+    <link rel="stylesheet" type="text/css" href="css/episode.css?v=0.0.3"/>
 {% endblock %}
 
 {% block content %}
 
 <div id="subtitle_content">
-    <div id="subtitle_content_title_container" id="navigate_top">	
-        <span class="hint--top hint--bounce hint--rounded" data-hint="Temporada Anterior"><div id="previous_season" class="clips_pages_button">
-            <i class="fa fa-angle-double-left" aria-hidden="true"></i>	
-        </div></span>
-        <span class="hint--top hint--bounce hint--rounded" data-hint="Episodio Anterior"><div id="previous_episode" class="clips_pages_button">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>	
-        </div></span>
+    <div id="subtitle_content_title_container">
+        <a href='{{ prev_url }}' {% if not prev_url %}disabled{% endif %}>
+            <div id="previous_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Episodio Anterior">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </div>
+        </a>
         <div id="episode_title">
             <a href='/shows/{{ episode.show.id }}'>{{ episode.show.name }}</a> <span id="season_number"><a href='/shows/{{ episode.show.id }}/{{ episode.season }}'>{{ episode.season }}</a></span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span>- {{ episode.name }}
         </div>	
-        <span class="hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio"><div id="next_episode" class="clips_pages_button">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>	
-        </div></span>	
-        <span class="hint--top hint--bounce hint--rounded" data-hint="Siguiente Temporada"><div id="next_season" class="clips_pages_button">
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div></span>			
+        <a href='{{ next_url }}' {% if not next_url %}disabled{% endif %}>
+            <div id="next_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>	
+            </div>
+        </a>
     </div>
     <div id="subtitle_details">
 
@@ -148,6 +146,11 @@
 
         $newTranslationButton.on("click", function() {
             $("#new-translation-opts").toggleClass("hidden");
+        });
+
+        $("a[disabled]").on("click", function(e) {
+            e.preventDefault();
+            return false;
         });
 
         {% verbatim %}

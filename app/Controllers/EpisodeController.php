@@ -18,9 +18,9 @@ use App\Services\Langs;
 
 class EpisodeController
 {
-    public function view($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
+    public function view($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router)
     {
-        $ep = $em->createQuery("SELECT s, v, e FROM App:Episode e JOIN e.versions v JOIN v.subtitles s WHERE e.id = :id")
+        $ep = $em->createQuery("SELECT e, sb, v, sw FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN e.show sw WHERE e.id = :id")
                    ->setParameter("id", $id)
                    ->getOneOrNullResult();
         
@@ -39,11 +39,29 @@ class EpisodeController
                 $langs[$lang][] = $sub;
             }
         }
+
+        $epSeason = $ep->getSeason();
+        $epNumber = $ep->getNumber();
+        
+        // Get ids for the jump arrows
+        $nextId = $em->createQuery("SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number > :epnumber) OR e.season > :epseason) ORDER BY e.season, e.number ASC")
+                     ->setParameter("epseason", $epSeason)
+                     ->setParameter("epnumber", $epNumber)
+                     ->setParameter("show", $ep->getShow()->getId())
+                     ->setMaxResults(1)
+                     ->getOneOrNullResult();
+        $prevId = $em->createQuery("SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number < :epnumber) OR e.season < :epseason) ORDER BY e.season, e.number DESC")
+                     ->setParameter("epseason", $epSeason)
+                     ->setParameter("epnumber", $epNumber)
+                     ->setParameter("show", $ep->getShow()->getId())
+                     ->setMaxResults(1)
+                     ->getOneOrNullResult();
         
         return $twig->render($response, 'episode.twig', [
             'episode' => $ep,
             'langs' => $langs,
-            'uploader_name' => "user"
+            'prev_url' => $prevId ? $router->pathFor("episode", $prevId) : "",
+            'next_url' => $nextId ? $router->pathFor("episode", $nextId) : ""
         ]);
     }
 }
