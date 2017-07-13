@@ -20,7 +20,7 @@ class EpisodeController
 {
     public function view($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router)
     {
-        $ep = $em->createQuery("SELECT e, sb, v, sw FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN e.show sw WHERE e.id = :id")
+        $ep = $em->createQuery("SELECT e, sb, v, sw, p FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN e.show sw LEFT JOIN sb.pause p WHERE e.id = :id")
                    ->setParameter("id", $id)
                    ->getOneOrNullResult();
         

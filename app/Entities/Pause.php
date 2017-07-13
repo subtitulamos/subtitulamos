@@ -23,12 +23,12 @@ class Pause
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Subtitle", mappedBy="pause")
+     * @ORM\OneToOne(targetEntity="Subtitle", inversedBy="pause")
      */
     private $subtitle;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

@@ -20,8 +20,7 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class () extends \DI\Bridge\Slim\App
-{
+$app = new class() extends \DI\Bridge\Slim\App {
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -58,8 +57,7 @@ $app = new class () extends \DI\Bridge\Slim\App
                 ));
 
                 $auth = $c->get('App\Services\Auth');
-                $twig->getEnvironment()->addGlobal("auth", new class ($auth)
-                {
+                $twig->getEnvironment()->addGlobal("auth", new class($auth) {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;
@@ -122,6 +120,8 @@ $app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\Subtitle
  */
 
 $app->get('/subtitles/{subId}/delete', ['\App\Controllers\SubtitleController', 'delete'])->add($needsRoles('ROLE_MOD'));
+$app->get('/subtitles/{subId}/pause', ['\App\Controllers\SubtitleController', 'pause'])->add($needsRoles('ROLE_TH'));
+$app->get('/subtitles/{subId}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRoles('ROLE_TH'));
 
 $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRoles('ROLE_USER'));

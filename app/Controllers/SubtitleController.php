@@ -13,6 +13,7 @@ use Respect\Validation\Validator as v;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Entities\Subtitle;
+use App\Entities\Pause;
 
 class SubtitleController
 {
@@ -28,5 +29,49 @@ class SubtitleController
         $em->flush();
 
         return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $epId]));
+    }
+
+    public function pause($subId, $request, $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    {
+        $sub = $em->getRepository("App:Subtitle")->find($subId);
+        if (!$sub) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+        
+        if ($sub->getPause()) {
+            // Already paused!
+            return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $epId]));
+        }
+        
+        $pause = new Pause();
+        $pause->setStart(new \DateTime());
+        $pause->setSubtitle($sub);
+        $pause->setUser($auth->getUser());
+        $em->persist($pause);
+
+        $sub->setPause($pause);
+        $em->flush();
+
+        return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $sub->getVersion()->getEpisode()->getId()]));
+    }
+
+    public function unpause($subId, $request, $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    {
+        $sub = $em->getRepository("App:Subtitle")->find($subId);
+        if (!$sub) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+        
+        if (!$sub->getPause()) {
+            // Not paused!
+            return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $epId]));
+        }
+        
+        $pause = $em->getRepository("App:Pause")->find($sub->getPause()->getId());
+        $em->remove($pause);
+        $sub->setPause(null);
+        
+        $em->flush();
+        return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $sub->getVersion()->getEpisode()->getId()]));
     }
 }

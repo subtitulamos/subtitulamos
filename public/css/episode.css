@@ -92,7 +92,7 @@ a {
    width: 940px;
    margin: 0 auto;
    background-color: #f0eeee;
-   padding: 20px 30px 20px 30px;
+   padding: 20px 15px 20px 15px;
    border-radius: 5px;
 }
 #subtitle_uploader{
@@ -141,75 +141,84 @@ a {
    vertical-align: middle;
    margin-left: 5px;
 }
-.resyncreq_subtitle, .download_subtitle, .translate_subtitle, .edit_subtitle, .delete_subtitle, .antitroll_subtitle{
-   width: 40px;
-   height: 40px;
+
+.subtitle-action {
+   width: 35px;
+   height: 35px;
    border-radius: 4px;
    display: inline-block;
    vertical-align: middle;
    text-align: center;
    cursor: pointer;
    color: rgba(0,0,0,0.5);
-   -webkit-box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
-    -moz-box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
     box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
-   margin: 0px 0px 0px 5px;
+   margin: 0px 0px 0px 2px;
+}
+
+.subtitle-action:hover {
+   color: white;
+   -webkit-box-shadow:none;
+   -moz-box-shadow:none;
+   box-shadow:none;
 }
 
 .edit_subtitle:hover{
    background-color: #94e81f;
+}
+.pause_subtitle:hover{
+   background-color: #f5bd00;
    color: white;
-   -webkit-box-shadow:none;
-   -moz-box-shadow:none;
    box-shadow:none;
 }
+
+.unpause-subtitle:hover {
+   background-color: #20a520; 
+}
+.unpause-subtitle:hover > .fa-lock {
+    color:white;
+}
+
 .delete_subtitle:hover{
    background-color: #ff2157;
-   color: white;
-   -webkit-box-shadow:none;
-   -moz-box-shadow:none;
-   box-shadow:none;
 }
 .resyncreq_subtitle:hover{
    background-color: #ecb908;
-   color: white;
-   -webkit-box-shadow:none;
-   -moz-box-shadow:none;
-   box-shadow:none;
 }
 .download_subtitle:hover{
    background-color: #0cdc5d;
-   color: white;
-   -webkit-box-shadow:none;
-   -moz-box-shadow:none;
-   box-shadow:none;
 }
 .translate_subtitle:hover{
    background-color: #ec1bdf;
-   color: white;
-   -webkit-box-shadow:none;
-    -moz-box-shadow:none;
-    box-shadow:none;
 }
 .antitroll_subtitle:hover{
    background-color: #6039af;
-   color: white;
-   -webkit-box-shadow:none;
-    -moz-box-shadow:none;
-    box-shadow:none;
 }
 
 .download_subtitle  .fa-download{
    padding-top: 10px;
    font-size: 16pt;
 }
+.pause_subtitle  .fa-unlock-alt {
+   padding-top: 10px;
+   font-size: 14pt;
+}
+.unpause-subtitle {
+   box-shadow: inset 0px 0 3px 1px rgba(0,0,0,0.4);
+}
+
+.unpause-subtitle .fa-lock {
+    padding-top: 10px;
+    font-size: 14pt;
+   color: green;
+}
+
 .translate_subtitle .fa-plus-circle{
-   padding-top: 9px;
-   font-size: 16pt;
+   padding-top: 7px;
+   font-size: 17pt;
 }
 .resyncreq_subtitle .fa-refresh{
-   padding-top: 10px;
-   font-size: 15pt;
+   padding-top: 8px;
+   font-size: 16pt;
 }
 .edit_subtitle .fa-file-text{
    padding-top: 12px;
@@ -226,7 +235,7 @@ a {
 
 #translation_progress_bar {
    height: 29px;
-   width: 600px;
+   width: 550px;
    border-radius: 2px;
    background-color: rgba(255,255,255,0.8);
    display: inline-block;
@@ -256,6 +265,14 @@ a {
    background-color: #33c53c;
    border-radius: 3px;
 }
+
+.paused .progress_9099{
+    background: linear-gradient(to right, #33c53c 0%, #e08747 100%);
+}
+.paused .progress_100{
+    background: linear-gradient(to right, #7ac533 0%, #e08747 100%);
+}
+
 .progress_9099{
    background-color: #7ac533;
    border-radius: 3px 0px 0px 3px;
@@ -298,10 +315,11 @@ a {
     font-size: 12px;
     background: rgb(227, 226, 226);
     border-radius: 2px 2px 6px 6px;
-    width: 78%;
+    width: 72%;
+    margin-left: 22px;
+    margin-top: -2px;
     color: #656565;
-    padding: 4px 10px 4px 10px;
-    margin: 0px;
+    padding: 4px 10px 4px 10px; 
 }
 
 .version_comments p i {
@@ -339,21 +357,6 @@ a {
 .compact .antitroll_subtitle .fa-gavel{
    padding-top: 9px;
    font-size: 14pt;
-}
-
-.compact .resyncreq_subtitle, .compact .download_subtitle, .compact .translate_subtitle, .compact .edit_subtitle, .compact .delete_subtitle, .compact .antitroll_subtitle{
-   width: 35px;
-   height: 35px;
-}
-
-.compact #translation_progress_bar {
-   width: 550px;
-}
-
-.compact .version_comments p {
-    width: 72%;
-    margin-left: 22px;
-    margin-top: -2px;
 }
 
 #new-translation, #new-translation-opts {

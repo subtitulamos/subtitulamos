@@ -12,18 +12,24 @@ use \Psr\Http\Message\RequestInterface;
 
 use \Doctrine\ORM\EntityManager;
 use \App\Services\Clock;
+use \App\Services\Auth;
 
 class DownloadController
 {
-    public function download($id, RequestInterface $request, ResponseInterface $response, EntityManager $em)
+    public function download($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Auth $auth)
     {
         $sub = $em->getRepository("App:Subtitle")->find($id);
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        if ($sub->getProgress() < 100) {
+        if ($sub->getProgress() < 100 && !$auth->hasRole('ROLE_TH')) {
             $response->getBody()->write("El subtítulo no ha sido completado todavía");
+            return $response->withStatus(403);
+        }
+
+        if ($sub->getPause() && !$auth->hasRole('ROLE_TH')) {
+            $response->getBody()->write("El subtítulo se encuentra bajo revisión");
             return $response->withStatus(403);
         }
 
