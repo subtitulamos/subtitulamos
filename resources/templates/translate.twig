@@ -78,7 +78,7 @@
             <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
             <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
         </div>
-        
+
         <template v-for="comment in comments">
             <comment
                 :key="comment.id"
@@ -384,6 +384,7 @@
 
             toPage: function(page) {
                 loadPage(page, availSecondaryLangs[0]);
+                document.getElementById('translation').scrollIntoView();
             }
         }
     });
