@@ -20,7 +20,8 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class() extends \DI\Bridge\Slim\App {
+$app = new class () extends \DI\Bridge\Slim\App
+{
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -57,7 +58,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 ));
 
                 $auth = $c->get('App\Services\Auth');
-                $twig->getEnvironment()->addGlobal("auth", new class($auth) {
+                $twig->getEnvironment()->addGlobal("auth", new class ($auth)
+                {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;
@@ -81,7 +83,6 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 );
 
                 $twig->getEnvironment()->addFunction(new Twig_Function('feature_on', 'feature_on'));
-
                 return $twig;
             },
 
@@ -131,13 +132,10 @@ $app->post('/episodes/{epId}/comments/submit', ['\App\Controllers\EpisodeComment
 $app->delete('/episodes/{epId}/comments/{cId}', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRoles('ROLE_USER'));
 /*
 $app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRoles('ROLE_USER'));
-
 $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRoles('ROLE_MOD'));
  */
 $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
-
 $app->get('/shows/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
-
 $app->get('/subtitles/{id}/download', ['\App\Controllers\DownloadController', 'download']);
 
 $app->get('/login', ['\App\Controllers\LoginController', 'viewLogin']);
@@ -146,6 +144,7 @@ $app->post('/register', ['\App\Controllers\LoginController', 'register']);
 $app->get('/logout', ['\App\Controllers\LoginController', 'logout']);
 
 $app->get('/rules[/{type}]', ['\App\Controllers\RulesController', 'view']);
+$app->get('/users/{userId}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
 
 // Run app
 $app->run();

@@ -1,0 +1,27 @@
+{% extends "base.twig" %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="css/user_profile.css"/>
+{% endblock %}
+
+{% block content %}
+<div id="user-profile-wrapper">
+    <div id='user-profile'>
+        <h2>{{ user.username }}</h2>
+
+        <h4>Capítulos subidos</h4>
+        <ul>
+            {% for episode in uploaded_episodes %}
+                <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <h4>Capítulos en los que ha colaborado</h4>
+        <ul>
+            {% for episode in collaborated_episodes %}
+                <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
