@@ -73,7 +73,12 @@
 
     <div id="translation-comments">
         <h4>Comentarios de traducción</h4>
-
+        
+        <div class='newcomment-box'>
+            <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
+            <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+        </div>
+        
         <template v-for="comment in comments">
             <comment
                 :key="comment.id"
@@ -86,10 +91,7 @@
             </comment>
         </template>
 
-        <div class='newcomment-box'>
-            <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-            <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
-        </div>
+       
     </div>
 </div>
 
