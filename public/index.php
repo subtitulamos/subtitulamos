@@ -103,6 +103,8 @@ $app->post('/upload', ['\App\Controllers\UploadController', 'do'])->add($needsRo
 $app->get('/search/query', ['\App\Controllers\SearchController', 'query']);
 $app->get('/search/popular', ['\App\Controllers\SearchController', 'listPopular']);
 $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUploads']);
+$app->get('/search/modified', ['\App\Controllers\SearchController', 'listRecentChanged']);
+$app->get('/search/completed', ['\App\Controllers\SearchController', 'listRecentCompleted']);
 
 $app->post('/subtitles/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRoles('ROLE_USER'));
 $app->get('/subtitles/{id}/translate', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRoles('ROLE_USER'));

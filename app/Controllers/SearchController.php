@@ -22,7 +22,7 @@ class SearchController
     // TODO: Separate popular listing into a weekly thing, with its own "popular" table and stuff
     public function listPopular(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
-        $episodes = $em->createQuery("SELECT e FROM App:Episode e ORDER BY e.downloads DESC")->setMaxResults(5)->getResult();
+        $episodes = $em->createQuery("SELECT e FROM App:Episode e ORDER BY e.downloads DESC")->setMaxResults(10)->getResult();
 
         $epList = [];
         foreach ($episodes as $ep) {
@@ -43,7 +43,7 @@ class SearchController
 
     public function listRecentUploads(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 ORDER BY s.uploadTime DESC")->setMaxResults(5)->getResult();
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 ORDER BY s.uploadTime DESC")->setMaxResults(10)->getResult();
 
         $epList = [];
         foreach ($subs as $sub) {
@@ -56,7 +56,51 @@ class SearchController
                 "slug" => $slugify->slugify($fullName),
                 "season" => $ep->getSeason(),
                 "episode_num" => $ep->getNumber(),
-                "upload_time" => $sub->getUploadTime()->format(\DateTime::ATOM),
+                "time" => $sub->getUploadTime()->format(\DateTime::ATOM),
+                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+            ];
+        }
+
+        return $response->withJson($epList);
+    }
+
+    public function listRecentChanged(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
+    {
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress > 0 ORDER BY s.editTime DESC")
+            ->setMaxResults(10)->getResult();
+
+        $epList = [];
+        foreach ($subs as $sub) {
+            $ep = $sub->getVersion()->getEpisode();
+            $fullName = $ep->getFullName();
+
+            $epList[] = [
+                "id" => $ep->getId(),
+                "name" => $fullName,
+                "slug" => $slugify->slugify($fullName),
+                "time" => $sub->getEditTime()->format(\DateTime::ATOM),
+                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+            ];
+        }
+
+        return $response->withJson($epList);
+    }
+
+    public function listRecentCompleted(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
+    {
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL ORDER BY s.completeTime DESC")
+            ->setMaxResults(10)->getResult();
+
+        $epList = [];
+        foreach ($subs as $sub) {
+            $ep = $sub->getVersion()->getEpisode();
+            $fullName = $ep->getFullName();
+
+            $epList[] = [
+                "id" => $ep->getId(),
+                "name" => $fullName,
+                "slug" => $slugify->slugify($fullName),
+                "time" => $sub->getCompleteTime()->format(\DateTime::ATOM),
                 "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
             ];
         }

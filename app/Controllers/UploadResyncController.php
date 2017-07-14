@@ -66,16 +66,16 @@ class UploadResyncController
         }
 
         $version = $em->createQuery("SELECT v FROM App:Version v WHERE v.episode = :ep AND v.name = :name")
-                      ->setParameter('ep', $ep)
-                      ->setParameter('name', $versionName)
-                      ->getOneOrNullResult();
+            ->setParameter('ep', $ep)
+            ->setParameter('name', $versionName)
+            ->getOneOrNullResult();
 
         if ($version) {
             // Verify that no subtitle exists with this lang
             $subExists = $em->createQuery("SELECT COUNT(sb.id) FROM App:Subtitle sb WHERE sb.version = :v AND sb.lang = :lang")
-                            ->setParameter('v', $version->getId())
-                            ->setParameter('lang', (string)Langs::getLangId($langCode))
-                            ->getSingleScalarResult();
+                ->setParameter('v', $version->getId())
+                ->setParameter('lang', (string)Langs::getLangId($langCode))
+                ->getSingleScalarResult();
 
             if ($subExists) {
                 $errors[] = "Ya existe un subtítulo en esta versión e idioma.";

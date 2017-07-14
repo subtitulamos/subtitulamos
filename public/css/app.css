@@ -484,7 +484,7 @@ input, button { border:none; }
    overflow: hidden;
    text-overflow: ellipsis;
 }
-.clip_global_info:hover .clip_title{
+.clip_title_row.clip_detailed:hover .clip_title{
    color: #3b72a9;
    font-size: 15px; 
    margin-top: 3px;
@@ -492,7 +492,7 @@ input, button { border:none; }
 .clip_add_details{
    display: none;
 }
-.clip_global_info:hover .clip_add_details{
+.clip_title_row.clip_detailed:hover .clip_add_details{
    display: inline-block !important;
    position: relative;
    top: -3px;

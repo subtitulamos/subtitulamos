@@ -37,7 +37,7 @@ class Subtitle
      * @ORM\OneToOne(targetEntity="Pause", inversedBy="subtitle")
      */
     private $pause;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Sequence", mappedBy="subtitle")
      */
@@ -54,6 +54,16 @@ class Subtitle
     private $uploadTime;
 
     /**
+     * @ORM\Column(type="datetime", name="edit_time", nullable=true)
+     */
+    private $editTime;
+
+    /**
+     * @ORM\Column(type="datetime", name="complete_time", nullable=true)
+     */
+    private $completeTime;
+
+    /**
      * @ORM\Column(type="float")
      */
     private $progress;
@@ -62,7 +72,7 @@ class Subtitle
      * @ORM\OneToMany(targetEntity="SubtitleComment", mappedBy="episode")
      */
     private $comments;
-    
+
     /**
      * Constructor
      */
@@ -231,6 +241,52 @@ class Subtitle
     public function getUploadTime()
     {
         return $this->uploadTime;
+    }
+
+    /**
+     * Set editTime
+     *
+     * @param \DateTime $editTime
+     * @return Subtitle
+     */
+    public function setEditTime($editTime)
+    {
+        $this->editTime = $editTime;
+
+        return $this;
+    }
+
+    /**
+     * Get editTime
+     *
+     * @return \DateTime
+     */
+    public function getEditTime()
+    {
+        return $this->editTime;
+    }
+
+    /**
+     * Set completeTime
+     *
+     * @param \DateTime $completeTime
+     * @return Subtitle
+     */
+    public function setCompleteTime($completeTime)
+    {
+        $this->completeTime = $completeTime;
+
+        return $this;
+    }
+
+    /**
+     * Get completeTime
+     *
+     * @return \DateTime
+     */
+    public function getCompleteTime()
+    {
+        return $this->completeTime;
     }
 
     /**

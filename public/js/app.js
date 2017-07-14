@@ -128,69 +128,6 @@ function cleanShowName(name) {
 	return name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/, '');
 }
 
-function openCategory(){
-	let $categoryClicked = $(this);	
-	let $mainState = $("#main_state");
-	let $incategoryState = $("#incategory_state");
-	let $categoryNavTitle = $("#category_navigation_title");
-	let $searchBarContainer = $("#search");
-	let $categoryNavList = $("#category_navigation_list");
-	let $whiteLogoSearchBar = $("#white_logo_searchbar");
-	
-	$categoryNavTitle.toggleClass("hidden", true);
-	$incategoryState.toggleClass("hidden", false);
-	
-
-	if ($(".category_navigation_item").hasClass("nvbi_active")){
-		$(".category_navigation_item").toggleClass("nvbi_active", false);
-		$categoryClicked.toggleClass("nvbi_active", true);
-	}
-	else {
-		window.scrollTo(0, 0);	
-		$categoryClicked.toggleClass("nvbi_active", true);
-		
-		$mainState.toggleClass("fade_out", true);
-
-		$searchBarContainer.toggleClass("move_up_searchbar",true);
-		$categoryNavList.toggleClass("move_up_searchbar",true).toggleClass("fade_in", true);
-		$incategoryState.toggleClass("move_up_searchbar",true).toggleClass("fade_in", true);
-		$whiteLogoSearchBar.toggleClass("hidden", false);
-		setTimeout(function(){		
-			$mainState.toggleClass("hidden", true);
-			$searchBarContainer.toggleClass("move_up_searchbar", false);
-			$categoryNavList.toggleClass("move_up_searchbar", false).toggleClass("fade_in", false);
-			$incategoryState.toggleClass("move_up_searchbar", false).toggleClass("fade_in", false);
-		}, 580);
-	}
-	
-	let target;
-	let id = $categoryClicked.attr("id");
-	switch(id) {
-		case "most_downloaded":
-			target = 'popular';
-			break;
-
-		case "last_uploaded":
-			target = "uploads";
-			break;
-	}
-
-	if(!target) // Nothing to do
-		return;
-
-	$.ajax({
-		url: "/search/"+target,
-		method: "get"
-	}).done(function(data) {
-		data.forEach(function(_, idx, data){
-			data[idx].time_ago = 0;
-			data[idx].time_unit = "sec";
-		});
-
-		episodeList.episodes = data;
-	});
-}
-
 function doLogin() {
 	let $notificationBar = $("#display_notification");
 
@@ -289,7 +226,6 @@ function register() {
 $(function() {
 	$("#close_logreg_form, #login_registry_fade_pan").on("click", function(){closeNotification(); closeLogRegForm();});
 	$("#login, #register").on("click", toggleAccessForm);
-	$(".category_navigation_item").on("click", openCategory);
 	$("#login_button .sign_button").on("click", doLogin);
 	$("#register_button .sign_button").on("click", register);
 	$("#close_notification, #display_notification").on("click", closeNotification);

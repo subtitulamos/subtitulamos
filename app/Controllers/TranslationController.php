@@ -299,13 +299,16 @@ class TranslationController
             return $response->withStatus(403);
         }
 
+        // Update last edition time of parent sub
+        $seq->getSubtitle()->setEditTime(new \DateTime());
+
         // Generate a copy of this sequence, we don't edit the original
         $nseq = clone $seq;
         $nseq->incRevision();
         $nseq->setText($text);
         $nseq->setAuthor($auth->getUser());
-
         $em->persist($nseq);
+
         $em->flush();
 
         $response->getBody()->write($nseq->getId());
@@ -359,7 +362,11 @@ class TranslationController
             // TODO: Log
             return $response->withStatus(500);
         }
+        
+        // Update last edition time of parent sub
+        $curSub->setEditTime(new \DateTime());
 
+        // Create new sequence
         $seq = new Sequence();
         $seq->setSubtitle($curSub);
         $seq->setNumber($baseSeq->getNumber());
@@ -381,8 +388,13 @@ class TranslationController
             ->setParameter('sub', $curSub->getId())
             ->getSingleScalarResult();
 
-        $ourSubSeqCount++; // Since this one we just translated wasn't counted (flush not called)
+        $ourSubSeqCount++; // Since this one we just translated wasn't persisted yet (flush not called)
         $curSub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
+        if ($curSub->getProgress() == 100) {
+            // We're done! Save our progress
+            $curSub->setCompleteTime(new \DateTime());
+        }
+
         $em->persist($curSub);
 
         // Flush and end
