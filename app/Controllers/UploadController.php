@@ -25,7 +25,8 @@ class UploadController
 {
     public function view(ResponseInterface $response, Twig $twig, EntityManager $em)
     {
-        $shows = $em->getRepository("App:Show")->findAll();
+        $shows = $em->createQuery("SELECT sw FROM App:Show sw ORDER BY sw.name ASC")->getResult();
+
         return $twig->render($response, 'upload.twig', [
             'shows' => $shows
         ]);
@@ -70,8 +71,7 @@ class UploadController
         if ($showId != "NEW") {
             if (!v::numeric()->positive()->validate($showId)) {
                 $errors[] = "Elige una serie de la lista";
-            }
-            else {
+            } else {
                 $show = $em->getRepository('App:Show')->find((int)$showId);
                 if (!$show) {
                     $errors[] = "La serie que has elegido no existe";
@@ -91,15 +91,13 @@ class UploadController
                     $errors[] = sprintf("El episodio %dx%d de la serie %s ya existe", $season, $epNumber, $show->getName());
                 }
             }
-        }
-        else {
+        } else {
             // Create a new show!
             $newShowName = $request->getParam("new-show");
             if (v::notEmpty()->length(1, 100)->validate($newShowName)) {
                 if ($em->getRepository("App:Show")->findByName($newShowName)) {
                     $errors[] = "La serie no se ha podido crear puesto que ya existe. Por favor, selecciónala en el desplegable";
-                }
-                else {
+                } else {
                     $show = new Show();
                     $show->setName($newShowName);
                     $show->setZeroTolerance(false);
@@ -107,8 +105,7 @@ class UploadController
                     
                     /* TODO: Log */
                 }
-            }
-            else {
+            } else {
                 $errors[] = "El nombre de la serie no puede estar vacío";
             }
         }
