@@ -333,3 +333,7 @@
 #translation #sequences textarea {
     resize: none;
 }
+
+#translation-locks {
+    margin-left: 20px;
+}

@@ -155,6 +155,45 @@ class TranslationController
         ]);
     }
 
+    public function listOpenLocks($id, $request, $response, EntityManager $em)
+    {
+        $openLocks = $em->createQuery("SELECT ol FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub ORDER BY ol.sequenceNumber DESC")
+            ->setParameter("sub", $id)
+            ->getResult();
+
+        $r = [];
+        foreach ($openLocks as $openLock) {
+            $r[] = [
+                'id' => $openLock->getId(),
+                'user' => [
+                    'id' => $openLock->getUser()->getId(),
+                    'username' => $openLock->getUser()->getUsername()
+                ],
+                'time' => $openLock->getGrantTime()->format('d/M H:i'),
+                'seq_number' => $openLock->getSequenceNumber()
+            ];
+        }
+
+        return $response->withJSON($r);
+    }
+
+    public function releaseLock($id, $lockId, $request, $response, EntityManager $em)
+    {
+        $openLock = $em->getRepository("App:OpenLock")->find($lockId);
+        if (!$openLock) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        if ($openLock->getSubtitle()->getId() != $id) {
+            return $response->withStatus(400);
+        }
+
+        $em->remove($openLock);
+        $em->flush();
+
+        return $response->withJSON($r);
+    }
+
     public function listSequences($id, $page, $request, $response, EntityManager $em)
     {
         $secondaryLang = $request->getQueryParam("secondaryLang", 0);

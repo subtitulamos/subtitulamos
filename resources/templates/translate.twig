@@ -83,6 +83,14 @@
         <div class="page-wrapper">
             <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage"></pagelist>
         </div>
+
+        <div id="translation-locks" v-if="openLocks.length > 0">
+            Secuencias abiertas:
+
+            <ul>
+                <seqlock v-for="lock in openLocks" :key="lock.id" :id="lock.id" :user="lock.user" :seqnum="lock.seq_number" :time="lock.time"></seqlock>
+            </ul>
+        </div>
     </div>
 
     <div id="translation-comments">
@@ -104,8 +112,6 @@
             >
             </comment>
         </template>
-
-       
     </div>
 </div>
 
@@ -113,6 +119,7 @@
 <script type="text/javascript">
     let subID = {{ sub.id }};
     let canLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
+    let canReleaseOpenLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
     let pageCount = {{ page_count }};
     let availSecondaryLangs = {{ avail_secondary_langs|raw }};
     let textFilter = "";
@@ -155,6 +162,24 @@
 
     {# FIXME: The template string breaks compatibility for certain browsers (http://caniuse.com/#search=template%20literal) #}
     {% verbatim %}
+    Vue.component('seqlock', {
+        template: `
+            <li>#{{ seqnum }} por <a :href="'/users/'+user.id">{{ user.username }}</a> [{{ time }}] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
+        `,
+        props: ["id", "seqnum", "user", "time"],
+        methods: {
+            release: function() {
+                $.ajax({
+                    url: '/subtitles/'+subID+'/translate/open-list/'+this.id,
+                    method: 'DELETE',
+                    data: {}
+                }).done(function() {
+                    loadOpenLocks();
+                });
+            }
+        }
+    });
+
     Vue.component('sequence', {
         template: `
             <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
@@ -523,6 +548,18 @@
         })
     }
 
+    function loadOpenLocks()
+    {
+        $.ajax({
+            url: '/subtitles/'+subID+'/translate/open-list',
+            method: 'GET'
+        }).done(function(reply) {
+            translation.openLocks = reply;            
+        }).fail(function() {
+            alertify.error("Ha ocurrido un error tratando de cargar las secuencias abiertas");
+        });
+    }
+
     /**
     * Boot
     */
@@ -532,7 +569,8 @@
             sequences: [],
             pages: [],
             curPage: 0,
-            lastPage: pageCount
+            lastPage: pageCount,
+            openLocks: []
         },
         methods: {
             applyFilter: function() {
@@ -558,6 +596,9 @@
 
     loadPage(1, availSecondaryLangs[0]); // Load first page by default
     loadComments();
+    if(canReleaseOpenLock) {
+        loadOpenLocks();
+    }
     setInterval(loadComments, 30000);
 </script>
 {% endblock %}
