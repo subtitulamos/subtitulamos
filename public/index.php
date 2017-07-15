@@ -20,8 +20,7 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class () extends \DI\Bridge\Slim\App
-{
+$app = new class() extends \DI\Bridge\Slim\App {
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -58,8 +57,7 @@ $app = new class () extends \DI\Bridge\Slim\App
                 ));
 
                 $auth = $c->get('App\Services\Auth');
-                $twig->getEnvironment()->addGlobal("auth", new class ($auth)
-                {
+                $twig->getEnvironment()->addGlobal("auth", new class($auth) {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;

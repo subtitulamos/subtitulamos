@@ -13,6 +13,7 @@ use \Doctrine\ORM\EntityManager;
 use \Slim\Views\Twig;
 use App\Entities\Subtitle;
 use App\Entities\Sequence;
+use App\Entities\OpenLock;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
@@ -83,8 +84,7 @@ class TranslationController
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            }
-            else {
+            } else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -166,8 +166,7 @@ class TranslationController
                 ->getResult();
 
             $snumbers = [];
-        }
-        else {
+        } else {
             $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number < :last ORDER BY sq.number ASC, sq.revision DESC")
                 ->setParameter("id", $id)
                 ->setParameter("first", $firstNum)
@@ -185,8 +184,7 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            }
-            else {
+            } else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -260,14 +258,68 @@ class TranslationController
         return $response->withJSON($sequences);
     }
 
-    public function open($id, $request, $response, EntityManager $em)
+    public function open($id, $request, $response, EntityManager $em, Auth $auth)
     {
-        $seqID = $request->getParsedBodyParam('seqID', 0);
+        $seqNum = $request->getParsedBodyParam('seqNum', 0);
 
-        $res = ['ok' => true];
-        // TODO: Implement open lock restrictions
+        if (!$seqNum) {
+            return $response->withStatus(400);
+        }
+
+        $sub = $em->getRepository("App:Subtitle")->find($id);
+        if (!$sub) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $sequence = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC")
+                    ->setParameter('sub', $id)
+                    ->setParameter('num', $seqNum)
+                    ->setMaxResults(1)
+                    ->getOneOrNullResult();
+
+        $oLock = $em->createQuery("SELECT ol, u FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+                    ->setParameter('sub', $id)
+                    ->setParameter('num', $seqNum)
+                    ->getOneOrNullResult();
+
+        $res = ['ok' => true, 'text' => $sequence ? $sequence->getText() : null, 'id' => $sequence ? $sequence->getId() : null];
+        if (!$oLock) {
+            // Cool, let's create a lock
+            $oLock = new OpenLock();
+            $oLock->setSubtitle($sub);
+            $oLock->setSequenceNumber($seqNum);
+            $oLock->setUser($auth->getUser());
+            $oLock->setGrantTime(new \DateTime());
+            $em->persist($oLock);
+            $em->flush();
+        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+            // Sequence already open!
+            $res['ok'] = false;
+            $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
+        }
 
         return $response->withJSON($res);
+    }
+
+    public function close($id, $request, $response, EntityManager $em, Auth $auth)
+    {
+        $seqNum = $request->getParsedBodyParam('seqNum', 0);
+
+        if (!$seqNum) {
+            return $response->withStatus(400);
+        }
+
+        $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+                    ->setParameter('sub', $id)
+                    ->setParameter('num', $seqNum)
+                    ->getOneOrNullResult();
+
+        if ($oLock) {
+            $em->remove($oLock);
+            $em->flush();
+        }
+
+        return $response->withStatus(200);
     }
 
     public function save($id, $request, $response, EntityManager $em, Auth $auth)
@@ -289,6 +341,10 @@ class TranslationController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
+        if ($seq->getSubtitle()->getId() != $id) {
+            return $response->withStatus(400);
+        }
+
         if ($text == $seq->getText()) {
             // Nothing to change here, send the id of this very sequence
             $response->getBody()->write($seq->getId());
@@ -301,6 +357,16 @@ class TranslationController
 
         // Update last edition time of parent sub
         $seq->getSubtitle()->setEditTime(new \DateTime());
+
+        // Find an open lock on this sequence and clear it
+        $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+                    ->setParameter('sub', $seq->getSubtitle())
+                    ->setParameter('num', $seq->getNumber())
+                    ->getOneOrNullResult();
+
+        if ($oLock) {
+            $em->remove($oLock);
+        }
 
         // Generate a copy of this sequence, we don't edit the original
         $nseq = clone $seq;
@@ -365,6 +431,16 @@ class TranslationController
         
         // Update last edition time of parent sub
         $curSub->setEditTime(new \DateTime());
+
+        // Find an open lock on this sequence and clear it
+        $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+                    ->setParameter('sub', $curSub)
+                    ->setParameter('num', $baseSeq->getNumber())
+                    ->getOneOrNullResult();
+
+        if ($oLock) {
+            $em->remove($oLock);
+        }
 
         // Create new sequence
         $seq = new Sequence();

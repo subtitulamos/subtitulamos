@@ -258,12 +258,18 @@
                     url: '/subtitles/'+subID+'/translate/open',
                     method: 'POST',
                     data: {
-                        seqID: this.id
+                        seqNum: this.number
                     }
                 }).done(function(reply) {
                     if(reply.ok) {
                         this.editing = true;
                         this.curText = this.text;
+                        if(reply.text !== null) {
+                            this.text = reply.text;
+                        }
+                        if(reply.id !== null) {
+                            this.id = reply.id;
+                        }
                     } else {
                         alertify.error(reply.msg);
                     }
@@ -329,6 +335,18 @@
                 // Discard sequence changes
                 this.text = this.curText;
                 this.editing = false;
+
+                 $.ajax({
+                    url: '/subtitles/'+subID+'/translate/close',
+                    method: 'POST',
+                    data: {
+                        seqNum: this.number
+                    }
+                })
+                .fail(function() {
+                    alertify.error("Ha ocurrido un error al intentar cerrar la secuencia");
+                    pthis.editing = true;
+                });
             },
 
             toggleLock: function() {
