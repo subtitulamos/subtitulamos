@@ -74,6 +74,11 @@ class Subtitle
     private $comments;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $downloads;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -353,5 +358,28 @@ class Subtitle
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set downloads
+     *
+     * @param integer $downloads
+     * @return Subtitle
+     */
+    public function setDownloads($downloads)
+    {
+        $this->downloads = $downloads;
+
+        return $this;
+    }
+
+    /**
+     * Get downloads
+     *
+     * @return integer 
+     */
+    public function getDownloads()
+    {
+        return $this->downloads;
     }
 }

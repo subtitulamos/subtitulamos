@@ -33,6 +33,10 @@ class DownloadController
             return $response->withStatus(403);
         }
 
+        // Count the download first
+        $sub->setDownloads($sub->getDownloads() + 1);
+        $em->flush();
+
         // Grab the latest revision sequences
         $sequences = [];
         foreach ($sub->getSequences() as $seq) {

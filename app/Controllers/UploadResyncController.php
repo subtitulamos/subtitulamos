@@ -102,6 +102,7 @@ class UploadResyncController
         $subtitle->setUploadTime(new \DateTime());
         $subtitle->setDirectUpload(true);
         $subtitle->setProgress(100);
+        $subtitle->setDownloads(0);
         $em->persist($subtitle);
 
         // Set sequences

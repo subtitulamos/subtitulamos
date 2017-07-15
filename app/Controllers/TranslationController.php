@@ -75,6 +75,7 @@ class TranslationController
         $sub->setProgress(0); // TODO: This progress could be more than 0% if sequences are autofilled
         $sub->setDirectUpload(false);
         $sub->setUploadTime(new \DateTime());
+        $sub->setDownloads(0);
 
         // Autofill sequences
         foreach ($base->getSequences() as $sequence) {
