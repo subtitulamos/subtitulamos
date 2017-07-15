@@ -12,7 +12,15 @@
 
     <div id="translation-details">
         <div id='filters'>
-            Filtrar por cadena: <input type="text" id="text-filter" /><button type="submit" id="apply" @click="applyFilter">Aplicar</button>
+            Filtrar por cadena: <input type="text" id="text-filter" />
+            Filtrar por autor: 
+            <select id='author-filter'>
+                <option value="0">Todos</option>
+                {% for user in authors %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" id="apply" @click="applyFilter">Aplicar</button>
         </div>
 
         <div class="page-wrapper">
@@ -23,7 +31,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Autor: <span id='author-filter-name'>Todos</span> <i class="fa fa-caret-down" aria-hidden="true"></i></th>
+                    <th>Autor</th>
                     <th>Tiempos</th>
                     <th>Idioma secundario: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i></th>
                     <th>Traducción al <span id='target-language-name'>{{ sub_lang }}</span></th>
@@ -102,6 +110,7 @@
     let pageCount = {{ page_count }};
     let availSecondaryLangs = {{ avail_secondary_langs|raw }};
     let textFilter = "";
+    let authorFilter = 0;
     let myId = {{ auth.user.id }};
     let myName = "{{ auth.user.username }}";
     let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
@@ -112,6 +121,7 @@
             method: 'GET',
             data: {
                 textFilter: textFilter,
+                authorFilter: authorFilter,
                 secondaryLang: secondaryLang
             }
         }).done(function(pageData) {
@@ -519,12 +529,15 @@
         methods: {
             applyFilter: function() {
                 let newTextFilter = $("#text-filter").val();
-                if(newTextFilter == textFilter) {
-                    return;
-                }
-                
+                let newAuthorFilter = $("#author-filter").val();
+                let reload = newTextFilter != textFilter || newAuthorFilter != authorFilter;
+
                 textFilter = newTextFilter;
-                loadPage(1, availSecondaryLangs[0]);
+                authorFilter = newAuthorFilter;
+
+                if(reload) {
+                    loadPage(1, availSecondaryLangs[0]);
+                }
             }
         }
     });

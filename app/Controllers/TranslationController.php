@@ -135,13 +135,19 @@ class TranslationController
             ->setParameter("sub", $baseSub)
             ->getSingleScalarResult();
 
+        // Get a list of sequence authors
+        $authors = $em->createQuery("SELECT DISTINCT u.id, u.username FROM App:Sequence s JOIN s.author u WHERE s.subtitle = :sub")
+            ->setParameter("sub", $sub)
+            ->getResult();
+
         return $twig->render($response, 'translate.twig', [
             'sub' => $sub,
             'avail_secondary_langs' => json_encode($langs),
             'episode' => $sub->getVersion()->getEpisode(),
             'page_count' => ceil($seqCount / self::SEQUENCES_PER_PAGE),
             "full_name" => $sub->getVersion()->getEpisode()->getFullName(),
-            'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang()))
+            'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+            'authors' => $authors
         ]);
     }
 
@@ -156,23 +162,43 @@ class TranslationController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
+        $qb = $em->createQueryBuilder();
+        $qb->select('sq')
+            ->from('App:Sequence', 'sq')
+            ->join('sq.author', 'u')
+            ->where('sq.subtitle = :id')
+            ->setParameter('id', $id);
+
         if ($request->getQueryParam("textFilter")) {
+            $filtered = true;
+            
             $textFilter = $request->getQueryParam("textFilter");
             $textFilter = "%" . str_replace("%", "", trim($textFilter)) . "%";
 
-            $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id WHERE sq.text LIKE :tx ORDER BY sq.number ASC, sq.revision DESC")
-                ->setParameter("id", $id)
-                ->setParameter("tx", $textFilter)
-                ->getResult();
-
-            $snumbers = [];
-        } else {
-            $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN App:User u WHERE sq.author = u AND sq.subtitle = :id AND sq.number >= :first AND sq.number < :last ORDER BY sq.number ASC, sq.revision DESC")
-                ->setParameter("id", $id)
-                ->setParameter("first", $firstNum)
-                ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE)
-                ->getResult();
+            $qb->andWhere('sq.text LIKE :tx')
+               ->setParameter('tx', $textFilter);
         }
+
+        if ($request->getQueryParam("authorFilter")) {
+            $filtered = true;
+
+            $qb->andWhere('sq.author = :author')
+               ->setParameter('author', $request->getQueryParam("authorFilter"));
+        }
+
+        if (!isset($filtered) || $filtered == false) {
+            $qb->andWhere("sq.number >= :first")
+               ->andWhere("sq.number < :last")
+               ->setParameter("first", $firstNum)
+               ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
+        } else {
+            $snumbers = [];
+        }
+
+        $qb->addOrderBy('sq.number', 'ASC')
+           ->addOrderBy('sq.revision', 'DESC');
+           
+        $seqList = $qb->getQuery()->getResult();
 
         $sequences = [];
         foreach ($seqList as $seq) {
