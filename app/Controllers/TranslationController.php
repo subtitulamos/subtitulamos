@@ -60,8 +60,10 @@ class TranslationController
             }
 
             if ($sub->getLang() == $lang) {
-                // Lang already started!
-                $response->getBody()->write("This version already has this lang");
+                // Lang already started! -- TODO: Cheap redirect, should not ever get to this page in the first place // could do this via ajax // add a link to body instead
+                $response->getBody()->write("<meta http-equiv=\"refresh\" content=\"3;url=".$router->pathFor("translation", ["id" => $sub->getId()])."\" />");
+                $response->getBody()->write("Esta versión ya tiene este idioma abierto. Redirigiendo...");
+                $response->withHeader('Refresh', 5);
                 return $response->withStatus(412);
             }
         }
