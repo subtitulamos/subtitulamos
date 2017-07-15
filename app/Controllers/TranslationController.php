@@ -154,8 +154,10 @@ class TranslationController
     public function listSequences($id, $page, $request, $response, EntityManager $em)
     {
         $secondaryLang = $request->getQueryParam("secondaryLang", 0);
+        $untranslatedFilter = $request->getQueryParam('untranslated', 'false') == 'true';
         $page = max((int)$page, 1);
         $firstNum = ($page - 1) * self::SEQUENCES_PER_PAGE + 1;
+        $sequences = [];
 
         $sub = $em->getRepository("App:Subtitle")->find($id);
         if (!$sub) {
@@ -176,31 +178,29 @@ class TranslationController
             $textFilter = "%" . str_replace("%", "", trim($textFilter)) . "%";
 
             $qb->andWhere('sq.text LIKE :tx')
-               ->setParameter('tx', $textFilter);
+            ->setParameter('tx', $textFilter);
         }
 
         if ($request->getQueryParam("authorFilter")) {
             $filtered = true;
 
             $qb->andWhere('sq.author = :author')
-               ->setParameter('author', $request->getQueryParam("authorFilter"));
+            ->setParameter('author', $request->getQueryParam("authorFilter"));
         }
 
         if (!isset($filtered) || $filtered == false) {
             $qb->andWhere("sq.number >= :first")
-               ->andWhere("sq.number < :last")
-               ->setParameter("first", $firstNum)
-               ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
+            ->andWhere("sq.number < :last")
+            ->setParameter("first", $firstNum)
+            ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
         } else {
             $snumbers = [];
         }
 
         $qb->addOrderBy('sq.number', 'ASC')
-           ->addOrderBy('sq.revision', 'DESC');
-           
+        ->addOrderBy('sq.revision', 'DESC');
+        
         $seqList = $qb->getQuery()->getResult();
-
-        $sequences = [];
         foreach ($seqList as $seq) {
             $snum = $seq->getNumber();
 
@@ -261,17 +261,21 @@ class TranslationController
             foreach ($altSeqs as $altSeq) {
                 $snum = $altSeq->getNumber();
 
-                if (!isset($sequences[$snum])) {
-                    $temp = new Sequence(); // not intended to persist
-                    $temp->setNumber($snum);
-                    $temp->setStartTime($altSeq->getStartTime());
-                    $temp->setEndTime($altSeq->getEndTime());
-                    $temp->setText('');
+                if ($untranslatedFilter && isset($sequences[$snum])) {
+                    unset($sequences[$snum]);
+                } else {
+                    if (!isset($sequences[$snum])) {
+                        $temp = new Sequence(); // not intended to persist
+                        $temp->setNumber($snum);
+                        $temp->setStartTime($altSeq->getStartTime());
+                        $temp->setEndTime($altSeq->getEndTime());
+                        $temp->setText('');
 
-                    $sequences[$snum] = $temp->jsonSerialize();
+                        $sequences[$snum] = $temp->jsonSerialize();
+                    }
+
+                    $sequences[$snum]['secondary_text'] = $altSeq->getText();
                 }
-
-                $sequences[$snum]['secondary_text'] = $altSeq->getText();
             }
         }
 
