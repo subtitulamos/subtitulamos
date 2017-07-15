@@ -130,8 +130,9 @@ class TranslationController
         }
         
         // Calculate sequence number for the main subtitle version
-        $baseSub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
+        $baseSub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1 ORDER BY sb.uploadTime DESC")
             ->setParameter('v', $sub->getVersion())
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         $seqCount = $em->createQuery("SELECT COUNT(s.id) FROM App:Sequence s WHERE s.subtitle = :sub")
