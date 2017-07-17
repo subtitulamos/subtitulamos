@@ -48,18 +48,19 @@ class LoginController
         if (!$username || !$password) {
             return $response->withStatus(400);
         }
-        
+
         if (\filter_var($username, \FILTER_VALIDATE_EMAIL)) {
             // Logging in with email
             $user = $em->getRepository("App:User")->findOneByEmail($username);
             $loginName = "Correo electrónico";
-        } else {
+        }
+        else {
             $user = $em->getRepository("App:User")->findOneByUsername($username);
             $loginName = "Usuario";
         }
 
         if (!$user || !\password_verify($password, $user->getPassword())) {
-            return $response->withJson([$loginName.' o contraseña incorrectos'], 403);
+            return $response->withJson([$loginName . ' o contraseña incorrectos'], 403);
         }
 
         $auth->log($user, $remember);
@@ -85,19 +86,22 @@ class LoginController
 
         if (!v::alnum('_')->noWhitespace()->length(3, 24)->validate($username)) {
             $errors[] = ["username" => "El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos"];
-        } elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
+        }
+        elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
             $errors[] = ["username" => "El nombre de usuario ya está en uso"];
         }
 
         if (!v::email()->validate($email)) {
             $errors[] = ["email" => "El correo electrónico no tiene un formato válido"];
-        } elseif ($em->getRepository("App:User")->findByEmail($email) != null) {
+        }
+        elseif ($em->getRepository("App:User")->findByEmail($email) != null) {
             $errors[] = ["email" => "El correo electrónico ya está en uso"];
         }
-        
+
         if (!v::length(8, 80)->validate($password)) {
             $errors[] = ["password" => "La contraseña debe tener 8 caracters como mínimo"];
-        } elseif ($password != $password_confirmation) {
+        }
+        elseif ($password != $password_confirmation) {
             $errors[] = ["password_confirmation" => "Las contraseñas no coinciden"];
         }
 
@@ -113,7 +117,7 @@ class LoginController
         $user->setBanned(false);
         $user->setRoles(["ROLE_USER"]);
         $user->setRememberToken("");
-        
+
         $em->persist($user);
         $em->flush();
 
@@ -134,7 +138,7 @@ class LoginController
 
     public function viewLogin($response)
     {
-        $response->getBody()->write("Necesitas estar indentificado para acceder a esta sección. <a href='/'>Ir a la página principal</a>");
+        $response->getBody()->write("Necesitas estar identificado para acceder a esta sección. <a href='/'>Ir a la página principal</a>");
         return $response;
     }
 }
