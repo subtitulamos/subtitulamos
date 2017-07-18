@@ -6,12 +6,13 @@
         "twig/twig": "~2.0",
         "monolog/monolog": "^1.22",
         "php-di/slim-bridge": "^1.0",
-        "doctrine/orm": "2.4.*",
+        "doctrine/orm": "2.5.*",
         "respect/validation": "^1.1",
         "neitanod/forceutf8": "~2.0",
         "dflydev/fig-cookies": "^1.0",
         "cocur/slugify": "^2.5",
-        "elasticsearch/elasticsearch": "^5.2"
+        "elasticsearch/elasticsearch": "^5.2",
+        "symfony/console": "^3.3"
     },
 
     "autoload": {
