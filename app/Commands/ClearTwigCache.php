@@ -32,5 +32,7 @@ class ClearTwigCache extends Command
             $fn = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
             $fn($fileinfo->getRealPath());
         }
+
+        $output->writeln("Cleared Twig template cache");
     }
 }
