@@ -70,7 +70,7 @@ class Subtitle
     private $progress;
 
     /**
-     * @ORM\OneToMany(targetEntity="SubtitleComment", mappedBy="episode")
+     * @ORM\OneToMany(targetEntity="SubtitleComment", mappedBy="subtitle")
      */
     private $comments;
 
