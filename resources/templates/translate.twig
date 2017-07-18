@@ -185,7 +185,7 @@
         template: `
             <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
                 <td><span v-if="!history">{{ number }}</span></td>
-                <td class="user"><a :href="'/user/' + author.id">{{ author_name }}</a></td>
+                <td class="user"><a :href="'/users/' + author.id">{{ author_name }}</a></td>
                 <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
                 <td class="text"><pre>{{ secondaryText }}</pre></td>
                 <td class="text" @click="editSequence" :class="{'translatable': !history}">
