@@ -1,3 +1,4 @@
+{% import 'macros/assets.twig' as assets %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,16 +10,19 @@
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
 	<link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
-	<link rel="stylesheet" href="css/app.css?v=0.0.3"/>
-	<link rel="stylesheet" href="css/hint.css">
-	<link rel="stylesheet" href="css/normalize.css">
-	<link rel="stylesheet" href="css/browser_specific.css">
-	<link rel="stylesheet" href="css/effects.css">
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+	{{ assets.css('app') }}
+	{{ assets.css('hint') }}
+	{{ assets.css('normalize') }}
+	{{ assets.css('browser_specific') }}
+	{{ assets.css('effects') }}
 	{% block css %}{% endblock %}
+
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="js/vue.js"></script>
-	<script type="text/javascript" src="js/app.js?v=0.0.3" async defer></script>
+	
+	{{ assets.js('vue') }}
+	{{ assets.js('app', 'async defer') }}
 	<script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async defer></script>
 
 	<title>{% block title %}Subtitulamos.tv{% endblock %}</title>
@@ -136,7 +140,7 @@
 		<div class="main_container">
 			{% block search %}
 				<div id="search">
-					<a href="/"><div id="white_logo_searchbar" class="white_logo"></div></a>
+					<a href="/"><div id="white-logo-searchbar" class="white_logo"></div></a>
 					<input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" />
 					<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
 					
@@ -211,5 +215,5 @@
 	</div>
 
 	{% block scripts %}{% endblock %}
-	<script type='text/javascript' src='js/search.js?v=0.0.1'></script>
+	{{ assets.js('search') }}
 </body>

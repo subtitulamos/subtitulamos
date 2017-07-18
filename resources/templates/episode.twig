@@ -1,7 +1,8 @@
 {% extends "base.twig" %}
+{% import 'macros/assets.twig' as assets %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="css/episode.css?v=0.0.3"/>
+    {{ assets.css('episode') }}
 {% endblock %}
 
 {% block content %}
@@ -160,7 +161,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="js/timeago.min.js"></script>
+    {{ assets.js('timeago.min') }}
     <script type="text/javascript">
         let epId = {{ episode.id }};
         let $newTranslationButton = $(".translate_subtitle");

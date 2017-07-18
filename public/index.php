@@ -37,6 +37,9 @@ $app = new class() extends \DI\Bridge\Slim\App {
             \App\Services\Auth::class => function (ContainerInterface $c) use ($entityManager) {
                 return new \App\Services\Auth($entityManager);
             },
+            \App\Services\AssetManager::class => function (ContainerInterface $c) {
+                return new \App\Services\AssetManager();
+            },
             \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
                 return new Cocur\Slugify\Slugify();
             },
@@ -81,6 +84,11 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 );
 
                 $twig->getEnvironment()->addFunction(new Twig_Function('feature_on', 'feature_on'));
+
+                $assetMgr = $c->get('App\Services\AssetManager');
+                $twig->getEnvironment()->addFunction(new Twig_Function('asset_versioned_name', function ($name) use (&$assetMgr) {
+                    return $assetMgr->getAssetVersionedName($name);
+                }));
                 return $twig;
             },
 

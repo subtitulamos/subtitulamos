@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2017 subtitulamos.tv
+ */
+
+require __DIR__.'/../vendor/autoload.php';
+use Symfony\Component\Console\Application;
+
+define('DEBUG', getenv('DEBUG') == 'true');
+$application = new Application();
+$application->add(new \App\Commands\DeployAssetsCommand());
+$application->run();

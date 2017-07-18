@@ -6,4 +6,4 @@ tmp/
 *~
 resources/assets/rev-manifest.json
 public/css/*.css
-public/js/*.css
+public/js/*.js
