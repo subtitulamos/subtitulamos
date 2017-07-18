@@ -24,7 +24,7 @@ class Version
 
     /**
      * @ORM\ManyToOne(targetEntity="Episode", inversedBy="versions")
-     * @ORM\JoinColumn(name="episode_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="episode_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $episode;
 
@@ -56,7 +56,7 @@ class Version
     {
         $this->subtitles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Get id
      *

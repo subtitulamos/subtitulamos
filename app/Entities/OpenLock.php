@@ -24,7 +24,7 @@ class OpenLock
 
     /**
      * @ORM\ManyToOne(targetEntity="Subtitle")
-     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $subtitle;
 

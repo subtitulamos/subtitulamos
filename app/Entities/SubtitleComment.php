@@ -24,7 +24,7 @@ class SubtitleComment implements \JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="Subtitle", inversedBy="comments")
-     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $subtitle;
 
@@ -70,6 +70,7 @@ class SubtitleComment implements \JsonSerializable
     }
 
     ///////////////////////////// AUTOMATICALLY GENERATED CODE BELOW \\\\\\\\\\\\\\\\\\\\\\\\\\
+
 
     /**
      * Get id

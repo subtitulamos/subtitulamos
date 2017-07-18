@@ -24,7 +24,7 @@ class Subtitle
 
     /**
      * @ORM\ManyToOne(targetEntity="Version", inversedBy="subtitles")
-     * @ORM\JoinColumn(name="version_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="version_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $version;
 
@@ -35,6 +35,7 @@ class Subtitle
 
     /**
      * @ORM\OneToOne(targetEntity="Pause", inversedBy="subtitle")
+     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $pause;
 

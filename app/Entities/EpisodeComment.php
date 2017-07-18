@@ -27,7 +27,7 @@ class EpisodeComment implements \JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="Episode", inversedBy="comments")
-     * @ORM\JoinColumn(name="episode_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="episode_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $episode;
 
@@ -77,6 +77,7 @@ class EpisodeComment implements \JsonSerializable
     }
 
     ///////////////////////////// AUTOMATICALLY GENERATED CODE BELOW \\\\\\\\\\\\\\\\\\\\\\\\\\
+
     /**
      * Get id
      *

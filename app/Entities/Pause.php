@@ -24,6 +24,7 @@ class Pause
 
     /**
      * @ORM\OneToOne(targetEntity="Subtitle", inversedBy="pause")
+     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $subtitle;
 
