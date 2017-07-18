@@ -53,18 +53,23 @@ class DownloadController
 
         $response = $response->withHeader('Content-Type', 'text/srt');
         $response = $response->withHeader('Content-Disposition', sprintf("attachment; filename=\"%s.srt\"", $sub->getVersion()->getEpisode()->getFullName()));
-        
+
         foreach ($sequences as $seq) {
-            $file .= $sequenceNumber."\r\n";
+            $file .= $sequenceNumber . "\r\n";
             $file .= Clock::intToTimeStr($seq->getStartTime()) . " --> " . Clock::intToTimeStr($seq->getEndTime()) . "\r\n";
-            
+
             $text = str_replace("\n", "\r\n", str_replace("\r\r", "\r", $seq->getText()));
             /* TODO:allow user to configure a "utf8_download" preference */
             $text = utf8_decode($text);
 
+            if (trim($text) == "") {
+                $text = \str_repeat(" ", 3);
+            }
+
             $file .= $text;
             if (substr($text, strlen($text) - 1) != "\n") {
                 $file .= "\r\n"; // Add a linebreak if there's none in this last line
+
             }
 
             $file .= "\r\n";
