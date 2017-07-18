@@ -61,7 +61,7 @@ class TranslationController
 
             if ($sub->getLang() == $lang) {
                 // Lang already started! -- TODO: Cheap redirect, should not ever get to this page in the first place // could do this via ajax // add a link to body instead
-                $response->getBody()->write("<meta http-equiv=\"refresh\" content=\"3;url=".$router->pathFor("translation", ["id" => $sub->getId()])."\" />");
+                $response->getBody()->write("<meta http-equiv=\"refresh\" content=\"3;url=" . $router->pathFor("translation", ["id" => $sub->getId()]) . "\" />");
                 $response->getBody()->write("Esta versión ya tiene este idioma abierto. Redirigiendo...");
                 $response->withHeader('Refresh', 5);
                 return $response->withStatus(412);
@@ -87,7 +87,8 @@ class TranslationController
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            } else {
+            }
+            else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -157,7 +158,7 @@ class TranslationController
 
     public function listOpenLocks($id, $request, $response, EntityManager $em)
     {
-        $openLocks = $em->createQuery("SELECT ol FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub ORDER BY ol.sequenceNumber DESC")
+        $openLocks = $em->createQuery("SELECT ol FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub ORDER BY ol.sequenceNumber ASC")
             ->setParameter("sub", $id)
             ->getResult();
 
@@ -216,33 +217,34 @@ class TranslationController
 
         if ($request->getQueryParam("textFilter")) {
             $filtered = true;
-            
+
             $textFilter = $request->getQueryParam("textFilter");
             $textFilter = "%" . str_replace("%", "", trim($textFilter)) . "%";
 
             $qb->andWhere('sq.text LIKE :tx')
-            ->setParameter('tx', $textFilter);
+                ->setParameter('tx', $textFilter);
         }
 
         if ($request->getQueryParam("authorFilter")) {
             $filtered = true;
 
             $qb->andWhere('sq.author = :author')
-            ->setParameter('author', $request->getQueryParam("authorFilter"));
+                ->setParameter('author', $request->getQueryParam("authorFilter"));
         }
 
         if (!isset($filtered) || $filtered == false) {
             $qb->andWhere("sq.number >= :first")
-            ->andWhere("sq.number < :last")
-            ->setParameter("first", $firstNum)
-            ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
-        } else {
+                ->andWhere("sq.number < :last")
+                ->setParameter("first", $firstNum)
+                ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
+        }
+        else {
             $snumbers = [];
         }
 
         $qb->addOrderBy('sq.number', 'ASC')
-        ->addOrderBy('sq.revision', 'DESC');
-        
+            ->addOrderBy('sq.revision', 'DESC');
+
         $seqList = $qb->getQuery()->getResult();
         foreach ($seqList as $seq) {
             $snum = $seq->getNumber();
@@ -253,7 +255,8 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            } else {
+            }
+            else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -306,7 +309,8 @@ class TranslationController
 
                 if ($untranslatedFilter && isset($sequences[$snum])) {
                     unset($sequences[$snum]);
-                } else {
+                }
+                else {
                     if (!isset($sequences[$snum])) {
                         $temp = new Sequence(); // not intended to persist
                         $temp->setNumber($snum);
@@ -345,15 +349,15 @@ class TranslationController
         }
 
         $sequence = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC")
-                    ->setParameter('sub', $id)
-                    ->setParameter('num', $seqNum)
-                    ->setMaxResults(1)
-                    ->getOneOrNullResult();
+            ->setParameter('sub', $id)
+            ->setParameter('num', $seqNum)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
 
         $oLock = $em->createQuery("SELECT ol, u FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
-                    ->setParameter('sub', $id)
-                    ->setParameter('num', $seqNum)
-                    ->getOneOrNullResult();
+            ->setParameter('sub', $id)
+            ->setParameter('num', $seqNum)
+            ->getOneOrNullResult();
 
         $res = ['ok' => true, 'text' => $sequence ? $sequence->getText() : null, 'id' => $sequence ? $sequence->getId() : null];
         if (!$oLock) {
@@ -365,7 +369,8 @@ class TranslationController
             $oLock->setGrantTime(new \DateTime());
             $em->persist($oLock);
             $em->flush();
-        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        }
+        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
@@ -383,9 +388,9 @@ class TranslationController
         }
 
         $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
-                    ->setParameter('sub', $id)
-                    ->setParameter('num', $seqNum)
-                    ->getOneOrNullResult();
+            ->setParameter('sub', $id)
+            ->setParameter('num', $seqNum)
+            ->getOneOrNullResult();
 
         if ($oLock) {
             $em->remove($oLock);
@@ -433,9 +438,9 @@ class TranslationController
 
         // Find an open lock on this sequence and clear it
         $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
-                    ->setParameter('sub', $seq->getSubtitle())
-                    ->setParameter('num', $seq->getNumber())
-                    ->getOneOrNullResult();
+            ->setParameter('sub', $seq->getSubtitle())
+            ->setParameter('num', $seq->getNumber())
+            ->getOneOrNullResult();
 
         if ($oLock) {
             $em->remove($oLock);
@@ -507,9 +512,9 @@ class TranslationController
 
         // Find an open lock on this sequence and clear it
         $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
-                    ->setParameter('sub', $curSub)
-                    ->setParameter('num', $baseSeq->getNumber())
-                    ->getOneOrNullResult();
+            ->setParameter('sub', $curSub)
+            ->setParameter('num', $baseSeq->getNumber())
+            ->getOneOrNullResult();
 
         if ($oLock) {
             $em->remove($oLock);
