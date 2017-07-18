@@ -4,3 +4,6 @@ tmp/
 /.vscode
 /logs/*.log
 *~
+resources/assets/rev-manifest.json
+public/css/*.css
+public/js/*.css
