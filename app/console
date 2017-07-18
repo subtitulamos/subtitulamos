@@ -6,10 +6,11 @@
  * @copyright 2017 subtitulamos.tv
  */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 use Symfony\Component\Console\Application;
 
 define('DEBUG', getenv('DEBUG') == 'true');
 $application = new Application();
 $application->add(new \App\Commands\DeployAssetsCommand());
+$application->add(new \App\Commands\ClearTwigCache());
 $application->run();
