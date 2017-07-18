@@ -185,7 +185,7 @@
         template: `
             <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
                 <td><span v-if="!history">{{ number }}</span></td>
-                <td class="user"><a :href="'/users/' + author.id">{{ author_name }}</a></td>
+                <td class="user"><a :href="'/users/' + author.id" tabindex="-1">{{ author_name }}</a></td>
                 <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
                 <td class="text"><pre>{{ secondaryText }}</pre></td>
                 <td class="text" @click="editSequence" :class="{'translatable': !history}">
@@ -200,8 +200,8 @@
                 </td>
                 <td class="actions">
                     <div v-if="!history && editing">
-                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save"></i>
-                        <i class="fa fa-times-circle-o" @click="discard"></i>
+                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save" tabindex="0"></i>
+                        <i class="fa fa-times-circle-o" @click="discard" tabindex="0"></i>
                     </div>
 
                     <div v-if="translated && !history && !editing">
