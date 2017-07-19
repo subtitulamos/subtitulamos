@@ -452,3 +452,8 @@ a {
     padding: 4px;
     margin: 3px;
 }
+
+.comment-refresh {
+    float: right;
+    cursor: pointer;
+}

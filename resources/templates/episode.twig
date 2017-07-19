@@ -134,7 +134,7 @@
         </div>
     </div>
     <div id="subtitle-comments">
-        <h4>Comentarios</h4>
+        <h4>Comentarios <span class='comment-refresh'><i class='fa fa-refresh' @click="refresh"></i></span></h4>
 
         <template v-for="comment in comments">
             <comment
@@ -261,6 +261,9 @@
                     }).fail(function() {
                         alertify.error("Ha ocurrido un error al enviar tu comentario");
                     });
+                },
+                refresh: function() {
+                    loadComments();
                 }
             }
         });

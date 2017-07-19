@@ -95,8 +95,7 @@
     </div>
 
     <div id="translation-comments">
-        <h4>Comentarios de traducción</h4>
-        
+        <h4>Comentarios de traducción <span class='comment-refresh'><i class='fa fa-refresh' @click="refresh"></i></span></h4>
         <div class='newcomment-box'>
             <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
             <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
@@ -533,6 +532,10 @@
                 }).fail(function() {
                     alertify.error("Ha ocurrido un error al enviar tu comentario");
                 });
+            },
+            
+            refresh: function() {
+                loadComments();
             }
         }
     });
@@ -599,7 +602,9 @@
     loadComments();
     if(canReleaseOpenLock) {
         loadOpenLocks();
+        setInterval(loadOpenLocks, 45000);
     }
+
     setInterval(loadComments, 30000);
 </script>
 {% endblock %}

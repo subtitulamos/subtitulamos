@@ -337,3 +337,8 @@
 #translation-locks {
     margin-left: 20px;
 }
+
+.comment-refresh {
+    float: right;
+    cursor: pointer;
+}
