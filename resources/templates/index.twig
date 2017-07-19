@@ -1,5 +1,8 @@
 {% extends "base.twig" %}
+{% import 'macros/assets.twig' as assets %}
+
 {% block search %}{# Do not display top search here #}{% endblock %}
+{% block css %}{{ assets.css('index') }}{% endblock %}
 
 {% block content %}
 	<div class='main_container'>
@@ -46,6 +49,14 @@
 						</td>
 					</tr>
 				</table>
+				<div id='pages'>
+					<div id='prev-page' class='hidden'>
+						<i class='fa fa-chevron-circle-left'></i> Página anterior
+					</div>
+					<div id='next-page'>
+						Siguiente página <i class='fa fa-chevron-circle-right'></i>
+					</div>
+				</div>
 			</div>
 		</div>
 		{% endverbatim %}
@@ -57,6 +68,7 @@
 		let episodeList = new Vue({
 			el: "#incategory_board",
 			data: {
+				category: '',
 				episodes: [],
 			}, methods: {
 				subURI: function(ep) {
@@ -106,8 +118,56 @@
 			}
 		});
 
-		$(".category_navigation_item").on("click", openCategory);
-		function openCategory() {
+		let categoryPage = {};
+		let rowsPerPage = 0;
+		function search(target, page) {
+			$.ajax({
+				url: "/search/"+target,
+				method: "get",
+				data: {
+					page: page
+				}
+			}).done(function(data) {
+				data.forEach(function(_, idx, data){
+					data[idx].time_ago = 0;
+					data[idx].time_unit = "sec";
+				});
+
+				episodeList.category = target;
+				episodeList.episodes = data;
+				categoryPage[target] = page;
+
+				if(rowsPerPage == 0 || rowsPerPage < episodeList.episodes.length) {
+					// First load? Let's guess the value
+					rowsPerPage = episodeList.episodes.length;
+				}
+
+				$("#next-page").toggleClass("hidden", episodeList.episodes.length < rowsPerPage);
+				$("#prev-page").toggleClass("hidden", page <= 1);
+			});
+		}
+
+		$("#prev-page").on("click", function() {
+			let targetPage = Math.max(categoryPage[episodeList.category] - 1, 1);
+			if(targetPage == 1) {
+				$(this).toggleClass("hidden", true);
+			}
+
+			$("#next-page").toggleClass("hidden", false);
+			search(episodeList.category, targetPage);
+		});
+
+		$("#next-page").on("click", function() {
+			let targetPage = Math.min(categoryPage[episodeList.category] + 1, 10);
+			if(targetPage >= 10) {
+				$(this).toggleClass("hidden", true);
+			}
+
+			$("#prev-page").toggleClass("hidden", false);
+			search(episodeList.category, targetPage);
+		});
+
+		$(".category_navigation_item").on("click", function() {
 			let $categoryClicked = $(this);	
 			let $mainState = $("#main_state");
 			let $incategoryState = $("#incategory_state");
@@ -165,18 +225,8 @@
 			if(!target) // Nothing to do
 				return;
 
-			$.ajax({
-				url: "/search/"+target,
-				method: "get"
-			}).done(function(data) {
-				data.forEach(function(_, idx, data){
-					data[idx].time_ago = 0;
-					data[idx].time_unit = "sec";
-				});
-
-				episodeList.episodes = data;
-			});
-		}
+			search(target, 1);
+		});
 
 	</script>
 {% endblock %}

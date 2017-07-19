@@ -41,9 +41,13 @@ class SearchController
         return $response->withJson($epList);
     }
 
-    public function listRecentUploads(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
+    public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify)
     {
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 ORDER BY s.uploadTime DESC")->setMaxResults(10)->getResult();
+        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 ORDER BY s.uploadTime DESC")
+            ->setMaxResults(10)
+            ->setFirstResult($page * 10)
+            ->getResult();
 
         $epList = [];
         foreach ($subs as $sub) {
@@ -66,8 +70,11 @@ class SearchController
 
     public function listRecentChanged(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
+        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC")
-            ->setMaxResults(10)->getResult();
+            ->setMaxResults(10)
+            ->setFirstResult($page * 10)
+            ->getResult();
 
         $epList = [];
         foreach ($subs as $sub) {

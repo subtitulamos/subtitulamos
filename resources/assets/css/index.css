@@ -1,0 +1,23 @@
+#pages {
+    width: 100%;
+    min-height: 25px;
+    padding: 5px;
+}
+
+#prev-page {
+    color: #fff;
+    font-size: 1.2em;
+    float: left;
+    cursor: pointer;
+}
+
+#next-page {
+    color: #fff;
+    font-size: 1.2em;
+    float: right;
+    cursor: pointer;
+}
+
+#prev-page:hover, #next-page:hover {
+    text-shadow: white 0px 0px 2px;
+}
