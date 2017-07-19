@@ -24,7 +24,7 @@ class ShowController
         if (!$show) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
-        
+
         $seasonsRes = $em->createQuery("SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id")
             ->setParameter("id", $showId)
             ->getResult();
@@ -35,15 +35,15 @@ class ShowController
         }
 
         sort($seasons);
-        
+
         if (empty($seasons)) {
-            //TODO: Error out
+            /*TODO: Error out*/
         }
 
         // Let's see if the URI contains the season, otherwise, fill it
         $route = $request->getAttribute('route');
         $season = (int)$route->getArgument('season');
-        if ($season <= 0) {
+        if (!in_array($season, $seasons)) {
             $season = $seasons[0];
         }
 
@@ -51,7 +51,11 @@ class ShowController
             ->setParameter("id", $showId)
             ->setParameter("season", $season)
             ->getOneOrNullResult();
-        
+
+        if (!$show) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
         $episodeList = [];
         foreach ($show->getEpisodes() as $ep) {
             $epInfo = [
