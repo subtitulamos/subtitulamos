@@ -200,8 +200,8 @@
                 </td>
                 <td class="actions">
                     <div v-if="!history && editing">
-                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save" tabindex="0"></i>
-                        <i class="fa fa-times-circle-o" @click="discard" tabindex="0"></i>
+                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
+                        <i class="fa fa-times-circle-o" @click="discard" tabindex="0" @keyup.enter="discard"></i>
                     </div>
 
                     <div v-if="translated && !history && !editing">
