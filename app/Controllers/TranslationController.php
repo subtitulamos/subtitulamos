@@ -192,7 +192,7 @@ class TranslationController
         $em->remove($openLock);
         $em->flush();
 
-        return $response->withJSON($r);
+        return $response->withStatus(200);
     }
 
     public function listSequences($id, $page, $request, $response, EntityManager $em)
