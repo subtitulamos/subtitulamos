@@ -47,7 +47,7 @@ class SessionMiddleware
             // Try to load up a remembered session given that there's none
             $success = $auth->logByToken($rememberCookie->getValue());
             if ($success) {
-                $response = FigResponseCookies::set($response, SetCookie::create('remember')->withValue($auth->getUser()->getRememberToken())->rememberForever());
+                $response = FigResponseCookies::set($response, SetCookie::create('remember')->withPath('/')->withValue($auth->getUser()->getRememberToken())->rememberForever());
             }
         } elseif (!empty($_SESSION['uid'])) {
             // Load up existing session
@@ -57,7 +57,7 @@ class SessionMiddleware
                 // Regen remember token.
                 // TODO: Smarter regen policy
                 $auth->regenerateRememberToken();
-                $response = FigResponseCookies::set($response, SetCookie::create('remember')->withValue($auth->getUser()->getRememberToken())->rememberForever());
+                $response = FigResponseCookies::set($response, SetCookie::create('remember')->withPath('/')->withValue($auth->getUser()->getRememberToken())->rememberForever());
             }
         }
 
