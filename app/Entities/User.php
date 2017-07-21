@@ -331,4 +331,18 @@ class User
     {
         return $this->subComments;
     }
+
+    /**
+     * Set id (exclusively for bots - users < 0)
+     *
+     * @return integer
+     */
+    public function setId(int $id)
+    {
+        if ($id >= 0) {
+            return;
+        }
+
+        $this->id = $id;
+    }
 }

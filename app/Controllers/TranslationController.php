@@ -78,22 +78,22 @@ class TranslationController
         $sub->setDownloads(0);
 
         // Autofill sequences
+        $modBot = $em->getRepository("App:User")->find(-1);
         foreach ($base->getSequences() as $sequence) {
             if (Translation::containsCreditsText($sequence->getText())) {
                 // Autoblock and replace with our credits
                 $nseq = clone $sequence;
                 $nseq->setSubtitle($sub);
-                //$nseq->setAuthor(null); // TODO: Change author to ModBot
+                $nseq->setAuthor($modBot);
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            }
-            else {
+            } else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
                     $nseq = clone $sequence;
-                    //$nseq->setAuthor(null); // TODO: Change author to ModBot
+                    $nseq->setAuthor($modBot);
                     $nseq->setSubtitle($sub);
                     $nseq->setText(' '); //Blank
                     $nseq->setLocked($blankSequence >= 95 ? 1 : 0); // Only lock if we're sure
@@ -237,8 +237,7 @@ class TranslationController
                 ->andWhere("sq.number < :last")
                 ->setParameter("first", $firstNum)
                 ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
-        }
-        else {
+        } else {
             $snumbers = [];
         }
 
@@ -255,8 +254,7 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            }
-            else {
+            } else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -309,8 +307,7 @@ class TranslationController
 
                 if ($untranslatedFilter && isset($sequences[$snum])) {
                     unset($sequences[$snum]);
-                }
-                else {
+                } else {
                     if (!isset($sequences[$snum])) {
                         $temp = new Sequence(); // not intended to persist
                         $temp->setNumber($snum);
@@ -369,8 +366,7 @@ class TranslationController
             $oLock->setGrantTime(new \DateTime());
             $em->persist($oLock);
             $em->flush();
-        }
-        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
