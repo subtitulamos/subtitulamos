@@ -1,0 +1,33 @@
+#hammer {
+    background-color: #f0eeee;
+    padding: 10px;
+    font-size: 0.95em;
+}
+
+.candidates {
+    margin-left: 40px;
+}
+
+h3 {
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+}
+
+ul > li {
+    margin-left: -20px;
+}
+
+.hammer {
+    padding: 5px 4px 5px 4px;
+    font-size: 1.2em;
+    transform: rotate(80deg);
+}
+
+.hammer:hover {
+    color: #ce2828;
+    cursor: pointer;
+    transform: rotate(120deg);
+}

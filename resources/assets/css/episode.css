@@ -201,7 +201,7 @@ a {
 .translate_subtitle:hover{
    background-color: #ec1bdf;
 }
-.antitroll_subtitle:hover{
+.hammer_subtitle:hover{
    background-color: #6039af;
 }
 
@@ -239,7 +239,7 @@ a {
    padding-top: 8px;
    font-size: 17pt;
 }
-.antitroll_subtitle .fa-gavel{
+.hammer_subtitle .fa-gavel{
    padding-top: 9px;
    font-size: 16pt;
 }
@@ -365,7 +365,7 @@ a {
    padding-top: 8px;
    font-size: 15pt;
 }
-.compact .antitroll_subtitle .fa-gavel{
+.compact .hammer_subtitle .fa-gavel{
    padding-top: 9px;
    font-size: 14pt;
 }

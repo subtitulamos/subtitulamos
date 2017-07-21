@@ -92,7 +92,9 @@
                             <a data-action="delete" data-id="{{ sub.id }}">
                                 <div class="subtitle-action delete_subtitle"><i class="fa fa-times" aria-hidden="true"></i></div>
                             </a>
-                            <div class="subtitle-action antitroll_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
+                            <a href='/subtitles/{{ sub.id }}/hammer'>
+                                <div class="subtitle-action hammer_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
+                            </a>
                         {% endif %}
                     </div>
 
