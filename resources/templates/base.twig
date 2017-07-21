@@ -53,10 +53,10 @@
 						<td><div id="remember_me">Recordarme en este equipo</div></td>
 					</tr>
 				</table>
-				<div id="login_button"><div class="button sign_button">INICIAR SESIÓN</div></div>
+				<div id="login_button"><button class="button sign_button" tabindex="0">INICIAR SESIÓN</button></div>
 			</div>
 			<div id="register_form" class="hidden">
-				<form id="fregister" action="">
+				<form id="fregister" action="/register" method="POST">
 					<div id='reg-errors'>
 						<ul></ul>
 					</div>
@@ -80,11 +80,11 @@
 							<td> <input type="password" id="reg_password_confirmation" placeholder="Repite tu contraseña" class="form_input" required></td>
 						</tr>
 						<tr class="registry_line"> 
-							<td class="form_text"><input id="reg_terms" name="accept" type="checkbox" value="true" required></td>
+							<td class="form_text"><input id="reg_terms" type="checkbox" value="true" required></td>
 							<td><div id="remember_me">Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web</div></td>
 						</tr>
 					</table>
-					<div id="register_button"><div class="button sign_button">REGISTRAR</div></div>
+					<div id="register_button"><button class="button sign_button" tabindex="0">REGISTRAR</button></div>
 				</form>
 			</div>
 		</div>

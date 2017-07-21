@@ -128,7 +128,9 @@ function cleanShowName(name) {
 	return name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/, '');
 }
 
-function doLogin() {
+function doLogin(e) {
+	e.preventDefault();
+
 	let $notificationBar = $("#display_notification");
 
 	// Login the user via ajax
@@ -182,12 +184,14 @@ function clickHomepageEpisode() {
 	window.location = $(this).data("target");
 }
 
-function register() {
+function register(e) {
+	e.preventDefault();
+
 	var $regForm = $('#fregister');
 
 	if(!$regForm[0].checkValidity()) { // If the form is invalid, submit it to display error messages
 		$regForm.find(':submit').click();
-		return;
+		return false;
 	}
 
 	// Login the user via ajax
