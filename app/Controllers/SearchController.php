@@ -95,8 +95,11 @@ class SearchController
 
     public function listRecentCompleted(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
+        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC")
-            ->setMaxResults(10)->getResult();
+            ->setMaxResults(10)
+            ->setFirstResult($page * 10)
+            ->getResult();
 
         $epList = [];
         foreach ($subs as $sub) {
