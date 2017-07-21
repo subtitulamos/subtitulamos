@@ -13,6 +13,7 @@ use \Psr\Http\Message\RequestInterface;
 use \Doctrine\ORM\EntityManager;
 use \App\Services\Clock;
 use \App\Services\Auth;
+use \App\Services\Langs;
 
 class DownloadController
 {
@@ -51,9 +52,6 @@ class DownloadController
         $file = "";
         $sequenceNumber = 1;
 
-        $response = $response->withHeader('Content-Type', 'text/srt');
-        $response = $response->withHeader('Content-Disposition', sprintf("attachment; filename=\"%s.srt\"", $sub->getVersion()->getEpisode()->getFullName()));
-
         foreach ($sequences as $seq) {
             $file .= $sequenceNumber . "\r\n";
             $file .= Clock::intToTimeStr($seq->getStartTime()) . " --> " . Clock::intToTimeStr($seq->getEndTime()) . "\r\n";
@@ -69,13 +67,15 @@ class DownloadController
             $file .= $text;
             if (substr($text, strlen($text) - 1) != "\n") {
                 $file .= "\r\n"; // Add a linebreak if there's none in this last line
-
             }
 
             $file .= "\r\n";
             $sequenceNumber++;
         }
 
+        $filename = $sub->getVersion()->getEpisode()->getFullName() . "." . $sub->getVersion()->getName() . "." . Langs::getLangCode($sub->getLang());
+        $response = $response->withHeader('Content-Type', 'text/srt');
+        $response = $response->withHeader('Content-Disposition', sprintf("attachment; filename=\"%s.srt\"", $filename));
         $response->getBody()->write($file);
         return $response;
     }
