@@ -53,7 +53,8 @@ class LoginController
             // Logging in with email
             $user = $em->getRepository("App:User")->findOneByEmail($username);
             $loginName = "Correo electrónico";
-        } else {
+        }
+        else {
             $user = $em->getRepository("App:User")->findOneByUsername($username);
             $loginName = "Usuario";
         }
@@ -70,7 +71,7 @@ class LoginController
         return $response->withStatus(200);
     }
 
-    public function register(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em)
+    public function register(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Auth $auth)
     {
         $username = $request->getParam('username', '');
         $password = $request->getParam('password', '');
@@ -85,19 +86,22 @@ class LoginController
 
         if (!v::alnum('_')->noWhitespace()->length(3, 24)->validate($username)) {
             $errors[] = ["username" => "El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos"];
-        } elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
+        }
+        elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
             $errors[] = ["username" => "El nombre de usuario ya está en uso"];
         }
 
         if (!v::email()->validate($email)) {
             $errors[] = ["email" => "El correo electrónico no tiene un formato válido"];
-        } elseif ($em->getRepository("App:User")->findByEmail($email) != null) {
+        }
+        elseif ($em->getRepository("App:User")->findByEmail($email) != null) {
             $errors[] = ["email" => "El correo electrónico ya está en uso"];
         }
 
         if (!v::length(8, 80)->validate($password)) {
             $errors[] = ["password" => "La contraseña debe tener 8 caracters como mínimo"];
-        } elseif ($password != $password_confirmation) {
+        }
+        elseif ($password != $password_confirmation) {
             $errors[] = ["password_confirmation" => "Las contraseñas no coinciden"];
         }
 
@@ -117,6 +121,7 @@ class LoginController
         $em->persist($user);
         $em->flush();
 
+        $auth->log($user, false);
         return $response->withStatus(200);
     }
 
