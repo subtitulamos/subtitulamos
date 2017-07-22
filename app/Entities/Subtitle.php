@@ -35,7 +35,7 @@ class Subtitle
 
     /**
      * @ORM\OneToOne(targetEntity="Pause", inversedBy="subtitle")
-     * @ORM\JoinColumn(name="subtitle_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="pause_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $pause;
 
@@ -78,6 +78,11 @@ class Subtitle
      * @ORM\Column(type="integer")
      */
     private $downloads;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $resync;
 
     /**
      * Constructor
@@ -382,5 +387,28 @@ class Subtitle
     public function getDownloads()
     {
         return $this->downloads;
+    }
+
+    /**
+     * Get resync
+     *
+     * @return boolean 
+     */
+    public function getResync()
+    {
+        return $this->resync;
+    }
+
+    /**
+     * Set resync
+     *
+     * @param boolean $resync
+     * @return Subtitle 
+     */
+    public function setResync($resync)
+    {
+        $this->resync = $resync;
+
+        return $this;
     }
 }

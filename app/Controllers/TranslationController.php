@@ -74,6 +74,7 @@ class TranslationController
         $sub->setVersion($version);
         $sub->setProgress(0); // TODO: This progress could be more than 0% if sequences are autofilled
         $sub->setDirectUpload(false);
+        $sub->setResync(false);
         $sub->setUploadTime(new \DateTime());
         $sub->setDownloads(0);
 
@@ -88,7 +89,8 @@ class TranslationController
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            } else {
+            }
+            else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -237,7 +239,8 @@ class TranslationController
                 ->andWhere("sq.number < :last")
                 ->setParameter("first", $firstNum)
                 ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
-        } else {
+        }
+        else {
             $snumbers = [];
         }
 
@@ -254,7 +257,8 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            } else {
+            }
+            else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -307,7 +311,8 @@ class TranslationController
 
                 if ($untranslatedFilter && isset($sequences[$snum])) {
                     unset($sequences[$snum]);
-                } else {
+                }
+                else {
                     if (!isset($sequences[$snum])) {
                         $temp = new Sequence(); // not intended to persist
                         $temp->setNumber($snum);
@@ -366,7 +371,8 @@ class TranslationController
             $oLock->setGrantTime(new \DateTime());
             $em->persist($oLock);
             $em->flush();
-        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        }
+        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);

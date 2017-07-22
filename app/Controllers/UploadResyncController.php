@@ -101,6 +101,7 @@ class UploadResyncController
         $subtitle->setVersion($version);
         $subtitle->setUploadTime(new \DateTime());
         $subtitle->setDirectUpload(true);
+        $subtitle->setResync(true);
         $subtitle->setProgress(100);
         $subtitle->setDownloads(0);
         $em->persist($subtitle);
