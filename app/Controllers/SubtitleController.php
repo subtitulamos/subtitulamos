@@ -25,11 +25,23 @@ class SubtitleController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $epId = $sub->getVersion()->getEpisode()->getId();
+        $version = $sub->getVersion();
+        $episode = $version->getEpisode();
+        $epId = $episode->getId();
+
+        $episodeDeleted = false;
+        if (count($version->getSubtitles()) == 1) {
+            if (count($episode->getVersions()) == 1) {
+                $em->remove($episode);
+                $episodeDeleted = true;
+            }
+
+            $em->remove($version);
+        }
+
         $em->remove($sub);
         $em->flush();
-
-        return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $epId]));
+        return $response->withStatus(200)->withHeader('Location', $episodeDeleted ? '/' : $router->pathFor("episode", ["id" => $epId]));
     }
 
     public function pause($subId, $request, $response, EntityManager $em, \Slim\Router $router, Auth $auth)
@@ -38,12 +50,12 @@ class SubtitleController
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
-        
+
         if ($sub->getPause()) {
             // Already paused!
             return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $epId]));
         }
-        
+
         $pause = new Pause();
         $pause->setStart(new \DateTime());
         $pause->setSubtitle($sub);
@@ -62,16 +74,16 @@ class SubtitleController
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
-        
+
         if (!$sub->getPause()) {
             // Not paused!
             return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $epId]));
         }
-        
+
         $pause = $em->getRepository("App:Pause")->find($sub->getPause()->getId());
         $em->remove($pause);
         $sub->setPause(null);
-        
+
         $em->flush();
         return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $sub->getVersion()->getEpisode()->getId()]));
     }
@@ -86,7 +98,7 @@ class SubtitleController
         $users = $em->createQuery("SELECT u, COUNT(u) FROM App:User u JOIN App:Sequence sq WHERE sq.author = u AND sq.subtitle = :sub GROUP BY u")
             ->setParameter('sub', $sub)
             ->getResult();
-                
+
         return $twig->render($response, 'hammer.twig', [
             'subtitle' => $sub,
             'users' => $users
@@ -106,24 +118,24 @@ class SubtitleController
         }
 
         $seqNums = $em->createQuery("SELECT sq.number, sq.revision FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub ORDER BY sq.revision DESC")
-                      ->setParameter('sub', $sub)
-                      ->setParameter('u', $target)
-                      ->getResult();
+            ->setParameter('sub', $sub)
+            ->setParameter('u', $target)
+            ->getResult();
 
         foreach ($seqNums as $sq) {
             $em->createQuery("UPDATE App:Sequence sq SET sq.revision = sq.revision - 1 WHERE sq.number = :num AND sq.revision >= :rev AND sq.subtitle = :sub")
-            ->setParameter('sub', $sub)
-            ->setParameter('num', $sq['number'])
-            ->setParameter('rev', $sq['revision'])
-            ->execute();
+                ->setParameter('sub', $sub)
+                ->setParameter('num', $sq['number'])
+                ->setParameter('rev', $sq['revision'])
+                ->execute();
 
-            $response->getBody()->write($sq['number'] . "-" . $sq['revision']."\n");
+            $response->getBody()->write($sq['number'] . "-" . $sq['revision'] . "\n");
         }
 
         $em->createQuery("DELETE FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub")
-           ->setParameter('sub', $sub)
-           ->setParameter('u', $target)
-           ->getResult();
+            ->setParameter('sub', $sub)
+            ->setParameter('u', $target)
+            ->getResult();
 
         return $response;
     }
