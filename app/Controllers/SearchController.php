@@ -44,7 +44,7 @@ class SearchController
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 ORDER BY s.uploadTime DESC")
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC")
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
             ->getResult();
