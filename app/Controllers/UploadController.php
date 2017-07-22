@@ -158,7 +158,7 @@ class UploadController
         // Index the new show if it was just created
         if (isset($newShowName)) {
             $client->index([
-                'index' => 'shows',
+                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
                 'type' => 'show',
                 'id' => $show->getId(),
                 'body' => [

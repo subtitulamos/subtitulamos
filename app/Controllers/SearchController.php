@@ -142,7 +142,7 @@ class SearchController
             }
 
             $r = $client->search([
-                'index' => 'shows',
+                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
                 'type' => 'show',
                 'body' => [
                     'query' => [

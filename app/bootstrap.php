@@ -5,21 +5,22 @@
  * @copyright 2017 subtitulamos.tv
  */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
 // Load env variables from file
 if (getenv('ENVIRONMENT') !== 'production') {
-    $dotenv = new Dotenv\Dotenv(__DIR__.'/..');
+    $dotenv = new Dotenv\Dotenv(__DIR__ . '/..');
     $dotenv->load();
 }
 
 define('DEBUG', getenv('DEBUG') == 'true');
+define('ELASTICSEARCH_NAMESPACE', getenv('ELASTICSEARCH_NAMESPACE') ? getenv('ELASTICSEARCH_NAMESPACE') : 'ns');
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__."/Entities"], DEBUG, null, null, false);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . "/Entities"], DEBUG, null, null, false);
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => getenv('DATABASE_NAME'),
