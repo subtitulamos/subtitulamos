@@ -25,7 +25,7 @@ class ShowController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $seasonsRes = $em->createQuery("SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id")
+        $seasonsRes = $em->createQuery("SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC")
             ->setParameter("id", $showId)
             ->getResult();
 
@@ -47,7 +47,7 @@ class ShowController
             $season = $seasons[0];
         }
 
-        $show = $em->createQuery("SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season")
+        $show = $em->createQuery("SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC")
             ->setParameter("id", $showId)
             ->setParameter("season", $season)
             ->getOneOrNullResult();
