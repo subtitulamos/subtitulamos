@@ -40,12 +40,16 @@
 						</td>
 						<td class="visual_separator"></td>
 						<td class="clip_title_row" :class="{ 'clip_detailed': ep.lang_name != undefined }">
-							<div class="clip_title">{{ ep.name }}</div>
-							<div class="clip_add_details">
-								<div class="clip_language">{{ ep.lang_name }}</div>
-								<div class="new_season" v-if="ep.new_season">Nueva Temporada</div>
-								<div class="new_series" v-if="ep.new_series">Nueva Serie</div>
-							</div>
+							<a :href='subURI(ep)'>
+								<div class='clip_row_wrapper'>
+									<div class="clip_title">{{ ep.name }}</div>
+									<div class="clip_add_details">
+										<div class="clip_language">{{ ep.lang_name }}</div>
+										<div class="new_season" v-if="ep.new_season">Nueva Temporada</div>
+										<div class="new_series" v-if="ep.new_series">Nueva Serie</div>
+									</div>
+								</div>
+							</a>
 						</td>
 					</tr>
 				</table>

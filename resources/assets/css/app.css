@@ -475,6 +475,15 @@ input, button { border:none; }
    padding-left: 10px;
    text-align: left;
 }
+.clip_title_row a {
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+.clip_row_wrapper {
+  width: 100%;
+  height: 100%;
+}
 .clip_title{
    color: #315d88;
    font-weight: 600;   
