@@ -52,7 +52,7 @@
                     <div id="translation_progress_bar" class='{{ pause_class }}'>
                         {% if sub.directUpload %}
                             <div class="progress progress_original_subtitle">
-                                <div id="subtitle_uploader">subtítulo original subido por <a href="/users/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
+                                <div id="subtitle_uploader">{% if not sub.resync %}subtítulo original subido{% else %}resincronización subida{% endif %} por <a href="/users/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
                             </div>
                         {% else %}
                             <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%">  
