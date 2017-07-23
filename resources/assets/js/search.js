@@ -3,6 +3,7 @@ $(function(){
     let $searchResults = $("#search-results");
     let searchTimerHandle = null;
     let lastSearchedText = "";
+    let linkResultList = [];
 
     function zeropad(n, width) {
         n = n + '';
@@ -18,6 +19,7 @@ $(function(){
         }
         
         lastSearchedText = q;
+        linkResultList = [];
 
         $.ajax({
             url: '/search/query',
@@ -30,15 +32,20 @@ $(function(){
 
             if(reply.length > 0) {
                 reply.forEach(function(show) {
-                    let $link = $('<a>').attr('href', '/shows/'+show.id).html(show.name);
+                    let url = '/shows/'+show.id;
+                    let $link = $('<a>').attr('href', url).html(show.name);
                     let $result = $('<li>').append($link);
                     $searchResults.append($result);
+                    linkResultList.push(url);
 
                     if(show.episodes) {
                         show.episodes.forEach(function(ep) {
-                            $link = $('<a>').attr('href', '/episodes/'+ep.id).html(show.name + ' - ' + ep.season+ 'x' + zeropad(ep.number, 2) + ' '+ep.name);
+                            let epURL = '/episodes/'+ep.id;
+                            $link = $('<a>').attr('href', epURL).html(show.name + ' - ' + ep.season+ 'x' + zeropad(ep.number, 2) + ' '+ep.name);
                             $result = $('<li>').append($link);
                             $searchResults.append($result);
+                            
+                            linkResultList.push(epURL);
                         });
                     }
                 });
@@ -53,6 +60,11 @@ $(function(){
     }
 
     $searchBar.on("keyup", function(e) {
+        if(e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
+            window.location = linkResultList[0];
+            e.preventDefault();
+        }
+
         if(searchTimerHandle) {
             clearTimeout(searchTimerHandle);
         }
@@ -63,4 +75,7 @@ $(function(){
     let hideTimeoutHandle = null;
     $searchBar.on("focusin", function() { clearTimeout(hideTimeoutHandle); $searchResults.toggleClass('hidden', $searchBar.val() == ''); });
     $searchBar.on("focusout", function() { hideTimeoutHandle = setTimeout(function(){$searchResults.toggleClass('hidden', true);}, 500); });
+    $searchBar.parent().on("submit", function(e) {
+        e.preventDefault();
+    });
 });
