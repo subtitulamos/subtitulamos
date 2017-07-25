@@ -3,5 +3,5 @@
 {% endmacro %}
 
 {% macro js(name, props) %}
-    <script type="text/javascript" src="{{ asset_versioned_name("js/" ~ name ~ ".js") }}" {{ props }}></script>
+    <script type="text/javascript" src="{{ webpack_versioned_name(name ~ ".js") }}" {{ props }}></script>
 {% endmacro %}

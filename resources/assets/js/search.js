@@ -1,3 +1,5 @@
+import $ from './jquery.js';
+
 $(function(){
     let $searchBar = $("#search_bar");
     let $searchResults = $("#search-results");

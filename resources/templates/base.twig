@@ -20,9 +20,6 @@
 	{% block css %}{% endblock %}
 
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-	
-	{{ assets.js('vue') }}
-	{{ assets.js('app', 'async defer') }}
 	<script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async defer></script>
 
 	<title>{% block title %}Subtitulamos.tv{% endblock %}</title>
@@ -215,5 +212,6 @@
 	</div>
 
 	{% block scripts %}{% endblock %}
+	{{ assets.js('app') }}
 	{{ assets.js('search') }}
 </body>

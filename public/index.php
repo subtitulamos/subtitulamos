@@ -91,6 +91,10 @@ $app = new class () extends \DI\Bridge\Slim\App
                 $twig->getEnvironment()->addFunction(new Twig_Function('asset_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getAssetVersionedName($name);
                 }));
+                $twig->getEnvironment()->addFunction(new Twig_Function('webpack_versioned_name', function ($name) use (&$assetMgr) {
+                    return $assetMgr->getWebpackVersionedName($name);
+                }));
+
                 return $twig;
             },
 

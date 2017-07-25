@@ -1,0 +1,27 @@
+{
+  "name": "subtitulamos",
+  "version": "1.0.0",
+  "description": "Este es el código de la plataforma de subtítulos subtitulamos.tv, actualmente en construcción.",
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^0.28.4",
+    "vue-loader": "^12.2.2",
+    "vue-template-compiler": "^2.4.2",
+    "webpack": "^3.3.0",
+    "webpack-manifest-plugin": "^1.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subtitulamos/subtitulamos.git"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "subtitulamos",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/subtitulamos/subtitulamos/issues"
+  },
+  "homepage": "https://www.subtitulamos.tv",
+  "private": true
+}

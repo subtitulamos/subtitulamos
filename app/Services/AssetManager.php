@@ -17,6 +17,14 @@ class AssetManager
     private $manifest = [];
 
     /**
+     * Webpack-generated associative array with the asset-version bindings
+     *
+     * @var string
+     */
+
+    private $webpackManifest = [];
+
+    /**
      * Path of the asset directory
      * @var string
      */
@@ -27,6 +35,12 @@ class AssetManager
      * @var string
      */
     public const MANIFEST_PATH = self::ASSET_PATH . "/rev-manifest.json";
+
+    /**
+     * Path of the manifest file
+     * @var string
+     */
+    public const WEBPACK_MANIFEST_PATH = self::ASSET_PATH . "/manifest.json";
 
     /**
      * Path of the deploy directory
@@ -54,6 +68,11 @@ class AssetManager
         $contents = @\file_get_contents(self::MANIFEST_PATH);
         if (!empty($contents)) {
             $this->manifest = \json_decode($contents, true);
+        }
+
+        $contents = @\file_get_contents(self::WEBPACK_MANIFEST_PATH);
+        if (!empty($contents)) {
+            $this->webpackManifest = \json_decode($contents, true);
         }
     }
 
@@ -110,5 +129,10 @@ class AssetManager
     public function getAssetVersionedName($assetName)
     {
         return isset($this->manifest[$assetName]) ? $this->manifest[$assetName] : "???";
+    }
+
+    public function getWebpackVersionedName($assetName)
+    {
+        return isset($this->webpackManifest[$assetName]) ? $this->webpackManifest[$assetName] : "???";
     }
 }
