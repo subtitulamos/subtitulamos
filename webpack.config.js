@@ -20,5 +20,19 @@ module.exports = {
         new ManifestPlugin({
             fileName: '../resources/assets/manifest.json'
         })
-    ]
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader?cacheDirectory=true',
+                    options: {
+                        presets: ['env']
+                    }
+                }
+            }
+        ]
+    }
 };

@@ -83,8 +83,8 @@ class AssetManager
      */
     public function redeployAssets()
     {
-        $allowedExts = ["css", "js"];
-        $folders = ["css", "js"];
+        $allowedExts = ["css"];
+        $folders = ["css"];
 
         $manifest = [];
         foreach ($folders as $folder) {

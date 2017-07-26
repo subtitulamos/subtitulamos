@@ -4,6 +4,9 @@
   "description": "Este es el código de la plataforma de subtítulos subtitulamos.tv, actualmente en construcción.",
   "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.4",
     "vue-loader": "^12.2.2",
     "vue-template-compiler": "^2.4.2",
