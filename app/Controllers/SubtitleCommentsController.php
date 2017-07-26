@@ -27,7 +27,7 @@ class SubtitleCommentsController
 
         // Verify subtitle exists
         $sub = $em->getRepository("App:Subtitle")->find($subId);
-        
+
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -39,7 +39,7 @@ class SubtitleCommentsController
         $comment->setPublishTime(new \DateTime());
         $comment->setEditTime(new \DateTime());
         $comment->setSoftDeleted(false);
-        
+
         $em->persist($comment);
         $em->flush();
 
@@ -50,9 +50,9 @@ class SubtitleCommentsController
     public function list($subId, $request, $response, EntityManager $em)
     {
         $comments = $em->createQuery("SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0 ORDER BY sc.id DESC")
-                   ->setParameter("id", $subId)
-                   ->getResult();
-                   
+            ->setParameter("id", $subId)
+            ->getResult();
+
         return $response->withJson($comments);
     }
 

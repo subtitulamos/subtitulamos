@@ -342,3 +342,23 @@
     float: right;
     cursor: pointer;
 }
+
+.comment-actions i {
+    cursor: pointer;
+}
+
+.comment-actions .fa-times {
+    color: #d25959;
+}
+
+.comment-body.role-tt, .comment-body.role-mod {
+    font-weight: bold;
+}
+
+.comment-body.role-tt {
+    color: green;
+}
+
+.comment-body.role-mod {
+    color: #0074ca;
+}

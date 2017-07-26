@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import $ from 'jquery';
-import timeago from 'timeago.js';
+import './vue/comment.js';
 
 let $newTranslationButton = $(".translate_subtitle");
 $newTranslationButton.on("click", function() {
@@ -19,56 +19,6 @@ $("a[data-action='delete']").on("click", function(e) {
     });
 });
 
-Vue.component('comment', {
-    template: `
-        <article class='comment'>
-            <header>
-                <ul>
-                    <li class='comment-user'>
-                        <a :href="'/users/' + user.id">{{ user.name }}</a>
-                    </li>
-                    <li class='comment-time'>
-                        {{ date }}
-                    </li>
-                    <li class='comment-actions' v-if="canDelete">
-                        <i class="fa fa-times" aria-hidden="true" @click="remove"></i>
-                    </li>
-                </ul>
-            </header>
-            <section class='comment-body'>
-                {{ text }}
-            </section>
-            <section class='comment-actions'>
-            </section>
-        </article>
-        `,
-    
-    props: ['id', 'user', 'text', 'published-at'],
-    data: function() {
-        return {
-            date: '',
-            canDelete: canDeleteComments
-        }
-    },
-    created: function() {
-        this.update = setInterval(this.updateDate, 10000);
-        this.updateDate();
-    },
-    methods: {
-        updateDate: function() {
-            this.date = timeago().format(this.publishedAt, 'es')
-        },
-
-        remove: function() {
-            $.ajax({
-                url: '/episodes/'+epId+'/comments/'+this.id,
-                method: 'DELETE'
-            }).done(function() {
-                loadComments();
-            })
-        }
-    }
-});
 
 let comments = new Vue({
     el: '#subtitle-comments',
@@ -97,6 +47,34 @@ let comments = new Vue({
         },
         refresh: function() {
             loadComments();
+        },
+
+        remove: function(id) {
+            let c, cidx;
+            for(let i = 0; i < this.comments.length; ++i) {
+                if(this.comments[i].id == id) {
+                    // Save comment and remove it from the list
+                    c = this.comments[i];
+                    cidx = i;
+                    this.comments.splice(cidx, 1);
+                    break;
+                }
+            }
+
+            $.ajax({
+                url: '/episodes/'+epId+'/comments/'+id,
+                method: 'DELETE'
+            }).done(function() {
+                loadComments();
+            }).fail(function() {
+                alertify.error('Se ha encontrado un error al borrar el comentario');
+                if(typeof cidx !== 'undefined') {
+                    // Insert the comment right back where it was
+                    this.comments.splice(cidx, 0, c);
+                } else {
+                    loadComments();
+                }
+            }.bind(this));
         }
     }
 });

@@ -68,7 +68,8 @@ class EpisodeComment implements \JsonSerializable
             "id" => $this->id,
             "user" => [
                 "id" => $this->user->getId(),
-                "name" => $this->user->getUsername()
+                "name" => $this->user->getUsername(),
+                "roles" => $this->user->getRoles()
             ],
             "published_at" => $this->publishTime->format(\DateTime::ATOM),
             "edited_at" => $this->editTime->format(\DateTime::ATOM),
@@ -77,6 +78,7 @@ class EpisodeComment implements \JsonSerializable
     }
 
     ///////////////////////////// AUTOMATICALLY GENERATED CODE BELOW \\\\\\\\\\\\\\\\\\\\\\\\\\
+
 
     /**
      * Get id

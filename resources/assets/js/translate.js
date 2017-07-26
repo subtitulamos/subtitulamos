@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import timeago from 'timeago.js';
+import './vue/comment.js';
 
 let textFilter = "";
 let authorFilter = 0;
@@ -322,58 +323,6 @@ Vue.component('pagelist', {
 *        COMMENTS
 ***************************/
 
-// TODO: This code is copy-paste of that of the episode view, unify
-Vue.component('comment', {
-    template: `
-        <article class='comment'>
-            <header>
-                <ul>
-                    <li class='comment-user'>
-                        <a :href="'/users/' + user.id">{{ user.name }}</a>
-                    </li>
-                    <li class='comment-time'>
-                        {{ date }}
-                    </li>
-                    <li class='comment-actions' v-if="canDelete">
-                        <i class="fa fa-times" aria-hidden="true" @click="remove"></i>
-                    </li>
-                </ul>
-            </header>
-            <section class='comment-body'>
-                {{ text }}
-            </section>
-            <section class='comment-actions'>
-            </section>
-        </article>
-        `,
-    
-    props: ['id', 'user', 'text', 'published-at'],
-    data: function() {
-        return {
-            date: '',
-            canDelete: canDeleteComments
-        }
-    },
-    created: function() {
-        this.update = setInterval(this.updateDate, 10000);
-        this.updateDate();
-    },
-    methods: {
-        updateDate: function() {
-            this.date = timeago().format(this.publishedAt, 'es')
-        }, 
-
-        remove: function() {
-            $.ajax({
-                url: '/subtitles/'+subID+'/translate/comments/'+this.id,
-                method: 'DELETE'
-            }).done(function() {
-                loadComments();
-            })
-        }
-    }
-});
-
 let comments = new Vue({
     el: '#translation-comments',
     data: {
@@ -402,6 +351,34 @@ let comments = new Vue({
         
         refresh: function() {
             loadComments();
+        },
+        
+        remove: function(id) {
+            let c, cidx;
+            for(let i = 0; i < this.comments.length; ++i) {
+                if(this.comments[i].id == id) {
+                    // Save comment and remove it from the list
+                    c = this.comments[i];
+                    cidx = i;
+                    this.comments.splice(cidx, 1);
+                    break;
+                }
+            }
+
+            $.ajax({
+                url: '/subtitles/'+subID+'/translate/comments/'+id,
+                method: 'DELETE'
+            }).done(function() {
+                loadComments();
+            }).fail(function() {
+                alertify.error('Se ha encontrado un error al borrar el comentario');
+                if(typeof cidx !== 'undefined') {
+                    // Insert the comment right back where it was
+                    this.comments.splice(cidx, 0, c);
+                } else {
+                    loadComments();
+                }
+            }.bind(this));
         }
     }
 });

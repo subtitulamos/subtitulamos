@@ -102,17 +102,15 @@
             <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
         </div>
 
-        <template v-for="comment in comments">
-            <comment
-                :key="comment.id"
-
-                :id="comment.id"
-                :user="comment.user"
-                :text="comment.text"
-                :published-at="comment.published_at"
-            >
-            </comment>
-        </template>
+        <comment v-for="comment in comments"
+            :key="comment.id"
+            :id="comment.id"
+            :user="comment.user"
+            :text="comment.text"
+            :published-at="comment.published_at"
+            @remove="remove"
+        >
+        </comment>
     </div>
 </div>
 
