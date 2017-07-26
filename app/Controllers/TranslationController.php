@@ -404,16 +404,7 @@ class TranslationController
     public function save($id, $request, $response, EntityManager $em, Auth $auth)
     {
         $seqID = $request->getParsedBodyParam('seqID', 0);
-        $text = trim($request->getParsedBodyParam('text', ""));
-
-        // Remove multiple spaces concatenated
-        $text = preg_replace('/ +/', ' ', $text);
-        if (empty($text)) {
-            // At least one space
-            $text = " ";
-        }
-        
-        // TODO: Better validate text (multiline etc) + multiline trim
+        $text = $this->processText(trim($request->getParsedBodyParam('text', "")));
 
         $seq = $em->getRepository("App:Sequence")->find($seqID);
         if (!$seq) {
@@ -466,16 +457,7 @@ class TranslationController
     public function create($id, $request, $response, EntityManager $em, Auth $auth)
     {
         $seqNum = $request->getParsedBodyParam('number', 0);
-        $text = trim($request->getParsedBodyParam('text', ""));
-
-        // Remove multiple spaces concatenated
-        $text = preg_replace('/ +/', ' ', $text);
-        if (empty($text)) {
-            // At least one space
-            $text = " ";
-        }
-
-        // TODO: Better validate text (multiline etc) + multiline trim
+        $text = $this->processText(trim($request->getParsedBodyParam('text', "")));
 
         $seq = $em->createQuery("SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num")
             ->setParameter('sub', $id)
@@ -574,5 +556,34 @@ class TranslationController
         $em->flush();
 
         return $response->withStatus(200);
+    }
+
+    /**
+     * processText normalizes the text into a less modern
+     * variant with more widespread support by players
+     */
+    private function processText($text)
+    {
+        // Remove multiple spaces concatenated
+        $text = preg_replace('/ +/', ' ', $text);
+        if (empty($text)) {
+            // At least one space
+            $text = " ";
+        }
+
+        $text = str_replace('…', '...', strip_tags($text));
+        $text = str_replace("“", '"', $text);
+        $text = str_replace("”", '"', $text);
+
+        /**
+         * http://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
+         * U+200B zero width space
+         * U+200C zero width non-joiner Unicode code point
+         * U+200D zero width joiner Unicode code point
+         */
+        $text = preg_replace('/[\x{200B}-\x{200D}]/u', '', $text);
+        
+        /* TODO: Better validate text (multiline etc) + multiline trim */
+        return $text;
     }
 }
