@@ -1,5 +1,6 @@
-var path = require('path');
-var ManifestPlugin = require('webpack-manifest-plugin');
+const path = require('path');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -14,9 +15,10 @@ module.exports = {
     },
     output: {
         filename: 'js/[name].[chunkhash].bundle.js',
-        path: path.resolve(__dirname, 'public/')
+        path: path.resolve(__dirname, 'public')
     },
     plugins: [
+        new CleanWebpackPlugin(['public/js']),
         new ManifestPlugin({
             fileName: '../resources/assets/manifest.json'
         })
