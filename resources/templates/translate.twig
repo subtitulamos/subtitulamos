@@ -1,6 +1,7 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
+{% block title %}Traducir {{ sub.version.episode.fullname }}{% endblock %}
 {% block css %}
     {{ assets.css('translate') }}
 {% endblock %}
@@ -8,7 +9,7 @@
 {% block content %}
 <div id="translation">
     <header>
-        Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ full_name }}</a></span>
+        Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ sub.version.episode.fullname }}</a></span>
     </header>
 
     <div id="translation-details">

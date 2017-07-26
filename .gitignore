@@ -9,4 +9,3 @@ resources/assets/rev-manifest.json
 resources/assets/manifest.json
 public/css/*.css
 public/js/*.js
-resources/assets/vendor-manifest.json

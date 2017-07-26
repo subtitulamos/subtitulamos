@@ -1,6 +1,7 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
+{% block title %}{{ episode.fullname }}{% endblock %}
 {% block css %}
     {{ assets.css('episode') }}
 {% endblock %}
