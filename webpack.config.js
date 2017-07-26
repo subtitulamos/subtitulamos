@@ -13,7 +13,7 @@ module.exports = {
         translate: './resources/assets/js/translate.js',
     },
     output: {
-        filename: 'js/[name].[hash].bundle.js',
+        filename: 'js/[name].[chunkhash].bundle.js',
         path: path.resolve(__dirname, 'public/')
     },
     plugins: [
