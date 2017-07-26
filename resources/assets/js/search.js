@@ -1,4 +1,5 @@
-import $ from './jquery.js';
+import Vue from 'vue';
+import $ from 'jquery';
 
 $(function(){
     let $searchBar = $("#search_bar");

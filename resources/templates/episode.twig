@@ -165,7 +165,6 @@
 {% block scripts %}
     <script type="text/javascript">
         let epId = {{ episode.id }};
-        let $newTranslationButton = $(".translate_subtitle");
         let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     </script>
     {{ assets.js('episode') }}

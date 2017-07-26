@@ -1,4 +1,5 @@
-import Vue from './vue.js';
+import Vue from 'vue';
+import $ from 'jquery';
 import { dateDiff } from './app.js';
 
 let episodeList = new Vue({

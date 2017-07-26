@@ -1,4 +1,5 @@
-import $ from './jquery.js';
+import Vue from 'vue';
+import $ from 'jquery';
 
 $(function() {
     let $newShow = $("#new-show");

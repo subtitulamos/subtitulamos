@@ -1,6 +1,7 @@
 const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
     entry: {
@@ -12,6 +13,7 @@ module.exports = {
         rules: './resources/assets/js/rules.js',
         upload: './resources/assets/js/upload.js',
         translate: './resources/assets/js/translate.js',
+        vendor: ['jquery', 'vue', 'timeago.js']
     },
     output: {
         filename: 'js/[name].[chunkhash].bundle.js',
@@ -21,6 +23,11 @@ module.exports = {
         new CleanWebpackPlugin(['public/js']),
         new ManifestPlugin({
             fileName: '../resources/assets/manifest.json'
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            filename: "js/vendor.[chunkhash].js",
+            minChunks: Infinity,
         })
     ],
     module: {
@@ -36,5 +43,10 @@ module.exports = {
                 }
             }
         ]
+    },
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js' // TODO: Fully migrate to Vue files
+        }
     }
 };

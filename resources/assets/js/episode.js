@@ -1,7 +1,8 @@
-import $ from './jquery.js';
-import Vue from './vue.js';
-import timeago from './timeago.min.js';
+import Vue from 'vue';
+import $ from 'jquery';
+import timeago from 'timeago.js';
 
+let $newTranslationButton = $(".translate_subtitle");
 $newTranslationButton.on("click", function() {
     $("#new-translation-opts").toggleClass("hidden");
 });

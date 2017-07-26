@@ -1,6 +1,6 @@
-import $ from './jquery.js';
-import Vue from './vue.js';
-import timeago from './timeago.min.js';
+import Vue from 'vue';
+import $ from 'jquery';
+import timeago from 'timeago.js';
 
 let textFilter = "";
 let authorFilter = 0;

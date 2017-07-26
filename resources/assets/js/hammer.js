@@ -1,5 +1,5 @@
-import $ from './jquery.js';
-import Vue from './vue.js';
+import Vue from 'vue';
+import $ from 'jquery';
 
 Vue.component('hammertarget', {
     template: "<li class='target' v-if='!deleted'><i class='fa fa-gavel hammer' aria-hidden='true' @click='hammer'></i> <a :href='\"/users/\"+id'>{{ username }}</a> ({{ count }} secuencias)</li>",

@@ -1,4 +1,5 @@
-import $ from './jquery.js';
+import Vue from 'vue';
+import $ from 'jquery';
 
 $(".spoiler-wrapper").on("click", function() {
     let $this = $(this);

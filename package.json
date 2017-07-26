@@ -2,7 +2,11 @@
   "name": "subtitulamos",
   "version": "1.0.0",
   "description": "Este es el código de la plataforma de subtítulos subtitulamos.tv, actualmente en construcción.",
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "timeago.js": "^3.0.2",
+    "vue": "^2.4.2"
+  },
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -20,7 +24,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "deploy": "webpack -p"
+    "build-prod": "webpack -p"
   },
   "author": "subtitulamos",
   "license": "AGPL-3.0",
