@@ -188,4 +188,31 @@ class SearchController
 
         return $response->withJson($shows);
     }
+
+    public function listPaused($request, $response, EntityManager $em, SlugifyInterface $slugify)
+    {
+        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC")
+            ->setMaxResults(10)
+            ->setFirstResult($page * 10)
+            ->getResult();
+
+        $epList = [];
+        foreach ($subs as $sub) {
+            $ep = $sub->getVersion()->getEpisode();
+            $fullName = $ep->getFullName();
+
+            $epList[] = [
+                "id" => $ep->getId(),
+                "name" => $fullName,
+                "slug" => $slugify->slugify($fullName),
+                "season" => $ep->getSeason(),
+                "episode_num" => $ep->getNumber(),
+                "time" => $sub->getPause()->getStart()->format(\DateTime::ATOM),
+                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+            ];
+        }
+
+        return $response->withJson($epList);
+    }
 }

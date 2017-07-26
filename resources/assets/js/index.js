@@ -158,6 +158,10 @@ $(".category_navigation_item").on("click", function() {
         case "last-edited":
             target = "modified";
             break;
+
+        case "paused":
+            target = "paused";
+            break;
     }
 
     if(!target) // Nothing to do
