@@ -68,8 +68,8 @@ Vue.component('sequence', {
 
                 <textarea v-model="text" v-if="editing"></textarea>
                 <div class="line-status" v-if="editing">
-                    <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 30 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
-                    <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 30 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
+                    <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
+                    <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
                 </div>
             </td>
             <td class="actions">
