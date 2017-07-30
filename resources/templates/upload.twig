@@ -10,6 +10,12 @@
 <div id="upload">
     <h2>Subir subtítulo</h2>
 
+    <div id='upload-rules'>
+        <h3>Normas de subida</h3>
+
+        {% include "rules/rules_upload.twig" %}
+    </div>
+
     <form name="" action="" method="POST" enctype="multipart/form-data">
         {#{% for error in errors.all() %}
             <li>{{ error }}</li>
@@ -35,7 +41,7 @@
             <input type="text" placeholder="Título" name="title" class="form_input" required><br/>
         </div>
         <div class="form-group">
-            <label for="lang">Idioma</label> 
+            <label for="lang">Idioma</label>
             <select name="lang" id="lang" class="form_input">
                 <option value="none" disabled selected>Selecciona un idioma</option>
                 <option value="en-en">English</option>

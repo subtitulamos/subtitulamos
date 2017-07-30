@@ -8,10 +8,10 @@
     padding: 3px;
 }
 
-#upload input[type=number]::-webkit-inner-spin-button, 
-#upload input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+#upload input[type=number]::-webkit-inner-spin-button,
+#upload input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 #upload input[type=number] {
@@ -27,7 +27,7 @@
     display: inline-block;
     min-width: 200px;
     padding-left: 20px;
-    
+
 }
 
 #upload .form-group button {
@@ -41,7 +41,7 @@
     font-size: 25px;
 }
 
-#upload h3 {
+#upload .ep-name {
     text-align: center;
     margin-top: -20px;
     color: #636363;
@@ -55,4 +55,15 @@
 #upload form {
     width: 890px;
     margin: 0 auto;
+}
+
+#upload-rules {
+    margin: 10px auto;
+    width: 50%;
+    border: 1px solid grey;
+}
+
+#upload-rules h3 {
+    margin-left: 10px;
+    padding: 0;
 }

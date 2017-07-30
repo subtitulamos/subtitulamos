@@ -9,14 +9,14 @@
 {% block content %}
 <div id="upload">
     <h2>Subir resincronización</h2>
-    <h3>{{ ep_full_name }}</h3>
+    <h3 class='ep-name'>{{ ep_full_name }}</h3>
 
     <form name="" action="" method="POST" enctype="multipart/form-data">
         {#{% for error in errors.all() %}
             <li>{{ error }}</li>
         {% endfor %}#}
         <div class="form-group">
-            <label for="lang">Idioma</label> 
+            <label for="lang">Idioma</label>
             <select name="lang" id="lang" class="form_input">
                 <option value="none" disabled selected>Selecciona un idioma</option>
                 <option value="en-en">English</option>
