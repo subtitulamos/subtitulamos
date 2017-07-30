@@ -99,7 +99,7 @@ class LoginController
         }
 
         if (!v::length(8, 80)->validate($password)) {
-            $errors[] = ["password" => "La contraseña debe tener 8 caracters como mínimo"];
+            $errors[] = ["password" => "La contraseña debe tener 8 caracteres como mínimo"];
         }
         elseif ($password != $password_confirmation) {
             $errors[] = ["password_confirmation" => "Las contraseñas no coinciden"];

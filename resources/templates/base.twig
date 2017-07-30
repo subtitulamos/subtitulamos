@@ -3,8 +3,8 @@
 <html>
 <head>
 	<base href="/">
-	
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>			 
+
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
@@ -37,15 +37,15 @@
 				</div>
 
 				<table>
-					<tr class="registry_line"> 
+					<tr class="registry_line">
 						<td class="form_text">Usuario o correo electrónico</td>
 						<td> <input id="login_username" type="text" placeholder="" class="form_input"></td>
 					</tr>
-					<tr class="registry_line"> 
+					<tr class="registry_line">
 						<td class="form_text">Contraseña</td>
 						<td> <input type="password" id="login_password" placeholder="" class="form_input"></td>
 					</tr>
-					<tr class="registry_line"> 
+					<tr class="registry_line">
 						<td class="form_text"><input id="login_remember_me" type="checkbox"></td>
 						<td><div id="remember_me">Recordarme en este equipo</div></td>
 					</tr>
@@ -60,23 +60,23 @@
 					<button type="submit" style="display:none"></button> {# For javascript trickery only #}
 
 					<table>
-						<tr class="registry_line"> 
+						<tr class="registry_line">
 							<td class="form_text">Usuario</td>
 							<td> <input type="text" id="reg_username" placeholder="Elige un nombre de usuario" class="form_input" required></td>
 						</tr>
-						<tr class="registry_line"> 
+						<tr class="registry_line">
 							<td class="form_text">Correo electrónico</td>
 							<td> <input type="email" id="reg_email" placeholder="Escribe tu correo eletrónico" class="form_input" required></td>
 						</tr>
-						<tr class="registry_line"> 
+						<tr class="registry_line">
 							<td class="form_text">Contraseña</td>
 							<td> <input type="password" id="reg_password" placeholder="Elige una contraseña" class="form_input" required></td>
 						</tr>
-						<tr class="registry_line"> 
+						<tr class="registry_line">
 							<td class="form_text">Repetir contraseña</td>
 							<td> <input type="password" id="reg_password_confirmation" placeholder="Repite tu contraseña" class="form_input" required></td>
 						</tr>
-						<tr class="registry_line"> 
+						<tr class="registry_line">
 							<td class="form_text"><input id="reg_terms" type="checkbox" value="true" required></td>
 							<td><div id="remember_me">Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web</div></td>
 						</tr>
@@ -89,7 +89,7 @@
 
 	<div id="login_registry_fade_pan" class="hidden"></div>
 	<div id="container">
-		<div id="header" class="fade_slide_in">			
+		<div id="header" class="fade_slide_in">
 			<div id="social">
 				<div id="facebook_background"></div>
 				<a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
@@ -97,8 +97,8 @@
 					<span class="hint--bottom-right hint--bounce hint--rounded" data-hint="¡Visítanos en Facebook!">
 						<i class="fa fa-facebook-square" aria-hidden="true"></i>
 					</span>
-				</div></a>	
-				<div id="twitter_background"></div>			
+				</div></a>
+				<div id="twitter_background"></div>
 				<a href="https://twitter.com/subtitulamostv" target="_blank">
 					<div class="social" id="twitter" >
 						<span class="hint--bottom hint--bounce hint--rounded" data-hint="Síguenos en Twitter">
@@ -115,20 +115,20 @@
 					</div>
 				</a>
 			</div>
-			
+
 			<div id="signing">
 				{% if not auth.logged %}
-					<div class="signing" id="login">INICIAR SESIÓN</div> 
+					<div class="signing" id="login">INICIAR SESIÓN</div>
 					<div class="signing" id="register">REGISTRO</div>
 				{% else %}
-					<div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/users/{{ auth.user.id }}'>{{ auth.user.username }}</a></div> 
+					<div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
 					<div class="signing"><a href="/rules">NORMAS</a></div>
                     <div class="signing" id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></div>
 					<div class="signing"><a href="/logout">SALIR</a></div>
 				{% endif %}
 
 				{% if feature_on('DONATIONS') %}
-					<div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large" 
+					<div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large"
 						data-hint="Este sitio está mantenido exclusivamente a base de donaciones">DONAR</span>
 					</div>
 				{% endif %}
@@ -140,19 +140,19 @@
 					<a href="/"><div id="white-logo-searchbar" class="white_logo"></div></a>
 					<input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" />
 					<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
-					
+
 					<ul id="search-results" class='hidden'></ul>
 				</div>
 			{% endblock %}
 		</div>
-		
+
 		{# TODO: This should be inside main container! #}
 		{% block content %}{% endblock %}
-		
+
 		<div id="footer">
 			<div id="footer_section_1">
 				<div id="tv">
-				 
+
 					<div id="tv_fade_out"></div>
 					<div class="tv" id="tv_box_outer"></div>
 					<div class="tv" id="tv_box_inner"></div>
@@ -170,10 +170,10 @@
 					<div class="tv" id="tv_button_1"></div>
 					<div class="tv" id="tv_button_2_outer"></div>
 					<div class="tv" id="tv_button_2"></div>
-					
+
 					<div id="footer_disclaimer">
 						<a href="/dmca">DMCA and Disclaimer</a>
-					</div>					
+					</div>
 					<div id="footer_memoria">
 						En memoria de Subtitulos.es (2008-2015)
 					</div>
@@ -181,16 +181,16 @@
 						 DIFUNDE LA PALABRA
 					</div>
 				</div>
-				
+
 			</div>
 			<div id="footer_section_2">
-			
+
 				<div id="useful_links">
 					<div><div class="white_logo"></div> <div id="white_logo_text">© subtitulamos.tv</div></div>
 					<div class="social_white" id="social_white">
 						<a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
 							<i class="fa fa-facebook-square" aria-hidden="true"></i>
-						</a>			
+						</a>
 						<a href="https://twitter.com/subtitulamostv" target="_blank">
 							<i class="fa fa-twitter-square" aria-hidden="true"></i>
 						</a>
@@ -199,7 +199,7 @@
 						</a>
 					</div>
 				</div>
-				
+
 				<div id="website_navigator">
 					<table>
 					  <tr><td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>	<td></td></tr>

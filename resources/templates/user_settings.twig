@@ -1,0 +1,48 @@
+{% extends "base.twig" %}
+{% import 'macros/assets.twig' as assets %}
+{% import 'macros/alerts.twig' as alerts %}
+
+{% block title %}Mi perfil{% endblock %}
+{% block css %}
+    {{ assets.css('user_settings') }}
+{% endblock %}
+
+{% block content %}
+<div id="user-settings-wrapper">
+    <div id='user-settings'>
+        {% for error in auth.flash.errors() %}
+            {{ alerts.show('error', error) }}
+        {% endfor %}
+        {% for success in auth.flash.successes() %}
+            {{ alerts.show('success', success) }}
+        {% endfor %}
+
+        <h2>Configuración</h2>
+
+        <form name="" action="" method="POST">
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <span class='details'>{{ user.username }} (<a href='/users/{{ user.id }}'>Perfil público</a>)</span>
+            </div>
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <span class='details'>{{ user.email }}</span>
+            </div>
+            <div class="form-group">
+                <label for="newpwd">Nueva contraseña</label>
+                <input id="newpwd" name="newpwd" type="password" class="form_input" value="" v-model="newpwd">
+            </div>
+            <div class="form-group">
+                <label for="pwdconfirm">Repetir contraseña</label>
+                <input id="pwdconfirm" name="pwdconfirm" type="password" class="form_input" value="" :disabled="!newpwd">
+            </div>
+            <div class='form-group'>
+                <button type="submit" class='button'>Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ assets.js('user_settings') }}
+{% endblock %}

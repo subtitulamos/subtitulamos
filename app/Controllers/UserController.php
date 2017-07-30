@@ -10,6 +10,9 @@ namespace App\Controllers;
 use \Slim\Views\Twig;
 use \Doctrine\ORM\EntityManager;
 use \Cocur\Slugify\SlugifyInterface;
+use App\Services\Auth;
+
+use \Respect\Validation\Validator as v;
 
 class UserController
 {
@@ -46,10 +49,42 @@ class UserController
             ];
         }
 
-        return $twig->render($response, 'user_profile.twig', [
+        return $twig->render($response, 'user_public_profile.twig', [
             'user' => $user,
             'uploaded_episodes' => $uploadedEpisodes,
             'collaborated_episodes' => $colaboratedEpisodes
         ]);
+    }
+
+    public function viewSettings($request, $response, Twig $twig, Auth $auth)
+    {
+        $user = $auth->getUser();
+        return $twig->render($response, 'user_settings.twig', [
+            'user' => $user
+        ]);
+    }
+
+    public function saveSettings($request, $response, Twig $twig, Auth $auth, \Slim\Router $router)
+    {
+        $user = $auth->getUser();
+        $password = $request->getParam('newpwd', '');
+        if ($password != '') {
+            $password_confirmation = $request->getParam('pwdconfirm', '');
+
+            // TODO: Unify this into a single validation/encryption point
+            $errors = [];
+            if (!v::length(8, 80)->validate($password)) {
+                $auth->addFlash("error", "La contraseña debe tener 8 caracteres como mínimo");
+            }
+            elseif ($password != $password_confirmation) {
+                $auth->addFlash("error", "Las contraseñas no coinciden");
+            }
+            else {
+                $auth->addFlash("success", "Contraseña cambiada correctamente");
+                $user->setPassword(\password_hash($password, \PASSWORD_BCRYPT, ['cost' => 13]));
+            }
+        }
+
+        return $response->withHeader('Location', $router->pathFor("settings"));
     }
 }
