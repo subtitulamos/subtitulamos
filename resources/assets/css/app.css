@@ -470,21 +470,21 @@ input, button { border:none; }
    border-left: 1px solid rgba(0,0,0,0.2);
    margin-top: 7px;
 }
-.clip_title_row{
+.ep-title_row{
    width: 880px;
    padding-left: 10px;
    text-align: left;
 }
-.clip_title_row a {
+.ep-title_row a {
   width: 100%;
   text-decoration: none;
   color: inherit;
 }
-.clip_row_wrapper {
+.ep-row-wrapper {
   width: 100%;
   height: 100%;
 }
-.clip_title{
+.ep-title{
    color: #315d88;
    font-weight: 600;
    font-size: 17px;
@@ -494,24 +494,24 @@ input, button { border:none; }
    overflow: hidden;
    text-overflow: ellipsis;
 }
-.clip_title_row.clip_detailed:hover .clip_title{
+.ep-title_row.ep-detailed:hover .ep-title{
    color: #3b72a9;
    font-size: 15px;
    margin-top: 3px;
 }
-.clip_add_details{
+.ep-add-details{
    display: none;
 }
-.clip_title_row.clip_detailed:hover .clip_add_details{
+.ep-title_row.ep-detailed:hover .ep-add-details{
    display: inline-block !important;
    position: relative;
    top: -3px;
 }
-.clip_language{
+.ep-details{
    font-size: 10pt;
    display: none;
 }
-.clip_global_info:hover .clip_language{
+.clip_global_info:hover .ep-details{
    display: inline-block !important;
 }
 .new_episode{
@@ -528,7 +528,7 @@ input, button { border:none; }
    border-radius: 3px;
    padding: 0px 5px 0px 4px;
 }
-.new_season{
+.ep-new-season{
    background-color: #22b18e;
    color: #FFF;
    font-size: 10pt;
@@ -536,13 +536,13 @@ input, button { border:none; }
    font-weight: 600;
    letter-spacing: 0.1px;
 }
-.clip_global_info:hover .new_season{
+.clip_global_info:hover .ep-new-season{
    display: inline-block !important;
    margin-left: 3px;
    border-radius: 3px;
    padding: 0px 5px 0px 4px;
 }
-.new_series{
+.ep-new-series{
    background-color: #157d6e;
    color: #FFF;
    font-size: 10pt;
@@ -550,7 +550,7 @@ input, button { border:none; }
    font-weight: 600;
    letter-spacing: 0.1px;
 }
-.clip_global_info:hover .new_series{
+.clip_global_info:hover .ep-new-series{
    display: inline-block !important;
    margin-left: 3px;
    border-radius: 3px;

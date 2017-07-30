@@ -1,20 +1,20 @@
 /*Styling for Firefox*/
-@-moz-document url-prefix() { 
-   #tv_box_outer{ 
+@-moz-document url-prefix() {
+   #tv_box_outer{
       margin-top: -40px;
    }
-   #tv_box_inner{ 
+   #tv_box_inner{
       margin-top: -30px;
    }
    #tv_fade_out{
       margin-top: -34px;
    }
-   .clip_global_info:hover .clip_title{
+   .clip_global_info:hover .ep-title{
       color: #3b72a9;
-      font-size: 15px; 
+      font-size: 15px;
       margin-top: 2px;
    }
-   .clip_global_info:hover .clip_add_details{
+   .clip_global_info:hover .ep-add-details{
       display: inline-block !important;
       position: relative;
       top: -4px;
@@ -33,5 +33,5 @@
 
 /*Styling for Microsoft Edge*/
 @supports (-ms-ime-align:auto) {
-  body { overflow-x: hidden; } 
+  body { overflow-x: hidden; }
 }

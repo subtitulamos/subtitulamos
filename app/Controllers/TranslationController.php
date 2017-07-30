@@ -121,7 +121,7 @@ class TranslationController
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
-        
+
         // Determine which secondary languages we can use
         $langRes = $em->createQuery("SELECT DISTINCT(s.lang) FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100")
             ->setParameter("ver", $sub->getVersion())
@@ -131,7 +131,7 @@ class TranslationController
         foreach ($langRes as $lang) {
             $langs[] = $lang;
         }
-        
+
         // Calculate sequence number for the main subtitle version
         $baseSub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1 ORDER BY sb.uploadTime DESC")
             ->setParameter('v', $sub->getVersion())
@@ -294,7 +294,7 @@ class TranslationController
                 ->setParameter("ssub", $secondarySub)
                 ->setParameter("snumbers", $snumbers)
                 ->getResult();
-            
+
             // Now we have to *filter* out old revisions, since we only care about the text in the latest revision.
             // This is actually hard to do in SQL and it requires some tricks, so we do in code instead.
             $altSeqs = [];
@@ -427,6 +427,7 @@ class TranslationController
 
         // Update last edition time of parent sub
         $seq->getSubtitle()->setEditTime(new \DateTime());
+        $seq->getSubtitle()->setLastEditedBy($auth->getUser());
 
         // Find an open lock on this sequence and clear it
         $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
@@ -468,7 +469,7 @@ class TranslationController
             // A sequence for this number already exists, but it shouldnt
             return $response->withStatus(403);
         }
-        
+
         // Find the original sequence, and create one lookalike
         $curSub = $em->getRepository("App:Subtitle")->find($id);
         if (!$curSub) {
@@ -489,9 +490,10 @@ class TranslationController
             // TODO: Log
             return $response->withStatus(500);
         }
-        
+
         // Update last edition time of parent sub
         $curSub->setEditTime(new \DateTime());
+        $curSub->setLastEditedBy($auth->getUser());
 
         // Find an open lock on this sequence and clear it
         $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
@@ -582,7 +584,7 @@ class TranslationController
          * U+200D zero width joiner Unicode code point
          */
         $text = preg_replace('/[\x{200B}-\x{200D}]/u', '', $text);
-        
+
         /* TODO: Better validate text (multiline etc) + multiline trim */
         return $text;
     }

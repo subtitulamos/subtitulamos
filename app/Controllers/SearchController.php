@@ -61,7 +61,7 @@ class SearchController
                 "season" => $ep->getSeason(),
                 "episode_num" => $ep->getNumber(),
                 "time" => $sub->getUploadTime()->format(\DateTime::ATOM),
-                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
             ];
         }
 
@@ -86,7 +86,8 @@ class SearchController
                 "name" => $fullName,
                 "slug" => $slugify->slugify($fullName),
                 "time" => $sub->getEditTime()->format(\DateTime::ATOM),
-                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())) . $editorString,
+                "last_edited_by" => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : ""
             ];
         }
 
@@ -111,7 +112,7 @@ class SearchController
                 "name" => $fullName,
                 "slug" => $slugify->slugify($fullName),
                 "time" => $sub->getCompleteTime()->format(\DateTime::ATOM),
-                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
             ];
         }
 
@@ -209,7 +210,7 @@ class SearchController
                 "season" => $ep->getSeason(),
                 "episode_num" => $ep->getNumber(),
                 "time" => $sub->getPause()->getStart()->format(\DateTime::ATOM),
-                "lang_name" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
             ];
         }
 

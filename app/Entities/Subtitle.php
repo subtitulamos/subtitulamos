@@ -55,14 +55,20 @@ class Subtitle
     private $uploadTime;
 
     /**
+     * @ORM\Column(type="datetime", name="complete_time", nullable=true)
+     */
+    private $completeTime;
+
+    /**
      * @ORM\Column(type="datetime", name="edit_time", nullable=true)
      */
     private $editTime;
 
     /**
-     * @ORM\Column(type="datetime", name="complete_time", nullable=true)
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="last_edited_by", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $completeTime;
+    private $lastEditedBy;
 
     /**
      * @ORM\Column(type="float")
@@ -278,6 +284,29 @@ class Subtitle
     }
 
     /**
+     * Set lastEditedBy
+     *
+     * @param \App\Entities\User $lastEditedBy
+     * @return Subtitle
+     */
+    public function setLastEditedBy(\App\Entities\User $lastEditedBy)
+    {
+        $this->lastEditedBy = $lastEditedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get lastEditedBy
+     *
+     * @return \App\Entities\User
+     */
+    public function getLastEditedBy()
+    {
+        return $this->lastEditedBy;
+    }
+
+    /**
      * Set completeTime
      *
      * @param \DateTime $completeTime
@@ -326,7 +355,7 @@ class Subtitle
     /**
      * Get directUpload
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDirectUpload()
     {
@@ -359,7 +388,7 @@ class Subtitle
     /**
      * Get comments
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getComments()
     {
@@ -382,7 +411,7 @@ class Subtitle
     /**
      * Get downloads
      *
-     * @return integer 
+     * @return integer
      */
     public function getDownloads()
     {
@@ -392,7 +421,7 @@ class Subtitle
     /**
      * Get resync
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResync()
     {
@@ -403,7 +432,7 @@ class Subtitle
      * Set resync
      *
      * @param boolean $resync
-     * @return Subtitle 
+     * @return Subtitle
      */
     public function setResync($resync)
     {
