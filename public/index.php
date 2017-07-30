@@ -25,7 +25,7 @@ $app = new class () extends \DI\Bridge\Slim\App
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
-        
+
         // Slim configuration
         $builder->addDefinitions([
             'settings.displayErrorDetails' => DEBUG
@@ -61,29 +61,7 @@ $app = new class () extends \DI\Bridge\Slim\App
                 ));
 
                 $auth = $c->get('App\Services\Auth');
-                $twig->getEnvironment()->addGlobal("auth", new class ($auth)
-                {
-                    public function __construct(&$auth)
-                    {
-                        $this->auth = $auth;
-                    }
-
-                    public function logged()
-                    {
-                        return $this->auth->isLogged();
-                    }
-
-                    public function has_role($role)
-                    {
-                        return $this->auth->hasRole($role);
-                    }
-
-                    public function user()
-                    {
-                        return $this->auth->getUser();
-                    }
-                }
-                );
+                $twig->getEnvironment()->addGlobal("auth", $auth->getTwigInterface());
 
                 $twig->getEnvironment()->addFunction(new Twig_Function('feature_on', 'feature_on'));
 
@@ -165,6 +143,8 @@ $app->get('/logout', ['\App\Controllers\LoginController', 'logout']);
 
 $app->get('/rules[/{type}]', ['\App\Controllers\RulesController', 'view']);
 $app->get('/users/{userId}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
+$app->get('/me', ['\App\Controllers\UserController', 'viewSettings'])->setName('settings')->add($needsRoles('ROLE_USER'));
+$app->post('/me', ['\App\Controllers\UserController', 'saveSettings'])->add($needsRoles('ROLE_USER'));
 
 $app->get('/dmca', ['\App\Controllers\TermsController', 'viewDMCA']);
 // Run app

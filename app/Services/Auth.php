@@ -32,7 +32,7 @@ class Auth
     /**
      * (re)creates a remember token and
      * updates the user instance with it
-     * 
+     *
      * @return void
      */
     public function regenerateRememberToken()
@@ -94,7 +94,7 @@ class Auth
         $_SESSION['logged'] = true;
         $_SESSION['uid'] = $user->getId();
         $this->user = $user;
-        
+
         if ($remember) {
             $this->regenerateRememberToken();
         }
@@ -102,7 +102,7 @@ class Auth
 
     /**
      * Returns whether the currently authenticated user has
-     * a role or not. If no user is authenticated this function 
+     * a role or not. If no user is authenticated this function
      * will only return true if the role is ROLE_GUEST.
      *
      * @param string $role
@@ -110,8 +110,7 @@ class Auth
      */
     public function hasRole($role)
     {
-        return $role == 'ROLE_GUEST' ||
-                ($this->user !== null && \in_array($role, $this->user->getRoles()));
+        return $role == 'ROLE_GUEST' || ($this->user !== null && \in_array($role, $this->user->getRoles()));
     }
 
     /**
@@ -140,5 +139,124 @@ class Auth
     public function getUser()
     {
         return $this->user;
+    }
+
+    /*******************************************************************
+                            FLASH NOTIFICATIONS
+     *******************************************************************/
+    public function addFlash($type, $msg)
+    {
+        if (!isset($_SESSION['flash'])) {
+            $_SESSION['flash'] = [];
+        }
+
+        if (!isset($_SESSION['flash'][$type])) {
+            $_SESSION['flash'][$type] = [];
+        }
+
+        $_SESSION['flash'][$type][] = $msg;
+    }
+
+    public function hasFlashByType($type)
+    {
+        return isset($_SESSION['flash']) && isset($_SESSION['flash'][$type]) && count($_SESSION['flash'][$type]) > 0;
+    }
+
+    public function getFlashByType($type = "")
+    {
+        if (!isset($_SESSION['flash'])) {
+            return [];
+        }
+
+        $ret = isset($_SESSION['flash'][$type]) ? $_SESSION['flash'][$type] : [];
+        if (!empty($ret)) {
+            unset($_SESSION['flash'][$type]);
+        }
+
+        return $ret;
+    }
+
+    public function getAllFlash($type = "")
+    {
+        $ret = isset($_SESSION['flash']) ? $_SESSION['flash'] : [];
+        if (!empty($ret)) {
+            unset($_SESSION['flash']);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Yield an anonymous class to feed to Twig that determines
+     * possible interactions with this class
+     *
+     * @return Anonymous
+     */
+    public function getTwigInterface()
+    {
+        return new class ($this)
+        {
+            public function __construct(&$auth)
+            {
+                $this->auth = $auth;
+            }
+
+            public function logged()
+            {
+                return $this->auth->isLogged();
+            }
+
+            public function has_role($role)
+            {
+                return $this->auth->hasRole($role);
+            }
+
+            public function user()
+            {
+                return $this->auth->getUser();
+            }
+
+            public function flash()
+            {
+                $auth = $this->auth;
+                return new class ($auth)
+                {
+                    public function __construct(&$auth)
+                    {
+                        $this->auth = $auth;
+                    }
+
+                    public function has($type)
+                    {
+                        return $this->auth->hasFlashByType($type);
+                    }
+
+                    public function successes()
+                    {
+                        return $this->auth->getFlashByType('success');
+                    }
+
+                    public function errors()
+                    {
+                        return $this->auth->getFlashByType('error');
+                    }
+
+                    public function notices()
+                    {
+                        return $this->auth->getFlashByType('notice');
+                    }
+
+                    public function warnings()
+                    {
+                        return $this->auth->getFlashByType('warning');
+                    }
+
+                    public function all()
+                    {
+                        return $this->auth->getAllFlash();
+                    }
+                };
+            }
+        };
     }
 }
