@@ -16,8 +16,8 @@ function toggleAccessForm() {
 	let $fadingPan = $("#login_registry_fade_pan");
 
 	$fadingPan.toggleClass("hidden", false);
-	
-	if (formType == "login"){		
+
+	if (formType == "login"){
 		//if Login Form is open and you click on Iniciar Sesion on navigation bar -- close it
 		if (!$loginForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")){
 			$loginRegistry.toggleClass("bounce", false);
@@ -39,7 +39,7 @@ function toggleAccessForm() {
 			setTimeout(function(){
 				$regForm.toggleClass("hidden", true);
 				$loginForm.toggleClass("hidden", false);
-				$loginForm.toggleClass("sendleft", true);}, 250);				
+				$loginForm.toggleClass("sendleft", true);}, 250);
 			setTimeout(function(){
 				$regForm.toggleClass("sendleft_remove", false);
 				$loginForm.toggleClass("sendleft", false);}, 400);
@@ -72,12 +72,12 @@ function toggleAccessForm() {
 				$loginForm.toggleClass("sendleft_remove", false);
 				$regForm.toggleClass("sendleft", false);}, 400);
 		}
-	}		
+	}
 }
 
 function closeLogRegForm()
 {
-	let $loginRegistry = $("#login_registry");	
+	let $loginRegistry = $("#login_registry");
 	let $fadingPan = $("#login_registry_fade_pan");
 
 	$fadingPan.toggleClass("fade_out", true);
@@ -85,7 +85,7 @@ function closeLogRegForm()
 		$fadingPan.toggleClass("hidden", true);
 		$fadingPan.toggleClass("fade_out", false);
 	}, 580);
-	
+
 	if ($loginRegistry.hasClass("hidden")){
 		$loginRegistry.toggleClass("hidden", false);
 	}
@@ -156,7 +156,7 @@ function doLogin(e) {
 			Object.keys(d).forEach(function(k) {
 				$errList.append("<li>"+d[k]+"</li>");
 			}, this);
-			
+
 		} catch (e) {
 			$loginErrors.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
 		}
@@ -166,7 +166,7 @@ function doLogin(e) {
 function closeNotification(){
 	let $notificationBar = $("#display_notification");
 	$notificationBar.toggleClass("fade_slide_out", true);
-	
+
 	setTimeout(function(){
 		$notificationBar.toggleClass("hidden", true).toggleClass("fade_slide_out", false);
 	}, 350);
@@ -174,16 +174,12 @@ function closeNotification(){
 
 function clickReactionsAnimate(){
 	let $this = $(this);
-	
+
 	$this.toggleClass("button_bounce_click", true);
-	
+
 	setTimeout(function(){
 		$this.toggleClass("button_bounce_click", false);
 	}, 500);
-}
-
-function clickHomepageEpisode() {
-	window.location = $(this).data("target");
 }
 
 function register(e) {
@@ -221,7 +217,7 @@ function register(e) {
 				Object.keys(d[k]).forEach(function(k2) {
 					$errList.append("<li>"+d[k][k2]+"</li>");
 				})
-				
+
 			}, this);
 		} catch (e) {
 			$regErrors.html("Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo.");
@@ -236,5 +232,4 @@ $(function() {
 	$("#register_button .sign_button").on("click", register);
 	$("#close_notification, #display_notification").on("click", closeNotification);
 	$("#incategory_board").on("click", ".love_reaction, .share_reaction", clickReactionsAnimate);
-	$("#incategory_board").on("click", ".clip_info_row", clickHomepageEpisode);
 });
