@@ -136,8 +136,7 @@ class SearchController
                 $season = $matches[1] ? (int)$matches[1] : ($matches[3] ? (int)$matches[3] : -1);
                 $episode = $matches[2] ? (int)$matches[2] : ($matches[4] ? (int)$matches[4] : -1);
                 $showName = trim(str_replace($matches[0], '', $q));
-            }
-            else {
+            } else {
                 // No episode in search
                 $showName = $q;
             }
