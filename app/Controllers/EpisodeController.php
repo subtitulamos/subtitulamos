@@ -45,13 +45,13 @@ class EpisodeController
         $epNumber = $ep->getNumber();
 
         // Get ids for the jump arrows
-        $nextId = $em->createQuery("SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number > :epnumber) OR e.season > :epseason) ORDER BY e.season, e.number ASC")
+        $nextId = $em->createQuery("SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number > :epnumber) OR e.season > :epseason) ORDER BY e.season ASC, e.number ASC")
             ->setParameter("epseason", $epSeason)
             ->setParameter("epnumber", $epNumber)
             ->setParameter("show", $ep->getShow()->getId())
             ->setMaxResults(1)
             ->getOneOrNullResult();
-        $prevId = $em->createQuery("SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number < :epnumber) OR e.season < :epseason) ORDER BY e.season, e.number DESC")
+        $prevId = $em->createQuery("SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number < :epnumber) OR e.season < :epseason) ORDER BY e.season DESC, e.number DESC")
             ->setParameter("epseason", $epSeason)
             ->setParameter("epnumber", $epNumber)
             ->setParameter("show", $ep->getShow()->getId())
