@@ -11,11 +11,13 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
 // Load env variables from file
-if (getenv('ENVIRONMENT') !== 'production') {
+if (!getenv('SKIP_ENV_FILE')) {
     $dotenv = new Dotenv\Dotenv(__DIR__ . '/..');
     $dotenv->load();
 }
 
+$env = getenv('ENVIRONMENT');
+define('ENVIRONMENT_NAME', $env ? $env : "dev");
 define('DEBUG', getenv('DEBUG') == 'true');
 define('ELASTICSEARCH_NAMESPACE', getenv('ELASTICSEARCH_NAMESPACE') ? getenv('ELASTICSEARCH_NAMESPACE') : 'ns');
 

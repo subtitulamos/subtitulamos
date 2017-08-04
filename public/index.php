@@ -20,8 +20,7 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class () extends \DI\Bridge\Slim\App
-{
+$app = new class() extends \DI\Bridge\Slim\App {
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -60,16 +59,18 @@ $app = new class () extends \DI\Bridge\Slim\App
                     $basePath
                 ));
 
-                $auth = $c->get('App\Services\Auth');
-                $twig->getEnvironment()->addGlobal("auth", $auth->getTwigInterface());
+                $twigEnv = $twig->getEnvironment();
+                $twigEnv->addGlobal("ENVIRONMENT_NAME", ENVIRONMENT_NAME);
 
-                $twig->getEnvironment()->addFunction(new Twig_Function('feature_on', 'feature_on'));
+                $auth = $c->get('App\Services\Auth');
+                $twigEnv->addGlobal("auth", $auth->getTwigInterface());
+                $twigEnv->addFunction(new Twig_Function('feature_on', 'feature_on'));
 
                 $assetMgr = $c->get('App\Services\AssetManager');
-                $twig->getEnvironment()->addFunction(new Twig_Function('asset_versioned_name', function ($name) use (&$assetMgr) {
+                $twigEnv->addFunction(new Twig_Function('asset_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getAssetVersionedName($name);
                 }));
-                $twig->getEnvironment()->addFunction(new Twig_Function('webpack_versioned_name', function ($name) use (&$assetMgr) {
+                $twigEnv->addFunction(new Twig_Function('webpack_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getWebpackVersionedName($name);
                 }));
 
