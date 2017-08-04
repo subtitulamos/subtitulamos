@@ -44,9 +44,8 @@ class UploadResyncController
         }
 
         $langCode = $request->getParam("lang", "");
-        $epName = $request->getParam("title", "");
-        $versionName = $request->getParam("version", "");
-        $comments = $request->getParam("comments", "");
+        $versionName = trim(strip_tags($request->getParam("version", "")));
+        $comments = trim(strip_tags($request->getParam("comments", "")));
 
         $errors = [];
         if (!Langs::existsCode($langCode)) {

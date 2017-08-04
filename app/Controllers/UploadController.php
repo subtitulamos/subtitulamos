@@ -38,9 +38,9 @@ class UploadController
         $season = $request->getParam("season", -1);
         $epNumber = $request->getParam("episode", -1);
         $langCode = $request->getParam("lang", "");
-        $epName = $request->getParam("title", "");
-        $versionName = $request->getParam("version", "");
-        $comments = $request->getParam("comments", "");
+        $epName = strip_tags(trim($request->getParam("title", "")));
+        $versionName = strip_tags(trim($request->getParam("version", "")));
+        $comments = strip_tags(trim($request->getParam("comments", "")));
 
         $errors = [];
         if (!\App\Services\Langs::existsCode($langCode)) {
@@ -105,7 +105,7 @@ class UploadController
                     $show->setName($newShowName);
                     $show->setZeroTolerance(false);
                     $em->persist($show);
-                    
+
                     /* TODO: Log */
                 }
             }
@@ -140,7 +140,7 @@ class UploadController
         $subtitle->setResync(false);
         $subtitle->setProgress(100);
         $subtitle->setDownloads(0);
-        
+
         // Persist
         $em->persist($episode);
         $em->persist($version);
