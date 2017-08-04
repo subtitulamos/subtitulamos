@@ -9,8 +9,8 @@ a {
 }
 
 /*Styling for episode
- subtitle details */ 
- 
+ subtitle details */
+
 #subtitle_content_title_container{
    text-align: center;
    width: 980px;
@@ -60,8 +60,8 @@ a {
     background-color: grey;
 }
 
-#episode_title{   
-   font-weight: 600;   
+#episode_title{
+   font-weight: 600;
    font-size: 17px;
    text-align: center;
    display: inline-block;
@@ -129,7 +129,7 @@ a {
 }
 .subtitle_language{
    color: rgba(0,0,0,0.8);
-   font-size: 0.9em; 
+   font-size: 0.9em;
    font-weight: 600;
 
    margin-top: 10px;
@@ -137,7 +137,7 @@ a {
    margin-bottom: 7px;
 }
 .subtitle_buttons{
-   display: inline-block;   
+   display: inline-block;
    vertical-align: middle;
    margin-left: 5px;
 }
@@ -183,7 +183,7 @@ a {
 }
 
 .unpause-subtitle:hover {
-   background-color: #20a520; 
+   background-color: #20a520;
 }
 .unpause-subtitle:hover > .fa-lock {
     color:white;
@@ -330,7 +330,7 @@ a {
     margin-left: 22px;
     margin-top: -2px;
     color: #656565;
-    padding: 4px 10px 4px 10px; 
+    padding: 4px 10px 4px 10px;
 }
 
 .version_comments p i {
@@ -476,4 +476,8 @@ a {
 
 .comment-body.role-mod {
     color: #0074ca;
+}
+
+.edit-episode {
+    margin: 5px;
 }

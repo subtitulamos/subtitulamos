@@ -20,7 +20,8 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class() extends \DI\Bridge\Slim\App {
+$app = new class () extends \DI\Bridge\Slim\App
+{
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -109,7 +110,6 @@ $app->post('/subtitles/{id}/translate/save', ['\App\Controllers\TranslationContr
 $app->post('/subtitles/{id}/translate/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{id}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_TH'));
 
-
 $app->get('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{subId}/translate/comments/submit', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRoles('ROLE_USER'));
 $app->delete('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRoles('ROLE_MOD'));
@@ -123,6 +123,8 @@ $app->get('/subtitles/{subId}/unpause', ['\App\Controllers\SubtitleController', 
 $app->get('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'viewHammer'])->add($needsRoles('ROLE_MOD'));
 $app->post('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRoles('ROLE_MOD'));
 
+$app->get('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'edit'])->add($needsRoles('ROLE_MOD'))->setName('ep-edit');
+$app->post('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRoles('ROLE_MOD'));
 $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRoles('ROLE_USER'));
 $app->get('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);

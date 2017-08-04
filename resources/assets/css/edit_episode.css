@@ -1,0 +1,83 @@
+#subtitle_content {
+   padding-top: 40px;
+   padding-bottom: 40px;
+   background-color: #e9e7e7 !important;
+}
+
+a {
+    color: inherit;
+}
+
+#subtitle_content_title_container{
+   text-align: center;
+   width: 980px;
+   margin: 0 auto;
+   margin-bottom: 30px;
+   padding: 10px 10px 5px 10px;
+   border-radius: 5px;
+   background-color: rgba(255, 255, 255, 0.3);
+}
+#episode_title{
+   font-weight: 600;
+   font-size: 17px;
+   text-align: center;
+   display: inline-block;
+   margin-top: 17px;
+   color: #315d88;
+   width: 885px;
+   position: relative;
+   top: -9px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+#season_number{
+   color: #4480bb;
+   text-align: center;
+   margin: 3px;
+}
+#season_number:hover {
+   text-decoration: underline;
+}
+
+#episode_number{
+   color: #218dff;
+   text-align: center;
+   margin: 3px;
+}
+
+.form-group {
+    padding: 3px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.form-group label {
+    display: inline-block;
+    min-width: 200px;
+    padding-left: 20px;
+
+}
+
+.form-group button {
+    margin-left: 40%;
+    width: 20%;
+}
+
+#save-edit {
+    background-color: #08a762;
+    font-weight: bold;
+}
+
+#info form {
+    width: 890px;
+    margin: 0 auto;
+}

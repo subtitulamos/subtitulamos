@@ -17,10 +17,16 @@
         </a>
         <div id="episode_title">
             <a href='/shows/{{ episode.show.id }}'>{{ episode.show.name }}</a> <span id="season_number"><a href='/shows/{{ episode.show.id }}/{{ episode.season }}'>{{ episode.season }}</a></span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span>- {{ episode.name }}
-        </div>	
+
+            {% if auth.has_role('ROLE_MOD') %}
+                <span class='edit-episode'>
+                    <a href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </span>
+            {% endif %}
+        </div>
         <a href='{{ next_url }}' {% if not next_url %}disabled{% endif %}>
             <div id="next_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio">
-                <i class="fa fa-angle-right" aria-hidden="true"></i>	
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
         </a>
     </div>
@@ -49,14 +55,14 @@
                 {% set can_download = auth.has_role('ROLE_TH') or (not sub.pause and sub.progress == 100) %}
 
                 <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
-                    <div class="version_name">{{ sub.version.name }}</div>		
+                    <div class="version_name">{{ sub.version.name }}</div>
                     <div id="translation_progress_bar" class='{{ pause_class }}'>
                         {% if sub.directUpload %}
                             <div class="progress progress_original_subtitle">
                                 <div id="subtitle_uploader">{% if not sub.resync %}subtítulo original subido{% else %}resincronización subida{% endif %} por <a href="/users/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
                             </div>
                         {% else %}
-                            <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%">  
+                            <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%">
                                 <div class="progress_percentage">
                                     {{ sub.progress // 1}}%
                                     {% if sub.pause and sub.progress >= 90 %}
@@ -87,7 +93,7 @@
                         <a href="/subtitles/{{ sub.id }}/translate"><div class="subtitle-action edit_subtitle hint--bottom hint--rounded"
                                 data-hint="Colaborar en la traducción">
                                 <i class="fa fa-file-text" aria-hidden="true"></i>
-                            </div> 
+                            </div>
                         </a>
                         {% if auth.has_role('ROLE_MOD') %}
                             <a data-action="delete" data-id="{{ sub.id }}">
