@@ -19,6 +19,7 @@ use \App\Entities\Version;
 use \App\Entities\Subtitle;
 use \App\Services\Auth;
 use \App\Services\Langs;
+use \App\Services\Srt\SrtParser;
 
 use Respect\Validation\Validator as v;
 
@@ -58,9 +59,10 @@ class UploadResyncController
 
         $uploadList = $request->getUploadedFiles();
         if (isset($uploadList['sub'])) {
-            $srt = new \App\Services\Srt\SrtParser($uploadList['sub']->file);
-            if (!$srt->isValid()) {
-                $errors[] = $srt->getErrorDesc();
+            $srtParser = new SrtParser();
+            $srtParser->parseFile($uploadList['sub']->file, $auth->hasRole('ROLE_TH'));
+            if (!$srtParser->isValid()) {
+                $errors[] = $srtParser->getErrorDesc();
             }
         }
 
@@ -106,7 +108,7 @@ class UploadResyncController
         $em->persist($subtitle);
 
         // Set sequences
-        $sequences = $srt->getSequences();
+        $sequences = $srtParser->getSequences();
         foreach ($sequences as $k => $sequence) {
             $sequence->setSubtitle($subtitle);
             $sequence->setAuthor($auth->getUser());

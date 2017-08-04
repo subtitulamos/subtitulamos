@@ -89,7 +89,8 @@ class TranslationController
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            } else {
+            }
+            else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -237,7 +238,8 @@ class TranslationController
                 ->andWhere("sq.number < :last")
                 ->setParameter("first", $firstNum)
                 ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
-        } else {
+        }
+        else {
             $snumbers = [];
         }
 
@@ -254,7 +256,8 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            } else {
+            }
+            else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -307,7 +310,8 @@ class TranslationController
 
                 if ($untranslatedFilter && isset($sequences[$snum])) {
                     unset($sequences[$snum]);
-                } else {
+                }
+                else {
                     if (!isset($sequences[$snum])) {
                         $temp = new Sequence(); // not intended to persist
                         $temp->setNumber($snum);
@@ -366,7 +370,8 @@ class TranslationController
             $oLock->setGrantTime(new \DateTime());
             $em->persist($oLock);
             $em->flush();
-        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        }
+        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
@@ -399,7 +404,7 @@ class TranslationController
     public function save($id, $request, $response, EntityManager $em, Auth $auth)
     {
         $seqID = $request->getParsedBodyParam('seqID', 0);
-        $text = $this->processText(trim($request->getParsedBodyParam('text', "")), $auth->hasRole('ROLE_TH'));
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), $auth->hasRole('ROLE_TH'));
 
         $seq = $em->getRepository("App:Sequence")->find($seqID);
         if (!$seq) {
@@ -453,7 +458,7 @@ class TranslationController
     public function create($id, $request, $response, EntityManager $em, Auth $auth)
     {
         $seqNum = $request->getParsedBodyParam('number', 0);
-        $text = $this->processText(trim($request->getParsedBodyParam('text', "")), $auth->hasRole('ROLE_TH'));
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), $auth->hasRole('ROLE_TH'));
 
         $seq = $em->createQuery("SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num")
             ->setParameter('sub', $id)
@@ -559,52 +564,4 @@ class TranslationController
      * processText normalizes the text into a less modern
      * variant with more widespread support by players
      */
-    private function processText($text, $allowSpecialTags)
-    {
-        // Remove multiple spaces concatenated
-        $text = preg_replace('/ +/', ' ', $text);
-        if (empty($text)) {
-            // At least one space
-            $text = " ";
-        }
-
-        if ($allowSpecialTags) {
-            $text = strip_tags($text, "<font>");
-
-            $dom = new \DOMDocument();
-            $dom->loadHTML("<div>".$text."</div>", \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
-            $xpath = new \DOMXPath($dom);
-            $nodes = $xpath->query('//font');
-            foreach ($nodes as $node) {
-                $color = $node->hasAttribute('color') ? $node->getAttribute('color') : "";
-                $attributes = $node->attributes;
-                while ($attributes->length) {  // https://stackoverflow.com/a/10281657/2205532
-                    $node->removeAttribute($attributes->item(0)->name);
-                }
-
-                if ($color) {
-                    $node->setAttribute("color", $color);
-                }
-            }
-
-            $text = $dom->saveHTML();
-            $text = \substr($text, 5, strlen($text) - 12); // Remove the div wrapping we added initially
-        } else {
-            $text = strip_tags($text);
-        }
-
-        $pregReplacements = [
-            '…' => '...',
-            "“" => '"',
-            "”" => '"',
-            '/[\x{200B}-\x{200D}]/u' => '', //(Remove all 0-width space: https://stackoverflow.com/a/11305926/2205532)
-        ];
-
-        foreach ($pregReplacements as $k => $v) {
-            $text = str_replace($k, $v, $text);
-        }
-
-        /* TODO: Better validate text (multiline etc) + multiline trim */
-        return $text;
-    }
 }

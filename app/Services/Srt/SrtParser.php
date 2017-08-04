@@ -10,6 +10,7 @@ namespace App\Services\Srt;
 use \ForceUTF8\Encoding;
 use App\Entities\Sequence;
 use App\Services\Clock;
+use App\Services\Translation;
 
 const PARSING_STATE_SEQUENCE = 0;
 const PARSING_STATE_TIME = 1;
@@ -39,11 +40,6 @@ class SrtParser
      */
     private $sequences = [];
 
-    public function __construct($filename = "")
-    {
-        $this->valid = $this->parseFile($filename);
-    }
-
     /**
      * getter for the valid property
      * @return boolean
@@ -59,10 +55,10 @@ class SrtParser
      * @param string $filename
      * @return boolean
      */
-    private function parseFile(string $filename)
+    public function parseFile(string $filename, bool $allowSpecialTags)
     {
         $flines = file($filename);
-        
+
         $this->lastTimeEnd = 0;
         $this->seqNum = 0;
 
@@ -76,9 +72,7 @@ class SrtParser
                 if ($parsingState == PARSING_STATE_TEXT) {
                     // We're done with this line
                     if ($sequence) {
-                        if (!$sequence->getText()) {
-                            $sequence->setText(" ");
-                        }
+                        $sequence->setText(Translation::cleanText($sequence->getText(), $allowSpecialTags));
 
                         $sequences[] = $sequence;
                         $sequence = null;
@@ -91,11 +85,11 @@ class SrtParser
             }
 
             switch ($parsingState) {
-                case PARSING_STATE_SEQUENCE:
+                case PARSING_STATE_SEQUENCE :
                     if (!is_numeric($line)) {
                         break;
                     }
-                    
+
                     $sequence = new Sequence();
                     $sequence->setNumber(++$this->seqNum);
                     $sequence->setRevision(0);
@@ -105,10 +99,10 @@ class SrtParser
                     $parsingState = PARSING_STATE_TIME;
                     break;
 
-                case PARSING_STATE_TIME:
+                case PARSING_STATE_TIME :
                     preg_match("/([\d:]+)[,.](\d+)\s*-->\s*([\d:]+)[,.](\d+)/", $line, $matches);
                     if (count($matches) != 5) {
-                        $this->errorDesc = "Formato incorrecto: El formato de los tiempos de la línea ".$line." es incorrecto";
+                        $this->errorDesc = "Formato incorrecto: El formato de los tiempos de la línea " . $line . " es incorrecto";
                         return false;
                     }
 
@@ -117,12 +111,14 @@ class SrtParser
                     if ($tstart > $tend) {
                         $this->errorDesc = "Formato incorrecto: El tiempo de inicio en la secuencia #" . ($this->seqNum + 1) . " es mayor que su tiempo de fin.";
                         return false;
-                    } else {
+                    }
+                    else {
                         if ($tstart <= $this->lastTimeEnd) {
                             if ($tstart + 50 < $tend && $tstart + 50 > $this->lastTimeEnd) {
                                 // Autocorrección del solapamiento si es inferior a 50ms
                                 $tstart += $this->lastTimeEnd - $tstart + 1;
-                            } else {
+                            }
+                            else {
                                 $this->errorDesc = "Formato incorrecto: Los tiempos de las secuencias #" . $this->seqNum . " y #" . ($this->seqNum + 1) . " tienen un solapamiento significativo.";
                                 return false;
                             }
@@ -137,12 +133,13 @@ class SrtParser
                     $parsingState = PARSING_STATE_TEXT;
                     break;
 
-                case PARSING_STATE_TEXT:
-                    $line = Encoding::toUTF8(strip_tags($line));
+                case PARSING_STATE_TEXT :
+                    $line = Encoding::toUTF8($line);
                     if (empty($sequence->getText())) {
                         $sequence->setText($line);
-                    } else {
-                        $sequence->setText($sequence->getText()."\n".$line);
+                    }
+                    else {
+                        $sequence->setText($sequence->getText() . "\n" . $line);
                     }
 
                     break;
@@ -150,6 +147,7 @@ class SrtParser
         }
 
         $this->sequences = $sequences;
+        $this->valid = true;
         return true;
     }
 
@@ -173,7 +171,7 @@ class SrtParser
     {
         $bom = pack('H*', 'EFBBBF');
         $text = preg_replace("/^$bom/", '', $text);
-        
+
         return $text;
     }
 }
