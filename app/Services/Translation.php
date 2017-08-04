@@ -7,6 +7,8 @@
 
 namespace App\Services;
 
+use \ForceUTF8\Encoding;
+
 class Translation
 {
     /**
@@ -66,7 +68,9 @@ class Translation
             $text = strip_tags($text, "<font>");
 
             $dom = new \DOMDocument();
-            $dom->loadHTML("<div>" . $text . "</div>", \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+            $dom->encoding = 'utf-8';
+            $dom->loadHTML("<div>" . utf8_decode($text) . "</div>", \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+
             $xpath = new \DOMXPath($dom);
             $nodes = $xpath->query('//font');
             foreach ($nodes as $node) {
@@ -81,13 +85,7 @@ class Translation
                 }
             }
 
-            $text = $dom->saveHTML();
-            $text = \substr($text, 5, strlen($text) - 12); // Remove the div wrapping we added initially
-
-
-
-
-
+            $text = Encoding::toUTF8($dom->documentElement->nodeValue);
         }
         else {
             $text = strip_tags($text);
