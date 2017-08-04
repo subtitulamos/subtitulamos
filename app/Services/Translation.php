@@ -85,7 +85,7 @@ class Translation
                 }
             }
 
-            $text = trim(Encoding::toUTF8(strip_tags($dom->saveHTML(), "<font>")));
+            $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML(), "<font>"))));
         }
         else {
             $text = strip_tags($text);
