@@ -139,4 +139,85 @@ class SubtitleController
 
         return $response;
     }
+
+    public function editProperties($subId, $request, $response, EntityManager $em, Twig $twig)
+    {
+        $sub = $em->getRepository("App:Subtitle")->find($subId);
+        if (!$sub) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $v = $sub->getVersion();
+        $ep = $v->getEpisode();
+
+        return $twig->render($response, 'edit_subtitle.twig', [
+            'episode' => $ep,
+            'version' => $v,
+            'subtitle' => $sub,
+            'lang' => Langs::getLangCode($sub->getLang())
+        ]);
+    }
+
+    public function saveProperties($subId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, \Slim\Router $router)
+    {
+        $sub = $em->getRepository("App:Subtitle")->find($subId);
+        if (!$sub) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $v = $sub->getVersion();
+
+        $vname = trim(strip_tags($request->getParam("vname", "")));
+        $vcomment = trim(strip_tags($request->getParam("vcomment", "")));
+        $langCode = $request->getParam("lang", -1);
+
+        if (!Langs::existsCode($langCode)) {
+            $errors[] = "Elige un idioma válido";
+        }
+
+        if (!v::notEmpty()->validate($vname) || !v::notEmpty()->validate($vcomment)) {
+            $errors[] = "Ni el nombre de la versión ni los comentarios pueden estar vacíos";
+        }
+
+        if (empty($errors) && $vname != $v->getName()) {
+            $version = $em->createQuery("SELECT v FROM App:Version v WHERE v.episode = :ep AND v.name = :name")
+                ->setParameter('ep', $v->getEpisode())
+                ->setParameter('name', $vname)
+                ->getOneOrNullResult();
+
+            if ($version) {
+                $errors[] = "Ya existe una versión con este nombre";
+            }
+        }
+
+        if (empty($errors) && Langs::getLangId($langCode) != $sub->getLang()) {
+            $subExists = $em->createQuery("SELECT COUNT(sb.id) FROM App:Subtitle sb WHERE sb.version = :v AND sb.lang = :lang")
+                ->setParameter('v', $v)
+                ->setParameter('lang', (string)Langs::getLangId($langCode))
+                ->getSingleScalarResult();
+
+            if ($subExists) {
+                $errors[] = "Ya existe un subtítulo en este idioma para esta versión";
+            }
+        }
+
+        if (empty($errors)) {
+            $v->setName($vname);
+            $v->setComments($vcomment);
+            $sub->setLang(Langs::getLangId($langCode));
+
+            $em->persist($v);
+            $em->persist($sub);
+            $em->flush();
+
+            $auth->addFlash("success", "Parámetros de versión / subtítulo actualizados");
+        }
+        else {
+            foreach ($errors as $error) {
+                $auth->addFlash('error', $error);
+            }
+        }
+
+        return $response->withHeader('Location', $router->pathFor("subtitle-edit", ["subId" => $subId]));
+    }
 }

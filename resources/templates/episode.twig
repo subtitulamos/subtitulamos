@@ -52,11 +52,12 @@
                 {% endif %}
 
                 {% set pause_class = sub.pause ? 'paused' : '' %}
+                {% set small_class = auth.has_role('ROLE_MOD') ? 'sm' : '' %}
                 {% set can_download = auth.has_role('ROLE_TH') or (not sub.pause and sub.progress == 100) %}
 
                 <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
                     <div class="version_name">{{ sub.version.name }}</div>
-                    <div id="translation_progress_bar" class='{{ pause_class }}'>
+                    <div id="translation_progress_bar" class='{{ pause_class }}{{ small_class }}'>
                         {% if sub.directUpload %}
                             <div class="progress progress_original_subtitle">
                                 <div id="subtitle_uploader">{% if not sub.resync %}subtítulo original subido{% else %}resincronización subida{% endif %} por <a href="/users/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
@@ -102,11 +103,14 @@
                             <a href='/subtitles/{{ sub.id }}/hammer'>
                                 <div class="subtitle-action hammer_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
                             </a>
+                            <a href='/subtitles/{{ sub.id }}/properties'>
+                                <div class="subtitle-action properties_subtitle"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                            </a>
                         {% endif %}
                     </div>
 
                     {% if sub.directUpload %}
-                        <div class="version_comments">
+                        <div class="version_comments {{ small_class }}">
                             <p><i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}</p>
                         </div>
                     {% endif %}

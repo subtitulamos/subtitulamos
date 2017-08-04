@@ -122,9 +122,12 @@ $app->get('/subtitles/{subId}/pause', ['\App\Controllers\SubtitleController', 'p
 $app->get('/subtitles/{subId}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRoles('ROLE_TH'));
 $app->get('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'viewHammer'])->add($needsRoles('ROLE_MOD'));
 $app->post('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRoles('ROLE_MOD'));
+$app->get('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRoles('ROLE_MOD'))->setName('subtitle-edit');
+$app->post('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRoles('ROLE_MOD'));
 
 $app->get('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'edit'])->add($needsRoles('ROLE_MOD'))->setName('ep-edit');
 $app->post('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRoles('ROLE_MOD'));
+
 $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRoles('ROLE_USER'));
 $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRoles('ROLE_USER'));
 $app->get('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);

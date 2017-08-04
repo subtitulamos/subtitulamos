@@ -204,6 +204,9 @@ a {
 .hammer_subtitle:hover{
    background-color: #6039af;
 }
+.properties_subtitle:hover {
+    background-color: #3990af;
+}
 
 .download_subtitle  .fa-download{
    padding-top: 10px;
@@ -240,6 +243,10 @@ a {
    font-size: 17pt;
 }
 .hammer_subtitle .fa-gavel{
+   padding-top: 9px;
+   font-size: 16pt;
+}
+.properties_subtitle .fa-pencil {
    padding-top: 9px;
    font-size: 16pt;
 }
@@ -369,6 +376,11 @@ a {
    padding-top: 9px;
    font-size: 14pt;
 }
+.compact .properties_subtitle .fa-pencil{
+    padding-top: 7px;
+    font-size: 15pt;
+    padding-left: 2px;
+}
 
 #new-translation, #new-translation-opts {
     display: inline-block;
@@ -480,4 +492,12 @@ a {
 
 .edit-episode {
     margin: 5px;
+}
+
+#translation_progress_bar.sm {
+    width: 500px;
+}
+
+.version_comments.sm {
+    width: 842px;
 }
