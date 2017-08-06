@@ -133,11 +133,9 @@
                     <form action="/subtitles/translate" method="POST">
                         <input type="hidden" name="episode" value="{{ episode.id }}" />
                         <select name="lang" id="translate-to-lang">
-                            <option value="1">English</option>
-                            <option value="5">Español (España)</option>
-                            <option value="6">Español (Latinoamérica)</option>
-                            <option value="12">Català</option>
-                            <option value="15">Galego</option>
+                            {% for lid, lcode in LANG_LIST %}
+                                <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+                            {% endfor %}
                         </select>
 
                         <button type="submit" id="open-translation">Abrir traducción</button>

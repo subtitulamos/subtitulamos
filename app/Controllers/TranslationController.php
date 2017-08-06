@@ -32,14 +32,14 @@ class TranslationController
     public function newTranslation($request, $response, EntityManager $em, \Slim\Router $router)
     {
         $episodeID = $request->getParsedBodyParam('episode', 0);
-        $lang = (int)$request->getParsedBodyParam('lang', 0);
-        if (!Langs::existsId($lang)) {
-            $response->getBody()->write("Lang is invalid");
+        $langCode = $request->getParsedBodyParam('lang', 0);
+        if (!Langs::existsCode($langCode)) {
+            $response->getBody()->write("El idioma no es correcto");
             return $response->withStatus(400);
         }
 
         if (!v::numeric()->positive()->validate($episodeID)) {
-            $response->getBody()->write("Version is invalid");
+            $response->getBody()->write("La versión no es correcta");
             return $response->withStatus(400);
         }
 
@@ -49,10 +49,11 @@ class TranslationController
             ->getOneOrNullResult();
 
         if (!$version) {
-            $response->getBody()->write("Version doesn't exist");
+            $response->getBody()->write("La versión no existe");
             return $response->withStatus(412);
         }
 
+        $lang = Langs::getLangId($langCode);
         $base = null;
         foreach ($version->getSubtitles() as $sub) {
             if ($sub->isDirectUpload()) {
@@ -89,8 +90,7 @@ class TranslationController
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
-            }
-            else {
+            } else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -238,8 +238,7 @@ class TranslationController
                 ->andWhere("sq.number < :last")
                 ->setParameter("first", $firstNum)
                 ->setParameter("last", $firstNum + self::SEQUENCES_PER_PAGE);
-        }
-        else {
+        } else {
             $snumbers = [];
         }
 
@@ -256,8 +255,7 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-            }
-            else {
+            } else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -310,8 +308,7 @@ class TranslationController
 
                 if ($untranslatedFilter && isset($sequences[$snum])) {
                     unset($sequences[$snum]);
-                }
-                else {
+                } else {
                     if (!isset($sequences[$snum])) {
                         $temp = new Sequence(); // not intended to persist
                         $temp->setNumber($snum);
@@ -370,8 +367,7 @@ class TranslationController
             $oLock->setGrantTime(new \DateTime());
             $em->persist($oLock);
             $em->flush();
-        }
-        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);

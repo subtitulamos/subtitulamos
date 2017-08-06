@@ -16,7 +16,7 @@
         <div id='filters'>
             Filtrar por cadena: <input type="text" id="text-filter" />
             &nbsp;&nbsp;-&nbsp;&nbsp;
-            Filtrar por autor: 
+            Filtrar por autor:
             <select id='author-filter'>
                 <option value="0">Todos</option>
                 {% for user in authors %}
@@ -41,7 +41,7 @@
                     <th>#</th>
                     <th>Autor</th>
                     <th>Tiempos</th>
-                    <th>Idioma secundario: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i></th>
+                    <th>Idioma secundario{#: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i>#}</th>
                     <th>Traducción al <span id='target-language-name'>{{ sub_lang }}</span></th>
                     <th></th>
                 </tr>
@@ -49,7 +49,7 @@
 
             {% verbatim %}
                 <template v-for="seq in sequences">
-                    <sequence v-for="hseq in seq.history" 
+                    <sequence v-for="hseq in seq.history"
                         :key="seq.id + 'hist' + seq.number"
 
                         :original-id="hseq.id"
@@ -63,10 +63,10 @@
                         :original-text="hseq.text"
                         :history="true">
                     ></sequence>
-                    
-                    <sequence 
+
+                    <sequence
                         :key="seq.id + '' + seq.number"
-                        
+
                         :original-id="seq.id"
                         :number="seq.number"
                         :p-locked="seq.locked"

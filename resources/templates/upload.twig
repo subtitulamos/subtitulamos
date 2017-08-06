@@ -44,11 +44,9 @@
             <label for="lang">Idioma</label>
             <select name="lang" id="lang" class="form_input">
                 <option value="none" disabled selected>Selecciona un idioma</option>
-                <option value="en-en">English</option>
-                <option value="es-es">Español (España)</option>
-                <option value="es-lat">Español (Latinoamérica)</option>
-                <option value="ca-es">Català</option>
-                <option value="gl-es">Galego</option>
+                {% for lid, lcode in LANG_LIST %}
+                    <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-group">

@@ -39,11 +39,9 @@
                 <label for="lang">Idioma</label>
                 <select name="lang" id="lang" class="form_input">
                     <option value="none" disabled>Selecciona un idioma</option>
-                    <option value="en-en" {% if lang == 'en-en' %}selected{% endif %}>English</option>
-                    <option value="es-es" {% if lang == 'es-es' %}selected{% endif %}>Español (España)</option>
-                    <option value="es-lat" {% if lang == 'es-lat' %}selected{% endif %}>Español (Latinoamérica)</option>
-                    <option value="ca-es" {% if lang == 'ca-es' %}selected{% endif %}>Català</option>
-                    <option value="gl-es" {% if lang == 'gl-es' %}selected{% endif %}>Galego</option>
+                    {% for lid, lcode in LANG_LIST %}
+                        <option value="{{ lcode }}" {% if lang == lcode %}selected{% endif %}>{{ LANG_NAMES[lcode] }}</option>
+                    {% endfor %}
                 </select>
             </div>
 

@@ -7,6 +7,7 @@
 
 use \Psr\Container\ContainerInterface;
 use App\Services\Auth;
+use App\Services\Langs;
 
 require '../app/bootstrap.php';
 
@@ -20,8 +21,7 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class () extends \DI\Bridge\Slim\App
-{
+$app = new class() extends \DI\Bridge\Slim\App {
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -62,6 +62,8 @@ $app = new class () extends \DI\Bridge\Slim\App
 
                 $twigEnv = $twig->getEnvironment();
                 $twigEnv->addGlobal("ENVIRONMENT_NAME", ENVIRONMENT_NAME);
+                $twigEnv->addGlobal("LANG_LIST", Langs::LANG_LIST);
+                $twigEnv->addGlobal("LANG_NAMES", Langs::LANG_NAMES);
 
                 $auth = $c->get('App\Services\Auth');
                 $twigEnv->addGlobal("auth", $auth->getTwigInterface());
