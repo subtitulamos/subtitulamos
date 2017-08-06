@@ -46,10 +46,6 @@ a {
    margin: 3px;
 }
 
-.form-group {
-    padding: 3px;
-}
-
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -58,13 +54,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 input[type=number] {
     -moz-appearance:textfield;
-}
-
-.form-group label {
-    display: inline-block;
-    min-width: 200px;
-    padding-left: 20px;
-
 }
 
 .form-group button {

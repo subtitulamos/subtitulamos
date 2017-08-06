@@ -10,6 +10,17 @@ a {
    text-decoration:none !important;
 }
 input, button { border:none; }
+
+input.nospinner[type=number]::-webkit-inner-spin-button,
+input.nospinner[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input.nospinner[type=number] {
+    -moz-appearance:textfield;
+}
+
 #container {
    width: 100%;
    position: relative;
@@ -181,6 +192,16 @@ input, button { border:none; }
    padding: 4px 4px 4px 7px;
    width: 450px;
    border: 1px solid rgba(0,0,0,0.2);
+}
+
+.form-group {
+    padding: 3px;
+}
+
+.form-group label {
+    display: inline-block;
+    min-width: 200px;
+    padding-left: 20px;
 }
 
 #remember_me {
