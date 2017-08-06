@@ -33,13 +33,17 @@ class Auth
      * (re)creates a remember token and
      * updates the user instance with it
      *
+     * @param boolean $flush Or not to flush
      * @return void
      */
-    public function regenerateRememberToken()
+    public function regenerateRememberToken(bool $flush)
     {
         $rememberTok = Utils::generateRandomString(40);
         $this->user->setRememberToken($rememberTok);
-        $this->em->flush();
+
+        if ($flush) {
+            $this->em->flush();
+        }
     }
 
     /**
@@ -79,6 +83,9 @@ class Auth
 
         $_SESSION['logged'] = true; // (just to make sure this is set)
         $this->user = $user;
+        $this->user->setLastSeen(new \DateTime());
+        $this->em->flush();
+
         return true;
     }
 
@@ -94,10 +101,12 @@ class Auth
         $_SESSION['logged'] = true;
         $_SESSION['uid'] = $user->getId();
         $this->user = $user;
-
+        $this->user->setLastSeen(new \DateTime());
         if ($remember) {
-            $this->regenerateRememberToken();
+            $this->regenerateRememberToken(false);
         }
+
+        $this->em->flush();
     }
 
     /**
@@ -194,8 +203,7 @@ class Auth
      */
     public function getTwigInterface()
     {
-        return new class ($this)
-        {
+        return new class($this) {
             public function __construct(&$auth)
             {
                 $this->auth = $auth;
@@ -219,8 +227,7 @@ class Auth
             public function flash()
             {
                 $auth = $this->auth;
-                return new class ($auth)
-                {
+                return new class($auth) {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;

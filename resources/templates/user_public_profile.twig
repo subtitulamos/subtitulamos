@@ -11,10 +11,35 @@
     <div id='user-profile'>
         <h2>{{ user.username }}</h2>
 
+        {% if auth.has_role('ROLE_MOD') %}
+            <div class='oneline'>
+                <h4>Última conexión:</h4>
+                <span>
+                    {% if user.lastSeen is not null %}
+                        {{ user.lastSeen|date('d/M/Y H:i') }}
+                    {% else %}
+                        Nunca
+                    {% endif %}
+                </span>
+            </div>
+            <div class='oneline'>
+                <h4>Fecha de registro:</h4>
+                <span>
+                    {% if user.registeredAt is not null %}
+                        {{ user.registeredAt|date('d/M/Y H:i') }}
+                    {% else %}
+                        Nunca (¿magia?)
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+
         <h4>Capítulos subidos</h4>
         <ul>
             {% for episode in uploaded_episodes %}
                 <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% else %}
+                {{ user.username }} no ha subido ningún capítulo
             {% endfor %}
         </ul>
 
@@ -22,6 +47,8 @@
         <ul>
             {% for episode in collaborated_episodes %}
                 <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% else %}
+                {{ user.username }} no ha colaborado en ningún capítulo
             {% endfor %}
         </ul>
     </div>

@@ -38,7 +38,7 @@ class User
      * @ORM\Column(type="string", length=80, unique=true)
      */
     private $email;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Version", mappedBy="user")
      */
@@ -58,7 +58,7 @@ class User
      * @ORM\Column(type="boolean")
      */
     private $banned;
-    
+
     /**
      * @ORM\Column(type="json_array")
      */
@@ -68,6 +68,16 @@ class User
      * @ORM\Column(type="string", length=60, name="remember_token")
      */
     private $rememberToken;
+
+    /**
+     * @ORM\Column(type="datetime", name="registered_at", nullable=true)
+     */
+    private $registeredAt;
+
+    /**
+     * @ORM\Column(type="datetime", name="last_seen", nullable=true)
+     */
+    private $lastSeen;
 
     /**
      * Constructor
@@ -292,7 +302,7 @@ class User
     /**
      * Get epComments
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEpComments()
     {
@@ -325,7 +335,7 @@ class User
     /**
      * Get subComments
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSubComments()
     {
@@ -344,5 +354,53 @@ class User
         }
 
         $this->id = $id;
+    }
+
+    /**
+     * Set lastSeen
+     *
+     * @param \DateTime $lastSeen
+     *
+     * @return User
+     */
+    public function setLastSeen($lastSeen)
+    {
+        $this->lastSeen = $lastSeen;
+
+        return $this;
+    }
+
+    /**
+     * Get lastSeen
+     *
+     * @return \DateTime
+     */
+    public function getLastSeen()
+    {
+        return $this->lastSeen;
+    }
+
+    /**
+     * Set registeredAt
+     *
+     * @param \DateTime $registeredAt
+     *
+     * @return User
+     */
+    public function setRegisteredAt($registeredAt)
+    {
+        $this->registeredAt = $registeredAt;
+
+        return $this;
+    }
+
+    /**
+     * Get registeredAt
+     *
+     * @return \DateTime
+     */
+    public function getRegisteredAt()
+    {
+        return $this->registeredAt;
     }
 }

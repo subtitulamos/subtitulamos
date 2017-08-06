@@ -35,8 +35,9 @@ class CreateUserBots extends Command
         foreach ($bots as $botInfo) {
             if (!$bot = $entityManager->getRepository('App:User')->find($botInfo['id'])) {
                 $bot = new User();
+                $bot->setRegisteredAt(new \DateTime());
             }
-            
+
             $bot->setId($botInfo['id']);
             $bot->setUsername($botInfo['name']);
             $bot->setPassword('');
@@ -44,7 +45,7 @@ class CreateUserBots extends Command
             $bot->setBanned(true);
             $bot->setRoles([]);
             $bot->setRememberToken('');
-            
+
             // Prevent id autogeneration
             $metadata = $entityManager->getClassMetaData(get_class($bot));
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
