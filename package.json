@@ -24,7 +24,8 @@
   },
   "scripts": {
     "build": "webpack",
-    "build-prod": "webpack -p"
+    "build-prod": "webpack -p",
+    "watch": "webpack --watch"
   },
   "author": "subtitulamos",
   "license": "AGPL-3.0",
