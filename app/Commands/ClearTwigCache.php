@@ -23,8 +23,14 @@ class ClearTwigCache extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $cacheDir = __DIR__ . '/../../tmp/twig';
+        if (!\is_dir($cacheDir)) {
+            $output->writeln("Twig template cache folder does not exist, nothing to clear");
+            return;
+        }
+
         $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(__DIR__ . '/../../tmp/twig', \RecursiveDirectoryIterator::SKIP_DOTS),
+            new \RecursiveDirectoryIterator($cacheDir, \RecursiveDirectoryIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::CHILD_FIRST
         );
 
