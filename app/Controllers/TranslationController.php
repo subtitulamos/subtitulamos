@@ -81,6 +81,7 @@ class TranslationController
 
         // Autofill sequences
         $modBot = $em->getRepository("App:User")->find(-1);
+        $baseSequenceNumbers = [];
         foreach ($base->getSequences() as $sequence) {
             if (Translation::containsCreditsText($sequence->getText())) {
                 // Autoblock and replace with our credits
@@ -90,6 +91,8 @@ class TranslationController
                 $nseq->setText('www.subtitulamos.tv');
                 $nseq->setLocked(true);
                 $em->persist($nseq);
+
+                ++$autofilledSeqCount;
             } else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
@@ -100,8 +103,16 @@ class TranslationController
                     $nseq->setText(' '); //Blank
                     $nseq->setLocked($blankSequence >= 95 ? 1 : 0); // Only lock if we're sure
                     $em->persist($nseq);
+
+                    ++$autofilledSeqCount;
                 }
             }
+
+            $baseSequenceNumbers[$sequence->getNumber()] = true;
+        }
+
+        if ($autofilledSeqCount > 0) {
+            $sub->setProgress($autofilledSeqCount / count($baseSequenceNumbers) * 100);
         }
 
         $em->persist($sub);
