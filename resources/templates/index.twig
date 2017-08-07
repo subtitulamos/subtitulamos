@@ -53,11 +53,14 @@
 							<div class="ep-add-details">
 								<div class="ep-details">
 									{{ ep.additional_info }}
+									<span v-if="ep.progress">
+										· <b>{{ ep.progress }}%</b>
+									</span>
 									<span v-if="ep.last_edited_by">
-										· <b>{{ ep.last_edited_by }}</b>
+										· {{ ep.last_edited_by }}
 									</span>
 									<span v-if="ep.paused_by">
-										· <b>{{ ep.paused_by }}</b>
+										· {{ ep.paused_by }}
 									</span>
 								</div>
 								<div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>

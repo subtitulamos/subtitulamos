@@ -61,7 +61,7 @@ class SearchController
                 "season" => $ep->getSeason(),
                 "episode_num" => $ep->getNumber(),
                 "time" => $sub->getUploadTime()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang()))
             ];
         }
 
@@ -87,7 +87,8 @@ class SearchController
                 "slug" => $slugify->slugify($fullName),
                 "time" => $sub->getEditTime()->format(\DateTime::ATOM),
                 "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                "last_edited_by" => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : ""
+                "last_edited_by" => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : "",
+                "progress" => floor($sub->getProgress())
             ];
         }
 
@@ -210,6 +211,7 @@ class SearchController
                 "episode_num" => $ep->getNumber(),
                 "time" => $sub->getPause()->getStart()->format(\DateTime::ATOM),
                 "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "progress" => floor($sub->getProgress())
             ];
         }
 
