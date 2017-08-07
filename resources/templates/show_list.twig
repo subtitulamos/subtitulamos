@@ -43,12 +43,26 @@
                                     {% elseif sub.progress == 100 %}
                                         {% set progress_class = '100' %}
                                     {% endif %}
-                                    
-                                    <div class='version-name'>{{ sub.version_name }}</div>
-                                    <div class='progress_bar'>
-                                        <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 12) }}%"><div class="progress_percentage">{{ sub.progress // 1}}%</div></div>
+
+                                    {% set pause_class = sub.pause ? 'paused' : '' %}
+                                    {% set can_download = auth.has_role('ROLE_TH') or (not sub.pause and sub.progress == 100) %}
+
+                                    <div class="{{ pause_class }}">
+                                        <div class='version-name'>{{ sub.version_name }}</div>
+                                        <div class='progress_bar'>
+                                            <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 12) }}%"><div class="progress_percentage">
+                                                {{ sub.progress // 1}}%
+                                                {% if sub.pause and sub.progress >= 90 %}
+                                                    <span class='revision-clarify hint--rounded hint--top' data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
+                                                        (En revisión)
+                                                    </span>
+                                                {% endif %}
+                                            </div></div>
+                                        </div>
+                                        {% if can_download %}<a href="/subtitles/{{ sub.id }}/download">{% endif %}
+                                            <div class="subtitle-action download-subtitle {% if not can_download %}unavailable{% endif %}"><i class="fa fa-download" aria-hidden="true"></i></div>
+                                        {% if can_download %}</a>{% endif %}
                                     </div>
-                                    <div class="download-subtitle"><a href="/subtitles/{{ sub.id }}/download"><i class="fa fa-download" aria-hidden="true"></i></a></div>
                                 </div>
                             {% endfor %}
                         </div>

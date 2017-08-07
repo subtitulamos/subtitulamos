@@ -74,7 +74,8 @@ class ShowController
                     $epInfo['langs'][$lang][] = [
                         'id' => $sub->getId(),
                         'version_name' => $v->getName(),
-                        'progress' => $sub->getProgress()
+                        'progress' => $sub->getProgress(),
+                        'pause' => $sub->getPause()
                     ];
                 }
             }

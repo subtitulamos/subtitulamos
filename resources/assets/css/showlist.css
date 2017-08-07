@@ -41,7 +41,7 @@
 .season-tabs li {
     cursor: pointer;
     list-style-type: none;
-    
+
     display: inline-block;
     text-align: center;
     line-height: 48px;
@@ -93,29 +93,15 @@
     color: white;
     margin-left: 20px;
 }
-
-.download-subtitle {
-    width: 35px;
-    height: 35px;
-    border-radius: 4px;
-    display: inline-block;
-    vertical-align: middle;
-    text-align: center;
-    cursor: pointer;
-    color: rgba(0,0,0,0.5);
-    -webkit-box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.4);
-    -moz-box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.4);
-    box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.4);
-    margin: 0px 0px 0px 5px;
+.download-subtitle:not(.unavailable):hover{
+   background-color: #0cdc5d;
 }
-
+.download-subtitle .fa-download{
+   padding-top: 9px;
+   font-size: 16pt;
+}
 .download-subtitle a {
     color: inherit;
-}
-
-.download-subtitle i {
-    padding-top: 10px;
-    font-size: 14pt;
 }
 
 .progress_bar {
@@ -184,4 +170,42 @@
 .episode-name {
     margin-bottom: 20px;
     color: #436173;
+}
+
+.paused .progress_9099{
+    background: linear-gradient(to right, #33c53c 0%, #e08747 100%);
+}
+.paused .progress_100{
+    background: linear-gradient(to right, #7ac533 0%, #e08747 100%);
+}
+.revision-clarify {
+    border-bottom: 1px dotted white;
+    line-height: 16px;
+}
+
+.subtitle-action {
+   width: 35px;
+   height: 35px;
+   border-radius: 4px;
+   display: inline-block;
+   vertical-align: middle;
+   text-align: center;
+   cursor: pointer;
+   color: rgba(0,0,0,0.5);
+    box-shadow:inset 0px 0px 0px 1px rgba(0,0,0,0.4);
+   margin: 0px 0px 0px 2px;
+}
+
+.subtitle-action:not(.unavailable):hover {
+   color: white;
+   -webkit-box-shadow:none;
+   -moz-box-shadow:none;
+   box-shadow:none;
+}
+.unavailable:hover {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='grey' stroke-width='6'/></svg>");
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: 100% 100%, auto;
+    cursor: default;
 }
