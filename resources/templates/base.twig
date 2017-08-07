@@ -150,7 +150,7 @@
 			{% endblock %}
 		</div>
 
-		{% if auth.user.ban %}
+		{% if auth.user is not null and auth.user.ban %}
 			<div class="ban-banner">
 				<b>Aviso</b>: Tu cuenta se encuentra baneada {% if auth.user.ban.until|date('Y') > "+5 years"|date('Y') %}de forma permanente{% else %}temporalmente hasta el {{ auth.user.ban.until|date('d/M/Y H:i (e)') }}{% endif %}
 				por violación de las normas de la web.<br/>
