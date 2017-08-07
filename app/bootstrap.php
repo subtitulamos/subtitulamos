@@ -22,7 +22,7 @@ define('DEBUG', getenv('DEBUG') == 'true');
 define('ELASTICSEARCH_NAMESPACE', getenv('ELASTICSEARCH_NAMESPACE') ? getenv('ELASTICSEARCH_NAMESPACE') : 'ns');
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . "/Entities"], DEBUG, null, null, false);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . "/Entities"], DEBUG, __DIR__."/../tmp/doctrine", null, false);
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => getenv('DATABASE_NAME'),

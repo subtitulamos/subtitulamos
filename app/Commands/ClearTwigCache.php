@@ -24,7 +24,7 @@ class ClearTwigCache extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(__DIR__ . '/../../tmp', \RecursiveDirectoryIterator::SKIP_DOTS),
+            new \RecursiveDirectoryIterator(__DIR__ . '/../../tmp/twig', \RecursiveDirectoryIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::CHILD_FIRST
         );
 

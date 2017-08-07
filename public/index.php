@@ -49,7 +49,7 @@ $app = new class() extends \DI\Bridge\Slim\App {
             },
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
                 $twig = new \Slim\Views\Twig(__DIR__ . '/../resources/templates', [
-                    'cache' => __DIR__ . '/../tmp',
+                    'cache' => __DIR__ . '/../tmp/twig',
                     'strict_variables' => getenv('TWIG_STRICT') || true,
                     'debug' => DEBUG
                 ]);
