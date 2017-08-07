@@ -7,6 +7,7 @@ let episodeList = new Vue({
     data: {
         category: '',
         episodes: [],
+        hideDetails: false
     }, methods: {
         subURI: function(ep) {
             return "/episodes/"+ep.id+"/"+ep.slug;
@@ -73,6 +74,7 @@ function search(target, page) {
 
         episodeList.category = target;
         episodeList.episodes = data;
+        episodeList.hideDetails = target == 'uploads';
         categoryPage[target] = page;
 
         if(rowsPerPage == 0 || rowsPerPage < episodeList.episodes.length) {
@@ -80,8 +82,11 @@ function search(target, page) {
             rowsPerPage = episodeList.episodes.length;
         }
 
-        $("#next-page").toggleClass("hidden", episodeList.episodes.length < rowsPerPage);
-        $("#prev-page").toggleClass("hidden", page <= 1);
+        let nextPageHidden = episodeList.episodes.length < rowsPerPage;
+        let prevPageHidden = page <= 1;
+        $("#next-page").toggleClass("hidden", nextPageHidden);
+        $("#prev-page").toggleClass("hidden", prevPageHidden);
+        $("#pages").toggleClass("hidden", nextPageHidden && prevPageHidden);
     });
 }
 

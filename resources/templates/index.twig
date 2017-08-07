@@ -33,37 +33,39 @@
 		{% verbatim %}
 		<div id="incategory_state" class="hidden">
 			<div id="incategory_board">
-				<table class="clip_global_info" v-for="ep in episodes">
-					<tr class="clip_info_row fade_slide_in">
-						<td class="clip_downloads" v-if="ep.download_count">
-							<div class="clip_downloads_times">{{ ep.download_count }}</div>
-							<div class="clip_downloads_text">descargas</div>
-						</td>
-						<td class="clip_activity_since" v-if="ep.time">
-							<div class="clip_row_text_faded">hace</div>
-							<div class="clip_row_time">{{ ep.time_ago }}</div>
-							<div class="clip_row_text">{{ ep.time_unit }}</div>
-						</td>
-						<td class="visual_separator"></td>
-						<td class="ep-title_row" :class="{ 'ep-detailed': ep.additional_info != undefined }">
-							<a :href='subURI(ep)'>
-								<div class='ep-row-wrapper'>
-									<div class="ep-title">{{ ep.name }}</div>
-									<div class="ep-add-details">
-										<div class="ep-details">
-											{{ ep.additional_info }}
-											<span v-if="ep.last_edited_by">
-												· Última edición por <b>{{ ep.last_edited_by }}</b>
-											</span>
-										</div>
-										<div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>
-										<div class="ep-new-series" v-if="ep.ep_new_series">Nueva Serie</div>
-									</div>
+				<div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': hideDetails }">
+					<div class="clip_downloads" v-if="ep.download_count">
+						<div class="clip_downloads_times">{{ ep.download_count }}</div>
+						<div class="clip_downloads_text">descargas</div>
+					</div>
+
+					<div class="clip_activity_since" v-if="ep.time">
+						<div class="clip_row_text_faded">hace</div>
+						<div class="clip_row_time">{{ ep.time_ago }}</div>
+						<div class="clip_row_text">{{ ep.time_unit }}</div>
+					</div>
+
+					<div class="visual_separator"></div>
+
+					<a :href='subURI(ep)'>
+						<div class="ep-title_row" :class="{ 'ep-detailed': ep.additional_info != undefined }">
+							<div class="ep-title">{{ ep.name }}</div>
+							<div class="ep-add-details">
+								<div class="ep-details">
+									{{ ep.additional_info }}
+									<span v-if="ep.last_edited_by">
+										· <b>{{ ep.last_edited_by }}</b>
+									</span>
+									<span v-if="ep.paused_by">
+										· <b>{{ ep.paused_by }}</b>
+									</span>
 								</div>
-							</a>
-						</td>
-					</tr>
-				</table>
+								<div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>
+								<div class="ep-new-series" v-if="ep.ep_new_series">Nueva Serie</div>
+							</div>
+						</div>
+					</a>
+				</div>
 				<div id='pages'>
 					<div id='prev-page' class='hidden'>
 						<i class='fa fa-chevron-circle-left'></i> Página anterior
