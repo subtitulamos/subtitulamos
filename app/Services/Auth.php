@@ -96,11 +96,10 @@ class Auth
     {
         $_SESSION['logged'] = true;
         $_SESSION['uid'] = $user->getId();
-        $now = new \DateTime();
-        $user->setLastSeen($now);
+        $user->setLastSeen(new \DateTime());
 
         $ban = $user->getBan();
-        if ($ban && $ban->getUntil() <= $now) {
+        if ($ban && $ban->isExpired()) {
             # Ban is already over, remove
             $user->setBan(null);
         }

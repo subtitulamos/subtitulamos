@@ -34,9 +34,9 @@
 
         <template v-if="mode == 'normal'">
             {% if auth.has_role('ROLE_MOD') %}
-                {% if user.ban is not null %}
+                {% if user.ban is not null and not user.ban.expired %}
                     <div class='oneline hint--top-right hint--bounce hint--rounded' data-hint="{{ user.ban.reason }}">
-                        <b>Baneo activo</b>: {{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> (<a href='/users/{{ user.id }}/unban'>Desbanear</a>)
+                        <b>Baneado hasta</b>: {{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> (<a href='/users/{{ user.id }}/unban'>Desbanear</a>)
                     </div>
                 {% else %}
                     <br/><br/>
