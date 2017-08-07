@@ -59,10 +59,6 @@ class Translation
     {
         // Remove multiple spaces concatenated
         $text = trim(preg_replace('/ +/', ' ', $text));
-        if (empty($text)) {
-            // At least one space
-            $text = " ";
-        }
 
         if ($allowSpecialTags) {
             $text = strip_tags($text, "<font>");
@@ -86,8 +82,7 @@ class Translation
             }
 
             $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML(), "<font>"))));
-        }
-        else {
+        } else {
             $text = strip_tags($text);
         }
 
@@ -100,6 +95,12 @@ class Translation
 
         foreach ($pregReplacements as $k => $v) {
             $text = str_replace($k, $v, $text);
+        }
+
+        $text = trim($text);
+        if (empty($text)) {
+            // At least one space
+            $text = " ";
         }
 
         /* TODO: Better validate text (multiline etc) + multiline trim */
