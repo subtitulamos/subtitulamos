@@ -86,7 +86,7 @@ class SearchController
                 "name" => $fullName,
                 "slug" => $slugify->slugify($fullName),
                 "time" => $sub->getEditTime()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())) . $editorString,
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 "last_edited_by" => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : ""
             ];
         }
