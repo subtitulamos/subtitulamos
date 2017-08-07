@@ -26,7 +26,7 @@ function loadPage(pageNum, secondaryLang) {
             sequence.editing = false;
             sequence.canSave = false;
             sequence.lineCounters = [];
-            
+
             sequences.push(sequence);
         });
 
@@ -59,14 +59,17 @@ Vue.component('sequence', {
     template: `
         <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
             <td><span v-if="!history">{{ number }}</span></td>
-            <td class="user"><a :href="'/users/' + author.id" tabindex="-1">{{ author_name }}</a></td>
+            <td class="user"><a :href="'/users/' + author.id" tabindex="-1">{{ authorName }}</a></td>
             <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
             <td class="text"><pre>{{ secondaryText }}</pre></td>
             <td class="text" @click="editSequence" :class="{'translatable': !history}">
                 <pre v-if="!editing && text">{{ text }}</pre>
                 <pre v-if="!editing && !text" class="untranslated">- Sin traducir -</pre>
 
-                <textarea v-model="text" v-if="editing"></textarea>
+                <textarea v-model="text" v-if="editing" @keyup.ctrl="keyboardActions"></textarea>
+                <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
+                    <i class="fa fa-wrench" aria-hidden="true"></i>
+                </div>
                 <div class="line-status" v-if="editing">
                     <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
                     <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
@@ -89,7 +92,7 @@ Vue.component('sequence', {
             </td>
         </tr>
         `,
-    
+
     props: ['originalId', 'pLocked', 'pVerified', 'number', 'originalAuthor', 'tstart', 'tend', 'secondaryText', 'originalText', 'history'],
     data: function() {
         return {
@@ -143,7 +146,7 @@ Vue.component('sequence', {
                     lineCounters[i] = text.length;
                 }
             }
-            
+
             return lineCounters;
         },
 
@@ -152,7 +155,6 @@ Vue.component('sequence', {
                         && (!this.lineCounters[1] || this.lineCounters[1] <= 40);
         },
 
-        
         canLock: function() {
             return canLock && !this.history && this.id;
         },
@@ -161,13 +163,33 @@ Vue.component('sequence', {
             return this.id != 0
         },
 
-        author_name: function() {
+        authorName: function() {
             return this.author.name ? this.author.name : " - ";
-        }
+        },
 
+        shouldFixLevel: function() {
+            let tlines = [];
+            $.each(this.text.split("\n"), function (i, val) {
+                tlines.push(val.trim());
+            });
+
+            let full = tlines.join('\n');
+            let msg, hint;
+            let dialogLineCount = (full.match(/(?:^|\s)-/g) || []).length;
+            if (full.length > 40 || (dialogLineCount == 2 && full.match(/^\s*-/g))) {
+                let unopinionatedMatch = this.balanceText(false).join('\n') == full;
+                let opinionatedMatch = this.balanceText(true).join('\n') == full;
+
+                return !unopinionatedMatch && !opinionatedMatch ? 2 : 0;
+            } else if(tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
+                return 1;
+            }
+
+            return 0;
+        }
     },
     methods: {
-        editSequence: function() {         
+        editSequence: function() {
             if(this.editing || this.history) {
                 return true; // Already , no effect
             }
@@ -194,10 +216,20 @@ Vue.component('sequence', {
             }.bind(this));
         },
 
+        keyboardActions: function(e) {
+            if(e.altKey && e.key == "f") {
+                this.fix();
+            } else if(e.key == "s") {
+                this.save();
+            }
+
+            e.preventDefault();
+        },
+
         save: function() {
             if(!this.canSave)
                 return false;
-            
+
             let pthis = this;
             if(this.id) {
                 // Editing a sequence, save the changes
@@ -234,7 +266,7 @@ Vue.component('sequence', {
                     if(!pthis.text) {
                         pthis.text = " ";
                     }
-                    
+
                     pthis.author = {
                         id: myId,
                         name: myName
@@ -285,6 +317,155 @@ Vue.component('sequence', {
                 // Only revert if the request failed
                 this.locked = preLock;
             }.bind(this));
+        },
+
+        fix: function() {
+            if(this.shouldFixLevel <= 0) {
+                return false;
+            }
+
+            let ntext = this.balanceText(true).join('\n');
+            if(ntext != this.text) {
+                this.text = ntext;
+            } else {
+                let tlines = [];
+                $.each(this.text.split("\n"), function (i, val) {
+                    tlines.push(val.trim());
+                });
+
+                let dialogLineCount = (ntext.match(/(?:^|\s)-/g) || []).length;
+                if(tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
+                    this.text = tlines.join(' ');
+                }
+            }
+        },
+
+        balanceText: function(opinionated) {
+            if (typeof opinionated == 'undefined') {
+                // The default criteria is opinionated: if there's no difference between
+                // leaving a word on either line, it's left on the lower one.
+                opinionated = true;
+            }
+
+            let originalText = this.text;
+            let text = originalText.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
+
+            let dialogLineCount = (text.match(/(?:^|\s)-/g) || []).length;
+            let isDialog = text.match(/^\s*-/g) && dialogLineCount == 2;
+            if (isDialog) {
+                /*
+                * Looks like we have a dialog. We must preserve each line separated unless that is not possible.
+                */
+                let fDialogPos = text.indexOf('-');
+                let fDialogPos2 = text.substr(fDialogPos + 1).indexOf('-') + fDialogPos;
+                if (fDialogPos2 - fDialogPos <= 40 && text.length - 1 - fDialogPos2 <= 40) { //len - 1 due to the space introduced by the line break
+                    // If they fit in two separate lines, that's how it goes
+                    let dialogLines = [];
+                    dialogLines[0] = text.slice(0, fDialogPos2).trim();
+                    dialogLines[1] = text.slice(fDialogPos2, text.length).trim();
+                    return dialogLines;
+                }
+            }
+
+            if (text.length <= 40) {
+                // Nothing to divide
+                return [originalText];
+            }
+
+            let behind = 0;
+            let ahead = text.length;
+            let curWordPos = 0;
+            let ignoreSepUntilNextWord = false;
+            for (let i = 0; i < text.length; ++i) {
+                behind++;
+                ahead--;
+
+                let curChar = text[i];
+                if (curChar == '-') {
+                    ignoreSepUntilNextWord = true;
+                    continue;
+                }
+
+                // If we find a word separator...
+                if (curChar.match(/[ .,;?!-]/)) {
+                    if (ignoreSepUntilNextWord)
+                        continue;
+
+                    let nextChar = i + 1 < text.length ? text[i + 1] : null;
+                    let prevChar = i > 0 ? text[i - 1] : null;
+
+                    /*
+                    * If next char is also a separator (unless its a space), we do not split yet.
+                    */
+                    if (nextChar && nextChar.match(/[.,;?!-]/)) {
+                        continue;
+                    }
+
+                    /*
+                    * Numbers, format: 123.578.213
+                    * If we're at a dot or space, look forward and backwards. If there's a number, and the
+                    * next character also is a number, keep consuming characters.
+                    */
+                    if ((curChar == "." || curChar == " ") && nextChar && prevChar && $.isNumeric(nextChar) && $.isNumeric(prevChar)) {
+                        continue;
+                    }
+
+                    if (behind >= ahead) {
+                        let j;
+
+                        // <dir>IfSplit counts the number of characters that we'd actually have if we ignore spaces
+                        let aheadIfSplit = ahead;
+                        if (aheadIfSplit > 0) {
+                            j = i + 1;
+                            while (j < text.length) {
+                                if (text[j] != " ")
+                                    break;
+
+                                aheadIfSplit--;
+                                j++;
+                            }
+                        }
+
+                        let behindIfSplit = behind;
+                        if (behindIfSplit > 0) {
+                            j = i;
+                            while (j >= 0) {
+                                if (text[j] != " ") {
+                                    break;
+                                }
+
+                                behindIfSplit--;
+                                j--;
+                            }
+                        }
+
+                        // Split
+                        let curWordSize = i - curWordPos;
+                        let aheadWithWord = aheadIfSplit + curWordSize;
+                        let behindWithoutWord = behindIfSplit - curWordSize;
+                        let splitAt = i;
+
+                        let diff = Math.abs(aheadWithWord - behindWithoutWord) - Math.abs(aheadIfSplit - behindIfSplit);
+                        if (diff < 0 || (opinionated && diff == 0)) {
+                            // Should've split on the last separator
+                            splitAt = curWordPos;
+                        }
+
+                        let lines = [];
+                        lines[0] = text.slice(0, splitAt + 1).trim().replace(/\s\s+/, " ");
+                        lines[1] = text.slice(splitAt + 1, text.length).trim().replace(/\s\s+/, " ");
+                        return lines;
+                    }
+
+                    curWordPos = i;
+                } else if (ignoreSepUntilNextWord) {
+                    // We found a char that's not a separator so remove the flag and carry on
+                    ignoreSepUntilNextWord = false;
+                }
+            }
+
+            // No division
+            return [text];
         }
     },
 });
@@ -334,7 +515,7 @@ let comments = new Vue({
         publishComment: function() {
             let comment = this.newComment;
             this.newComment = '';
-            
+
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/comments/submit',
                 method: 'POST',
@@ -348,11 +529,11 @@ let comments = new Vue({
                 alertify.error("Ha ocurrido un error al enviar tu comentario");
             });
         },
-        
+
         refresh: function() {
             loadComments();
         },
-        
+
         remove: function(id) {
             let c, cidx;
             for(let i = 0; i < this.comments.length; ++i) {
@@ -401,7 +582,7 @@ function loadOpenLocks()
         url: '/subtitles/'+subID+'/translate/open-list',
         method: 'GET'
     }).done(function(reply) {
-        translation.openLocks = reply;            
+        translation.openLocks = reply;
     }).fail(function() {
         alertify.error("Ha ocurrido un error tratando de cargar las secuencias abiertas");
     });
@@ -449,3 +630,10 @@ if(canReleaseOpenLock) {
 }
 
 setInterval(loadComments, 30000);
+
+// Absorb and block default Ctrl+S behaviour
+$(document).bind('keydown', function(e) {
+  if(e.ctrlKey && (e.which == 83)) {
+    e.preventDefault();
+  }
+});

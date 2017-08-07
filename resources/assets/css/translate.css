@@ -57,6 +57,27 @@
 
 #translation table td.text {
     min-width: 325px;
+    position: relative;
+}
+
+#translation .text .fix-sequence {
+    position: absolute;
+    font-size: 0.9em;
+    bottom: 6px;
+    right: 22px;
+    color: rgba(0,0,0,0.7);
+    padding: 1px 2px 0px 3px;
+    background-color: rgba(134, 134, 134, 0.2);
+    border-radius: 3px;
+    text-align: center;
+}
+
+#translation .text .fix-sequence.warning {
+    color: rgba(220, 155, 4, 0.7);
+}
+
+#translation .text .fix-sequence.suggestion {
+    color: rgba(0, 151, 177, 0.7);
 }
 
 #translation table td.actions {
@@ -87,7 +108,7 @@
 
 #translation .locked {
    background-color: #7ccc94;
-    
+
 }
 
 #translation .tests {
@@ -176,7 +197,7 @@
     padding-left: 0px;
 }
 
-#translation textarea {    
+#translation textarea {
     width: 89%;
     margin-top: 5px;
     padding: 7px;
