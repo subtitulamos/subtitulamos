@@ -1,5 +1,6 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
+{% import 'macros/alerts.twig' as alerts %}
 
 {% block title %}Perfil de {{ user.username }}{% endblock %}
 {% block css %}
@@ -9,48 +10,108 @@
 {% block content %}
 <div id="user-profile-wrapper">
     <div id='user-profile'>
+        {% for error in auth.flash.errors() %}
+            {{ alerts.show('error', error) }}
+        {% endfor %}
+        {% for success in auth.flash.successes() %}
+            {{ alerts.show('success', success) }}
+        {% endfor %}
+
         <h2>{{ user.username }}</h2>
 
         {% if auth.has_role('ROLE_MOD') %}
-            <div class='oneline'>
-                <h4>Última conexión:</h4>
-                <span>
-                    {% if user.lastSeen is not null %}
-                        {{ user.lastSeen|date('d/M/Y H:i') }}
-                    {% else %}
-                        Nunca
-                    {% endif %}
+            <span class='view-normal action hint--left hint--bounce hint--rounded' v-show="mode != 'normal'" data-hint="Ver información">
+                <input type='radio' class='hidden' id='mode-normal' value='normal' v-model='mode'>
+                <label for='mode-normal'><i class="fa fa-eye" aria-hidden="true"></i></label>
+            </span>
+            {% if user.ban is null %}
+                <span class='view-ban action hint--left hint--bounce hint--rounded' v-show="mode != 'ban'"  data-hint="Banear">
+                    <input type='radio' class='hidden' id='mode-ban' value='ban' v-model='mode'>
+                    <label for='mode-ban'><i class="fa fa-gavel" aria-hidden="true"></i></label>
                 </span>
-            </div>
-            <div class='oneline'>
-                <h4>Fecha de registro:</h4>
-                <span>
-                    {% if user.registeredAt is not null %}
-                        {{ user.registeredAt|date('d/M/Y H:i') }}
-                    {% else %}
-                        Nunca (¿magia?)
-                    {% endif %}
-                </span>
-            </div>
+            {% endif %}
         {% endif %}
 
-        <h4>Capítulos subidos</h4>
-        <ul>
-            {% for episode in uploaded_episodes %}
-                <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-            {% else %}
-                {{ user.username }} no ha subido ningún capítulo
-            {% endfor %}
-        </ul>
+        <template v-if="mode == 'normal'">
+            {% if auth.has_role('ROLE_MOD') %}
+                {% if user.ban is not null %}
+                    <div class='oneline hint--top-right hint--bounce hint--rounded' data-hint="{{ user.ban.reason }}">
+                        <b>Baneo activo</b>: {{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> (<a href='/users/{{ user.id }}/unban'>Desbanear</a>)
+                    </div>
+                {% else %}
+                    <br/><br/>
+                {% endif %}
+                <div class='oneline'>
+                    <h4>Última conexión:</h4>
+                    <span>
+                        {% if user.lastSeen is not null %}
+                            {{ user.lastSeen|date('d/M/Y H:i') }}
+                        {% else %}
+                            Nunca
+                        {% endif %}
+                    </span>
+                </div>
+                <div class='oneline'>
+                    <h4>Fecha de registro:</h4>
+                    <span>
+                        {% if user.registeredAt is not null %}
+                            {{ user.registeredAt|date('d/M/Y H:i') }}
+                        {% else %}
+                            Nunca (¿magia?)
+                        {% endif %}
+                    </span>
+                </div>
+                {% if user.ban %}
+                {% endif %}
+            {% endif %}
 
-        <h4>Capítulos en los que ha colaborado</h4>
-        <ul>
-            {% for episode in collaborated_episodes %}
-                <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-            {% else %}
-                {{ user.username }} no ha colaborado en ningún capítulo
-            {% endfor %}
-        </ul>
+            <h4>Capítulos subidos</h4>
+            <ul>
+                {% for episode in uploaded_episodes %}
+                    <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+                {% else %}
+                    {{ user.username }} no ha subido ningún capítulo
+                {% endfor %}
+            </ul>
+
+            <h4>Capítulos en los que ha colaborado</h4>
+            <ul>
+                {% for episode in collaborated_episodes %}
+                    <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+                {% else %}
+                    {{ user.username }} no ha colaborado en ningún capítulo
+                {% endfor %}
+            </ul>
+        </template>
+        {% if auth.has_role('ROLE_MOD') %}
+            <template v-if="mode == 'ban'">
+                <h4>Banear</h4>
+                <form action="/users/{{ user.id }}/ban" method="POST">
+                    <div class='form-group'>
+                        <label for='time'>Duración</label>
+                        <div id='time'>
+                            <input type='radio' name='duration-type' value='permanent' v-model='duration'/> Permamente &nbsp;&nbsp;
+                            <input type='radio' name='duration-type' value='temporary' v-model='duration'/> Temporal
+                            <div v-if='duration == "temporary"'>
+                                <input type='number' name='days' class='form_input input-extra-sm nospinner' placeholder="0" /> días y <input type='number' name='hours' class='form_input input-extra-sm nospinner' placeholder="0" /> horas
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='reason'>Razón</label>
+                        <textarea id='reason' name='reason' type='text' class='form_input' maxlength="255" required>
+                        </textarea>
+                    </div>
+                    <div class='form-group'>
+                        <button type='submit' class='button'>Banear</button>
+                    </div>
+                </form>
+            </template>
+        {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ assets.js('user_public_profile') }}
 {% endblock %}

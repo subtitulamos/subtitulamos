@@ -148,11 +148,16 @@ $app->get('/login', ['\App\Controllers\LoginController', 'viewLogin']);
 $app->post('/login', ['\App\Controllers\LoginController', 'login']);
 $app->post('/register', ['\App\Controllers\LoginController', 'register']);
 $app->get('/logout', ['\App\Controllers\LoginController', 'logout']);
+$app->get('/banned', ['\App\Controllers\HomeController', 'bannedNotice']);
 
 $app->get('/rules[/{type}]', ['\App\Controllers\RulesController', 'view']);
-$app->get('/users/{userId}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
+
 $app->get('/me', ['\App\Controllers\UserController', 'viewSettings'])->setName('settings')->add($needsRoles('ROLE_USER'));
 $app->post('/me', ['\App\Controllers\UserController', 'saveSettings'])->add($needsRoles('ROLE_USER'));
+
+$app->get('/users/{userId}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
+$app->post('/users/{userId}/ban', ['\App\Controllers\UserController', 'ban'])->add($needsRoles('ROLE_MOD'));
+$app->get('/users/{userId}/unban', ['\App\Controllers\UserController', 'unban'])->add($needsRoles('ROLE_MOD'));
 
 $app->get('/dmca', ['\App\Controllers\TermsController', 'viewDMCA']);
 // Run app

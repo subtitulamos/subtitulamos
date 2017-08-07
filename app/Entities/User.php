@@ -80,6 +80,12 @@ class User
     private $lastSeen;
 
     /**
+     * @ORM\OneToOne(targetEntity="Ban", inversedBy="targetUser")
+     * @ORM\JoinColumn(name="ban_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    private $ban;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -402,5 +408,29 @@ class User
     public function getRegisteredAt()
     {
         return $this->registeredAt;
+    }
+
+    /**
+     * Set ban
+     *
+     * @param \App\Entities\Ban $ban
+     *
+     * @return User
+     */
+    public function setBan(\App\Entities\Ban $ban = null)
+    {
+        $this->ban = $ban;
+
+        return $this;
+    }
+
+    /**
+     * Get ban
+     *
+     * @return \App\Entities\Ban
+     */
+    public function getBan()
+    {
+        return $this->ban;
     }
 }

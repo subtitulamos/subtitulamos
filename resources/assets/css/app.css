@@ -193,6 +193,11 @@ input.nospinner[type=number] {
    width: 450px;
    border: 1px solid rgba(0,0,0,0.2);
 }
+.input-extra-sm {
+    width: 20px;
+    text-align: center;
+    padding-left: 4px;
+}
 
 .form-group {
     padding: 3px;
@@ -1209,4 +1214,12 @@ navigation buttons */
 
 .alert-green .alert-inner-topbar {
     background-color: #0bc72a;
+}
+
+.ban-banner {
+    color: white;
+    background-color: #c54e4e;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
 }

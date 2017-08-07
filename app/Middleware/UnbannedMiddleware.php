@@ -7,31 +7,17 @@
 
 namespace App\Middleware;
 
-class RestrictedMiddleware
+class UnbannedMiddleware
 {
-    /**
-     * List of roles that are allowed by this middleware.
-     * Defined when instanced
-     *
-     * @var array
-     */
-    private $allowedRoles = [];
-
     /**
      * App container instance
      * @var DI\Container
      */
     private $container;
 
-    public function __construct(\DI\Container $container, $roles)
+    public function __construct(\DI\Container $container)
     {
         $this->container = $container;
-
-        if (\is_string($roles)) {
-            $roles = [$roles];
-        }
-
-        $this->allowedRoles = $roles;
     }
     /**
      * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
@@ -45,13 +31,6 @@ class RestrictedMiddleware
         $auth = $this->container->get('App\Services\Auth');
         $u = $auth->getUser();
 
-        $allowed = false;
-        if (!$u->getBan()) { // Only proceed if there's no ban on us
-            foreach ($this->allowedRoles as $role) {
-                $allowed = $allowed || $auth->hasRole($role);
-            }
-        }
-
-        return $allowed ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/login');
+        return $u && !$u->getBan() ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/banned');
     }
 }

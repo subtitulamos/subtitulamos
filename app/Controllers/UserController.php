@@ -11,6 +11,7 @@ use \Slim\Views\Twig;
 use \Doctrine\ORM\EntityManager;
 use \Cocur\Slugify\SlugifyInterface;
 use App\Services\Auth;
+use App\Entities\Ban;
 
 use \Respect\Validation\Validator as v;
 
@@ -75,16 +76,93 @@ class UserController
             $errors = [];
             if (!v::length(8, 80)->validate($password)) {
                 $auth->addFlash("error", "La contraseña debe tener 8 caracteres como mínimo");
-            }
-            elseif ($password != $password_confirmation) {
+            } elseif ($password != $password_confirmation) {
                 $auth->addFlash("error", "Las contraseñas no coinciden");
-            }
-            else {
+            } else {
                 $auth->addFlash("success", "Contraseña cambiada correctamente");
                 $user->setPassword(\password_hash($password, \PASSWORD_BCRYPT, ['cost' => 13]));
             }
         }
 
         return $response->withHeader('Location', $router->pathFor("settings"));
+    }
+
+    public function ban($userId, $request, $response, EntityManager $em, Auth $auth, \Slim\Router $router)
+    {
+        $user = $em->getRepository("App:User")->find($userId);
+        if (!$user) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $errors = [];
+
+        $until = new \DateTime();
+        if ($request->getParam('duration-type', '') == 'permanent') {
+            $until->modify("+20 years");
+        } else {
+            $d = (int)$request->getParam('days', 0);
+            $h = (int)$request->getParam('hours', 0);
+
+            if ($d >= 0 && $h >= 0 && $d + $h > 0) {
+                $until->modify(sprintf("+%d days", $d));
+                $until->modify(sprintf("+%d hours", $h));
+            } else {
+                $errors[] = "Duración del ban incorrecta";
+            }
+        }
+
+        $reason = $request->getParam('reason');
+        if (empty($reason)) {
+            $errors[] = "La razón no puede estar vacía";
+        }
+
+        if (empty($errors)) {
+            $ban = new Ban();
+            $ban->setByUser($auth->getUser());
+            $ban->setTargetUser($user);
+            $ban->setReason($request->getParam('reason'));
+            $ban->setUntil($until);
+
+            $user->setBan($ban);
+
+            $em->persist($ban);
+            $em->flush();
+
+            $auth->addFlash("success", "Usuario baneado hasta el ".$until->format("d/M/Y H:i"));
+        } else {
+            foreach ($errors as $error) {
+                $auth->addFlash("error", $error);
+            }
+        }
+
+        return $response->withHeader('Location', $router->pathFor("user", ["userId" => $userId]));
+    }
+
+    public function unban($userId, $request, $response, EntityManager $em, Auth $auth, \Slim\Router $router)
+    {
+        $user = $em->getRepository("App:User")->find($userId);
+        if (!$user) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $errors = [];
+        $ban = $user->getBan();
+        if (!$ban) {
+            $errors[] = "El usuario no está baneado actualmente";
+        }
+
+        if (empty($errors)) {
+            $user->setBan(null);
+            $ban->setUnbanUser($auth->getUser());
+
+            $em->flush();
+            $auth->addFlash("success", "Suspensión de usuario eliminada");
+        } else {
+            foreach ($errors as $error) {
+                $auth->addFlash("error", $error);
+            }
+        }
+
+        return $response->withHeader('Location', $router->pathFor("user", ["userId" => $userId]));
     }
 }

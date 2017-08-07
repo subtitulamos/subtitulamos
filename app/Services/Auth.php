@@ -81,11 +81,7 @@ class Auth
             return false;
         }
 
-        $_SESSION['logged'] = true; // (just to make sure this is set)
-        $this->user = $user;
-        $this->user->setLastSeen(new \DateTime());
-        $this->em->flush();
-
+        $this->log($user, false);
         return true;
     }
 
@@ -93,16 +89,24 @@ class Auth
      * Logs a user into the running session instance
      *
      * @param User $user
-     * @param boolean $remember
+     * @param boolean $setRememberToken
      * @return void
      */
-    public function log(User $user, $remember)
+    public function log(User $user, $setRememberToken)
     {
         $_SESSION['logged'] = true;
         $_SESSION['uid'] = $user->getId();
+        $now = new \DateTime();
+        $user->setLastSeen($now);
+
+        $ban = $user->getBan();
+        if ($ban && $ban->getUntil() <= $now) {
+            # Ban is already over, remove
+            $user->setBan(null);
+        }
+
         $this->user = $user;
-        $this->user->setLastSeen(new \DateTime());
-        if ($remember) {
+        if ($setRememberToken) {
             $this->regenerateRememberToken(false);
         }
 
