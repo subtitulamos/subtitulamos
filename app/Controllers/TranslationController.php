@@ -451,7 +451,7 @@ class TranslationController
     /**
      * Handles the creation of a new translation for a given sequence
      */
-    public function create($id, $request, $response, EntityManager $em, Auth $auth)
+    public function create($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
         $seqNum = $request->getParsedBodyParam('number', 0);
         $text = Translation::cleanText($request->getParsedBodyParam('text', ""), $auth->hasRole('ROLE_TH'));
@@ -472,9 +472,7 @@ class TranslationController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $baseSubId = $em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
-            ->setParameter('v', $curSub->getVersion())
-            ->getSingleScalarResult();
+        $baseSubId = $translation->getBaseSubId($curSub);
 
         $baseSeq = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC")
             ->setParameter("sub", $baseSubId)
@@ -515,22 +513,7 @@ class TranslationController
         $em->persist($seq);
 
         // Update progress
-        $baseSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
-            ->setParameter('sub', $baseSubId)
-            ->getSingleScalarResult();
-
-        $ourSubSeqCount = $em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
-            ->setParameter('sub', $curSub->getId())
-            ->getSingleScalarResult();
-
-        $ourSubSeqCount++; // Since this one we just translated wasn't persisted yet (flush not called)
-        $curSub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
-        if ($curSub->getProgress() == 100) {
-            // We're done! Save our progress
-            $curSub->setCompleteTime(new \DateTime());
-        }
-
-        $em->persist($curSub);
+        $nprogress = $translation->recalculateSubtitleProgress($baseSubId, $curSub, 1);
 
         // Flush and end
         $em->flush();

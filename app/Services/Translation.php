@@ -8,6 +8,8 @@
 namespace App\Services;
 
 use \ForceUTF8\Encoding;
+use Doctrine\ORM\EntityManager;
+use App\Entities\Subtitle;
 
 class Translation
 {
@@ -105,5 +107,48 @@ class Translation
 
         /* TODO: Better validate text (multiline etc) + multiline trim */
         return $text;
+    }
+
+    /* ******************************************************* */
+
+    /**
+     * Entity manager handle
+     * @var EntityManager
+     */
+    private $em = null;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    public function getBaseSubId(Subtitle $sub)
+    {
+        return $this->em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
+                ->setParameter('v', $sub->getVersion())
+                ->getSingleScalarResult();
+    }
+
+    public function recalculateSubtitleProgress($baseSub, Subtitle $sub, int $modifier)
+    {
+        if (!$baseSub) {
+            $baseSub = $this->getBaseSubId($sub);
+        }
+
+        $baseSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+            ->setParameter('sub', $baseSub)
+            ->getSingleScalarResult();
+
+        $ourSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+            ->setParameter('sub', $sub->getId())
+            ->getSingleScalarResult();
+
+        $sub->setProgress(($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
+        if ($sub->getProgress() == 100 && !$sub->getPause()) {
+            // We're done! Mark as such
+            $sub->setCompleteTime(new \DateTime());
+        } elseif ($sub->getCompleteTime()) {
+            $sub->setCompleteTime(null);
+        }
     }
 }

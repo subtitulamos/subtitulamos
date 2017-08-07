@@ -41,6 +41,9 @@ $app = new class() extends \DI\Bridge\Slim\App {
             \App\Services\AssetManager::class => function (ContainerInterface $c) {
                 return new \App\Services\AssetManager();
             },
+            \App\Services\Translation::class => function (ContainerInterface $c) use ($entityManager) {
+                return new \App\Services\Translation($entityManager);
+            },
             \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
                 return new Cocur\Slugify\Slugify();
             },

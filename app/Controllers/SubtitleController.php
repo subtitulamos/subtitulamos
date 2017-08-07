@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
 
 use \Slim\Views\Twig;
+use App\Services\Translation;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Entities\Subtitle;
@@ -84,6 +85,10 @@ class SubtitleController
         $em->remove($pause);
         $sub->setPause(null);
 
+        if ($sub->getProgress() == 100 && !$sub->getCompleteTime()) {
+            $sub->setCompleteTime(new \DateTime());
+        }
+
         $em->flush();
         return $response->withStatus(200)->withHeader('Location', $router->pathFor("episode", ["id" => $sub->getVersion()->getEpisode()->getId()]));
     }
@@ -105,7 +110,7 @@ class SubtitleController
         ]);
     }
 
-    public function doHammer($subId, $request, $response, EntityManager $em, Twig $twig)
+    public function doHammer($subId, $request, $response, EntityManager $em, Twig $twig, Translation $translation)
     {
         $sub = $em->getRepository("App:Subtitle")->find($subId);
         if (!$sub) {
@@ -128,8 +133,6 @@ class SubtitleController
                 ->setParameter('num', $sq['number'])
                 ->setParameter('rev', $sq['revision'])
                 ->execute();
-
-            $response->getBody()->write($sq['number'] . "-" . $sq['revision'] . "\n");
         }
 
         $em->createQuery("DELETE FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub")
@@ -137,6 +140,11 @@ class SubtitleController
             ->setParameter('u', $target)
             ->getResult();
 
+        // Apply these changes so we can recalculate the proper percentage right after
+        $em->flush();
+
+        $translation->recalculateSubtitleProgress($baseSubId, $sub, 0);
+        $em->flush();
         return $response;
     }
 
@@ -211,8 +219,7 @@ class SubtitleController
             $em->flush();
 
             $auth->addFlash("success", "Parámetros de versión / subtítulo actualizados");
-        }
-        else {
+        } else {
             foreach ($errors as $error) {
                 $auth->addFlash('error', $error);
             }
