@@ -34,7 +34,7 @@ class Translation
      */
     public static function containsOwnCreditsText($text)
     {
-        return preg_match("/(www\.)?subtitlamos\.(?:com|tv)/i", $text) == 1;
+        return preg_match("/(www\.)?subtitulamos\.(?:com|tv)/i", $text) == 1;
     }
 
     /**
