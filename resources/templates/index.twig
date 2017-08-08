@@ -33,7 +33,7 @@
 		{% verbatim %}
 		<div id="incategory_state" class="hidden">
 			<div id="incategory_board">
-				<div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': hideDetails }">
+				<div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': ep.hide_details }">
 					<div class="clip_downloads" v-if="ep.download_count">
 						<div class="clip_downloads_times">{{ ep.download_count }}</div>
 						<div class="clip_downloads_text">descargas</div>

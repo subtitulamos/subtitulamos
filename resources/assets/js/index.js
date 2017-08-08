@@ -6,8 +6,7 @@ let episodeList = new Vue({
     el: "#incategory_board",
     data: {
         category: '',
-        episodes: [],
-        hideDetails: false
+        episodes: []
     }, methods: {
         subURI: function(ep) {
             return "/episodes/"+ep.id+"/"+ep.slug;
@@ -74,7 +73,6 @@ function search(target, page) {
 
         episodeList.category = target;
         episodeList.episodes = data;
-        episodeList.hideDetails = target == 'uploads';
         categoryPage[target] = page;
 
         if(rowsPerPage == 0 || rowsPerPage < episodeList.episodes.length) {

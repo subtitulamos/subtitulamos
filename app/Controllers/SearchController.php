@@ -16,6 +16,7 @@ use \Slim\Views\Twig;
 
 use \App\Entities\Episode;
 use \App\Services\Langs;
+use \App\Services\Auth;
 
 class SearchController
 {
@@ -41,7 +42,7 @@ class SearchController
         return $response->withJson($epList);
     }
 
-    public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify)
+    public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC")
@@ -49,6 +50,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
+        $hideDetails = !$auth->hasRole('ROLE_TH');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -61,14 +63,15 @@ class SearchController
                 "season" => $ep->getSeason(),
                 "episode_num" => $ep->getNumber(),
                 "time" => $sub->getUploadTime()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang()))
+                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "hide_details" => $hideDetails
             ];
         }
 
         return $response->withJson($epList);
     }
 
-    public function listRecentChanged(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
+    public function listRecentChanged(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC")
@@ -76,6 +79,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
+        $hideDetails = !$auth->hasRole('ROLE_TH');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -88,14 +92,15 @@ class SearchController
                 "time" => $sub->getEditTime()->format(\DateTime::ATOM),
                 "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 "last_edited_by" => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : "",
-                "progress" => floor($sub->getProgress())
+                "progress" => floor($sub->getProgress()),
+                "hide_details" => $hideDetails
             ];
         }
 
         return $response->withJson($epList);
     }
 
-    public function listRecentCompleted(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
+    public function listRecentCompleted(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC")
@@ -103,6 +108,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
+        $hideDetails = !$auth->hasRole('ROLE_TH');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -114,6 +120,7 @@ class SearchController
                 "slug" => $slugify->slugify($fullName),
                 "time" => $sub->getCompleteTime()->format(\DateTime::ATOM),
                 "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                "hide_details" => $hideDetails
             ];
         }
 
@@ -190,7 +197,7 @@ class SearchController
         return $response->withJson($shows);
     }
 
-    public function listPaused($request, $response, EntityManager $em, SlugifyInterface $slugify)
+    public function listPaused($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
         $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC")
@@ -198,6 +205,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
+        $hideDetails = !$auth->hasRole('ROLE_TH');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -211,7 +219,8 @@ class SearchController
                 "episode_num" => $ep->getNumber(),
                 "time" => $sub->getPause()->getStart()->format(\DateTime::ATOM),
                 "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                "progress" => floor($sub->getProgress())
+                "progress" => floor($sub->getProgress()),
+                "hide_details" => $hideDetails
             ];
         }
 
