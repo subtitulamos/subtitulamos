@@ -19,5 +19,8 @@
         "psr-4": {
             "App\\": "app/"
         }
+    },
+    "require-dev": {
+        "ukko/phpredis-phpdoc": "@dev"
     }
 }

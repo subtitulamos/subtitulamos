@@ -9,7 +9,7 @@ Vue.component('comment', {
             <header>
                 <ul>
                     <li class='comment-user'>
-                        <a :href="'/users/' + user.id">{{ user.name }}</a>
+                        <a :href="'/users/' + user.id">{{ user.username }}</a>
                     </li>
                     <li class='comment-time'>
                         {{ date }}
@@ -26,7 +26,7 @@ Vue.component('comment', {
             </section>
         </article>
         `,
-    
+
     props: ['id', 'user', 'text', 'published-at', 'type'],
     data: function() {
         return {

@@ -14,25 +14,24 @@
 
     <div id="translation-details">
         <div id='filters'>
-            Filtrar por cadena: <input type="text" id="text-filter" />
+            Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
             &nbsp;&nbsp;-&nbsp;&nbsp;
             Filtrar por autor:
-            <select id='author-filter'>
+            <select id='author-filter' @change="updateAuthorFilter">
                 <option value="0">Todos</option>
                 {% for user in authors %}
                     <option value="{{ user.id }}">{{ user.username }}</option>
                 {% endfor %}
             </select>
             &nbsp;&nbsp;-&nbsp;&nbsp;
-            <input type='checkbox' id='untranslated-filter'>
+            <input type='checkbox' id='untranslated-filter' @change="toggleUntranslatedFilter">
             <label for='untranslated-filter'>
                 Ver solo secuencias sin traducir
             </label>
-            <button type="submit" id="apply" @click="applyFilter">Aplicar</button>
         </div>
 
         <div class="page-wrapper">
-            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage"></pagelist>
+            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
         </div>
 
         <table id="sequences">
@@ -48,34 +47,35 @@
             </thead>
 
             {% verbatim %}
-                <template v-for="seq in sequences">
+                <template v-for="seq in pageSequences">
                     <sequence v-for="hseq in seq.history"
-                        :key="seq.id + 'hist' + seq.number"
+                        :key="hseq.id + '-hist-' + seq.number"
 
-                        :original-id="hseq.id"
+                        :id="hseq.id"
                         :number="seq.number"
-                        :p-locked="false"
-                        :p-verified="false"
-                        :original-author="hseq.author"
+                        :locked="false"
+                        :verified="false"
+                        :author="hseq.author"
                         :tstart="hseq.tstart"
                         :tend="hseq.tend"
                         :secondary-text="seq.secondary_text"
-                        :original-text="hseq.text"
+                        :text="hseq.text"
                         :history="true">
                     ></sequence>
 
                     <sequence
-                        :key="seq.id + '' + seq.number"
+                        :key="seq.id + '-' + seq.number"
 
-                        :original-id="seq.id"
+                        :id="seq.id"
                         :number="seq.number"
-                        :p-locked="seq.locked"
-                        :p-verified="seq.verified"
-                        :original-author="seq.author"
+                        :locked="seq.locked"
+                        :verified="seq.verified"
+                        :author="seq.author"
                         :tstart="seq.tstart"
                         :tend="seq.tend"
                         :secondary-text="seq.secondary_text"
-                        :original-text="seq.text"
+                        :text="seq.text"
+                        :open-info="seq.openInfo ? seq.openInfo : {id: 0}"
                         :history="false"
                     ></sequence>
                 </template>
@@ -83,20 +83,20 @@
         </table>
 
         <div class="page-wrapper">
-            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage"></pagelist>
+            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
         </div>
 
-        <div id="translation-locks" v-if="openLocks.length > 0">
+        <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
             Secuencias abiertas:
 
             <ul>
-                <seqlock v-for="lock in openLocks" :key="lock.id" :id="lock.id" :user="lock.user" :seqnum="lock.seq_number" :time="lock.time"></seqlock>
+                <seqlock v-for="lock in openLocks" :key="'lock-'+lock.id" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time"></seqlock>
             </ul>
         </div>
     </div>
 
     <div id="translation-comments">
-        <h4>Comentarios de traducción <span class='comment-refresh'><i class='fa fa-refresh' @click="refresh"></i></span></h4>
+        <h4>Comentarios de traducción</h4>
         <div class='newcomment-box'>
             <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
             <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>

@@ -2,55 +2,37 @@ import Vue from 'vue';
 import $ from 'jquery';
 import timeago from 'timeago.js';
 import './vue/comment.js';
-
-let textFilter = "";
-let authorFilter = 0;
-let untranslated = 0;
-function loadPage(pageNum, secondaryLang) {
-    $.ajax({
-        url: '/subtitles/'+subID+'/translate/page/' + pageNum,
-        method: 'GET',
-        data: {
-            textFilter: textFilter,
-            authorFilter: authorFilter,
-            untranslated: untranslated,
-            secondaryLang: secondaryLang
-        }
-    }).done(function(pageData) {
-        // Prepare sequences
-        let sequences = [];
-        Object.keys(pageData).forEach(function(k) {
-            let sequence = pageData[k];
-
-            // Add some state variables
-            sequence.editing = false;
-            sequence.canSave = false;
-            sequence.lineCounters = [];
-
-            sequences.push(sequence);
-        });
-
-        translation.sequences = sequences;
-
-        // Update pagelist
-        translation.curPage = pageNum;
-    });
-}
+import Subtitle from './subtitle.js';
+import ReconnectingWebsocket from 'reconnecting-websocket';
 
 Vue.component('seqlock', {
     template: `
-        <li>#{{ seqnum }} por <a :href="'/users/'+user.id">{{ user.username }}</a> [{{ time }}] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
+        <li>#{{ seqnum }} por <a :href="'/users/'+uid">{{ username }}</a> [{{ time }}] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
     `,
-    props: ["id", "seqnum", "user", "time"],
+    props: ["id", "seqnum", "uid", "time"],
     methods: {
         release: function() {
+            let seq = sub.getDataByNum(this.seqnum);
+            if(!seq) {
+                console.error("Could not find sequence to release!", this.seqnum);
+                return;
+            }
+
+            let seqInfoCopy = JSON.parse(JSON.stringify(seq.openInfo));
+            sub.closeSeq(this.seqnum);
+
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/open-list/'+this.id,
+                url: '/subtitles/'+subID+'/translate/open-lock/'+this.id,
                 method: 'DELETE',
                 data: {}
-            }).done(function() {
-                loadOpenLocks();
+            }).fail(() => {
+                sub.openSeq(this.seqnum, seqInfoCopy.by, seqInfoCopy.lockID);
             });
+        }
+    },
+    computed: {
+        username: function() {
+            return sub.getUsername(this.uid);
         }
     }
 });
@@ -59,14 +41,16 @@ Vue.component('sequence', {
     template: `
         <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
             <td><span v-if="!history">{{ number }}</span></td>
-            <td class="user"><a :href="'/users/' + author.id" tabindex="-1">{{ authorName }}</a></td>
+            <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
             <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
             <td class="text"><pre>{{ secondaryText }}</pre></td>
-            <td class="text" @click="editSequence" :class="{'translatable': !history}">
-                <pre v-if="!editing && text">{{ text }}</pre>
-                <pre v-if="!editing && !text" class="untranslated">- Sin traducir -</pre>
+            <td class="text" @click="openSequence" :class="{'translatable': !history && !openByOther, 'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
+                <pre v-if="!editing && id">{{ text }}</pre>
+                <pre v-if="!editing && !id" class="untranslated">- Sin traducir -</pre>
 
-                <textarea v-model="text" v-if="editing" @keyup.ctrl="keyboardActions"></textarea>
+                <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
+
+                <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions"></textarea>
                 <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
                     <i class="fa fa-wrench" aria-hidden="true"></i>
                 </div>
@@ -93,15 +77,22 @@ Vue.component('sequence', {
         </tr>
         `,
 
-    props: ['originalId', 'pLocked', 'pVerified', 'number', 'originalAuthor', 'tstart', 'tend', 'secondaryText', 'originalText', 'history'],
+    props: {
+        id: Number,
+        locked: Boolean,
+        verified: Boolean,
+        number: Number,
+        author: Number,
+        tstart: Number,
+        tend: Number,
+        secondaryText: String,
+        text: String,
+        history: Boolean,
+        openInfo: Object
+    },
     data: function() {
         return {
-            id: this.originalId,
-            author: this.originalAuthor,
-            text: this.originalText,
-            locked: this.pLocked,
-            verified: this.pVerified,
-            editing: false
+            editingText: this.text
         }
     },
     filters: {
@@ -134,8 +125,20 @@ Vue.component('sequence', {
         }
     },
     computed: {
+        openByOther: function() {
+            return this.openInfo && this.openInfo.by && this.openInfo.by != myId;
+        },
+
+        textHint: function() {
+            return this.openByOther ? sub.getUsername(this.openInfo.by)+" está editando esta secuencia" : '';
+        },
+
+        editing: function() {
+            return this.openInfo && this.openInfo.by == myId;
+        },
+
         lineCounters: function() {
-            let lines = this.text.split("\n");
+            let lines = this.editingText.split("\n");
             let lineCounters = [];
 
             for(let i = 0; i < lines.length; ++i) {
@@ -164,12 +167,12 @@ Vue.component('sequence', {
         },
 
         authorName: function() {
-            return this.author.name ? this.author.name : " - ";
+            return this.author ? sub.getUsername(this.author) : " - ";
         },
 
         shouldFixLevel: function() {
             let tlines = [];
-            $.each(this.text.split("\n"), function (i, val) {
+            $.each(this.editingText.split("\n"), function (i, val) {
                 tlines.push(val.trim());
             });
 
@@ -189,31 +192,28 @@ Vue.component('sequence', {
         }
     },
     methods: {
-        editSequence: function() {
-            if(this.editing || this.history) {
-                return true; // Already , no effect
+        openSequence: function() {
+            if(this.editing || this.history || this.openByOther) {
+                return true; // Already / no effect / can't open
             }
 
+            this.editingText = this.text;
+            sub.openSeq(this.number, myId, 0);
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/open',
                 method: 'POST',
                 data: {
                     seqNum: this.number
                 }
-            }).done(function(reply) {
-                if(reply.ok) {
-                    this.editing = true;
-                    this.curText = this.text;
-                    if(reply.text !== null) {
-                        this.text = reply.text;
-                    }
-                    if(reply.id !== null) {
-                        this.id = reply.id;
-                    }
-                } else {
+            }).done((reply) => {
+                if(!reply.ok) {
+                    sub.closeSeq(this.number);
                     alertify.error(reply.msg);
                 }
-            }.bind(this));
+            }).fail(() => {
+                sub.closeSeq(this.number);
+                alertify.error("Ha ocurrido un error desconocido al intentar editar");
+            });
         },
 
         keyboardActions: function(e) {
@@ -227,10 +227,19 @@ Vue.component('sequence', {
         },
 
         save: function() {
-            if(!this.canSave)
+            if(!this.canSave) {
                 return false;
+            }
 
-            let pthis = this;
+            let ntext = this.editingText.trim().replace(/ +/g,' ');
+            if(!ntext) {
+                ntext = " ";
+            }
+
+            if(ntext == this.text) {
+                this.discard();
+            }
+
             if(this.id) {
                 // Editing a sequence, save the changes
                 $.ajax({
@@ -238,18 +247,12 @@ Vue.component('sequence', {
                     method: 'POST',
                     data: {
                         seqID: this.id,
-                        text: this.text,
+                        text: ntext,
                     }
-                }).done(function(newId){
-                    pthis.id = newId;
-                    pthis.text = pthis.text.trim().replace(/ +/g,' ');
-                    if(!pthis.text) {
-                        pthis.text = " ";
-                    }
-                })
-                .fail(function() {
+                }).done((newID) => {
+                    sub.changeSeq(this.number, Number(newID), myId, ntext);
+                }).fail(() => {
                     alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                    pthis.editing = true;
                 });
             } else {
                 // Translating a sequence for the first time
@@ -258,44 +261,34 @@ Vue.component('sequence', {
                     method: 'POST',
                     data: {
                         number: this.number,
-                        text: this.text
+                        text: ntext
                     }
-                }).done(function(newId){
-                    pthis.id = newId;
-                    pthis.text = pthis.text.trim().replace(/ +/g,' ');
-                    if(!pthis.text) {
-                        pthis.text = " ";
-                    }
-
-                    pthis.author = {
-                        id: myId,
-                        name: myName
-                    };
-                })
-                .fail(function() {
+                }).done((newID) => {
+                    sub.changeSeq(this.number, Number(newID), myId, ntext);
+                }).fail(() => {
                     alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                    pthis.editing = true;
                 });
             }
-
-            this.editing = false;
         },
 
         discard: function() {
-            // Discard sequence changes
-            this.text = this.curText;
-            this.editing = false;
+            if(!this.openInfo) {
+                return;
+            }
 
-                $.ajax({
+            let oLockID = this.openInfo.id;
+            sub.closeSeq(this.number);
+
+            $.ajax({
                 url: '/subtitles/'+subID+'/translate/close',
                 method: 'POST',
                 data: {
                     seqNum: this.number
                 }
             })
-            .fail(function() {
+            .fail(() => {
+                sub.openSeq(this.number, myId, oLockID);
                 alertify.error("Ha ocurrido un error al intentar cerrar la secuencia");
-                pthis.editing = true;
             });
         },
 
@@ -305,7 +298,7 @@ Vue.component('sequence', {
             }
 
             let preLock = this.locked;
-            this.locked = !this.locked;
+            sub.lockSeq(this.id, !this.locked);
 
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/lock',
@@ -313,10 +306,11 @@ Vue.component('sequence', {
                 data: {
                     seqID: this.id
                 }
-            }).fail(function() {
-                // Only revert if the request failed
-                this.locked = preLock;
-            }.bind(this));
+            }).fail(() => {
+                // Revert, the request failed
+                sub.lockSeq(this.id, preLock);
+                alertify.error("Error al intentar cambiar el estado de esta secuencia");
+            });
         },
 
         fix: function() {
@@ -325,17 +319,17 @@ Vue.component('sequence', {
             }
 
             let ntext = this.balanceText(true).join('\n');
-            if(ntext != this.text) {
-                this.text = ntext;
+            if(ntext != this.editingText) {
+                this.editingText = ntext;
             } else {
                 let tlines = [];
-                $.each(this.text.split("\n"), function (i, val) {
+                $.each(this.editingText.split("\n"), function (i, val) {
                     tlines.push(val.trim());
                 });
 
                 let dialogLineCount = (ntext.match(/(?:^|\s)-/g) || []).length;
                 if(tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
-                    this.text = tlines.join(' ');
+                    this.editingText = tlines.join(' ');
                 }
             }
         },
@@ -347,7 +341,7 @@ Vue.component('sequence', {
                 opinionated = true;
             }
 
-            let originalText = this.text;
+            let originalText = this.editingText;
             let text = originalText.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
 
             let dialogLineCount = (text.match(/(?:^|\s)-/g) || []).length;
@@ -494,24 +488,114 @@ Vue.component('pagelist', {
         },
 
         toPage: function(page) {
-            loadPage(page, availSecondaryLangs[0]);
             document.getElementById('translation').scrollIntoView();
+            this.$emit("change-page", page);
         }
     }
 });
 
-/**************************
-*        COMMENTS
-***************************/
-
-let comments = new Vue({
-    el: '#translation-comments',
+/**
+* Boot
+*/
+const SEQS_PER_PAGE = 20;
+let translation = new Vue({
+    el: '#translation',
     data: {
+        sequences: [],
+        curPage: 1,
+        filters: {
+            onlyUntranslated: false,
+            author: 0,
+            text: ''
+        },
+        comments: [],
         newComment: '',
-        comments: [
-        ]
+        canReleaseOpenLock: canReleaseOpenLock
+    },
+    computed: {
+        lastPage: function() {
+            return Math.ceil(this.visibleSequences.length / SEQS_PER_PAGE);
+        },
+
+        pages: function() {
+            let pages = [];
+            for(let i = 1; i <= this.lastPage; ++i) {
+                pages.push(i);
+            }
+
+            return pages;
+        },
+
+        visibleSequences: function() {
+            return this.sequences.filter((seq) => {
+                if(this.filters.onlyUntranslated && seq.id) {
+                    return false;
+                }
+
+                if(this.filters.author > 0) {
+                    let authorFilterFn = (seq) => {
+                        return seq.author && this.filters.author == seq.author;
+                    }
+
+                    if(!authorFilterFn(seq) && (!seq.history || !seq.history.some(authorFilterFn))) {
+                        return false;
+                    }
+                }
+
+                if(this.filters.text != '') {
+                    let textFilterFn = (seq) => {
+                        let match = this.filters.text.toLowerCase();
+                        return seq.text.toLowerCase().includes(match) || (seq.secondaryText && seq.secondaryText.toLowerCase().includes(match));
+                    };
+
+                    if(!textFilterFn(seq) && (!seq.history || !seq.history.some(textFilterFn))) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        },
+
+        pageSequences: function() {
+            return this.visibleSequences.filter((ele, idx) => {
+                return Math.floor(idx/SEQS_PER_PAGE) == this.curPage - 1;
+            });
+        },
+
+        openLocks: function() {
+            let locks = [];
+            this.sequences.forEach((seq) => {
+                if(seq.openInfo) {
+                    locks.push({
+                        id: seq.openInfo.lockID,
+                        uid: seq.openInfo.by,
+                        time: seq.openInfo.since,
+                        seq_number: seq.number
+                    });
+                }
+            });
+
+            return locks;
+        },
     },
     methods: {
+        onChangePage: function(page) {
+            this.curPage = page;
+        },
+
+        toggleUntranslatedFilter: function() {
+            this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
+        },
+
+        updateAuthorFilter: function(e) {
+            this.filters.author = Number(e.target.value);
+        },
+
+        updateTextFilter: function(e) {
+            this.filters.text = e.target.value;
+        },
+
         publishComment: function() {
             let comment = this.newComment;
             this.newComment = '';
@@ -522,16 +606,11 @@ let comments = new Vue({
                 data: {
                     text: comment
                 }
-            }).done(function() {
-                // Cheap solution: reload the entire comment box
-                loadComments();
+            }).done(function(id) {
+                sub.addComment(id, {id: myId, username: myName, roles: ["ROLE_USER"]}, (new Date()).toISOString(), comment);
             }).fail(function() {
                 alertify.error("Ha ocurrido un error al enviar tu comentario");
             });
-        },
-
-        refresh: function() {
-            loadComments();
         },
 
         remove: function(id) {
@@ -549,87 +628,25 @@ let comments = new Vue({
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/comments/'+id,
                 method: 'DELETE'
-            }).done(function() {
-                loadComments();
             }).fail(function() {
                 alertify.error('Se ha encontrado un error al borrar el comentario');
                 if(typeof cidx !== 'undefined') {
                     // Insert the comment right back where it was
                     this.comments.splice(cidx, 0, c);
-                } else {
-                    loadComments();
                 }
             }.bind(this));
         }
     }
 });
 
-function loadComments()
-{
-    $.ajax({
-        url: '/subtitles/'+subID+'/translate/comments',
-        method: 'GET'
-    }).done(function(reply) {
-        comments.comments = reply;
-    }).fail(function() {
-        alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
-    })
-}
+let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
-function loadOpenLocks()
-{
-    $.ajax({
-        url: '/subtitles/'+subID+'/translate/open-list',
-        method: 'GET'
-    }).done(function(reply) {
-        translation.openLocks = reply;
-    }).fail(function() {
-        alertify.error("Ha ocurrido un error tratando de cargar las secuencias abiertas");
-    });
-}
-
-/**
-* Boot
-*/
-let translation = new Vue({
-    el: '#translation-details',
-    data: {
-        sequences: [],
-        pages: [],
-        curPage: 0,
-        lastPage: pageCount,
-        openLocks: []
-    },
-    methods: {
-        applyFilter: function() {
-            let newTextFilter = $("#text-filter").val();
-            let newAuthorFilter = $("#author-filter").val();
-            let newUntranslated = $("#untranslated-filter").is(":checked");
-            let reload = newTextFilter != textFilter || newAuthorFilter != authorFilter || newUntranslated != untranslated;
-
-            textFilter = newTextFilter;
-            authorFilter = newAuthorFilter;
-            untranslated = newUntranslated;
-
-            if(reload) {
-                loadPage(1, availSecondaryLangs[0]);
-            }
-        }
-    }
-});
-
-for(let p = 1; p < pageCount + 1; ++p) {
-    translation.pages.push(p);
-}
-
-loadPage(1, availSecondaryLangs[0]); // Load first page by default
-loadComments();
-if(canReleaseOpenLock) {
-    loadOpenLocks();
-    setInterval(loadOpenLocks, 45000);
-}
-
-setInterval(loadComments, 30000);
+// Set up websocket (which will itself load the sub)
+const wsProtocol = window.location.protocol == 'https:' ? 'wss' : 'ws';
+const ws = new ReconnectingWebsocket(wsProtocol + '://'+ window.location.hostname + "/translation-rt?subID="+subID+"&token=abc");
+ws.onopen = () => { sub.wsOpen() };
+ws.onmessage = (e) => { sub.wsMessage(e) };
+ws.onerror = (e) => { sub.wsError(e) };
 
 // Absorb and block default Ctrl+S behaviour
 $(document).bind('keydown', function(e) {

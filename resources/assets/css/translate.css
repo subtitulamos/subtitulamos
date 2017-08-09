@@ -201,22 +201,23 @@
     width: 89%;
     margin-top: 5px;
     padding: 7px;
-    height: 100%;
+    height: 36px;
 }
 
 #translation .text {
     min-width: 375px;
+    display: table-cell;
 }
 
 #translation .translatable {
     cursor: pointer;
+    vertical-align:middle;
 }
 
 #translation pre {
     font-family: "Open Sans";
-    height: 100%;
-    display:table-cell;
-    vertical-align:middle;
+    display: inline-block;
+    margin: 0;
 }
 
 #translation .line-status {
@@ -359,11 +360,6 @@
     margin-left: 20px;
 }
 
-.comment-refresh {
-    float: right;
-    cursor: pointer;
-}
-
 .comment-actions i {
     cursor: pointer;
 }
@@ -382,4 +378,9 @@
 
 .comment-body.role-mod {
     color: #0074ca;
+}
+
+.open-other {
+    float: right;
+    margin-top: 3px;
 }

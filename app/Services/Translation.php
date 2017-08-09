@@ -10,12 +10,205 @@ namespace App\Services;
 use \ForceUTF8\Encoding;
 use Doctrine\ORM\EntityManager;
 use App\Entities\Subtitle;
+use App\Entities\Sequence;
+use App\Entities\User;
+use App\Entities\OpenLock;
+use App\Entities\SubtitleComment;
 
 class Translation
 {
     /**
+     * Entity manager handle
+     * @var EntityManager
+     */
+    private $em = null;
+
+    /**
+     * Connection to the redis server
+     * @var \Redis
+     */
+    private $redis = null;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+
+        $redis = new \Redis();
+        $redis->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'));
+        $this->redis = $redis;
+    }
+
+    /**
+     * Obtains the id of the base subtitle, that is, the canonical one
+     * for the version of the given subtitle
+     *
+     * @param Subtitle $sub
+     * @return int
+     */
+    public function getBaseSubId(Subtitle $sub)
+    {
+        return $this->em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
+            ->setParameter('v', $sub->getVersion())
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Finds and returns the latest revision of a given sequence number
+     *
+     * @param int $subId
+     * @param int $seqNum
+     * @return \App\Entities\Sequence
+     */
+    public function getLatestSequenceRev($subId, $seqNum)
+    {
+        return $this->em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC")
+            ->setParameter('sub', $subId)
+            ->setParameter('num', $seqNum)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
+
+    public function getPubSubChanName(Subtitle $sub)
+    {
+        return sprintf("%s-translate-%d", ENVIRONMENT_NAME, $sub->getId());
+    }
+
+    /**
+     * Broadcasts to pub/sub channel the opening of a sequence on a sub
+     *
+     * @param \App\Entities\Subtitle $sub
+     * @param \App\Entities\User $byUser
+     * @param int $seqNum
+     * @param \App\Entities\OpenLock $lock
+     * @return void
+     */
+    public function broadcastOpen(Subtitle $sub, User $byUser, int $seqNum, OpenLock $lock)
+    {
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "seq-open",
+            "user" => $byUser->getId(),
+            "num" => $seqNum,
+            "openLockID" => $lock->getId()
+        ]));
+    }
+
+    /**
+     * Broadcasts to pub/sub channel the closing of a sequence on a sub
+     *
+     * @param \App\Entities\Subtitle $sub
+     * @param int $seqNum
+     * @return void
+     */
+    public function broadcastClose(Subtitle $sub, int $seqNum)
+    {
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "seq-close",
+            "num" => $seqNum
+        ]));
+    }
+
+    /**
+     * Broadcasts to pub/sub channel the edition of a sequence on a sub
+     *
+     * @param \App\Entities\Sequence $seq
+     * @return void
+     */
+    public function broadcastSeqChange(Sequence $seq)
+    {
+        $sub = $seq->getSubtitle();
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "seq-change",
+            "user" => $seq->getAuthor()->getId(),
+            "num" => $seq->getNumber(),
+            "nid" => $seq->getId(),
+            "ntext" => $seq->getText()
+        ]));
+    }
+
+    /**
+     * Broadcasts to pub/sub channel the lock status of a sequence on a sub
+     *
+     * @param \App\Entities\Sequence $seq
+     * @return void
+     */
+    public function broadcastLockChange(Sequence $seq)
+    {
+        $sub = $seq->getSubtitle();
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "seq-lock",
+            "id" => $seq->getId(),
+            "status" => $seq->getLocked()
+        ]));
+    }
+
+    /**
+     * Broadcasts new comment being published
+     *
+     * @param \App\Entities\SubtitleComment $c
+     * @return void
+     */
+    public function broadcastNewComment(SubtitleComment $c)
+    {
+        $sub = $c->getSubtitle();
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "com-new",
+            "id" => $c->getId(),
+            "user" => $c->getUser()->getId(),
+            "time" => $c->getPublishTime()->format(\DateTime::ATOM),
+            "text" => $c->getText()
+        ]));
+    }
+
+    /**
+     * Broadcasts comment being deleted
+     *
+     * @param \App\Entities\SubtitleComment $c
+     * @return void
+     */
+    public function broadcastDeleteComment(SubtitleComment $c)
+    {
+        $sub = $c->getSubtitle();
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "com-del",
+            "id" => $c->getId()
+        ]));
+    }
+
+    /**
+     * Calculate the translation progress for a given subtitle
+     *
+     * @param \App\Entities\Subtitle|int $baseSub
+     * @param \App\Entities\Subtitle $sub
+     * @param int $modifier
+     * @return void
+     */
+    public function recalculateSubtitleProgress($baseSub, Subtitle $sub, int $modifier)
+    {
+        if (!$baseSub) {
+            $baseSub = $this->getBaseSubId($sub);
+        }
+
+        $baseSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+            ->setParameter('sub', $baseSub)
+            ->getSingleScalarResult();
+
+        $ourSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+            ->setParameter('sub', $sub->getId())
+            ->getSingleScalarResult();
+
+        $sub->setProgress( ($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
+        if ($sub->getProgress() == 100 && !$sub->getPause()) {
+            // We're done! Mark as such
+            $sub->setCompleteTime(new \DateTime());
+        }
+        elseif ($sub->getCompleteTime()) {
+            $sub->setCompleteTime(null);
+        }
+    }
+
+    /**
      * Determine if a string contains a subtitle's credits (both ours and other people's)
-     * @param $text string
+     * @param string $text
      * @return bool
      */
     public static function containsCreditsText(string $text)
@@ -29,7 +222,7 @@ class Translation
 
     /**
      * Determine if a string contains our own credits
-     * @param $text string
+     * @param string $text
      * @return bool
      */
     public static function containsOwnCreditsText($text)
@@ -39,7 +232,7 @@ class Translation
 
     /**
      * Determine if a sequence should be left blank based on its contents
-     * @param $text
+     * @param string $text
      * @return int  Degree of confidence that this should be a blank sequence
      */
     public static function getBlankSequenceConfidence($sequence)
@@ -57,7 +250,15 @@ class Translation
         return 0;
     }
 
-    public static function cleanText($text, $allowSpecialTags)
+    /**
+     * Clear the text from artifacts that would render it
+     * unplayable on older devices or less standard-compliant ones
+     *
+     * @param string $text
+     * @param bool $allowSpecialTags
+     * @return void
+     */
+    public static function cleanText(string $text, bool $allowSpecialTags)
     {
         // Remove multiple spaces concatenated
         $text = trim(preg_replace('/ +/', ' ', $text));
@@ -107,49 +308,5 @@ class Translation
 
         /* TODO: Better validate text (multiline etc) + multiline trim */
         return $text;
-    }
-
-    /* ******************************************************* */
-
-    /**
-     * Entity manager handle
-     * @var EntityManager
-     */
-    private $em = null;
-
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
-    public function getBaseSubId(Subtitle $sub)
-    {
-        return $this->em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
-            ->setParameter('v', $sub->getVersion())
-            ->getSingleScalarResult();
-    }
-
-    public function recalculateSubtitleProgress($baseSub, Subtitle $sub, int $modifier)
-    {
-        if (!$baseSub) {
-            $baseSub = $this->getBaseSubId($sub);
-        }
-
-        $baseSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
-            ->setParameter('sub', $baseSub)
-            ->getSingleScalarResult();
-
-        $ourSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
-            ->setParameter('sub', $sub->getId())
-            ->getSingleScalarResult();
-
-        $sub->setProgress( ($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
-        if ($sub->getProgress() == 100 && !$sub->getPause()) {
-            // We're done! Mark as such
-            $sub->setCompleteTime(new \DateTime());
-        }
-        elseif ($sub->getCompleteTime()) {
-            $sub->setCompleteTime(null);
-        }
     }
 }

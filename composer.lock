@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ddb178a50df5cab6853fea810190f387",
-    "content-hash": "58c90cc39282fa486434296c8a07a2f5",
+    "hash": "8b790e126d4e6ed736735f1dc74c74cd",
+    "content-hash": "5dce574266ec48b532578b3d85720e69",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1972,10 +1972,62 @@
             "time": "2016-09-01 10:05:43"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "ukko/phpredis-phpdoc",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ukko/phpredis-phpdoc.git",
+                "reference": "6dc713f339a02b9ce0d84b8b3c95a2c3ad6ef196"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ukko/phpredis-phpdoc/zipball/6dc713f339a02b9ce0d84b8b3c95a2c3ad6ef196",
+                "reference": "6dc713f339a02b9ce0d84b8b3c95a2c3ad6ef196",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "phpredis-phpdoc": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Max Kamashev",
+                    "email": "max.kamashev@gmail.com",
+                    "homepage": "http://uk0.us/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "@phpdoc extension phpredis for IDE autocomplete",
+            "homepage": "https://github.com/ukko/phpredis-phpdoc",
+            "keywords": [
+                "helper",
+                "phpredis",
+                "redis"
+            ],
+            "time": "2016-11-02 12:11:09"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ukko/phpredis-phpdoc": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

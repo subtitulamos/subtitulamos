@@ -21,7 +21,8 @@ function feature_on($name)
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class() extends \DI\Bridge\Slim\App {
+$app = new class () extends \DI\Bridge\Slim\App
+{
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -106,9 +107,8 @@ $app->get('/search/paused', ['\App\Controllers\SearchController', 'listPaused'])
 
 $app->post('/subtitles/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRoles('ROLE_USER'));
 $app->get('/subtitles/{id}/translate', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRoles('ROLE_USER'));
-$app->get('/subtitles/{id}/translate/page/{page}', ['\App\Controllers\TranslationController', 'listSequences'])->add($needsRoles('ROLE_USER'));
-$app->get('/subtitles/{id}/translate/open-list', ['\App\Controllers\TranslationController', 'listOpenLocks'])->add($needsRoles('ROLE_TH'));
-$app->delete('/subtitles/{id}/translate/open-list/{lockId}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRoles('ROLE_TH'));
+$app->get('/subtitles/{id}/translate/load', ['\App\Controllers\TranslationController', 'loadData'])->add($needsRoles('ROLE_USER'));
+$app->delete('/subtitles/{id}/translate/open-lock/{lockId}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRoles('ROLE_TH'));
 $app->post('/subtitles/{id}/translate/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{id}/translate/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{id}/translate/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRoles('ROLE_USER'));

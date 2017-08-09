@@ -13,10 +13,11 @@ use Respect\Validation\Validator as v;
 use App\Entities\Subtitle;
 use App\Entities\SubtitleComment;
 use App\Services\Auth;
+use App\Services\Translation;
 
 class SubtitleCommentsController
 {
-    public function create($subId, $request, $response, EntityManager $em, Auth $auth)
+    public function create($subId, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
         // Validate input first
         $text = $request->getParsedBodyParam('text', '');
@@ -43,6 +44,7 @@ class SubtitleCommentsController
         $em->persist($comment);
         $em->flush();
 
+        $translation->broadcastNewComment($comment);
         $response->getBody()->write($comment->getId());
         return $response->withStatus(200);
     }
@@ -56,7 +58,7 @@ class SubtitleCommentsController
         return $response->withJson($comments);
     }
 
-    public function delete($subId, $cId, $request, $response, EntityManager $em)
+    public function delete($subId, $cId, $request, $response, EntityManager $em, Translation $translation)
     {
         $comment = $em->getRepository("App:SubtitleComment")->find($cId);
         if (!$comment) {
@@ -70,6 +72,7 @@ class SubtitleCommentsController
         $comment->setSoftDeleted(true);
         $em->flush();
 
+        $translation->broadcastDeleteComment($comment);
         return $response;
     }
 }
