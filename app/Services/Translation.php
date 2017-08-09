@@ -66,8 +66,7 @@ class Translation
             $text = strip_tags($text, "<font>");
 
             $dom = new \DOMDocument();
-            $dom->encoding = 'utf-8';
-            $dom->loadHTML("<div>" . utf8_decode($text) . "</div>", \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+            $dom->loadHTML(mb_convert_encoding("<div>" . $text . "</div>", 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
 
             $xpath = new \DOMXPath($dom);
             $nodes = $xpath->query('//font');
@@ -83,8 +82,9 @@ class Translation
                 }
             }
 
-            $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML(), "<font>"))));
-        } else {
+            $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML($dom->documentElement), "<font>"))));
+        }
+        else {
             $text = strip_tags($text);
         }
 
@@ -125,8 +125,8 @@ class Translation
     public function getBaseSubId(Subtitle $sub)
     {
         return $this->em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
-                ->setParameter('v', $sub->getVersion())
-                ->getSingleScalarResult();
+            ->setParameter('v', $sub->getVersion())
+            ->getSingleScalarResult();
     }
 
     public function recalculateSubtitleProgress($baseSub, Subtitle $sub, int $modifier)
@@ -143,11 +143,12 @@ class Translation
             ->setParameter('sub', $sub->getId())
             ->getSingleScalarResult();
 
-        $sub->setProgress(($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
+        $sub->setProgress( ($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
         if ($sub->getProgress() == 100 && !$sub->getPause()) {
             // We're done! Mark as such
             $sub->setCompleteTime(new \DateTime());
-        } elseif ($sub->getCompleteTime()) {
+        }
+        elseif ($sub->getCompleteTime()) {
             $sub->setCompleteTime(null);
         }
     }
