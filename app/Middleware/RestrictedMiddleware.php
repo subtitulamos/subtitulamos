@@ -46,10 +46,8 @@ class RestrictedMiddleware
         $u = $auth->getUser();
 
         $allowed = false;
-        if (!$u->getBan()) { // Only proceed if there's no ban on us
-            foreach ($this->allowedRoles as $role) {
-                $allowed = $allowed || $auth->hasRole($role);
-            }
+        foreach ($this->allowedRoles as $role) {
+            $allowed = $allowed || $auth->hasRole($role);
         }
 
         return $allowed ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/login');

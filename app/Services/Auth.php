@@ -122,7 +122,7 @@ class Auth
      */
     public function hasRole($role)
     {
-        return $role == 'ROLE_GUEST' || ($this->user !== null && \in_array($role, $this->user->getRoles()));
+        return $role == 'ROLE_GUEST' || ($this->user !== null && !$this->user->getBan() && \in_array($role, $this->user->getRoles()));
     }
 
     /**
@@ -206,7 +206,8 @@ class Auth
      */
     public function getTwigInterface()
     {
-        return new class($this) {
+        return new class ($this)
+        {
             public function __construct(&$auth)
             {
                 $this->auth = $auth;
@@ -230,7 +231,8 @@ class Auth
             public function flash()
             {
                 $auth = $this->auth;
-                return new class($auth) {
+                return new class ($auth)
+                {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;
