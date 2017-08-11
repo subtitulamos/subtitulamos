@@ -81,6 +81,7 @@ class TranslationController
         // Autofill sequences
         $modBot = $em->getRepository("App:User")->find(-1);
         $baseSequenceNumbers = [];
+        $autofilledSeqCount = 0;
         foreach ($base->getSequences() as $sequence) {
             if (Translation::containsCreditsText($sequence->getText())) {
                 // Autoblock and replace with our credits
