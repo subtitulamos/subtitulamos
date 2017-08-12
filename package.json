@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Este es el código de la plataforma de subtítulos subtitulamos.tv, actualmente en construcción.",
   "dependencies": {
+    "dateformat": "^2.0.0",
     "jquery": "^3.2.1",
     "reconnecting-websocket": "^3.0.7",
     "sprintf-js": "^1.1.1",

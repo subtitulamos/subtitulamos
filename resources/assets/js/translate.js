@@ -4,10 +4,11 @@ import timeago from 'timeago.js';
 import './vue/comment.js';
 import Subtitle from './subtitle.js';
 import ReconnectingWebsocket from 'reconnecting-websocket';
+import dateformat from 'dateformat';
 
 Vue.component('seqlock', {
     template: `
-        <li>#{{ seqnum }} por <a :href="'/users/'+uid">{{ username }}</a> [{{ time }}] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
+        <li>#{{ seqnum }} por <a :href="'/users/'+uid">{{ username }}</a> [ {{ niceTime }} ] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
     `,
     props: ["id", "seqnum", "uid", "time"],
     methods: {
@@ -33,6 +34,11 @@ Vue.component('seqlock', {
     computed: {
         username: function() {
             return sub.getUsername(this.uid);
+        },
+
+        niceTime: function() {
+            let d = new Date(this.time);
+            return dateformat(d, "d/mmm HH:MM");
         }
     }
 });
