@@ -175,6 +175,36 @@ class Translation
     }
 
     /**
+     * Broadcasts comment being deleted
+     *
+     * @param \App\Entities\Subtitle $sub
+     * @param \App\Entities\User $u
+     * @return void
+     */
+    public function broadcastUserInfo(Subtitle $sub, User $u)
+    {
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "uinfo",
+            "id" => $u->getId(),
+            "username" => $u->getUsername(),
+            "roles" => $u->getRoles()
+        ]));
+    }
+
+    /**
+     * Set the redis authentication token for real time translation.
+     * Token is valid for 24h
+     *
+     * @param string $token
+     * @param \App\Entities\Subtitle $sub
+     * @return void
+     */
+    public function setWSAuthToken(string $token, Subtitle $sub)
+    {
+        $this->redis->set("authtok-" . ENVIRONMENT_NAME . "-" . $token, $sub->getId(), 24 * 60 * 60);
+    }
+
+    /**
      * Calculate the translation progress for a given subtitle
      *
      * @param \App\Entities\Subtitle|int $baseSub

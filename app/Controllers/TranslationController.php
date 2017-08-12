@@ -17,6 +17,7 @@ use App\Entities\OpenLock;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
+use App\Services\Utils;
 
 use Respect\Validation\Validator as v;
 
@@ -124,7 +125,7 @@ class TranslationController
             ->withHeader('Location', $router->pathFor("translation", ["id" => $sub->getId()]));
     }
 
-    public function view($id, $request, $response, EntityManager $em, Twig $twig)
+    public function view($id, $request, $response, EntityManager $em, Twig $twig, Auth $auth, Translation $translation)
     {
         $sub = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.id = :id")
             ->setParameter("id", $id)
@@ -144,28 +145,18 @@ class TranslationController
             $langs[] = $lang;
         }
 
-        // Calculate sequence number for the main subtitle version
-        $baseSub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1 ORDER BY sb.uploadTime DESC")
-            ->setParameter('v', $sub->getVersion())
-            ->setMaxResults(1)
-            ->getOneOrNullResult();
-
-        $seqCount = $em->createQuery("SELECT COUNT(s.id) FROM App:Sequence s WHERE s.subtitle = :sub")
-            ->setParameter("sub", $baseSub)
-            ->getSingleScalarResult();
-
-        // Get a list of sequence authors
-        $authors = $em->createQuery("SELECT DISTINCT u.id, u.username FROM App:Sequence s JOIN s.author u WHERE s.subtitle = :sub")
-            ->setParameter("sub", $sub)
-            ->getResult();
+        // Generate a token for the real time socket to use to authenticate, and broadcast ourselves
+        $tok = Utils::generateRandomString(64);
+        $translation->setWSAuthToken($tok, $sub);
+        $translation->broadcastUserInfo($sub, $auth->getUser());
 
         return $twig->render($response, 'translate.twig', [
             'sub' => $sub,
             'avail_secondary_langs' => json_encode($langs),
             'episode' => $sub->getVersion()->getEpisode(),
-            'page_count' => ceil($seqCount / self::SEQUENCES_PER_PAGE),
             'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-            'authors' => $authors
+            'authors' => $authors,
+            'wstok' => $tok
         ]);
     }
 

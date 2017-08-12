@@ -6,7 +6,11 @@ function Subtitle(id, state, secondaryLang) {
     this.id = id;
     this.state = state;
     this.loaded = false;
-    this.users = [];
+    this.users = {};
+    this.users[me.id] = {
+        username: me.username,
+        roles: me.roles
+    };
     this.secondaryLang = secondaryLang;
 };
 
@@ -41,13 +45,21 @@ Subtitle.prototype.wsMessage = function(event) {
 
             case "com-new":
                 this.addComment(data.id, this.getUserObject(data.user), data.time, data.text);
-                if(data.user != myId) {
+                if(data.user != me.id) {
                     alertify.log(sprintf("<b>%s</b> ha publicado un comentario", this.getUsername(data.user)));
                 }
                 break;
 
             case "com-del":
                 this.deleteComment(data.id);
+                break;
+
+            case "uinfo":
+                this.users[data.id] = {
+                    username: data.username,
+                    roles: data.roles
+                };
+
                 break;
         }
     } catch (e) {
@@ -99,15 +111,11 @@ Subtitle.prototype.loadSequences = function() {
             }
         });
 
-        if(this.users.length == 0) {
-            this.users = userList;
-        } else {
-            Object.keys(userList).forEach((uid) => {
-                if(!this.users[uid]) {
-                    this.users[uid] = userList[uid];
-                }
-            });
-        }
+        Object.keys(userList).forEach((uid) => {
+            if(!this.users[uid]) {
+                this.users[uid] = userList[uid];
+            }
+        });
 
         this.state.curPage = 1;
     });

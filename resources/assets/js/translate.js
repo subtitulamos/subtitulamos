@@ -6,6 +6,7 @@ import Subtitle from './subtitle.js';
 import ReconnectingWebsocket from 'reconnecting-websocket';
 import dateformat from 'dateformat';
 
+// Components and such
 Vue.component('seqlock', {
     template: `
         <li>#{{ seqnum }} por <a :href="'/users/'+uid">{{ username }}</a> [ {{ niceTime }} ] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
@@ -132,7 +133,7 @@ Vue.component('sequence', {
     },
     computed: {
         openByOther: function() {
-            return this.openInfo && this.openInfo.by && this.openInfo.by != myId;
+            return this.openInfo && this.openInfo.by && this.openInfo.by != me.id;
         },
 
         textHint: function() {
@@ -140,7 +141,7 @@ Vue.component('sequence', {
         },
 
         editing: function() {
-            return this.openInfo && this.openInfo.by == myId;
+            return this.openInfo && this.openInfo.by == me.id;
         },
 
         lineCounters: function() {
@@ -204,7 +205,7 @@ Vue.component('sequence', {
             }
 
             this.editingText = this.text;
-            sub.openSeq(this.number, myId, 0);
+            sub.openSeq(this.number, me.id, 0);
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/open',
                 method: 'POST',
@@ -256,7 +257,7 @@ Vue.component('sequence', {
                         text: ntext,
                     }
                 }).done((newID) => {
-                    sub.changeSeq(this.number, Number(newID), myId, ntext);
+                    sub.changeSeq(this.number, Number(newID), me.id, ntext);
                 }).fail(() => {
                     alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
                 });
@@ -270,7 +271,7 @@ Vue.component('sequence', {
                         text: ntext
                     }
                 }).done((newID) => {
-                    sub.changeSeq(this.number, Number(newID), myId, ntext);
+                    sub.changeSeq(this.number, Number(newID), me.id, ntext);
                 }).fail(() => {
                     alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
                 });
@@ -293,7 +294,7 @@ Vue.component('sequence', {
                 }
             })
             .fail(() => {
-                sub.openSeq(this.number, myId, oLockID);
+                sub.openSeq(this.number, me.id, oLockID);
                 alertify.error("Ha ocurrido un error al intentar cerrar la secuencia");
             });
         },
@@ -613,7 +614,7 @@ let translation = new Vue({
                     text: comment
                 }
             }).done(function(id) {
-                sub.addComment(id, {id: myId, username: myName, roles: ["ROLE_USER"]}, (new Date()).toISOString(), comment);
+                sub.addComment(id, sub.getUserObject(me.id), (new Date()).toISOString(), comment);
             }).fail(function() {
                 alertify.error("Ha ocurrido un error al enviar tu comentario");
             });
@@ -649,7 +650,7 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
 // Set up websocket (which will itself load the sub)
 const wsProtocol = window.location.protocol == 'https:' ? 'wss' : 'ws';
-const ws = new ReconnectingWebsocket(wsProtocol + '://'+ window.location.hostname + "/translation-rt?subID="+subID+"&token=abc");
+const ws = new ReconnectingWebsocket(wsProtocol + '://'+ window.location.hostname + "/translation-rt?subID="+subID+"&token="+wsAuthToken);
 ws.onopen = () => { sub.wsOpen() };
 ws.onmessage = (e) => { sub.wsMessage(e) };
 ws.onerror = (e) => { sub.wsError(e) };

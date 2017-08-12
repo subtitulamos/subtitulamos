@@ -115,14 +115,19 @@
 </div>
 
 <script type="text/javascript">
-    let subID = {{ sub.id }};
-    let canLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
-    let canReleaseOpenLock = {{ auth.has_role('ROLE_TH') ? 'true' : 'false'}};
-    let pageCount = {{ page_count }};
-    let availSecondaryLangs = {{ avail_secondary_langs|raw }};
-    let myId = {{ auth.user.id }};
-    let myName = "{{ auth.user.username }}";
-    let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var subID = {{ sub.id }};
+    var availSecondaryLangs = {{ avail_secondary_langs|raw }};
+    var me = {
+        id: {{ auth.user.id }},
+        username: "{{ auth.user.username }}",
+        roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
+    };
+    var wsAuthToken = "{{ wstok }}";
+
+    // Permissions
+    var canLock = me.roles.includes('ROLE_TH');
+    var canReleaseOpenLock = me.roles.includes('ROLE_TH');
+    var canDeleteComments = me.roles.includes('ROLE_MOD');
 </script>
 {{ assets.js('translate') }}
 {% endblock %}
