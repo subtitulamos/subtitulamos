@@ -585,6 +585,17 @@ let translation = new Vue({
 
             return locks;
         },
+
+        authors: function() {
+            let authors = {};
+            this.sequences.forEach((seq) => {
+                if(seq.author && !authors[seq.author]) {
+                    authors[seq.author] = sub.getUsername(seq.author);
+                }
+            });
+
+            return authors;
+        }
     },
     methods: {
         onChangePage: function(page) {

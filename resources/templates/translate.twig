@@ -13,22 +13,22 @@
     </header>
 
     <div id="translation-details">
-        <div id='filters'>
-            Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
-            &nbsp;&nbsp;-&nbsp;&nbsp;
-            Filtrar por autor:
-            <select id='author-filter' @change="updateAuthorFilter">
-                <option value="0">Todos</option>
-                {% for user in authors %}
-                    <option value="{{ user.id }}">{{ user.username }}</option>
-                {% endfor %}
-            </select>
-            &nbsp;&nbsp;-&nbsp;&nbsp;
-            <input type='checkbox' id='untranslated-filter' @change="toggleUntranslatedFilter">
-            <label for='untranslated-filter'>
-                Ver solo secuencias sin traducir
-            </label>
-        </div>
+        {% verbatim %}
+            <div id='filters'>
+                Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
+                &nbsp;&nbsp;-&nbsp;&nbsp;
+                Filtrar por autor:
+                <select id='author-filter' @change="updateAuthorFilter">
+                    <option value="0">Todos</option>
+                    <option v-for="(username, uid) in authors" :value="uid">{{ username }}</option>
+                </select>
+                &nbsp;&nbsp;-&nbsp;&nbsp;
+                <input type='checkbox' id='untranslated-filter' @change="toggleUntranslatedFilter">
+                <label for='untranslated-filter'>
+                    Ver solo secuencias sin traducir
+                </label>
+            </div>
+        {% endverbatim %}
 
         <div class="page-wrapper">
             <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>

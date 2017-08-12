@@ -94,8 +94,7 @@ class TranslationController
                 $em->persist($nseq);
 
                 ++$autofilledSeqCount;
-            }
-            else {
+            } else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -155,7 +154,6 @@ class TranslationController
             'avail_secondary_langs' => json_encode($langs),
             'episode' => $sub->getVersion()->getEpisode(),
             'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-            'authors' => $authors,
             'wstok' => $tok
         ]);
     }
@@ -229,8 +227,7 @@ class TranslationController
                         "roles" => $u->getRoles()
                     ];
                 }
-            }
-            else {
+            } else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -327,8 +324,7 @@ class TranslationController
             $em->flush();
 
             $translation->broadcastOpen($sub, $byUser, $seqNum, $oLock);
-        }
-        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
