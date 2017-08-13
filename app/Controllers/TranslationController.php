@@ -94,7 +94,8 @@ class TranslationController
                 $em->persist($nseq);
 
                 ++$autofilledSeqCount;
-            } else {
+            }
+            else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -227,7 +228,8 @@ class TranslationController
                         "roles" => $u->getRoles()
                     ];
                 }
-            } else {
+            }
+            else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
@@ -324,7 +326,8 @@ class TranslationController
             $em->flush();
 
             $translation->broadcastOpen($sub, $byUser, $seqNum, $oLock);
-        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        }
+        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
             $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
@@ -358,7 +361,7 @@ class TranslationController
     public function save($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
         $seqID = $request->getParsedBodyParam('seqID', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), $auth->hasRole('ROLE_TH'));
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), false);
 
         $seq = $em->getRepository("App:Sequence")->find($seqID);
         if (!$seq) {
@@ -413,7 +416,7 @@ class TranslationController
     public function create($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
         $seqNum = $request->getParsedBodyParam('number', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), $auth->hasRole('ROLE_TH'));
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), false);
 
         $seq = $em->createQuery("SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num")
             ->setParameter('sub', $id)

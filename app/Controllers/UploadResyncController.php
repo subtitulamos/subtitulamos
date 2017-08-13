@@ -60,7 +60,7 @@ class UploadResyncController
         $uploadList = $request->getUploadedFiles();
         if (isset($uploadList['sub'])) {
             $srtParser = new SrtParser();
-            $srtParser->parseFile($uploadList['sub']->file, $auth->hasRole('ROLE_TH'));
+            $srtParser->parseFile($uploadList['sub']->file, false);
             if (!$srtParser->isValid()) {
                 $errors[] = $srtParser->getErrorDesc();
             }
