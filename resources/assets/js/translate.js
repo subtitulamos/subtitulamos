@@ -539,7 +539,7 @@ let translation = new Vue({
                     return false;
                 }
 
-                if(this.filters.author > 0) {
+                if(this.filters.author != 0) {
                     let authorFilterFn = (seq) => {
                         return seq.author && this.filters.author == seq.author;
                     }
