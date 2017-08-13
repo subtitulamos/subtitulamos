@@ -5,7 +5,7 @@ import {sprintf, vsprintf} from 'sprintf-js';
 function Subtitle(id, state, secondaryLang) {
     this.id = id;
     this.state = state;
-    this.loaded = false;
+    this.state.loaded = false;
     this.users = {};
     this.users[me.id] = {
         username: me.username,
@@ -15,12 +15,16 @@ function Subtitle(id, state, secondaryLang) {
 };
 
 Subtitle.prototype.wsOpen = function() {
+    if(this.state.loadedOnce) {
+        alertify.log("Reconectado al servidor de traducción");
+    }
+
     this.loadSequences();
     this.loadComments();
 };
 
 Subtitle.prototype.wsError = function() {
-    this.loaded = false;
+    this.state.loaded = false;
 };
 
 Subtitle.prototype.wsMessage = function(event) {
@@ -93,8 +97,10 @@ Subtitle.prototype.loadSequences = function() {
     }).done((reply) => {
         let sequenceList = reply.sequences;
         let userList = reply.users;
+        let isFirstLoad = !this.state.loadedOnce;
 
-        this.loaded = true;
+        this.state.loaded = true;
+        this.state.loadedOnce = true;
         Object.keys(sequenceList).forEach((k) => {
             let seq = sequenceList[k];
             let idx = this.findSeqIdxByNum(seq.number);
@@ -117,7 +123,9 @@ Subtitle.prototype.loadSequences = function() {
             }
         });
 
-        this.state.curPage = 1;
+        if(isFirstLoad) {
+            this.state.curPage = 1;
+        }
     });
 }
 

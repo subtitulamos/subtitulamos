@@ -2,6 +2,7 @@
    padding-top: 20px;
    padding-bottom: 40px;   /* Height of the footer + 150 */
    background-color: #e9e7e7 !important;
+   position: relative;
 }
 
 #translation-details {
@@ -383,4 +384,21 @@
 .open-other {
     float: right;
     margin-top: 3px;
+}
+
+#translation-details.disabled {
+    filter: blur(3px);
+    pointer-events:none;
+}
+
+#translation-disabled-warning {
+    background-color: #f15757;
+    position: sticky;
+    z-index: 2;
+    color: white;
+    width: 100%;
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+    bottom: 0px;
 }

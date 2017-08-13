@@ -516,6 +516,8 @@ let translation = new Vue({
             text: ''
         },
         comments: [],
+        loaded: false,
+        loadedOnce: false,
         newComment: '',
         canReleaseOpenLock: canReleaseOpenLock
     },

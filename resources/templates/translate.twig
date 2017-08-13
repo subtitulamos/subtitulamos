@@ -12,7 +12,10 @@
         Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ sub.version.episode.fullname }}</a></span>
     </header>
 
-    <div id="translation-details">
+    <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
+        Conexión con el servidor de traducción perdida. Reestableciendo...
+    </div>
+    <div id="translation-details" :class="{'disabled': !loaded}">
         {% verbatim %}
             <div id='filters'>
                 Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
