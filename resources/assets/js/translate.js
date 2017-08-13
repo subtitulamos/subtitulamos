@@ -603,14 +603,17 @@ let translation = new Vue({
         },
 
         toggleUntranslatedFilter: function() {
+            this.curPage = 1;
             this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
         },
 
         updateAuthorFilter: function(e) {
+            this.curPage = 1;
             this.filters.author = Number(e.target.value);
         },
 
         updateTextFilter: function(e) {
+            this.curPage = 1;
             this.filters.text = e.target.value;
         },
 
