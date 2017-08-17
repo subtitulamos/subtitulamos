@@ -242,6 +242,14 @@ class TranslationController
                     "text" => $seq->getText(),
                     "author" => $seq->getAuthor()->getId()
                 ];
+
+                $u = $seq->getAuthor();
+                if (!isset($usersInvolved[$u->getId()])) {
+                    $usersInvolved[$u->getId()] = [
+                        "username" => $u->getUsername(),
+                        "roles" => $u->getRoles()
+                    ];
+                }
             }
         }
 
