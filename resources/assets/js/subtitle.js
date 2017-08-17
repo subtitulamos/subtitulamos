@@ -47,6 +47,10 @@ Subtitle.prototype.wsMessage = function(event) {
                 this.lockSeq(data.id, data.status);
                 break;
 
+            case "seq-del":
+                this.deleteSeq(data.id);
+                break;
+
             case "com-new":
                 this.addComment(data.id, this.getUserObject(data.user), data.time, data.text);
                 if(data.user != me.id) {
@@ -200,6 +204,40 @@ Subtitle.prototype.lockSeq = function(seqID, status) {
     this.state.sequences[idx].locked = status;
 }
 
+Subtitle.prototype.deleteSeq = function(seqID, status) {
+    const removeFn = (s, hkey, replaceMain) => {
+        if(hkey >= 0) {
+            if(replaceMain && hkey == s.history.length - 1) {
+                // We also have to replace the actual sequence
+                let ns = s.history[hkey];
+                s.id = ns.id;
+                s.tstart = ns.tstart;
+                s.tend = ns.tend;
+                s.text = ns.text;
+                s.author = ns.author;
+            }
+
+            s.history.splice(hkey, 1);
+        } else {
+            s.id = 0;
+            s.author = 0;
+            s.text = '';
+        }
+    };
+
+    Object.keys(this.state.sequences).forEach((k) => {
+        let s = this.state.sequences[k];
+        if(s.id == seqID) {
+            removeFn(s, s.history ? s.history.length - 1 : -1, true);
+        } else if(s.history && s.history.length > 0) {
+            s.history.forEach((hs, hkey) => {
+                if(hs.id == seqID) {
+                    removeFn(s, hkey, false);
+                }
+            });
+        }
+    });
+}
 
 Subtitle.prototype.changeSeq = function(seqNum, newSeqID, newAuthorID, newText) {
     let idx = this.findSeqIdxByNum(seqNum);

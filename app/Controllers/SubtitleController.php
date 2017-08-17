@@ -122,17 +122,19 @@ class SubtitleController
             return $response->withStatus(400);
         }
 
-        $seqNums = $em->createQuery("SELECT sq.number, sq.revision FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub ORDER BY sq.revision DESC")
+        $seqsToDelete = $em->createQuery("SELECT sq.id, sq.number, sq.revision FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub ORDER BY sq.revision DESC")
             ->setParameter('sub', $sub)
             ->setParameter('u', $target)
             ->getResult();
 
-        foreach ($seqNums as $sq) {
+        foreach ($seqsToDelete as $sq) {
             $em->createQuery("UPDATE App:Sequence sq SET sq.revision = sq.revision - 1 WHERE sq.number = :num AND sq.revision >= :rev AND sq.subtitle = :sub")
                 ->setParameter('sub', $sub)
                 ->setParameter('num', $sq['number'])
                 ->setParameter('rev', $sq['revision'])
                 ->execute();
+
+            $translation->broadcastDeleteSequence($sub, $sq['id']);
         }
 
         $em->createQuery("DELETE FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub")
@@ -219,7 +221,8 @@ class SubtitleController
             $em->flush();
 
             $auth->addFlash("success", "Parámetros de versión / subtítulo actualizados");
-        } else {
+        }
+        else {
             foreach ($errors as $error) {
                 $auth->addFlash('error', $error);
             }

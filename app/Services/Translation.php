@@ -142,6 +142,21 @@ class Translation
     }
 
     /**
+     * Broadcasts to pub/sub channel the deletion of a sequence
+     *
+     * @param \App\Entities\Subtitle $sub
+     * @param int $seqId
+     * @return void
+     */
+    public function broadcastDeleteSequence(Subtitle $sub, int $seqId)
+    {
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            "type" => "seq-del",
+            "id" => $seqId
+        ]));
+    }
+
+    /**
      * Broadcasts new comment being published
      *
      * @param \App\Entities\SubtitleComment $c
