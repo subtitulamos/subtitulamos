@@ -6,6 +6,21 @@ import Subtitle from './subtitle.js';
 import ReconnectingWebsocket from 'reconnecting-websocket';
 import dateformat from 'dateformat';
 
+window.onbeforeunload = function(e) {
+    let ask = false;
+    for (var i = 0; i < sessionStorage.length; i++) {
+        if(sessionStorage.key(i).match("sub-"+subID+"-seqtext")) {
+            ask = true;
+        }
+    }
+
+    if(ask) {
+        let msg = "Parece que tienes secuencias abiertas. ¿Estás seguro de querer salir?";
+        (e || window.event).returnValue = msg;
+        return msg;
+    }
+}
+
 // Components and such
 Vue.component('seqlock', {
     template: `
@@ -102,6 +117,12 @@ Vue.component('sequence', {
             editingText: this.text
         }
     },
+    mounted: function() {
+        let savedText = sessionStorage.getItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+        if(savedText) {
+            this.editingText = savedText;
+        }
+    },
     filters: {
         nice_time: function (ms) {
             if (!ms)
@@ -129,6 +150,11 @@ Vue.component('sequence', {
             stime += ms;
 
             return stime;
+        }
+    },
+    watch: {
+        editingText: function(nText) {
+            sessionStorage.setItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id, nText);
         }
     },
     computed: {
@@ -238,6 +264,7 @@ Vue.component('sequence', {
                 return false;
             }
 
+            // Process text for spaces and proceed to save/create/cancel
             let ntext = this.editingText.trim().replace(/ +/g,' ');
             if(!ntext) {
                 ntext = " ";
@@ -245,6 +272,7 @@ Vue.component('sequence', {
 
             if(ntext == this.text) {
                 this.discard();
+                return;
             }
 
             if(this.id) {
@@ -276,6 +304,9 @@ Vue.component('sequence', {
                     alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
                 });
             }
+
+            // Discard editing text cache if saved
+            sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
         },
 
         discard: function() {
@@ -297,6 +328,9 @@ Vue.component('sequence', {
                 sub.openSeq(this.number, me.id, oLockID);
                 alertify.error("Ha ocurrido un error al intentar cerrar la secuencia");
             });
+
+            // Discard text cache if saved
+            sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
         },
 
         toggleLock: function() {
