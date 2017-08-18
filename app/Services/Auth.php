@@ -8,6 +8,7 @@
 namespace App\Services;
 
 use \App\Entities\User;
+use \App\Entities\RememberToken;
 use \App\Services\Utils;
 use \Doctrine\ORM\EntityManager;
 
@@ -30,37 +31,47 @@ class Auth
     }
 
     /**
-     * (re)creates a remember token and
-     * updates the user instance with it
+     * Ccreates a new remember token, bound to user
      *
-     * @param boolean $flush Or not to flush
-     * @return void
+     * @param \App\Entities\User $u
+     * @return string
      */
-    public function regenerateRememberToken(bool $flush)
+    public function remember(User $u)
     {
-        $rememberTok = Utils::generateRandomString(40);
-        $this->user->setRememberToken($rememberTok);
+        $newToken = Utils::generateRandomString(40);
 
-        if ($flush) {
-            $this->em->flush();
-        }
+        $tok = new RememberToken();
+        $tok->setToken($newToken);
+        $tok->setUser($u);
+        $tok->setCreatedAt(new \DateTime());
+        $this->em->persist($tok);
+
+        return $newToken;
     }
 
     /**
      * Login a user by using a remember token
      *
      * @param string $token
-     * @return boolean
+     * @return string
      */
     public function logByToken(string $token)
     {
-        $user = $this->em->getRepository('App:User')->findOneByRememberToken($token);
-        if (!$user) {
-            return false;
+        $tok = $this->em->getRepository('App:RememberToken')->find($token);
+        if (!$tok) {
+            return '';
         }
 
-        $this->log($user, true);
-        return true;
+        $this->em->remove($tok); // One time use tokens!
+
+        if((new \DateTime())->getTimestamp() - $tok->getCreatedAt()->getTimestamp() > RememberToken::MAX_DURATION) {
+            // Token expired, we cannot use it to login
+            $this->em->flush();
+            return '';
+        }
+
+        $newToken = $this->log($tok->getUser(), true);
+        return $newToken;
     }
 
     /**
@@ -68,7 +79,7 @@ class Auth
      * from a given ID
      *
      * @param string $id
-     * @return boolean
+     * @return bool
      */
     public function loadUser(string $id)
     {
@@ -89,10 +100,10 @@ class Auth
      * Logs a user into the running session instance
      *
      * @param User $user
-     * @param boolean $setRememberToken
+     * @param bool $setRememberToken
      * @return void
      */
-    public function log(User $user, $setRememberToken)
+    public function log(User $user, bool $setRememberToken)
     {
         $_SESSION['logged'] = true;
         $_SESSION['uid'] = $user->getId();
@@ -104,12 +115,11 @@ class Auth
             $user->setBan(null);
         }
 
+        $token = ($setRememberToken) ? $this->remember($user) : "";
         $this->user = $user;
-        if ($setRememberToken) {
-            $this->regenerateRememberToken(false);
-        }
-
         $this->em->flush();
+
+        return $token;
     }
 
     /**
@@ -118,7 +128,7 @@ class Auth
      * will only return true if the role is ROLE_GUEST.
      *
      * @param string $role
-     * @return boolean
+     * @return bool
      */
     public function hasRole($role)
     {
@@ -129,18 +139,21 @@ class Auth
      * Whether there's an user that's been properly
      * logged in in this session
      *
-     * @return boolean
+     * @return bool
      */
     public function isLogged()
     {
         return isset($_SESSION['logged']) && $_SESSION['logged'] === true;
     }
 
-    public function logout()
+    public function logout(string $rememberCookie)
     {
-        if ($this->user) {
-            $this->user->setRememberToken('');
-            $this->em->flush();
+        if($rememberCookie) {
+            $tok = $this->em->getRepository('App:RememberToken')->find($rememberCookie);
+            if($tok) {
+                $this->em->remove($tok);
+                $this->em->flush();
+            }
         }
 
         unset($_SESSION['logged']);

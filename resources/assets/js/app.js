@@ -142,7 +142,7 @@ function doLogin(e) {
 		data: {
 			username: $("#login_username").val(),
 			password: $("#login_password").val(),
-			remember: $("#login_remember_me").val()
+			remember: $("#login_remember_me").is(":checked")
 		}
 	}).done(function(data) {
 		window.location.reload(true);

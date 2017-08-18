@@ -65,11 +65,6 @@ class User
     private $roles;
 
     /**
-     * @ORM\Column(type="string", length=60, name="remember_token")
-     */
-    private $rememberToken;
-
-    /**
      * @ORM\Column(type="datetime", name="registered_at", nullable=true)
      */
     private $registeredAt;
@@ -257,29 +252,6 @@ class User
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    /**
-     * Set rememberToken
-     *
-     * @param string $rememberToken
-     * @return User
-     */
-    public function setRememberToken($rememberToken)
-    {
-        $this->rememberToken = $rememberToken;
-
-        return $this;
-    }
-
-    /**
-     * Get rememberToken
-     *
-     * @return string
-     */
-    public function getRememberToken()
-    {
-        return $this->rememberToken;
     }
 
     /**

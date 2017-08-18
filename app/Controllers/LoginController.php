@@ -11,6 +11,7 @@ use \Psr\Container\ContainerInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 use \Dflydev\FigCookies\FigResponseCookies;
+use \Dflydev\FigCookies\FigRequestCookies;
 use \Dflydev\FigCookies\SetCookie;
 
 use \Doctrine\ORM\EntityManager;
@@ -20,7 +21,6 @@ use \App\Entities\User;
 
 class LoginController
 {
-    // TODO: Export to some config file
     const MINIMUM_PASSWORD_LENGTH = 8;
     const MINIMUM_USER_LENGTH = 4;
 
@@ -43,7 +43,7 @@ class LoginController
     {
         $username = $request->getParam('username', '');
         $password = $request->getParam('password', '');
-        $remember = $request->getParam('remember', '') == 'on';
+        $remember = $request->getParam('remember', '') == 'true';
 
         if (!$username || !$password) {
             return $response->withStatus(400);
@@ -62,9 +62,9 @@ class LoginController
             return $response->withJson([$loginName . ' o contraseña incorrectos'], 403);
         }
 
-        $auth->log($user, $remember);
+        $token = $auth->log($user, $remember);
         if ($remember) {
-            $response = FigResponseCookies::set($response, SetCookie::create('remember')->withPath('/')->withValue($auth->getUser()->getRememberToken())->rememberForever());
+            $response = FigResponseCookies::set($response, SetCookie::create('remember')->withPath('/')->withValue($token)->rememberForever());
         }
 
         return $response->withStatus(200);
@@ -112,7 +112,6 @@ class LoginController
         $user->setEmail($email);
         $user->setBanned(false);
         $user->setRoles(["ROLE_USER"]);
-        $user->setRememberToken("");
         $user->setRegisteredAt(new \DateTime());
 
         $em->persist($user);
@@ -122,15 +121,16 @@ class LoginController
         return $response->withStatus(200);
     }
 
-    public function logout(ResponseInterface $response, Auth $auth)
+    public function logout($request, $response, Auth $auth)
     {
         if (ini_get("session.use_cookies")) {
             $response = FigResponseCookies::expire($response, session_name());
         }
 
-        $response = FigResponseCookies::expire($response, 'remember');
-        $auth->logout();
+        $rememberCookie = FigRequestCookies::get($request, 'remember', '');
+        $auth->logout($rememberCookie->getValue());
 
+        $response = FigResponseCookies::expire($response, 'remember');
         return $response->withHeader('Location', '/');
     }
 

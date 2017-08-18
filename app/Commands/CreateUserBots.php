@@ -44,7 +44,6 @@ class CreateUserBots extends Command
             $bot->setEmail('bots@subtitulamos.tv');
             $bot->setBanned(true);
             $bot->setRoles([]);
-            $bot->setRememberToken('');
 
             // Prevent id autogeneration
             $metadata = $entityManager->getClassMetaData(get_class($bot));
@@ -53,6 +52,6 @@ class CreateUserBots extends Command
         }
 
         $entityManager->flush();
-        $output->writeln(count($bots)." bots sync'd");
+        $output->writeln(count($bots) . " bots sync'd");
     }
 }
