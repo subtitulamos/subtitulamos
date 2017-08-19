@@ -65,20 +65,19 @@ class EpisodeComment implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            "id" => $this->id,
-            "user" => [
-                "id" => $this->user->getId(),
-                "username" => $this->user->getUsername(),
-                "roles" => $this->user->getRoles()
+            'id' => $this->id,
+            'user' => [
+                'id' => $this->user->getId(),
+                'username' => $this->user->getUsername(),
+                'roles' => $this->user->getRoles()
             ],
-            "published_at" => $this->publishTime->format(\DateTime::ATOM),
-            "edited_at" => $this->editTime->format(\DateTime::ATOM),
-            "text" => $this->text
+            'published_at' => $this->publishTime->format(\DateTime::ATOM),
+            'edited_at' => $this->editTime->format(\DateTime::ATOM),
+            'text' => $this->text
         ];
     }
 
     ///////////////////////////// AUTOMATICALLY GENERATED CODE BELOW \\\\\\\\\\\\\\\\\\\\\\\\\\
-
 
     /**
      * Get id

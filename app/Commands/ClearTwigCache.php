@@ -7,10 +7,10 @@
 
 namespace App\Commands;
 
+use App\Services\AssetManager as AssetManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Services\AssetManager as AssetManager;
 
 class ClearTwigCache extends Command
 {
@@ -23,9 +23,9 @@ class ClearTwigCache extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cacheDir = __DIR__ . '/../../tmp/twig';
+        $cacheDir = __DIR__.'/../../tmp/twig';
         if (!\is_dir($cacheDir)) {
-            $output->writeln("Twig template cache folder does not exist, nothing to clear");
+            $output->writeln('Twig template cache folder does not exist, nothing to clear');
             return;
         }
 
@@ -39,6 +39,6 @@ class ClearTwigCache extends Command
             $fn($fileinfo->getRealPath());
         }
 
-        $output->writeln("Cleared Twig template cache");
+        $output->writeln('Cleared Twig template cache');
     }
 }

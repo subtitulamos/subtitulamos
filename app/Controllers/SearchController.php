@@ -7,35 +7,35 @@
 
 namespace App\Controllers;
 
-use \Psr\Http\Message\ResponseInterface;
-use \Psr\Http\Message\RequestInterface;
+use App\Entities\Episode;
+use App\Services\Auth;
 
-use \Doctrine\ORM\EntityManager;
-use \Cocur\Slugify\SlugifyInterface;
-use \Slim\Views\Twig;
+use App\Services\Langs;
+use Cocur\Slugify\SlugifyInterface;
+use Doctrine\ORM\EntityManager;
 
-use \App\Entities\Episode;
-use \App\Services\Langs;
-use \App\Services\Auth;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Views\Twig;
 
 class SearchController
 {
     // TODO: Separate popular listing into a weekly thing, with its own "popular" table and stuff
     public function listPopular(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
-        $episodes = $em->createQuery("SELECT e FROM App:Episode e ORDER BY e.downloads DESC")->setMaxResults(10)->getResult();
+        $episodes = $em->createQuery('SELECT e FROM App:Episode e ORDER BY e.downloads DESC')->setMaxResults(10)->getResult();
 
         $epList = [];
         foreach ($episodes as $ep) {
             $fullName = $ep->getFullName();
 
             $epList[] = [
-                "id" => $ep->getId(),
-                "name" => $fullName,
-                "download_count" => $ep->getDownloads(),
-                "slug" => $slugify->slugify($fullName),
-                "season" => $ep->getSeason(),
-                "episode_num" => $ep->getNumber()
+                'id' => $ep->getId(),
+                'name' => $fullName,
+                'download_count' => $ep->getDownloads(),
+                'slug' => $slugify->slugify($fullName),
+                'season' => $ep->getSeason(),
+                'episode_num' => $ep->getNumber()
             ];
         }
 
@@ -45,7 +45,7 @@ class SearchController
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC")
+        $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
             ->getResult();
@@ -57,14 +57,14 @@ class SearchController
             $fullName = $ep->getFullName();
 
             $epList[] = [
-                "id" => $ep->getId(),
-                "name" => $fullName,
-                "slug" => $slugify->slugify($fullName),
-                "season" => $ep->getSeason(),
-                "episode_num" => $ep->getNumber(),
-                "time" => $sub->getUploadTime()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                "hide_details" => $hideDetails
+                'id' => $ep->getId(),
+                'name' => $fullName,
+                'slug' => $slugify->slugify($fullName),
+                'season' => $ep->getSeason(),
+                'episode_num' => $ep->getNumber(),
+                'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
+                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'hide_details' => $hideDetails
             ];
         }
 
@@ -74,7 +74,7 @@ class SearchController
     public function listRecentChanged(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC")
+        $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
             ->getResult();
@@ -86,14 +86,14 @@ class SearchController
             $fullName = $ep->getFullName();
 
             $epList[] = [
-                "id" => $ep->getId(),
-                "name" => $fullName,
-                "slug" => $slugify->slugify($fullName),
-                "time" => $sub->getEditTime()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                "last_edited_by" => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : "",
-                "progress" => floor($sub->getProgress()),
-                "hide_details" => $hideDetails
+                'id' => $ep->getId(),
+                'name' => $fullName,
+                'slug' => $slugify->slugify($fullName),
+                'time' => $sub->getEditTime()->format(\DateTime::ATOM),
+                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'last_edited_by' => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : '',
+                'progress' => floor($sub->getProgress()),
+                'hide_details' => $hideDetails
             ];
         }
 
@@ -103,7 +103,7 @@ class SearchController
     public function listRecentCompleted(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC")
+        $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
             ->getResult();
@@ -115,12 +115,12 @@ class SearchController
             $fullName = $ep->getFullName();
 
             $epList[] = [
-                "id" => $ep->getId(),
-                "name" => $fullName,
-                "slug" => $slugify->slugify($fullName),
-                "time" => $sub->getCompleteTime()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                "hide_details" => $hideDetails
+                'id' => $ep->getId(),
+                'name' => $fullName,
+                'slug' => $slugify->slugify($fullName),
+                'time' => $sub->getCompleteTime()->format(\DateTime::ATOM),
+                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'hide_details' => $hideDetails
             ];
         }
 
@@ -150,7 +150,7 @@ class SearchController
             }
 
             $r = $client->search([
-                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
+                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
                 'type' => 'show',
                 'body' => [
                     'query' => [
@@ -169,7 +169,7 @@ class SearchController
                 foreach ($r['hits']['hits'] as $hit) {
                     $eps = [];
                     if ($season >= 0 || $episode >= 0) {
-                        $ep = $em->createQuery("SELECT e FROM App:Episode e WHERE e.show = :show AND e.number = :epnum AND e.season = :season")
+                        $ep = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :show AND e.number = :epnum AND e.season = :season')
                             ->setParameter('show', $hit['_id'])
                             ->setParameter('epnum', $episode)
                             ->setParameter('season', $season)
@@ -200,7 +200,7 @@ class SearchController
     public function listPaused($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
-        $subs = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC")
+        $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
             ->getResult();
@@ -212,15 +212,15 @@ class SearchController
             $fullName = $ep->getFullName();
 
             $epList[] = [
-                "id" => $ep->getId(),
-                "name" => $fullName,
-                "slug" => $slugify->slugify($fullName),
-                "season" => $ep->getSeason(),
-                "episode_num" => $ep->getNumber(),
-                "time" => $sub->getPause()->getStart()->format(\DateTime::ATOM),
-                "additional_info" => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                "progress" => floor($sub->getProgress()),
-                "hide_details" => $hideDetails
+                'id' => $ep->getId(),
+                'name' => $fullName,
+                'slug' => $slugify->slugify($fullName),
+                'season' => $ep->getSeason(),
+                'episode_num' => $ep->getNumber(),
+                'time' => $sub->getPause()->getStart()->format(\DateTime::ATOM),
+                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'progress' => floor($sub->getProgress()),
+                'hide_details' => $hideDetails
             ];
         }
 

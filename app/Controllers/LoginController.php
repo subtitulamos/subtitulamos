@@ -7,17 +7,17 @@
 
 namespace App\Controllers;
 
-use \Psr\Container\ContainerInterface;
-use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Message\ResponseInterface;
-use \Dflydev\FigCookies\FigResponseCookies;
-use \Dflydev\FigCookies\FigRequestCookies;
-use \Dflydev\FigCookies\SetCookie;
+use App\Entities\User;
+use App\Services\Auth;
+use Dflydev\FigCookies\FigRequestCookies;
+use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\SetCookie;
+use Doctrine\ORM\EntityManager;
 
-use \Doctrine\ORM\EntityManager;
-use \Respect\Validation\Validator as v;
-use \App\Services\Auth;
-use \App\Entities\User;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Respect\Validation\Validator as v;
 
 class LoginController
 {
@@ -51,15 +51,15 @@ class LoginController
 
         if (\filter_var($username, \FILTER_VALIDATE_EMAIL)) {
             // Logging in with email
-            $user = $em->getRepository("App:User")->findOneByEmail($username);
-            $loginName = "Correo electrónico";
+            $user = $em->getRepository('App:User')->findOneByEmail($username);
+            $loginName = 'Correo electrónico';
         } else {
-            $user = $em->getRepository("App:User")->findOneByUsername($username);
-            $loginName = "Usuario";
+            $user = $em->getRepository('App:User')->findOneByUsername($username);
+            $loginName = 'Usuario';
         }
 
         if (!$user || !\password_verify($password, $user->getPassword())) {
-            return $response->withJson([$loginName . ' o contraseña incorrectos'], 403);
+            return $response->withJson([$loginName.' o contraseña incorrectos'], 403);
         }
 
         $token = $auth->log($user, $remember);
@@ -80,25 +80,25 @@ class LoginController
 
         $errors = [];
         if (!$terms) {
-            $errors[] = ["terms" => "Debes aceptar los términos y condiciones"];
+            $errors[] = ['terms' => 'Debes aceptar los términos y condiciones'];
         }
 
         if (!v::alnum('_')->noWhitespace()->length(3, 24)->validate($username)) {
-            $errors[] = ["username" => "El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos"];
-        } elseif ($em->getRepository("App:User")->findByUsername($username) != null) {
-            $errors[] = ["username" => "El nombre de usuario ya está en uso"];
+            $errors[] = ['username' => 'El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos'];
+        } elseif ($em->getRepository('App:User')->findByUsername($username) != null) {
+            $errors[] = ['username' => 'El nombre de usuario ya está en uso'];
         }
 
         if (!v::email()->validate($email)) {
-            $errors[] = ["email" => "El correo electrónico no tiene un formato válido"];
-        } elseif ($em->getRepository("App:User")->findByEmail($email) != null) {
-            $errors[] = ["email" => "El correo electrónico ya está en uso"];
+            $errors[] = ['email' => 'El correo electrónico no tiene un formato válido'];
+        } elseif ($em->getRepository('App:User')->findByEmail($email) != null) {
+            $errors[] = ['email' => 'El correo electrónico ya está en uso'];
         }
 
         if (!v::length(8, 80)->validate($password)) {
-            $errors[] = ["password" => "La contraseña debe tener 8 caracteres como mínimo"];
+            $errors[] = ['password' => 'La contraseña debe tener 8 caracteres como mínimo'];
         } elseif ($password != $password_confirmation) {
-            $errors[] = ["password_confirmation" => "Las contraseñas no coinciden"];
+            $errors[] = ['password_confirmation' => 'Las contraseñas no coinciden'];
         }
 
         if (!empty($errors)) {
@@ -111,7 +111,7 @@ class LoginController
         $user->setPassword(\password_hash($password, \PASSWORD_BCRYPT, ['cost' => 13]));
         $user->setEmail($email);
         $user->setBanned(false);
-        $user->setRoles(["ROLE_USER"]);
+        $user->setRoles(['ROLE_USER']);
         $user->setRegisteredAt(new \DateTime());
 
         $em->persist($user);
@@ -123,7 +123,7 @@ class LoginController
 
     public function logout($request, $response, Auth $auth)
     {
-        if (ini_get("session.use_cookies")) {
+        if (ini_get('session.use_cookies')) {
             $response = FigResponseCookies::expire($response, session_name());
         }
 

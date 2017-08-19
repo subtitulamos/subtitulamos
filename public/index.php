@@ -5,9 +5,12 @@
  * @copyright 2017 subtitulamos.tv
  */
 
-use \Psr\Container\ContainerInterface;
+use App\Services\AssetManager;
 use App\Services\Auth;
 use App\Services\Langs;
+use App\Services\Translation;
+use Cocur\Slugify\Slugify;
+use Psr\Container\ContainerInterface;
 
 require '../app/bootstrap.php';
 
@@ -16,13 +19,12 @@ session_start();
 
 function feature_on($name)
 {
-    $v = getenv($name . "_ENABLED");
+    $v = getenv($name.'_ENABLED');
     return $v == 'true' || $v == '1' || $v == 'yes';
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class () extends \DI\Bridge\Slim\App
-{
+$app = new class() extends \DI\Bridge\Slim\App {
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -37,23 +39,23 @@ $app = new class () extends \DI\Bridge\Slim\App
                 return $entityManager;
             },
             \App\Services\Auth::class => function (ContainerInterface $c) use ($entityManager) {
-                return new \App\Services\Auth($entityManager);
+                return new Auth($entityManager);
             },
             \App\Services\AssetManager::class => function (ContainerInterface $c) {
-                return new \App\Services\AssetManager();
+                return new AssetManager();
             },
             \App\Services\Translation::class => function (ContainerInterface $c) use ($entityManager) {
-                return new \App\Services\Translation($entityManager);
+                return new Translation($entityManager);
             },
             \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
-                return new Cocur\Slugify\Slugify();
+                return new Slugify();
             },
             \Elasticsearch\Client::class => function (ContainerInterface $c) {
                 return \Elasticsearch\ClientBuilder::create()->build();
             },
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
-                $twig = new \Slim\Views\Twig(__DIR__ . '/../resources/templates', [
-                    'cache' => __DIR__ . '/../tmp/twig',
+                $twig = new \Slim\Views\Twig(__DIR__.'/../resources/templates', [
+                    'cache' => __DIR__.'/../tmp/twig',
                     'strict_variables' => getenv('TWIG_STRICT') || true,
                     'debug' => DEBUG
                 ]);
@@ -65,12 +67,12 @@ $app = new class () extends \DI\Bridge\Slim\App
                 ));
 
                 $twigEnv = $twig->getEnvironment();
-                $twigEnv->addGlobal("ENVIRONMENT_NAME", ENVIRONMENT_NAME);
-                $twigEnv->addGlobal("LANG_LIST", Langs::LANG_LIST);
-                $twigEnv->addGlobal("LANG_NAMES", Langs::LANG_NAMES);
+                $twigEnv->addGlobal('ENVIRONMENT_NAME', ENVIRONMENT_NAME);
+                $twigEnv->addGlobal('LANG_LIST', Langs::LANG_LIST);
+                $twigEnv->addGlobal('LANG_NAMES', Langs::LANG_NAMES);
 
                 $auth = $c->get('App\Services\Auth');
-                $twigEnv->addGlobal("auth", $auth->getTwigInterface());
+                $twigEnv->addGlobal('auth', $auth->getTwigInterface());
                 $twigEnv->addFunction(new Twig_Function('feature_on', 'feature_on'));
 
                 $assetMgr = $c->get('App\Services\AssetManager');

@@ -7,26 +7,26 @@
 
 namespace App\Controllers;
 
-use \Psr\Http\Message\ResponseInterface;
-use \Psr\Http\Message\RequestInterface;
+use App\Entities\Episode;
+use App\Services\Langs;
 
 use Doctrine\ORM\EntityManager;
 
-use \Slim\Views\Twig;
-use App\Entities\Episode;
-use App\Services\Langs;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Views\Twig;
 
 class ShowController
 {
     public function view($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
     {
-        $show = $em->getRepository("App:Show")->find($showId);
+        $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $seasonsRes = $em->createQuery("SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC")
-            ->setParameter("id", $showId)
+        $seasonsRes = $em->createQuery('SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
+            ->setParameter('id', $showId)
             ->getResult();
 
         $seasons = [];
@@ -47,9 +47,9 @@ class ShowController
             $season = $seasons[0];
         }
 
-        $show = $em->createQuery("SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC")
-            ->setParameter("id", $showId)
-            ->setParameter("season", $season)
+        $show = $em->createQuery('SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC')
+            ->setParameter('id', $showId)
+            ->setParameter('season', $season)
             ->getOneOrNullResult();
 
         if (!$show) {

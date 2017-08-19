@@ -7,7 +7,7 @@
 
 namespace App\Controllers;
 
-use \Slim\Views\Twig;
+use Slim\Views\Twig;
 
 class HomeController
 {

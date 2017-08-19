@@ -7,10 +7,10 @@
 
 namespace App\Services;
 
-use \App\Entities\User;
-use \App\Entities\RememberToken;
-use \App\Services\Utils;
-use \Doctrine\ORM\EntityManager;
+use App\Entities\RememberToken;
+use App\Entities\User;
+use App\Services\Utils;
+use Doctrine\ORM\EntityManager;
 
 class Auth
 {
@@ -64,7 +64,7 @@ class Auth
 
         $this->em->remove($tok); // One time use tokens!
 
-        if((new \DateTime())->getTimestamp() - $tok->getCreatedAt()->getTimestamp() > RememberToken::MAX_DURATION) {
+        if ((new \DateTime())->getTimestamp() - $tok->getCreatedAt()->getTimestamp() > RememberToken::MAX_DURATION) {
             // Token expired, we cannot use it to login
             $this->em->flush();
             return '';
@@ -115,7 +115,7 @@ class Auth
             $user->setBan(null);
         }
 
-        $token = ($setRememberToken) ? $this->remember($user) : "";
+        $token = ($setRememberToken) ? $this->remember($user) : '';
         $this->user = $user;
         $this->em->flush();
 
@@ -148,16 +148,16 @@ class Auth
 
     public function logout(string $rememberCookie)
     {
-        if($rememberCookie) {
+        if ($rememberCookie) {
             $tok = $this->em->getRepository('App:RememberToken')->find($rememberCookie);
-            if($tok) {
+            if ($tok) {
                 $this->em->remove($tok);
                 $this->em->flush();
             }
         }
 
-        unset($_SESSION['logged']);
-        unset($_SESSION['uid']);
+        unset($_SESSION['logged'], $_SESSION['uid']);
+
         \session_destroy();
     }
 
@@ -187,7 +187,7 @@ class Auth
         return isset($_SESSION['flash']) && isset($_SESSION['flash'][$type]) && count($_SESSION['flash'][$type]) > 0;
     }
 
-    public function getFlashByType($type = "")
+    public function getFlashByType($type = '')
     {
         if (!isset($_SESSION['flash'])) {
             return [];
@@ -201,7 +201,7 @@ class Auth
         return $ret;
     }
 
-    public function getAllFlash($type = "")
+    public function getAllFlash($type = '')
     {
         $ret = isset($_SESSION['flash']) ? $_SESSION['flash'] : [];
         if (!empty($ret)) {
@@ -219,8 +219,7 @@ class Auth
      */
     public function getTwigInterface()
     {
-        return new class ($this)
-        {
+        return new class($this) {
             public function __construct(&$auth)
             {
                 $this->auth = $auth;
@@ -244,8 +243,7 @@ class Auth
             public function flash()
             {
                 $auth = $this->auth;
-                return new class ($auth)
-                {
+                return new class($auth) {
                     public function __construct(&$auth)
                     {
                         $this->auth = $auth;

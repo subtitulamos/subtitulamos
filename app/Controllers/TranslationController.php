@@ -9,17 +9,17 @@
 
 namespace App\Controllers;
 
-use \Doctrine\ORM\EntityManager;
-use \Slim\Views\Twig;
-use App\Entities\Subtitle;
-use App\Entities\Sequence;
 use App\Entities\OpenLock;
+use App\Entities\Sequence;
+use App\Entities\Subtitle;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
 use App\Services\Utils;
-
+use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
+
+use Slim\Views\Twig;
 
 class TranslationController
 {
@@ -34,22 +34,22 @@ class TranslationController
         $episodeID = $request->getParsedBodyParam('episode', 0);
         $langCode = $request->getParsedBodyParam('lang', 0);
         if (!Langs::existsCode($langCode)) {
-            $response->getBody()->write("El idioma no es correcto");
+            $response->getBody()->write('El idioma no es correcto');
             return $response->withStatus(400);
         }
 
         if (!v::numeric()->positive()->validate($episodeID)) {
-            $response->getBody()->write("La versión no es correcta");
+            $response->getBody()->write('La versión no es correcta');
             return $response->withStatus(400);
         }
 
-        $version = $em->createQuery("SELECT v FROM App:Version v WHERE v.episode = :epid ORDER BY v.id ASC")
-            ->setParameter("epid", (int)$episodeID)
+        $version = $em->createQuery('SELECT v FROM App:Version v WHERE v.episode = :epid ORDER BY v.id ASC')
+            ->setParameter('epid', (int)$episodeID)
             ->setMaxResults(1)
             ->getOneOrNullResult();
 
         if (!$version) {
-            $response->getBody()->write("La versión no existe");
+            $response->getBody()->write('La versión no existe');
             return $response->withStatus(412);
         }
 
@@ -62,8 +62,8 @@ class TranslationController
 
             if ($sub->getLang() == $lang) {
                 // Lang already started! -- TODO: Cheap redirect, should not ever get to this page in the first place // could do this via ajax // add a link to body instead
-                $response->getBody()->write("<meta http-equiv=\"refresh\" content=\"3;url=" . $router->pathFor("translation", ["id" => $sub->getId()]) . "\" />");
-                $response->getBody()->write("Esta versión ya tiene este idioma abierto. Redirigiendo...");
+                $response->getBody()->write('<meta http-equiv="refresh" content="3;url='.$router->pathFor('translation', ['id' => $sub->getId()]).'" />');
+                $response->getBody()->write('Esta versión ya tiene este idioma abierto. Redirigiendo...');
                 $response->withHeader('Refresh', 5);
                 return $response->withStatus(412);
             }
@@ -80,7 +80,7 @@ class TranslationController
         $sub->setDownloads(0);
 
         // Autofill sequences
-        $modBot = $em->getRepository("App:User")->find(-1);
+        $modBot = $em->getRepository('App:User')->find(-1);
         $baseSequenceNumbers = [];
         $autofilledSeqCount = 0;
         foreach ($base->getSequences() as $sequence) {
@@ -94,8 +94,7 @@ class TranslationController
                 $em->persist($nseq);
 
                 ++$autofilledSeqCount;
-            }
-            else {
+            } else {
                 $blankSequence = Translation::getBlankSequenceConfidence($sequence);
 
                 if ($blankSequence > 0) {
@@ -122,13 +121,13 @@ class TranslationController
 
         return $response
             ->withStatus(200)
-            ->withHeader('Location', $router->pathFor("translation", ["id" => $sub->getId()]));
+            ->withHeader('Location', $router->pathFor('translation', ['id' => $sub->getId()]));
     }
 
     public function view($id, $request, $response, EntityManager $em, Twig $twig, Auth $auth, Translation $translation)
     {
-        $sub = $em->createQuery("SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.id = :id")
-            ->setParameter("id", $id)
+        $sub = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.id = :id')
+            ->setParameter('id', $id)
             ->getOneOrNullResult();
 
         if (!$sub) {
@@ -136,8 +135,8 @@ class TranslationController
         }
 
         // Determine which secondary languages we can use
-        $langRes = $em->createQuery("SELECT DISTINCT(s.lang) FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100")
-            ->setParameter("ver", $sub->getVersion())
+        $langRes = $em->createQuery('SELECT DISTINCT(s.lang) FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100')
+            ->setParameter('ver', $sub->getVersion())
             ->getResult();
 
         $langs = [];
@@ -161,7 +160,7 @@ class TranslationController
 
     public function releaseLock($id, $lockId, $request, $response, EntityManager $em, Translation $translation)
     {
-        $oLock = $em->getRepository("App:OpenLock")->find($lockId);
+        $oLock = $em->getRepository('App:OpenLock')->find($lockId);
         if (!$oLock) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -179,17 +178,17 @@ class TranslationController
 
     public function loadData($id, $request, $response, EntityManager $em)
     {
-        $secondaryLang = $request->getQueryParam("secondaryLang", 0);
+        $secondaryLang = $request->getQueryParam('secondaryLang', 0);
 
         $usersInvolved = [];
         $sequences = [];
 
-        $sub = $em->getRepository("App:Subtitle")->find($id);
+        $sub = $em->getRepository('App:Subtitle')->find($id);
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $openList = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :id ORDER BY ol.sequenceNumber ASC")
+        $openList = $em->createQuery('SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :id ORDER BY ol.sequenceNumber ASC')
             ->setParameter('id', $id)
             ->getResult();
 
@@ -197,20 +196,20 @@ class TranslationController
         foreach ($openList as $o) {
             $u = $o->getUser();
             $openInfo[$o->getSequenceNumber()] = [
-                "lockID" => $o->getId(),
-                "by" => $u->getId(),
-                "since" => $o->getGrantTime()->format(\DateTime::ATOM)
+                'lockID' => $o->getId(),
+                'by' => $u->getId(),
+                'since' => $o->getGrantTime()->format(\DateTime::ATOM)
             ];
 
             if (!isset($usersInvolved[$u->getId()])) {
                 $usersInvolved[$u->getId()] = [
-                    "username" => $u->getUsername(),
-                    "roles" => $u->getRoles()
+                    'username' => $u->getUsername(),
+                    'roles' => $u->getRoles()
                 ];
             }
         }
 
-        $seqList = $em->createQuery("SELECT sq FROM App:Sequence sq JOIN sq.author u WHERE sq.subtitle = :id ORDER BY sq.number ASC, sq.revision DESC")
+        $seqList = $em->createQuery('SELECT sq FROM App:Sequence sq JOIN sq.author u WHERE sq.subtitle = :id ORDER BY sq.number ASC, sq.revision DESC')
             ->setParameter('id', $id)
             ->getResult();
 
@@ -219,35 +218,34 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
-                $sequences[$snum]["openInfo"] = !isset($openInfo[$snum]) ? null : $openInfo[$snum];
+                $sequences[$snum]['openInfo'] = !isset($openInfo[$snum]) ? null : $openInfo[$snum];
 
                 $u = $seq->getAuthor();
                 if (!isset($usersInvolved[$u->getId()])) {
                     $usersInvolved[$u->getId()] = [
-                        "username" => $u->getUsername(),
-                        "roles" => $u->getRoles()
+                        'username' => $u->getUsername(),
+                        'roles' => $u->getRoles()
                     ];
                 }
-            }
-            else {
+            } else {
                 // If sequence was already defined, then we're looking at its history
                 if (!isset($sequences[$snum]['history'])) {
                     $sequences[$snum]['history'] = [];
                 }
 
                 $sequences[$snum]['history'][] = [
-                    "id" => $seq->getId(),
-                    "tstart" => $seq->getStartTime(),
-                    "tend" => $seq->getEndTime(),
-                    "text" => $seq->getText(),
-                    "author" => $seq->getAuthor()->getId()
+                    'id' => $seq->getId(),
+                    'tstart' => $seq->getStartTime(),
+                    'tend' => $seq->getEndTime(),
+                    'text' => $seq->getText(),
+                    'author' => $seq->getAuthor()->getId()
                 ];
 
                 $u = $seq->getAuthor();
                 if (!isset($usersInvolved[$u->getId()])) {
                     $usersInvolved[$u->getId()] = [
-                        "username" => $u->getUsername(),
-                        "roles" => $u->getRoles()
+                        'username' => $u->getUsername(),
+                        'roles' => $u->getRoles()
                     ];
                 }
             }
@@ -255,13 +253,13 @@ class TranslationController
 
         if ($secondaryLang > 0) {
             // Also load stuff from the base lang
-            $secondarySub = $em->createQuery("SELECT sb FROM App:Subtitle sb WHERE sb.progress = 100 AND sb.version = :ver AND sb.lang = :lang")
-                ->setParameter("lang", $secondaryLang)
-                ->setParameter("ver", $sub->getVersion())
+            $secondarySub = $em->createQuery('SELECT sb FROM App:Subtitle sb WHERE sb.progress = 100 AND sb.version = :ver AND sb.lang = :lang')
+                ->setParameter('lang', $secondaryLang)
+                ->setParameter('ver', $sub->getVersion())
                 ->getResult();
 
-            $altSeqList = $em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :ssub ORDER BY sq.id ASC")
-                ->setParameter("ssub", $secondarySub)
+            $altSeqList = $em->createQuery('SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :ssub ORDER BY sq.id ASC')
+                ->setParameter('ssub', $secondarySub)
                 ->getResult();
 
             // Now we have to *filter* out old revisions, since we only care about the text in the latest revision.
@@ -285,7 +283,7 @@ class TranslationController
                     $temp->setText('');
 
                     $sequences[$snum] = $temp->jsonSerialize();
-                    $sequences[$snum]["openInfo"] = !isset($openInfo[$snum]) ? null : $openInfo[$snum];
+                    $sequences[$snum]['openInfo'] = !isset($openInfo[$snum]) ? null : $openInfo[$snum];
                 }
 
                 $sequences[$snum]['secondary_text'] = $altSeq->getText();
@@ -298,7 +296,7 @@ class TranslationController
             }
         }
 
-        return $response->withJSON(["sequences" => $sequences, "users" => $usersInvolved]);
+        return $response->withJSON(['sequences' => $sequences, 'users' => $usersInvolved]);
     }
 
     public function open($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
@@ -308,14 +306,14 @@ class TranslationController
             return $response->withStatus(400);
         }
 
-        $sub = $em->getRepository("App:Subtitle")->find($id);
+        $sub = $em->getRepository('App:Subtitle')->find($id);
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
         $sequence = $translation->getLatestSequenceRev($id, $seqNum);
 
-        $oLock = $em->createQuery("SELECT ol, u FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+        $oLock = $em->createQuery('SELECT ol, u FROM App:OpenLock ol JOIN ol.user u WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num')
             ->setParameter('sub', $sub->getId())
             ->setParameter('num', $seqNum)
             ->getOneOrNullResult();
@@ -334,11 +332,10 @@ class TranslationController
             $em->flush();
 
             $translation->broadcastOpen($sub, $byUser, $seqNum, $oLock);
-        }
-        elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
+        } elseif ($oLock->getUser()->getId() != $auth->getUser()->getId()) {
             // Sequence already open!
             $res['ok'] = false;
-            $res['msg'] = sprintf("El usuario %s está editando esta secuencia (#%d)", $oLock->getUser()->getUsername(), $seqNum);
+            $res['msg'] = sprintf('El usuario %s está editando esta secuencia (#%d)', $oLock->getUser()->getUsername(), $seqNum);
         }
 
         return $response->withJSON($res);
@@ -351,7 +348,7 @@ class TranslationController
             return $response->withStatus(400);
         }
 
-        $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+        $oLock = $em->createQuery('SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num')
             ->setParameter('sub', $id)
             ->setParameter('num', $seqNum)
             ->getOneOrNullResult();
@@ -369,9 +366,9 @@ class TranslationController
     public function save($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
         $seqID = $request->getParsedBodyParam('seqID', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), false);
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ''), false);
 
-        $seq = $em->getRepository("App:Sequence")->find($seqID);
+        $seq = $em->getRepository('App:Sequence')->find($seqID);
         if (!$seq) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -395,7 +392,7 @@ class TranslationController
         $seq->getSubtitle()->setLastEditedBy($auth->getUser());
 
         // Find an open lock on this sequence and clear it
-        $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+        $oLock = $em->createQuery('SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num')
             ->setParameter('sub', $seq->getSubtitle())
             ->setParameter('num', $seq->getNumber())
             ->getOneOrNullResult();
@@ -424,9 +421,9 @@ class TranslationController
     public function create($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
         $seqNum = $request->getParsedBodyParam('number', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ""), false);
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ''), false);
 
-        $seq = $em->createQuery("SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num")
+        $seq = $em->createQuery('SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num')
             ->setParameter('sub', $id)
             ->setParameter('num', $seqNum)
             ->getSingleScalarResult();
@@ -437,7 +434,7 @@ class TranslationController
         }
 
         // Find the original sequence, and create one lookalike
-        $curSub = $em->getRepository("App:Subtitle")->find($id);
+        $curSub = $em->getRepository('App:Subtitle')->find($id);
         if (!$curSub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -454,7 +451,7 @@ class TranslationController
         $curSub->setLastEditedBy($auth->getUser());
 
         // Find an open lock on this sequence and clear it
-        $oLock = $em->createQuery("SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num")
+        $oLock = $em->createQuery('SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num')
             ->setParameter('sub', $curSub)
             ->setParameter('num', $baseSeq->getNumber())
             ->getOneOrNullResult();
@@ -493,7 +490,7 @@ class TranslationController
     public function lockToggle($id, $request, $response, EntityManager $em, Translation $translation)
     {
         $seqID = $request->getParsedBodyParam('seqID', 0);
-        $seq = $em->getRepository("App:Sequence")->find($seqID);
+        $seq = $em->getRepository('App:Sequence')->find($seqID);
         if (!$seq) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }

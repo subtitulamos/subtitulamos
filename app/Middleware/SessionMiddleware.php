@@ -7,10 +7,10 @@
 
 namespace App\Middleware;
 
-use Doctrine\ORM\EntityManager;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
-use \Dflydev\FigCookies\SetCookie;
+use Dflydev\FigCookies\SetCookie;
+use Doctrine\ORM\EntityManager;
 
 class SessionMiddleware
 {

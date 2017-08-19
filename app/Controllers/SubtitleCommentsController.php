@@ -7,13 +7,13 @@
 
 namespace App\Controllers;
 
-use Doctrine\ORM\EntityManager;
-use Respect\Validation\Validator as v;
-
 use App\Entities\Subtitle;
 use App\Entities\SubtitleComment;
+
 use App\Services\Auth;
 use App\Services\Translation;
+use Doctrine\ORM\EntityManager;
+use Respect\Validation\Validator as v;
 
 class SubtitleCommentsController
 {
@@ -22,12 +22,12 @@ class SubtitleCommentsController
         // Validate input first
         $text = $request->getParsedBodyParam('text', '');
         if (!v::stringType()->length(1, 600)->validate($text)) {
-            $response->getBody()->write("Invalid text parameter value");
+            $response->getBody()->write('Invalid text parameter value');
             return $response->withStatus(400);
         }
 
         // Verify subtitle exists
-        $sub = $em->getRepository("App:Subtitle")->find($subId);
+        $sub = $em->getRepository('App:Subtitle')->find($subId);
 
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
@@ -51,8 +51,8 @@ class SubtitleCommentsController
 
     public function list($subId, $request, $response, EntityManager $em)
     {
-        $comments = $em->createQuery("SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0 ORDER BY sc.id DESC")
-            ->setParameter("id", $subId)
+        $comments = $em->createQuery('SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0 ORDER BY sc.id DESC')
+            ->setParameter('id', $subId)
             ->getResult();
 
         return $response->withJson($comments);
@@ -60,7 +60,7 @@ class SubtitleCommentsController
 
     public function delete($subId, $cId, $request, $response, EntityManager $em, Translation $translation)
     {
-        $comment = $em->getRepository("App:SubtitleComment")->find($cId);
+        $comment = $em->getRepository('App:SubtitleComment')->find($cId);
         if (!$comment) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }

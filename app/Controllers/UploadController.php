@@ -7,26 +7,26 @@
 
 namespace App\Controllers;
 
-use \Psr\Http\Message\ResponseInterface;
-use \Psr\Http\Message\RequestInterface;
+use App\Entities\Episode;
+use App\Entities\Show;
 
-use \Doctrine\ORM\EntityManager;
+use App\Entities\Subtitle;
 
-use \Slim\Views\Twig;
-use \App\Entities\Episode;
-use \App\Entities\Show;
-use \App\Entities\Version;
-use \App\Entities\Subtitle;
-use \App\Services\Auth;
-use \App\Services\Srt\SrtParser;
-
+use App\Entities\Version;
+use App\Services\Auth;
+use App\Services\Srt\SrtParser;
+use Doctrine\ORM\EntityManager;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator as v;
+
+use Slim\Views\Twig;
 
 class UploadController
 {
     public function view(ResponseInterface $response, Twig $twig, EntityManager $em)
     {
-        $shows = $em->createQuery("SELECT sw FROM App:Show sw ORDER BY sw.name ASC")->getResult();
+        $shows = $em->createQuery('SELECT sw FROM App:Show sw ORDER BY sw.name ASC')->getResult();
 
         return $twig->render($response, 'upload.twig', [
             'shows' => $shows
@@ -35,29 +35,29 @@ class UploadController
 
     public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth, \Elasticsearch\Client $client)
     {
-        $showId = $request->getParam("showId", 0);
-        $season = $request->getParam("season", -1);
-        $epNumber = $request->getParam("episode", -1);
-        $langCode = $request->getParam("lang", "");
-        $epName = strip_tags(trim($request->getParam("title", "")));
-        $versionName = strip_tags(trim($request->getParam("version", "")));
-        $comments = strip_tags(trim($request->getParam("comments", "")));
+        $showId = $request->getParam('showId', 0);
+        $season = $request->getParam('season', -1);
+        $epNumber = $request->getParam('episode', -1);
+        $langCode = $request->getParam('lang', '');
+        $epName = strip_tags(trim($request->getParam('title', '')));
+        $versionName = strip_tags(trim($request->getParam('version', '')));
+        $comments = strip_tags(trim($request->getParam('comments', '')));
 
         $errors = [];
         if (!\App\Services\Langs::existsCode($langCode)) {
-            $errors[] = "Elige un idioma válido";
+            $errors[] = 'Elige un idioma válido';
         }
 
         if (!v::numeric()->positive()->between(0, 99)->validate($season) || !v::numeric()->positive()->between(0, 99)->validate($epNumber)) {
-            $errors[] = "La temporada o episodio deben estar en el rango [0, 99]";
+            $errors[] = 'La temporada o episodio deben estar en el rango [0, 99]';
         }
 
         if (!v::notEmpty()->validate($epName)) {
-            $errors[] = "El nombre del episodio no puede estar vacío";
+            $errors[] = 'El nombre del episodio no puede estar vacío';
         }
 
         if (!v::notEmpty()->validate($versionName) || !v::notEmpty()->validate($comments)) {
-            $errors[] = "Ni el nombre de la versión ni los comentarios pueden estar vacíos";
+            $errors[] = 'Ni el nombre de la versión ni los comentarios pueden estar vacíos';
         }
 
         $uploadList = $request->getUploadedFiles();
@@ -70,39 +70,36 @@ class UploadController
         }
 
         $show = null;
-        if ($showId != "NEW") {
+        if ($showId != 'NEW') {
             if (!v::numeric()->positive()->validate($showId)) {
-                $errors[] = "Elige una serie de la lista";
-            }
-            else {
+                $errors[] = 'Elige una serie de la lista';
+            } else {
                 $show = $em->getRepository('App:Show')->find((int)$showId);
                 if (!$show) {
-                    $errors[] = "La serie que has elegido no existe";
+                    $errors[] = 'La serie que has elegido no existe';
                 }
             }
 
             if (empty($errors)) {
                 // Since the show already exists, we have to make sure that
                 // the an episode with this number doesn't already exist, too
-                $e = $em->createQuery("SELECT e FROM App:Episode e WHERE e.show = :showid AND e.season = :season AND e.number = :num")
+                $e = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :showid AND e.season = :season AND e.number = :num')
                     ->setParameter('showid', $show->getId())
                     ->setParameter('season', $season)
                     ->setParameter('num', $epNumber)
                     ->getResult();
 
                 if ($e != null) {
-                    $errors[] = sprintf("El episodio %dx%d de la serie %s ya existe", $season, $epNumber, $show->getName());
+                    $errors[] = sprintf('El episodio %dx%d de la serie %s ya existe', $season, $epNumber, $show->getName());
                 }
             }
-        }
-        else {
+        } else {
             // Create a new show!
-            $newShowName = $request->getParam("new-show");
+            $newShowName = $request->getParam('new-show');
             if (v::notEmpty()->length(1, 100)->validate($newShowName)) {
-                if ($em->getRepository("App:Show")->findByName($newShowName)) {
-                    $errors[] = "La serie no se ha podido crear puesto que ya existe. Por favor, selecciónala en el desplegable";
-                }
-                else {
+                if ($em->getRepository('App:Show')->findByName($newShowName)) {
+                    $errors[] = 'La serie no se ha podido crear puesto que ya existe. Por favor, selecciónala en el desplegable';
+                } else {
                     $show = new Show();
                     $show->setName($newShowName);
                     $show->setZeroTolerance(false);
@@ -110,9 +107,8 @@ class UploadController
 
                     /* TODO: Log */
                 }
-            }
-            else {
-                $errors[] = "El nombre de la serie no puede estar vacío";
+            } else {
+                $errors[] = 'El nombre de la serie no puede estar vacío';
             }
         }
 
@@ -160,7 +156,7 @@ class UploadController
         // Index the new show if it was just created
         if (isset($newShowName)) {
             $client->index([
-                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
+                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
                 'type' => 'show',
                 'id' => $show->getId(),
                 'body' => [
@@ -171,6 +167,6 @@ class UploadController
 
         return $response
             ->withStatus(302)
-            ->withHeader('Location', $router->pathFor("episode", ["id" => $episode->getId()]));
+            ->withHeader('Location', $router->pathFor('episode', ['id' => $episode->getId()]));
     }
 }

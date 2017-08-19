@@ -7,10 +7,10 @@
 
 namespace App\Services\Srt;
 
-use \ForceUTF8\Encoding;
 use App\Entities\Sequence;
 use App\Services\Clock;
 use App\Services\Translation;
+use ForceUTF8\Encoding;
 
 const PARSING_STATE_SEQUENCE = 0;
 const PARSING_STATE_TIME = 1;
@@ -85,7 +85,7 @@ class SrtParser
             }
 
             switch ($parsingState) {
-                case PARSING_STATE_SEQUENCE :
+                case PARSING_STATE_SEQUENCE:
                     if (!is_numeric($line)) {
                         break;
                     }
@@ -99,31 +99,30 @@ class SrtParser
                     $parsingState = PARSING_STATE_TIME;
                     break;
 
-                case PARSING_STATE_TIME :
+                case PARSING_STATE_TIME:
                     preg_match("/([\d:]+)[,.](\d+)\s*-->\s*([\d:]+)[,.](\d+)/", $line, $matches);
                     if (count($matches) != 5) {
-                        $this->errorDesc = "Formato incorrecto: El formato de los tiempos de la línea " . $line . " es incorrecto";
+                        $this->errorDesc = 'Formato incorrecto: El formato de los tiempos de la línea '.$line.' es incorrecto';
                         return false;
                     }
 
-                    $tstart = Clock::timeToInt($matches[1] . "," . $matches[2]);
-                    $tend = Clock::timeToInt($matches[3] . "," . $matches[4]);
+                    $tstart = Clock::timeToInt($matches[1].','.$matches[2]);
+                    $tend = Clock::timeToInt($matches[3].','.$matches[4]);
                     if ($tstart > $tend) {
-                        $this->errorDesc = "Formato incorrecto: El tiempo de inicio en la secuencia #" . ($this->seqNum + 1) . " es mayor que su tiempo de fin.";
+                        $this->errorDesc = 'Formato incorrecto: El tiempo de inicio en la secuencia #'.($this->seqNum + 1).' es mayor que su tiempo de fin.';
                         return false;
                     }
-                    else {
+
                         if ($tstart <= $this->lastTimeEnd) {
                             if ($tstart + 50 < $tend && $tstart + 50 > $this->lastTimeEnd) {
                                 // Autocorrección del solapamiento si es inferior a 50ms
                                 $tstart += $this->lastTimeEnd - $tstart + 1;
-                            }
-                            else {
-                                $this->errorDesc = "Formato incorrecto: Los tiempos de las secuencias #" . $this->seqNum . " y #" . ($this->seqNum + 1) . " tienen un solapamiento significativo.";
+                            } else {
+                                $this->errorDesc = 'Formato incorrecto: Los tiempos de las secuencias #'.$this->seqNum.' y #'.($this->seqNum + 1).' tienen un solapamiento significativo.';
                                 return false;
                             }
                         }
-                    }
+
 
                     $sequence->setStartTime($tstart);
                     $sequence->setEndTime($tend);
@@ -133,13 +132,12 @@ class SrtParser
                     $parsingState = PARSING_STATE_TEXT;
                     break;
 
-                case PARSING_STATE_TEXT :
+                case PARSING_STATE_TEXT:
                     $line = Encoding::toUTF8($line);
                     if (empty($sequence->getText())) {
                         $sequence->setText($line);
-                    }
-                    else {
-                        $sequence->setText($sequence->getText() . "\n" . $line);
+                    } else {
+                        $sequence->setText($sequence->getText()."\n".$line);
                     }
 
                     break;

@@ -1,0 +1,44 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+->exclude('tmp')
+->exclude('vendor')
+->exclude('node_modules')
+->in(__DIR__);
+
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@PSR2' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'combine_consecutive_unsets' => true,
+        'concat_space' => true,
+        'blank_line_after_opening_tag' => true,
+        'dir_constant' => true,
+        'function_to_constant' => ['functions' => ['phpversion', 'php_sapi_name', 'pi']],
+        'function_typehint_space' => true,
+        'is_null' => true,
+        'linebreak_after_opening_tag' => true,
+        'lowercase_cast' => true,
+        'method_separation' => true,
+        'modernize_types_casting' => true,
+        'no_empty_comment' => true,
+        'no_leading_import_slash' => true,
+        'no_leading_namespace_whitespace' => true,
+        'no_short_bool_cast' => true,
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'non_printable_character' => true,
+        'no_whitespace_in_blank_line' => true,
+        'object_operator_without_whitespace' => true,
+        'ordered_imports' => true,
+        'random_api_migration' => true,
+        'self_accessor' => true,
+        'short_scalar_cast' => true,
+        'single_quote' => true,
+        'standardize_not_equals' => true,
+        'ternary_operator_spaces' => true,
+        'trim_array_spaces' => true,
+        //'doctrine_annotation_spaces' => true,
+    ])
+    ->setFinder($finder);

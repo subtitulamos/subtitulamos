@@ -7,46 +7,46 @@
 
 namespace App\Controllers;
 
-use \Slim\Views\Twig;
-use \Doctrine\ORM\EntityManager;
-use \Cocur\Slugify\SlugifyInterface;
-use App\Services\Auth;
 use App\Entities\Ban;
+use App\Services\Auth;
+use Cocur\Slugify\SlugifyInterface;
+use Doctrine\ORM\EntityManager;
+use Respect\Validation\Validator as v;
 
-use \Respect\Validation\Validator as v;
+use Slim\Views\Twig;
 
 class UserController
 {
     public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em, \Slim\Router $router, SlugifyInterface $slugify)
     {
-        $user = $em->getRepository("App:User")->find($userId);
+        $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $upEpisodesRes = $em->createQuery("SELECT e FROM App:Episode e JOIN e.versions v WHERE v.user = :uid GROUP BY e.id")
-            ->setParameter("uid", $userId)->getResult();
+        $upEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v WHERE v.user = :uid GROUP BY e.id')
+            ->setParameter('uid', $userId)->getResult();
 
         $uploadedEpisodes = [];
         foreach ($upEpisodesRes as $ep) {
             $fullName = $ep->getFullName();
 
             $uploadedEpisodes[] = [
-                "full_name" => $fullName,
-                "url" => $router->pathFor("episode", ["id" => $ep->getId(), "slug" => $slugify->slugify($fullName)])
+                'full_name' => $fullName,
+                'url' => $router->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
 
-        $collabEpisodesRes = $em->createQuery("SELECT e FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN sb.sequences s WHERE s.author = :uid AND sb.directUpload = 0 GROUP BY e.id")
-            ->setParameter("uid", $userId)->getResult();
+        $collabEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN sb.sequences s WHERE s.author = :uid AND sb.directUpload = 0 GROUP BY e.id')
+            ->setParameter('uid', $userId)->getResult();
 
         $colaboratedEpisodes = [];
         foreach ($collabEpisodesRes as $ep) {
             $fullName = $ep->getFullName();
 
             $colaboratedEpisodes[] = [
-                "full_name" => $fullName,
-                "url" => $router->pathFor("episode", ["id" => $ep->getId(), "slug" => $slugify->slugify($fullName)])
+                'full_name' => $fullName,
+                'url' => $router->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
 
@@ -75,21 +75,21 @@ class UserController
             // TODO: Unify this into a single validation/encryption point
             $errors = [];
             if (!v::length(8, 80)->validate($password)) {
-                $auth->addFlash("error", "La contraseña debe tener 8 caracteres como mínimo");
+                $auth->addFlash('error', 'La contraseña debe tener 8 caracteres como mínimo');
             } elseif ($password != $password_confirmation) {
-                $auth->addFlash("error", "Las contraseñas no coinciden");
+                $auth->addFlash('error', 'Las contraseñas no coinciden');
             } else {
-                $auth->addFlash("success", "Contraseña cambiada correctamente");
+                $auth->addFlash('success', 'Contraseña cambiada correctamente');
                 $user->setPassword(\password_hash($password, \PASSWORD_BCRYPT, ['cost' => 13]));
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor("settings"));
+        return $response->withHeader('Location', $router->pathFor('settings'));
     }
 
     public function ban($userId, $request, $response, EntityManager $em, Auth $auth, \Slim\Router $router)
     {
-        $user = $em->getRepository("App:User")->find($userId);
+        $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -98,22 +98,22 @@ class UserController
 
         $until = new \DateTime();
         if ($request->getParam('duration-type', '') == 'permanent') {
-            $until->modify("+20 years");
+            $until->modify('+20 years');
         } else {
             $d = (int)$request->getParam('days', 0);
             $h = (int)$request->getParam('hours', 0);
 
             if ($d >= 0 && $h >= 0 && $d + $h > 0) {
-                $until->modify(sprintf("+%d days", $d));
-                $until->modify(sprintf("+%d hours", $h));
+                $until->modify(sprintf('+%d days', $d));
+                $until->modify(sprintf('+%d hours', $h));
             } else {
-                $errors[] = "Duración del ban incorrecta";
+                $errors[] = 'Duración del ban incorrecta';
             }
         }
 
         $reason = $request->getParam('reason');
         if (empty($reason)) {
-            $errors[] = "La razón no puede estar vacía";
+            $errors[] = 'La razón no puede estar vacía';
         }
 
         if (empty($errors)) {
@@ -128,19 +128,19 @@ class UserController
             $em->persist($ban);
             $em->flush();
 
-            $auth->addFlash("success", "Usuario baneado hasta el ".$until->format("d/M/Y H:i"));
+            $auth->addFlash('success', 'Usuario baneado hasta el '.$until->format('d/M/Y H:i'));
         } else {
             foreach ($errors as $error) {
-                $auth->addFlash("error", $error);
+                $auth->addFlash('error', $error);
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor("user", ["userId" => $userId]));
+        return $response->withHeader('Location', $router->pathFor('user', ['userId' => $userId]));
     }
 
     public function unban($userId, $request, $response, EntityManager $em, Auth $auth, \Slim\Router $router)
     {
-        $user = $em->getRepository("App:User")->find($userId);
+        $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -148,7 +148,7 @@ class UserController
         $errors = [];
         $ban = $user->getBan();
         if (!$ban) {
-            $errors[] = "El usuario no está baneado actualmente";
+            $errors[] = 'El usuario no está baneado actualmente';
         }
 
         if (empty($errors)) {
@@ -156,13 +156,13 @@ class UserController
             $ban->setUnbanUser($auth->getUser());
 
             $em->flush();
-            $auth->addFlash("success", "Suspensión de usuario eliminada");
+            $auth->addFlash('success', 'Suspensión de usuario eliminada');
         } else {
             foreach ($errors as $error) {
-                $auth->addFlash("error", $error);
+                $auth->addFlash('error', $error);
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor("user", ["userId" => $userId]));
+        return $response->withHeader('Location', $router->pathFor('user', ['userId' => $userId]));
     }
 }

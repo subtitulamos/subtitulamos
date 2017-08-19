@@ -7,30 +7,30 @@
 
 namespace App\Controllers;
 
-use \Psr\Http\Message\ResponseInterface;
-use \Psr\Http\Message\RequestInterface;
+use App\Services\Auth;
+use App\Services\Clock;
 
-use \Doctrine\ORM\EntityManager;
-use \App\Services\Clock;
-use \App\Services\Auth;
-use \App\Services\Langs;
+use App\Services\Langs;
+use Doctrine\ORM\EntityManager;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class DownloadController
 {
     public function download($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Auth $auth)
     {
-        $sub = $em->getRepository("App:Subtitle")->find($id);
+        $sub = $em->getRepository('App:Subtitle')->find($id);
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
         if ($sub->getProgress() < 100 && !$auth->hasRole('ROLE_TH')) {
-            $response->getBody()->write("El subtítulo no ha sido completado todavía");
+            $response->getBody()->write('El subtítulo no ha sido completado todavía');
             return $response->withStatus(403);
         }
 
         if ($sub->getPause() && !$auth->hasRole('ROLE_TH')) {
-            $response->getBody()->write("El subtítulo se encuentra bajo revisión");
+            $response->getBody()->write('El subtítulo se encuentra bajo revisión');
             return $response->withStatus(403);
         }
 
@@ -49,19 +49,19 @@ class DownloadController
         ksort($sequences);
 
         // Build the actual downloadable file
-        $file = "";
+        $file = '';
         $sequenceNumber = 1;
 
         foreach ($sequences as $seq) {
-            $file .= $sequenceNumber . "\r\n";
-            $file .= Clock::intToTimeStr($seq->getStartTime()) . " --> " . Clock::intToTimeStr($seq->getEndTime()) . "\r\n";
+            $file .= $sequenceNumber."\r\n";
+            $file .= Clock::intToTimeStr($seq->getStartTime()).' --> '.Clock::intToTimeStr($seq->getEndTime())."\r\n";
 
             $text = str_replace("\n", "\r\n", str_replace("\r\r", "\r", $seq->getText()));
             /* TODO:allow user to configure a "utf8_download" preference */
             $text = utf8_decode($text);
 
-            if (trim($text) == "") {
-                $text = \str_repeat(" ", 3);
+            if (trim($text) == '') {
+                $text = \str_repeat(' ', 3);
             }
 
             $file .= $text;
@@ -73,9 +73,9 @@ class DownloadController
             $sequenceNumber++;
         }
 
-        $filename = $sub->getVersion()->getEpisode()->getFullName() . "." . $sub->getVersion()->getName() . "." . Langs::getLangCode($sub->getLang());
+        $filename = $sub->getVersion()->getEpisode()->getFullName().'.'.$sub->getVersion()->getName().'.'.Langs::getLangCode($sub->getLang());
         $response = $response->withHeader('Content-Type', 'text/srt');
-        $response = $response->withHeader('Content-Disposition', sprintf("attachment; filename=\"%s.srt\"", $filename));
+        $response = $response->withHeader('Content-Disposition', sprintf('attachment; filename="%s.srt"', $filename));
         $response->getBody()->write($file);
         return $response;
     }

@@ -9,15 +9,15 @@ namespace App\Services;
 
 class Utils
 {
-    public static function generateRandomString(int $length, $charPool = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-")
+    public static function generateRandomString(int $length, $charPool = 'abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-')
     {
-        $tok = "";
+        $tok = '';
         $max = strlen($charPool);
-        
+
         while ($length--) {
             $tok .= $charPool[mt_rand(0, $max - 1)];
         }
-        
+
         return $tok;
     }
 }

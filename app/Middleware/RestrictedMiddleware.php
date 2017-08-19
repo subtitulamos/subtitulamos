@@ -33,6 +33,7 @@ class RestrictedMiddleware
 
         $this->allowedRoles = $roles;
     }
+
     /**
      * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
      * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response

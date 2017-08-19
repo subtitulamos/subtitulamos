@@ -7,11 +7,11 @@
 
 namespace App\Commands;
 
+use App\Entities\User;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use \Doctrine\ORM\EntityManager;
-use App\Entities\User;
 
 class CreateUserBots extends Command
 {
@@ -52,6 +52,6 @@ class CreateUserBots extends Command
         }
 
         $entityManager->flush();
-        $output->writeln(count($bots) . " bots sync'd");
+        $output->writeln(count($bots)." bots sync'd");
     }
 }

@@ -7,12 +7,12 @@
 
 namespace App\Controllers;
 
-use Doctrine\ORM\EntityManager;
-use Respect\Validation\Validator as v;
-
 use App\Entities\Episode;
 use App\Entities\EpisodeComment;
+
 use App\Services\Auth;
+use Doctrine\ORM\EntityManager;
+use Respect\Validation\Validator as v;
 
 class EpisodeCommentsController
 {
@@ -21,13 +21,13 @@ class EpisodeCommentsController
         // Validate input first
         $text = $request->getParsedBodyParam('text', '');
         if (!v::stringType()->length(1, 600)->validate($text)) {
-            $response->getBody()->write("Invalid text parameter value");
+            $response->getBody()->write('Invalid text parameter value');
             return $response->withStatus(400);
         }
 
         // Verify episode exists
-        $ep = $em->getRepository("App:Episode")->find($epId);
-        
+        $ep = $em->getRepository('App:Episode')->find($epId);
+
         if (!$ep) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
@@ -40,7 +40,7 @@ class EpisodeCommentsController
         $comment->setPublishTime(new \DateTime());
         $comment->setEditTime(new \DateTime());
         $comment->setSoftDeleted(false);
-        
+
         $em->persist($comment);
         $em->flush();
 
@@ -50,15 +50,15 @@ class EpisodeCommentsController
 
     public function list($epId, $response, EntityManager $em)
     {
-        $comments = $em->createQuery("SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0")
-                   ->setParameter("id", $epId)
+        $comments = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0')
+                   ->setParameter('id', $epId)
                    ->getResult();
         return $response->withJson($comments);
     }
 
     public function delete($epId, $cId, $request, $response, EntityManager $em)
     {
-        $comment = $em->getRepository("App:EpisodeComment")->find($cId);
+        $comment = $em->getRepository('App:EpisodeComment')->find($cId);
         if (!$comment) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }

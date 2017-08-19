@@ -28,25 +28,25 @@ class AssetManager
      * Path of the asset directory
      * @var string
      */
-    public const ASSET_PATH = __DIR__ . "/../../resources/assets";
+    public const ASSET_PATH = __DIR__.'/../../resources/assets';
 
     /**
      * Path of the manifest file
      * @var string
      */
-    public const MANIFEST_PATH = self::ASSET_PATH . "/rev-manifest.json";
+    public const MANIFEST_PATH = self::ASSET_PATH.'/rev-manifest.json';
 
     /**
      * Path of the manifest file
      * @var string
      */
-    public const WEBPACK_MANIFEST_PATH = self::ASSET_PATH . "/manifest.json";
+    public const WEBPACK_MANIFEST_PATH = self::ASSET_PATH.'/manifest.json';
 
     /**
      * Path of the deploy directory
      * @var string
      */
-    public const DEPLOY_PATH = __DIR__ . "/../../public";
+    public const DEPLOY_PATH = __DIR__.'/../../public';
 
     public function __construct()
     {
@@ -83,21 +83,21 @@ class AssetManager
      */
     public function redeployAssets()
     {
-        $allowedExts = ["css"];
-        $folders = ["css"];
+        $allowedExts = ['css'];
+        $folders = ['css'];
 
         $manifest = [];
         foreach ($folders as $folder) {
             if (DEBUG !== true) {
                 // Clear files on the deploy directory if we're rebuilding on production
-                foreach (new \DirectoryIterator(self::DEPLOY_PATH . "/" . $folder) as $fileInfo) {
+                foreach (new \DirectoryIterator(self::DEPLOY_PATH.'/'.$folder) as $fileInfo) {
                     if (!$fileInfo->isDot() && $fileInfo->isFile() && \in_array($fileInfo->getExtension(), $allowedExts)) {
                         unlink($fileInfo->getPathname());
                     }
                 }
             }
 
-            foreach (new \DirectoryIterator(self::ASSET_PATH . "/" . $folder) as $fileInfo) {
+            foreach (new \DirectoryIterator(self::ASSET_PATH.'/'.$folder) as $fileInfo) {
                 $ext = $fileInfo->getExtension();
 
                 if ($fileInfo->isDot() || !$fileInfo->isFile() || !\in_array($fileInfo->getExtension(), $allowedExts)) {
@@ -106,15 +106,15 @@ class AssetManager
 
                 $fileName = $fileInfo->getFilename();
                 $filePath = $fileInfo->getPathname();
-                $ver = \shell_exec("git log -n 1 --pretty=format:%h -- " . $filePath);
+                $ver = \shell_exec('git log -n 1 --pretty=format:%h -- '.$filePath);
                 if (!$ver) {
-                    $ver = "00000";
+                    $ver = '00000';
                 }
 
-                $manifestPath = $folder . "/" . $fileName;
-                $versionedPath = $folder . "/" . str_replace("." . $ext, "", $fileName) . "-" . $ver . "." . $ext;
+                $manifestPath = $folder.'/'.$fileName;
+                $versionedPath = $folder.'/'.str_replace('.'.$ext, '', $fileName).'-'.$ver.'.'.$ext;
                 if (DEBUG !== true || !isset($manifest[$manifestPath]) || $manifest[$manifestPath] != $ver) {
-                    $targetPath = self::DEPLOY_PATH . "/" . $versionedPath;
+                    $targetPath = self::DEPLOY_PATH.'/'.$versionedPath;
                     \copy($filePath, $targetPath);
                 }
 
@@ -128,11 +128,11 @@ class AssetManager
 
     public function getAssetVersionedName($assetName)
     {
-        return isset($this->manifest[$assetName]) ? $this->manifest[$assetName] : "???";
+        return isset($this->manifest[$assetName]) ? $this->manifest[$assetName] : '???';
     }
 
     public function getWebpackVersionedName($assetName)
     {
-        return isset($this->webpackManifest[$assetName]) ? $this->webpackManifest[$assetName] : "???";
+        return isset($this->webpackManifest[$assetName]) ? $this->webpackManifest[$assetName] : '???';
     }
 }

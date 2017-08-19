@@ -1,4 +1,5 @@
 .env
+.php_cs
 vendor/
 node_modules/
 tmp/
@@ -9,3 +10,4 @@ resources/assets/rev-manifest.json
 resources/assets/manifest.json
 public/css/*.css
 public/js/*.js
+.php_cs.cache

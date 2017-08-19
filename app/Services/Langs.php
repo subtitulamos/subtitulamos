@@ -10,22 +10,22 @@ namespace App\Services;
 class Langs
 {
     const LANG_LIST = [
-        1 => "en-en",
-        5 => "es-es",
-        6 => "es-lat",
-        8 => "fr-fr",
-        12 => "ca-es",
-        15 => "gl-es"
+        1 => 'en-en',
+        5 => 'es-es',
+        6 => 'es-lat',
+        8 => 'fr-fr',
+        12 => 'ca-es',
+        15 => 'gl-es'
 
     ];
 
     const LANG_NAMES = [
-        "en-en" => "English",
-        "es-es" => "Español (España)",
-        "es-lat" => "Español (Latinoamérica)",
-        "ca-es" => "Català",
-        "gl-es" => "Galego",
-        "fr-fr" => "Français"
+        'en-en' => 'English',
+        'es-es' => 'Español (España)',
+        'es-lat' => 'Español (Latinoamérica)',
+        'ca-es' => 'Català',
+        'gl-es' => 'Galego',
+        'fr-fr' => 'Français'
     ];
 
     public static function existsId(int $langId)
@@ -51,7 +51,7 @@ class Langs
 
     public static function getLangCode(int $langId)
     {
-        return isset(self::LANG_LIST[$langId]) ? self::LANG_LIST[$langId] : "err-err";
+        return isset(self::LANG_LIST[$langId]) ? self::LANG_LIST[$langId] : 'err-err';
     }
 
     public static function getLocalizedName($code)

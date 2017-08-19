@@ -7,13 +7,13 @@
 
 namespace App\Services;
 
-use \ForceUTF8\Encoding;
-use Doctrine\ORM\EntityManager;
-use App\Entities\Subtitle;
-use App\Entities\Sequence;
-use App\Entities\User;
 use App\Entities\OpenLock;
+use App\Entities\Sequence;
+use App\Entities\Subtitle;
 use App\Entities\SubtitleComment;
+use App\Entities\User;
+use Doctrine\ORM\EntityManager;
+use ForceUTF8\Encoding;
 
 class Translation
 {
@@ -47,7 +47,7 @@ class Translation
      */
     public function getBaseSubId(Subtitle $sub)
     {
-        return $this->em->createQuery("SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1")
+        return $this->em->createQuery('SELECT sb.id FROM App:Subtitle sb WHERE sb.version = :v AND sb.directUpload = 1')
             ->setParameter('v', $sub->getVersion())
             ->getSingleScalarResult();
     }
@@ -61,7 +61,7 @@ class Translation
      */
     public function getLatestSequenceRev($subId, $seqNum)
     {
-        return $this->em->createQuery("SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC")
+        return $this->em->createQuery('SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC')
             ->setParameter('sub', $subId)
             ->setParameter('num', $seqNum)
             ->setMaxResults(1)
@@ -70,7 +70,7 @@ class Translation
 
     public function getPubSubChanName(Subtitle $sub)
     {
-        return sprintf("%s-translate-%d", ENVIRONMENT_NAME, $sub->getId());
+        return sprintf('%s-translate-%d', ENVIRONMENT_NAME, $sub->getId());
     }
 
     /**
@@ -85,10 +85,10 @@ class Translation
     public function broadcastOpen(Subtitle $sub, User $byUser, int $seqNum, OpenLock $lock)
     {
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "seq-open",
-            "user" => $byUser->getId(),
-            "num" => $seqNum,
-            "openLockID" => $lock->getId()
+            'type' => 'seq-open',
+            'user' => $byUser->getId(),
+            'num' => $seqNum,
+            'openLockID' => $lock->getId()
         ]));
     }
 
@@ -102,8 +102,8 @@ class Translation
     public function broadcastClose(Subtitle $sub, int $seqNum)
     {
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "seq-close",
-            "num" => $seqNum
+            'type' => 'seq-close',
+            'num' => $seqNum
         ]));
     }
 
@@ -117,11 +117,11 @@ class Translation
     {
         $sub = $seq->getSubtitle();
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "seq-change",
-            "user" => $seq->getAuthor()->getId(),
-            "num" => $seq->getNumber(),
-            "nid" => $seq->getId(),
-            "ntext" => $seq->getText()
+            'type' => 'seq-change',
+            'user' => $seq->getAuthor()->getId(),
+            'num' => $seq->getNumber(),
+            'nid' => $seq->getId(),
+            'ntext' => $seq->getText()
         ]));
     }
 
@@ -135,9 +135,9 @@ class Translation
     {
         $sub = $seq->getSubtitle();
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "seq-lock",
-            "id" => $seq->getId(),
-            "status" => $seq->getLocked()
+            'type' => 'seq-lock',
+            'id' => $seq->getId(),
+            'status' => $seq->getLocked()
         ]));
     }
 
@@ -151,8 +151,8 @@ class Translation
     public function broadcastDeleteSequence(Subtitle $sub, int $seqId)
     {
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "seq-del",
-            "id" => $seqId
+            'type' => 'seq-del',
+            'id' => $seqId
         ]));
     }
 
@@ -166,11 +166,11 @@ class Translation
     {
         $sub = $c->getSubtitle();
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "com-new",
-            "id" => $c->getId(),
-            "user" => $c->getUser()->getId(),
-            "time" => $c->getPublishTime()->format(\DateTime::ATOM),
-            "text" => $c->getText()
+            'type' => 'com-new',
+            'id' => $c->getId(),
+            'user' => $c->getUser()->getId(),
+            'time' => $c->getPublishTime()->format(\DateTime::ATOM),
+            'text' => $c->getText()
         ]));
     }
 
@@ -184,8 +184,8 @@ class Translation
     {
         $sub = $c->getSubtitle();
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "com-del",
-            "id" => $c->getId()
+            'type' => 'com-del',
+            'id' => $c->getId()
         ]));
     }
 
@@ -199,10 +199,10 @@ class Translation
     public function broadcastUserInfo(Subtitle $sub, User $u)
     {
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
-            "type" => "uinfo",
-            "id" => $u->getId(),
-            "username" => $u->getUsername(),
-            "roles" => $u->getRoles()
+            'type' => 'uinfo',
+            'id' => $u->getId(),
+            'username' => $u->getUsername(),
+            'roles' => $u->getRoles()
         ]));
     }
 
@@ -216,7 +216,7 @@ class Translation
      */
     public function setWSAuthToken(string $token, Subtitle $sub)
     {
-        $this->redis->set("authtok-" . ENVIRONMENT_NAME . "-" . $token, $sub->getId(), 24 * 60 * 60);
+        $this->redis->set('authtok-'.ENVIRONMENT_NAME.'-'.$token, $sub->getId(), 24 * 60 * 60);
     }
 
     /**
@@ -233,20 +233,19 @@ class Translation
             $baseSub = $this->getBaseSubId($sub);
         }
 
-        $baseSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+        $baseSubSeqCount = $this->em->createQuery('SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub')
             ->setParameter('sub', $baseSub)
             ->getSingleScalarResult();
 
-        $ourSubSeqCount = $this->em->createQuery("SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub")
+        $ourSubSeqCount = $this->em->createQuery('SELECT COUNT(DISTINCT sq.number) FROM App:Sequence sq WHERE sq.subtitle = :sub')
             ->setParameter('sub', $sub->getId())
             ->getSingleScalarResult();
 
-        $sub->setProgress( ($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
+        $sub->setProgress(($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
         if ($sub->getProgress() == 100 && !$sub->getPause()) {
             // We're done! Mark as such
             $sub->setCompleteTime(new \DateTime());
-        }
-        elseif ($sub->getCompleteTime()) {
+        } elseif ($sub->getCompleteTime()) {
             $sub->setCompleteTime(null);
         }
     }
@@ -309,35 +308,34 @@ class Translation
         $text = trim(preg_replace('/ +/', ' ', $text));
 
         if ($allowSpecialTags) {
-            $text = strip_tags($text, "<font>");
+            $text = strip_tags($text, '<font>');
 
             $dom = new \DOMDocument();
-            $dom->loadHTML(mb_convert_encoding("<div>" . $text . "</div>", 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+            $dom->loadHTML(mb_convert_encoding('<div>'.$text.'</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
 
             $xpath = new \DOMXPath($dom);
             $nodes = $xpath->query('//font');
             foreach ($nodes as $node) {
-                $color = $node->hasAttribute('color') ? $node->getAttribute('color') : "";
+                $color = $node->hasAttribute('color') ? $node->getAttribute('color') : '';
                 $attributes = $node->attributes;
                 while ($attributes->length) {  // https://stackoverflow.com/a/10281657/2205532
                     $node->removeAttribute($attributes->item(0)->name);
                 }
 
                 if ($color) {
-                    $node->setAttribute("color", $color);
+                    $node->setAttribute('color', $color);
                 }
             }
 
-            $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML($dom->documentElement), "<font>"))));
-        }
-        else {
+            $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML($dom->documentElement), '<font>'))));
+        } else {
             $text = strip_tags($text);
         }
 
         $pregReplacements = [
             '…' => '...',
-            "“" => '"',
-            "”" => '"',
+            '“' => '"',
+            '”' => '"',
             '/[\x{200B}-\x{200D}]/u' => '', //(Remove all 0-width space: https://stackoverflow.com/a/11305926/2205532)
         ];
 
@@ -348,7 +346,7 @@ class Translation
         $text = trim($text);
         if (empty($text)) {
             // At least one space
-            $text = " ";
+            $text = ' ';
         }
 
         /* TODO: Better validate text (multiline etc) + multiline trim */
