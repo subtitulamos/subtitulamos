@@ -450,7 +450,7 @@ Vue.component('sequence', {
                 }
 
                 // If we find a word separator...
-                if (curChar.match(/[ .,;?!-]/)) {
+                if (curChar.match(/[ .,;?!-'"]/)) {
                     if (ignoreSepUntilNextWord)
                         continue;
 
@@ -460,7 +460,7 @@ Vue.component('sequence', {
                     /*
                     * If next char is also a separator (unless its a space), we do not split yet.
                     */
-                    if (nextChar && nextChar.match(/[.,;?!-]/)) {
+                    if (nextChar && nextChar.match(/[.,;?!-'"]/)) {
                         continue;
                     }
 
