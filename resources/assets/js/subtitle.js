@@ -40,7 +40,7 @@ Subtitle.prototype.wsMessage = function(event) {
                 break;
 
             case "seq-change":
-                this.changeSeq(data.num, Number(data.nid), data.user, data.ntext);
+                this.changeSeq(data.num, Number(data.nid), data.user, data.ntext, data.ntstart, data.ntend);
                 break;
 
             case "seq-lock":
@@ -239,7 +239,7 @@ Subtitle.prototype.deleteSeq = function(seqID, status) {
     });
 }
 
-Subtitle.prototype.changeSeq = function(seqNum, newSeqID, newAuthorID, newText) {
+Subtitle.prototype.changeSeq = function(seqNum, newSeqID, newAuthorID, newText, newStartTime, newEndTime) {
     let idx = this.findSeqIdxByNum(seqNum);
     if(idx < 0) {
         console.log("Could not update sequence text for "+seqNum+" (not found)");
@@ -272,6 +272,8 @@ Subtitle.prototype.changeSeq = function(seqNum, newSeqID, newAuthorID, newText) 
     seq.id = newSeqID;
     seq.text = newText;
     seq.author = newAuthorID;
+    seq.tstart = newStartTime;
+    seq.tend = newEndTime;
     seq.openInfo = null;
 }
 

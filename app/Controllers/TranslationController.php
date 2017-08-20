@@ -365,8 +365,16 @@ class TranslationController
 
     public function save($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
+        $canChangeTimes = $auth->hasRole('ROLE_MOD');
+
         $seqID = $request->getParsedBodyParam('seqID', 0);
         $text = Translation::cleanText($request->getParsedBodyParam('text', ''), false);
+        $nStartTime = $request->getParsedBodyParam('tstart', 0);
+        $nEndTime = $request->getParsedBodyParam('tend', 0);
+
+        if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
+            return $response->withStatus(400);
+        }
 
         $seq = $em->getRepository('App:Sequence')->find($seqID);
         if (!$seq) {
@@ -377,7 +385,8 @@ class TranslationController
             return $response->withStatus(400);
         }
 
-        if ($text == $seq->getText()) {
+        $changed = $text != $seq->getText() || ($canChangeTimes && ($nStartTime != $seq->getStartTime() || $nEndTime != $seq->getEndTime()));
+        if (!$changed) {
             // Nothing to change here, send the id of this very sequence
             $response->getBody()->write($seq->getId());
             return $response->withStatus(200);
@@ -406,8 +415,11 @@ class TranslationController
         $nseq->incRevision();
         $nseq->setText($text);
         $nseq->setAuthor($auth->getUser());
+        if ($canChangeTimes && $nStartTime && $nEndTime) {
+            $nseq->setStartTime($nStartTime);
+            $nseq->setEndTime($nEndTime);
+        }
         $em->persist($nseq);
-
         $em->flush();
 
         $translation->broadcastSeqChange($nseq);
@@ -420,8 +432,16 @@ class TranslationController
      */
     public function create($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
+        $canChangeTimes = $auth->hasRole('ROLE_MOD');
+
         $seqNum = $request->getParsedBodyParam('number', 0);
         $text = Translation::cleanText($request->getParsedBodyParam('text', ''), false);
+        $nStartTime = $request->getParsedBodyParam('tstart', 0);
+        $nEndTime = $request->getParsedBodyParam('tend', 0);
+
+        if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
+            return $response->withStatus(400);
+        }
 
         $seq = $em->createQuery('SELECT COUNT(sq.id) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num')
             ->setParameter('sub', $id)
@@ -471,6 +491,11 @@ class TranslationController
         $seq->setText($text);
         $seq->setLocked(false);
         $seq->setVerified(false);
+        if ($canChangeTimes && $nStartTime && $nEndTime) {
+            $seq->setStartTime($nStartTime);
+            $seq->setEndTime($nEndTime);
+        }
+
         $em->persist($seq);
 
         // Update progress

@@ -51,7 +51,7 @@
 
 #translation table td.time {
     padding: 0 30px 0 30px;
-    max-width: 235px;
+    max-width: 200px;
     font-size: 14px;
     text-align: center;
 }
@@ -401,4 +401,24 @@
     padding: 20px;
     text-align: center;
     bottom: 0px;
+}
+
+.time input {
+    width: 84px;
+    padding: 2px;
+    margin: -3px;
+    background-color: transparent;
+}
+
+.time input:hover {
+    border: 1px solid darkgrey;
+    cursor: text;
+    background-color: rgba(228, 228, 228, 0.5);
+    margin: -4px;
+}
+
+.time input:focus, .time input.edited {
+    border: 1px solid darkgrey;
+    background-color: #fff;
+    margin: -4px;
 }

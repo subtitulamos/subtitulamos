@@ -64,7 +64,17 @@ Vue.component('sequence', {
         <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
             <td><span v-if="!history">{{ number }}</span></td>
             <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
-            <td class="time">{{ tstart | nice_time }} <i class="fa fa-long-arrow-right"></i> {{ tend | nice_time }}</td>
+            <td class="time" @click="openSequence">
+                <div v-if="!editing || !canEditTimes">
+                    {{ tstart | timeFmt }} <i class="fa fa-long-arrow-right"></i> {{ tend | timeFmt }}
+                </div>
+
+                <div v-if="editing && canEditTimes">
+                    <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
+                    <i class="fa fa-long-arrow-right"></i>
+                    <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
+                </div>
+            </td>
             <td class="text"><pre>{{ secondaryText }}</pre></td>
             <td class="text" @click="openSequence" :class="{'translatable': !history && !openByOther, 'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <pre v-if="!editing && id">{{ text }}</pre>
@@ -114,7 +124,10 @@ Vue.component('sequence', {
     },
     data: function() {
         return {
-            editingText: this.text
+            editingTime: false,
+            editingText: this.text,
+            editingTimeEnd: this.$options.filters.timeFmt(this.tend),
+            editingTimeStart: this.$options.filters.timeFmt(this.tstart)
         }
     },
     mounted: function() {
@@ -124,7 +137,7 @@ Vue.component('sequence', {
         }
     },
     filters: {
-        nice_time: function (ms) {
+        timeFmt: function (ms) {
             if (!ms)
                 return '00:00:00.000';
 
@@ -158,6 +171,10 @@ Vue.component('sequence', {
         }
     },
     computed: {
+        canEditTimes: function() {
+            return canEditTimes;
+        },
+
         openByOther: function() {
             return this.openInfo && this.openInfo.by && this.openInfo.by != me.id;
         },
@@ -168,6 +185,14 @@ Vue.component('sequence', {
 
         editing: function() {
             return this.openInfo && this.openInfo.by == me.id;
+        },
+
+        parsedStartTime: function() {
+            return this.parseTime(this.editingTimeStart)
+        },
+
+        parsedEndTime: function() {
+            return this.parseTime(this.editingTimeEnd)
         },
 
         lineCounters: function() {
@@ -188,7 +213,8 @@ Vue.component('sequence', {
 
         canSave: function() {
             return !this.history && this.lineCounters.length > 0 && this.lineCounters[0] > 0 && this.lineCounters[0] <= 40
-                        && (!this.lineCounters[1] || this.lineCounters[1] <= 40);
+                        && (!this.lineCounters[1] || this.lineCounters[1] <= 40)
+                        && (this.parsedStartTime && this.parsedEndTime && this.parsedStartTime < this.parsedEndTime);
         },
 
         canLock: function() {
@@ -231,6 +257,9 @@ Vue.component('sequence', {
             }
 
             this.editingText = this.text;
+            this.editingTimeStart = this.$options.filters.timeFmt(this.tstart);
+            this.editingTimeEnd = this.$options.filters.timeFmt(this.tend);
+
             sub.openSeq(this.number, me.id, 0);
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/open',
@@ -270,40 +299,39 @@ Vue.component('sequence', {
                 ntext = " ";
             }
 
-            if(ntext == this.text) {
+            // Detect if anything changed at all
+            let modifiedText = ntext != this.text;
+            let modifiedTime = this.parsedEndTime != this.tend || this.parsedStartTime != this.tstart;
+            if(!modifiedText && !modifiedTime) {
                 this.discard();
                 return;
             }
 
-            if(this.id) {
-                // Editing a sequence, save the changes
-                $.ajax({
-                    url: '/subtitles/'+subID+'/translate/save',
-                    method: 'POST',
-                    data: {
-                        seqID: this.id,
-                        text: ntext,
-                    }
-                }).done((newID) => {
-                    sub.changeSeq(this.number, Number(newID), me.id, ntext);
-                }).fail(() => {
-                    alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                });
-            } else {
-                // Translating a sequence for the first time
-                $.ajax({
-                    url: '/subtitles/'+subID+'/translate/create',
-                    method: 'POST',
-                    data: {
-                        number: this.number,
-                        text: ntext
-                    }
-                }).done((newID) => {
-                    sub.changeSeq(this.number, Number(newID), me.id, ntext);
-                }).fail(() => {
-                    alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-                });
+            // Build payload to send
+            let action = this.id ? 'save' : 'create';
+            let postData = {
+                seqID: this.id,
+                number: this.number,
+                text: ntext
+            };
+
+            let nStartTime = this.parsedStartTime;
+            let nEndTime = this.parsedEndTime;
+
+            if(modifiedTime) {
+                postData.tstart = nStartTime;
+                postData.tend = nEndTime;
             }
+
+            $.ajax({
+                url: '/subtitles/'+subID+'/translate/'+action,
+                method: 'POST',
+                data: postData
+            }).done((newID) => {
+                sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
+            }).fail(() => {
+                alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
+            });
 
             // Discard editing text cache if saved
             sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
@@ -501,6 +529,16 @@ Vue.component('sequence', {
 
             // No division
             return [text];
+        },
+
+        parseTime: function(t) {
+            let matches = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{1,2})[\.,](\d{1,3})$/.exec(t);
+            if(!matches || matches.length < 4) {
+                return null;
+            }
+
+            let hs = matches[1] ? Number(matches[1])*3600 : 0;
+            return (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 + Number(matches[4]);
         }
     },
 });

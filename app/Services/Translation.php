@@ -121,7 +121,9 @@ class Translation
             'user' => $seq->getAuthor()->getId(),
             'num' => $seq->getNumber(),
             'nid' => $seq->getId(),
-            'ntext' => $seq->getText()
+            'ntext' => $seq->getText(),
+            'ntstart' => (int)$seq->getStartTime(),
+            'ntend' => (int)$seq->getEndTime()
         ]));
     }
 
