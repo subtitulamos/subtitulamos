@@ -65,7 +65,7 @@ class UserController
         ]);
     }
 
-    public function saveSettings($request, $response, Twig $twig, Auth $auth, \Slim\Router $router)
+    public function saveSettings($request, $response, Twig $twig, Auth $auth, \Slim\Router $router, EntityManager $em)
     {
         $user = $auth->getUser();
         $password = $request->getParam('newpwd', '');
@@ -81,6 +81,8 @@ class UserController
             } else {
                 $auth->addFlash('success', 'Contraseña cambiada correctamente');
                 $user->setPassword(\password_hash($password, \PASSWORD_BCRYPT, ['cost' => 13]));
+
+                $em->flush();
             }
         }
 
