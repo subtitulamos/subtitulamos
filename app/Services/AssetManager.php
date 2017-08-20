@@ -106,9 +106,14 @@ class AssetManager
 
                 $fileName = $fileInfo->getFilename();
                 $filePath = $fileInfo->getPathname();
-                $ver = \shell_exec('git log -n 1 --pretty=format:%h -- '.$filePath);
-                if (!$ver) {
-                    $ver = '00000';
+
+                if (DEBUG !== true) {
+                    $ver = \shell_exec('git log -n 1 --pretty=format:%h -- '.$filePath);
+                    if (!$ver) {
+                        $ver = '00000';
+                    }
+                } else {
+                    $ver = 'local';
                 }
 
                 $manifestPath = $folder.'/'.$fileName;
@@ -116,6 +121,10 @@ class AssetManager
                 if (DEBUG !== true || !isset($manifest[$manifestPath]) || $manifest[$manifestPath] != $ver) {
                     $targetPath = self::DEPLOY_PATH.'/'.$versionedPath;
                     \copy($filePath, $targetPath);
+                }
+
+                if (DEBUG === true) {
+                    $versionedPath .= '?v='.time();
                 }
 
                 $manifest[$manifestPath] = $versionedPath;
