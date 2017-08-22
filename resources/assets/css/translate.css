@@ -198,11 +198,13 @@
     padding-left: 0px;
 }
 
-#translation textarea {
+#translation .translatable textarea {
+    display: block;
     width: 89%;
-    margin-top: 5px;
-    padding: 7px;
-    height: 36px;
+    height: 38px;
+    padding: 6px 8px 5px 6px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 #translation .text {
@@ -212,7 +214,6 @@
 
 #translation .translatable {
     cursor: pointer;
-    vertical-align:middle;
 }
 
 #translation pre {
@@ -222,10 +223,12 @@
 }
 
 #translation .line-status {
-    display: inline-block;
+    position: absolute;
     text-align: center;
     vertical-align: middle;
-    margin-top: -42px;
+    top: -50px;
+    padding: 0;
+    right: 0;
 }
 
 #translation .line-counter {
