@@ -72,9 +72,11 @@ class SrtParser
                 if ($parsingState == PARSING_STATE_TEXT) {
                     // We're done with this line
                     if ($sequence) {
-                        $sequence->setText(Translation::cleanText($sequence->getText(), $allowSpecialTags));
+                        if (!empty($sequence->getText())) {
+                            $sequence->setText(Translation::cleanText($sequence->getText(), $allowSpecialTags));
+                            $sequences[] = $sequence;
+                        }
 
-                        $sequences[] = $sequence;
                         $sequence = null;
                     }
 
