@@ -310,7 +310,7 @@ class Translation
         // Remove multiple spaces concatenated / trim each line
         $lines = explode("\n", $text);
         foreach ($lines as &$line) {
-            $line = trim(preg_replace('/ +/', ' ', $line));
+            $line = \substr(trim(preg_replace('/ +/', ' ', $line)), 0, 40);
         }
 
         // Make sure that we only have two lines, and convert them back to string
