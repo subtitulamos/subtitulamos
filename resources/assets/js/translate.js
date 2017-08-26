@@ -212,7 +212,7 @@ Vue.component('sequence', {
         },
 
         canSave: function() {
-            return !this.history && this.lineCounters.length > 0 && this.lineCounters[0] > 0 && this.lineCounters[0] <= 40
+            return !this.history && this.lineCounters.length > 0 && this.lineCounters.length <= 2 && this.lineCounters[0] > 0 && this.lineCounters[0] <= 40
                         && (!this.lineCounters[1] || this.lineCounters[1] <= 40)
                         && (this.parsedStartTime && this.parsedEndTime && this.parsedStartTime < this.parsedEndTime);
         },

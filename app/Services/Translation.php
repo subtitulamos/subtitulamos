@@ -218,7 +218,7 @@ class Translation
      */
     public function setWSAuthToken(string $token, Subtitle $sub)
     {
-        $this->redis->set('authtok-'.ENVIRONMENT_NAME.'-'.$token, $sub->getId(), 24 * 60 * 60);
+        $this->redis->set('authtok-' . ENVIRONMENT_NAME . '-' . $token, $sub->getId(), 24 * 60 * 60);
     }
 
     /**
@@ -243,11 +243,12 @@ class Translation
             ->setParameter('sub', $sub->getId())
             ->getSingleScalarResult();
 
-        $sub->setProgress(($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
+        $sub->setProgress( ($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
         if ($sub->getProgress() == 100 && !$sub->getPause()) {
             // We're done! Mark as such
             $sub->setCompleteTime(new \DateTime());
-        } elseif ($sub->getCompleteTime()) {
+        }
+        elseif ($sub->getCompleteTime()) {
             $sub->setCompleteTime(null);
         }
     }
@@ -306,14 +307,21 @@ class Translation
      */
     public static function cleanText(string $text, bool $allowSpecialTags)
     {
-        // Remove multiple spaces concatenated
-        $text = trim(preg_replace('/ +/', ' ', $text));
+        // Remove multiple spaces concatenated / trim each line
+        $lines = explode("\n", $text);
+        foreach ($lines as &$line) {
+            $line = trim(preg_replace('/ +/', ' ', $line));
+        }
+
+        // Make sure that we only have two lines, and convert them back to string
+        $lines = \array_slice($lines, 0, 2);
+        $text = implode("\n", $lines);
 
         if ($allowSpecialTags) {
             $text = strip_tags($text, '<font>');
 
             $dom = new \DOMDocument();
-            $dom->loadHTML(mb_convert_encoding('<div>'.$text.'</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+            $dom->loadHTML(mb_convert_encoding('<div>' . $text . '</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
 
             $xpath = new \DOMXPath($dom);
             $nodes = $xpath->query('//font');
@@ -330,7 +338,8 @@ class Translation
             }
 
             $text = trim(Encoding::toUTF8(\html_entity_decode(strip_tags($dom->saveHTML($dom->documentElement), '<font>'))));
-        } else {
+        }
+        else {
             $text = strip_tags($text);
         }
 
@@ -351,7 +360,6 @@ class Translation
             $text = ' ';
         }
 
-        /* TODO: Better validate text (multiline etc) + multiline trim */
         return $text;
     }
 }
