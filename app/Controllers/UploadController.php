@@ -48,7 +48,7 @@ class UploadController
             $errors[] = 'Elige un idioma válido';
         }
 
-        if (!v::numeric()->positive()->between(0, 99)->validate($season) || !v::numeric()->positive()->between(0, 99)->validate($epNumber)) {
+        if (!v::numeric()->between(0, 99)->validate($season) || !v::numeric()->positive()->between(0, 99)->validate($epNumber)) {
             $errors[] = 'La temporada o episodio deben estar en el rango [0, 99]';
         }
 
