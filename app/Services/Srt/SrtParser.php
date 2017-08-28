@@ -74,6 +74,7 @@ class SrtParser
                     if ($sequence) {
                         if (!empty($sequence->getText())) {
                             $sequence->setText(Translation::cleanText($sequence->getText(), $allowSpecialTags));
+                            $sequence->setNumber(++$this->seqNum);
                             $sequences[] = $sequence;
                         }
 
@@ -93,7 +94,6 @@ class SrtParser
                     }
 
                     $sequence = new Sequence();
-                    $sequence->setNumber(++$this->seqNum);
                     $sequence->setRevision(0);
                     $sequence->setLocked(false);
                     $sequence->setVerified(false);
