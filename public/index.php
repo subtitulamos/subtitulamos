@@ -105,17 +105,17 @@ $app->get('/search/popular', ['\App\Controllers\SearchController', 'listPopular'
 $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUploads']);
 $app->get('/search/modified', ['\App\Controllers\SearchController', 'listRecentChanged']);
 $app->get('/search/completed', ['\App\Controllers\SearchController', 'listRecentCompleted']);
-$app->get('/search/paused', ['\App\Controllers\SearchController', 'listPaused'])->add($needsRoles('ROLE_TH'));
+$app->get('/search/paused', ['\App\Controllers\SearchController', 'listPaused'])->add($needsRoles('ROLE_TT'));
 
 $app->post('/subtitles/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRoles('ROLE_USER'));
 $app->get('/subtitles/{id}/translate', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRoles('ROLE_USER'));
 $app->get('/subtitles/{id}/translate/load', ['\App\Controllers\TranslationController', 'loadData'])->add($needsRoles('ROLE_USER'));
-$app->delete('/subtitles/{id}/translate/open-lock/{lockId}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRoles('ROLE_TH'));
+$app->delete('/subtitles/{id}/translate/open-lock/{lockId}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRoles('ROLE_TT'));
 $app->post('/subtitles/{id}/translate/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{id}/translate/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{id}/translate/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{id}/translate/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRoles('ROLE_USER'));
-$app->post('/subtitles/{id}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_TH'));
+$app->post('/subtitles/{id}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRoles('ROLE_TT'));
 
 $app->get('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRoles('ROLE_USER'));
 $app->post('/subtitles/{subId}/translate/comments/submit', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRoles('ROLE_USER'));
@@ -125,8 +125,8 @@ $app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\Subtitle
  */
 
 $app->get('/subtitles/{subId}/delete', ['\App\Controllers\SubtitleController', 'delete'])->add($needsRoles('ROLE_MOD'));
-$app->get('/subtitles/{subId}/pause', ['\App\Controllers\SubtitleController', 'pause'])->add($needsRoles('ROLE_TH'));
-$app->get('/subtitles/{subId}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRoles('ROLE_TH'));
+$app->get('/subtitles/{subId}/pause', ['\App\Controllers\SubtitleController', 'pause'])->add($needsRoles('ROLE_TT'));
+$app->get('/subtitles/{subId}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRoles('ROLE_TT'));
 $app->get('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'viewHammer'])->add($needsRoles('ROLE_MOD'));
 $app->post('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRoles('ROLE_MOD'));
 $app->get('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRoles('ROLE_MOD'))->setName('subtitle-edit');

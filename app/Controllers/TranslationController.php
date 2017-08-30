@@ -392,7 +392,7 @@ class TranslationController
             return $response->withStatus(200);
         }
 
-        if ($seq->getLocked() && !$auth->hasRole('ROLE_TH')) {
+        if ($seq->getLocked() && !$auth->hasRole('ROLE_TT')) {
             return $response->withStatus(403);
         }
 

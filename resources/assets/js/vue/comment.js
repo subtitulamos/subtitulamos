@@ -36,7 +36,7 @@ Vue.component('comment', {
     },
     computed: {
         bodyClasses: function () {
-            let isTT = this.user.roles.includes('ROLE_TH');
+            let isTT = this.user.roles.includes('ROLE_TT');
             let isMod = this.user.roles.includes('ROLE_MOD');
             return {
                 'role-tt': isTT && !isMod,

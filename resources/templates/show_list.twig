@@ -45,7 +45,7 @@
                                     {% endif %}
 
                                     {% set pause_class = sub.pause ? 'paused' : '' %}
-                                    {% set can_download = auth.has_role('ROLE_TH') or (not sub.pause and sub.progress == 100) %}
+                                    {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
 
                                     <div class="{{ pause_class }}">
                                         <div class='version-name'>{{ sub.version_name }}</div>

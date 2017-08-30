@@ -50,7 +50,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
-        $hideDetails = !$auth->hasRole('ROLE_TH');
+        $hideDetails = !$auth->hasRole('ROLE_TT');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -79,7 +79,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
-        $hideDetails = !$auth->hasRole('ROLE_TH');
+        $hideDetails = !$auth->hasRole('ROLE_TT');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -108,7 +108,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
-        $hideDetails = !$auth->hasRole('ROLE_TH');
+        $hideDetails = !$auth->hasRole('ROLE_TT');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();
@@ -205,7 +205,7 @@ class SearchController
             ->setFirstResult($page * 10)
             ->getResult();
 
-        $hideDetails = !$auth->hasRole('ROLE_TH');
+        $hideDetails = !$auth->hasRole('ROLE_TT');
         $epList = [];
         foreach ($subs as $sub) {
             $ep = $sub->getVersion()->getEpisode();

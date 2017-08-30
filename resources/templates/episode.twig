@@ -53,7 +53,7 @@
 
                 {% set pause_class = sub.pause ? 'paused' : '' %}
                 {% set small_class = auth.has_role('ROLE_MOD') ? 'sm' : '' %}
-                {% set can_download = auth.has_role('ROLE_TH') or (not sub.pause and sub.progress == 100) %}
+                {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
 
                 <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
                     <div class="version_name">{{ sub.version.name }}</div>
@@ -81,7 +81,7 @@
                         {% endif %}
                     </div>
                     <div class="subtitle_buttons">
-                        {% if auth.has_role('ROLE_TH') %}
+                        {% if auth.has_role('ROLE_TT') %}
                             {% if sub.pause %}
                                 <a href="/subtitles/{{ sub.id }}/unpause">
                                     <div class="subtitle-action unpause-subtitle"><i class="fa fa-lock" aria-hidden="true"></i></div>
