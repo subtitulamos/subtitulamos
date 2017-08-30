@@ -12,19 +12,12 @@
 		<link rel="shortcut icon" type="image/png" href="favicon_nonprod.png"/>
 	{% endif %}
 
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
-	<link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-	{{ assets.css('app') }}
-	{{ assets.css('hint') }}
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
 	{{ assets.css('normalize') }}
+	{{ assets.css('app') }}
 	{{ assets.css('browser_specific') }}
-	{{ assets.css('effects') }}
 	{% block css %}{% endblock %}
-
-	{{ assets.js('vendor') }}
-	<script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async defer></script>
 
 	<title>{% block title %}{% endblock %} - Subtitulamos.tv</title>
 </head>
@@ -225,6 +218,15 @@
 			</div>
 		</div>
 	</div>
+	{# Load nonessential CSS #}
+	<link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
+
+	{{ assets.css('hint') }}
+	{{ assets.css('effects') }}
+
+	{# Load js last #}
+	{{ assets.js('vendor') }}
+	<script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async defer></script>
 
 	{% block scripts %}{% endblock %}
 	{{ assets.js('app') }}
