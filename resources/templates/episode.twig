@@ -66,10 +66,16 @@
                             <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%">
                                 <div class="progress_percentage">
                                     {{ sub.progress // 1}}%
-                                    {% if sub.pause and sub.progress >= 90 %}
-                                        <span class='revision-clarify hint--rounded hint--top' data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
-                                            (En revisión)
-                                        </span>
+                                    {% if sub.pause %}
+                                        {% if sub.progress >= 100 %}
+                                            <span class='revision-clarify hint--rounded hint--top' data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
+                                                (En revisión)
+                                            </span>
+                                        {% elseif sub.progress >= 90 %}
+                                            <span class='revision-clarify hint--rounded hint--top' data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
+                                                (Pendiente de revisión)
+                                            </span>
+                                        {% endif %}
                                     {% endif %}
                                 </div></div>
                         {% endif %}
