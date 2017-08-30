@@ -19,8 +19,8 @@
     <div id="translation-details" :class="{'disabled': !loaded}">
         {% verbatim %}
             <div id='translation-tools' v-if="hasTools">
-                <button type="button" @click="openPage">Abrir página</button>
-                <button type="button" @click="closePage">Cerrar página</button>
+                <button type="button" @click="openPage">Abrir todo</button>
+                <button type="button" @click="closePage">Cerrar todo</button>
                 <button type="button" @click="savePage">Guardar todo</button>
                 <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
                 <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
