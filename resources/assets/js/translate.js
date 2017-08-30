@@ -94,19 +94,25 @@ Vue.component('sequence', {
                 </div>
             </td>
             <td class="actions">
-                <div v-if="!history && editing">
-                    <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
-                    <i class="fa fa-times-circle-o" @click="discard" tabindex="0" @keyup.enter="discard"></i>
-                </div>
+                <template v-if="!saving">
+                    <template v-if="!history && editing">
+                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
+                        <i class="fa fa-times-circle-o" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+                    </template>
 
-                <div v-if="translated && !history && !editing">
-                    <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
-                    <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
-                </div>
+                    <template v-if="translated && !history && !editing">
+                        <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
+                        <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
+                    </template>
 
-                <div v-if="false && history">
-                    <i class="fa fa-undo" aria-hidden="true"></i>
-                </div>
+                    <template v-if="false && history">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </template>
+                </template>
+
+                <template v-if="saving">
+                    <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                </template>
             </td>
         </tr>
         `,
@@ -124,12 +130,14 @@ Vue.component('sequence', {
         history: Boolean,
         openInfo: Object
     },
+
     data: function() {
         return {
             editingTime: false,
             editingText: this.text,
             editingTimeEnd: this.$options.filters.timeFmt(this.tend),
-            editingTimeStart: this.$options.filters.timeFmt(this.tstart)
+            editingTimeStart: this.$options.filters.timeFmt(this.tstart),
+            saving: false
         }
     },
 
@@ -287,7 +295,7 @@ Vue.component('sequence', {
 
     methods: {
         openSequence: function() {
-            if(this.editing || this.history || this.openByOther) {
+            if(this.editing || this.history || this.openByOther || this.saving) {
                 return true; // Already / no effect / can't open
             }
 
@@ -324,9 +332,11 @@ Vue.component('sequence', {
         },
 
         save: function() {
-            if(!this.canSave) {
+            if(!this.canSave || this.saving) {
                 return false;
             }
+
+            this.saving = true;
 
             // Process text for spaces and proceed to save/create/cancel
             let ntext = this.editingText.trim().replace(/ +/g,' ');
@@ -364,6 +374,7 @@ Vue.component('sequence', {
                 data: postData
             }).done((newID) => {
                 sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
+                this.saving = false;
             }).fail(() => {
                 alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
             });
@@ -377,6 +388,9 @@ Vue.component('sequence', {
                 return;
             }
 
+            this.saving = true;
+
+            // Preserve lock id in case we need to undo this sequence close
             let oLockID = this.openInfo.id;
             sub.closeSeq(this.number);
 
@@ -387,6 +401,7 @@ Vue.component('sequence', {
                     seqNum: this.number
                 }
             })
+            .done(() => { this.saving = false; })
             .fail(() => {
                 sub.openSeq(this.number, me.id, oLockID);
                 alertify.error("Ha ocurrido un error al intentar cerrar la secuencia");
