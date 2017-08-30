@@ -15,8 +15,17 @@
     <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
         Conexión con el servidor de traducción perdida. Reestableciendo...
     </div>
+
     <div id="translation-details" :class="{'disabled': !loaded}">
         {% verbatim %}
+            <div id='translation-tools' v-if="hasTools">
+                <button type="button" @click="openPage">Abrir página</button>
+                <button type="button" @click="closePage">Cerrar página</button>
+                <button type="button" @click="savePage">Guardar todo</button>
+                <button type="button" @click="lockPage(true)" class="lock-tool">Bloquear todo</button>
+                <button type="button" @click="lockPage(false)" class="lock-tool">Desbloquear todo</button>
+            </div>
+
             <div id='filters'>
                 Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
                 &nbsp;&nbsp;-&nbsp;&nbsp;
@@ -32,7 +41,6 @@
                 </label>
             </div>
         {% endverbatim %}
-
         <div class="page-wrapper">
             <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
         </div>

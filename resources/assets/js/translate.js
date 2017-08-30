@@ -6,6 +6,8 @@ import Subtitle from './subtitle.js';
 import ReconnectingWebsocket from 'reconnecting-websocket';
 import dateformat from 'dateformat';
 
+let bus = new Vue();
+
 window.onbeforeunload = function(e) {
     let ask = false;
     for (var i = 0; i < sessionStorage.length; i++) {
@@ -99,7 +101,7 @@ Vue.component('sequence', {
 
                 <div v-if="translated && !history && !editing">
                     <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
-                    <i class="fa" @click="toggleLock" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
+                    <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
                 </div>
 
                 <div v-if="false && history">
@@ -130,12 +132,42 @@ Vue.component('sequence', {
             editingTimeStart: this.$options.filters.timeFmt(this.tstart)
         }
     },
+
     mounted: function() {
         let savedText = sessionStorage.getItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
         if(savedText) {
             this.editingText = savedText;
         }
     },
+
+    created: function() {
+        if(!this.history) {
+            bus.$on("open", (num) => {
+                if(this.number == num) {
+                    this.openSequence();
+                }
+            });
+
+            bus.$on("close", (num) => {
+                if(this.number == num) {
+                    this.discard();
+                }
+            });
+
+            bus.$on("save", (num) => {
+                if(this.number == num) {
+                    this.save();
+                }
+            });
+
+            bus.$on("lock", (num, state) => {
+                if(this.number == num) {
+                    this.toggleLock(state);
+                }
+            });
+        }
+    },
+
     filters: {
         timeFmt: function (ms) {
             if (!ms)
@@ -165,11 +197,13 @@ Vue.component('sequence', {
             return stime;
         }
     },
+
     watch: {
         editingText: function(nText) {
             sessionStorage.setItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id, nText);
         }
     },
+
     computed: {
         canEditTimes: function() {
             return canEditTimes;
@@ -250,6 +284,7 @@ Vue.component('sequence', {
             return 0;
         }
     },
+
     methods: {
         openSequence: function() {
             if(this.editing || this.history || this.openByOther) {
@@ -361,14 +396,16 @@ Vue.component('sequence', {
             sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
         },
 
-        toggleLock: function() {
+        toggleLock: function(newState) {
             if(!canLock) {
                 return false;
             }
 
-            let preLock = this.locked;
-            sub.lockSeq(this.id, !this.locked);
+            if(this.locked == newState) {
+                return false; // Nothing to do
+            }
 
+            sub.lockSeq(this.id, newState);
             $.ajax({
                 url: '/subtitles/'+subID+'/translate/lock',
                 method: 'POST',
@@ -377,8 +414,8 @@ Vue.component('sequence', {
                 }
             }).fail(() => {
                 // Revert, the request failed
-                sub.lockSeq(this.id, preLock);
-                alertify.error("Error al intentar cambiar el estado de esta secuencia");
+                sub.lockSeq(this.id, !newState);
+                alertify.error("Error al intentar cambiar el estado de bloqueo de #"+this.number);
             });
         },
 
@@ -467,7 +504,7 @@ Vue.component('sequence', {
                     /**
                      * If next char is alphanumeric or yet another separator and cur char is an opening separator, continue
                      */
-                    if(nextChar.match(/[\w¿¡"']/) && curChar.match(/[¿¡"']/)) {
+                    if(nextChar && nextChar.match(/[\w¿¡"']/) && curChar.match(/[¿¡"']/)) {
                         continue;
                     }
 
@@ -598,7 +635,8 @@ let translation = new Vue({
         loaded: false,
         loadedOnce: false,
         newComment: '',
-        canReleaseOpenLock: canReleaseOpenLock
+        canReleaseOpenLock: canReleaseOpenLock,
+        hasTools: me.roles.includes('ROLE_TH')
     },
     computed: {
         lastPage: function() {
@@ -737,7 +775,39 @@ let translation = new Vue({
                     this.comments.splice(cidx, 0, c);
                 }
             }.bind(this));
-        }
+        },
+
+        openPage: function() {
+            this.pageSequences.forEach(function(s) {
+                if(!s.openInfo) {
+                    bus.$emit("open", s.number);
+                }
+            });
+        },
+
+        closePage: function() {
+            this.pageSequences.forEach(function(s) {
+                if(s.openInfo && s.openInfo.by == me.id) {
+                    bus.$emit("close", s.number);
+                }
+            });
+        },
+
+        savePage: function() {
+            this.pageSequences.forEach(function(s) {
+                if(s.openInfo && s.openInfo.by == me.id) {
+                    bus.$emit("save", s.number);
+                }
+            });
+        },
+
+        lockPage: function(state) {
+            this.pageSequences.forEach(function(s) {
+                if(!s.openInfo) {
+                    bus.$emit("lock", s.number, state);
+                }
+            });
+        },
     }
 });
 
@@ -752,7 +822,7 @@ ws.onerror = (e) => { sub.wsError(e) };
 
 // Absorb and block default Ctrl+S behaviour
 $(document).bind('keydown', function(e) {
-  if(e.ctrlKey && (e.which == 83)) {
-    e.preventDefault();
-  }
+    if(e.ctrlKey && (e.which == 83)) {
+        e.preventDefault();
+    }
 });

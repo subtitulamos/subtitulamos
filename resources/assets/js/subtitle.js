@@ -184,7 +184,7 @@ Subtitle.prototype.openSeq = function(seqNum, by, openLockID) {
     this.state.sequences[idx].openInfo = openInfo;
 }
 
-Subtitle.prototype.closeSeq = function(seqNum, by) {
+Subtitle.prototype.closeSeq = function(seqNum) {
     let idx = this.findSeqIdxByNum(seqNum);
     if(idx < 0) {
         console.log("Could not close sequence "+seqNum+" (not found)");
