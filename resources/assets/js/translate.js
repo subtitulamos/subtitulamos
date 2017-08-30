@@ -651,7 +651,8 @@ let translation = new Vue({
         loadedOnce: false,
         newComment: '',
         canReleaseOpenLock: canReleaseOpenLock,
-        hasTools: me.roles.includes('ROLE_TH')
+        hasTools: hasTools,
+        hasAdvancedTools: hasAdvancedTools
     },
     computed: {
         lastPage: function() {
