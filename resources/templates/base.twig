@@ -35,7 +35,7 @@
 				<span></span> <div id="close_notification">(OK!)</div>
 			</div>
 			<div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
-			<div id="login_form" class="hidden">
+			<form id="login_form" class="hidden">
 				<div id='login-errors'>
 					<ul></ul>
 				</div>
@@ -43,19 +43,22 @@
 				<table>
 					<tr class="registry_line">
 						<td class="form_text">Usuario o correo electrónico</td>
-						<td> <input id="login_username" type="text" placeholder="" class="form_input"></td>
+						<td> <input id="login_username" type="text" class="form_input" required></td>
 					</tr>
 					<tr class="registry_line">
 						<td class="form_text">Contraseña</td>
-						<td> <input type="password" id="login_password" placeholder="" class="form_input"></td>
+						<td> <input type="password" id="login_password" class="form_input" required></td>
 					</tr>
 					<tr class="registry_line">
 						<td class="form_text"><input id="login_remember_me" type="checkbox"></td>
 						<td><div id="remember_me">Recordarme en este equipo</div></td>
 					</tr>
 				</table>
-				<div id="login_button"><button class="button sign_button" tabindex="0">INICIAR SESIÓN</button></div>
-			</div>
+				<div id="login_button">
+					<button class="button sign_button" type="submit">INICIAR SESIÓN</button>
+                    <i class="fa fa-spinner fa-pulse fa-3x fa-fw hidden"></i>
+				</div>
+			</form>
 			<div id="register_form" class="hidden">
 				<form id="fregister" action="/register" method="POST">
 					<div id='reg-errors'>

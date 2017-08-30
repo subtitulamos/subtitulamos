@@ -1,3 +1,4 @@
+//import Vue from 'vue';
 import $ from 'jquery';
 
 export function dateDiff(a, b) {
@@ -133,21 +134,41 @@ function cleanShowName(name) {
 function doLogin(e) {
 	e.preventDefault();
 
+	let $loginErrors = $("#login-errors");
 	let $notificationBar = $("#display_notification");
+
+	let username = $("#login_username").val().trim();
+	let pwd = $("#login_password").val();
+
+	if(!username.length || !pwd.length) {
+		$loginErrors.html("Ha ocurrido un error al intentar acceder a la web:");
+		$loginErrors.append("<ul><li>Ni el usuario ni la contraseña pueden estar vacíos</li></ul>");
+		return;
+	}
+
+	let $btnWrapper = $("#login_button");
+	let $loginBtn = $btnWrapper.find("button");
+	let $loginLoading = $btnWrapper.find("i");
+
+	$loginBtn.toggleClass("hidden", true);
+	$loginLoading.toggleClass("hidden", false);
+	$loginErrors.html(""); // Clear previous errors, just so it's clearer they're new
 
 	// Login the user via ajax
 	$.ajax({
 		url: "/login",
 		method: "post",
 		data: {
-			username: $("#login_username").val(),
-			password: $("#login_password").val(),
+			username: username,
+			password: pwd,
 			remember: $("#login_remember_me").is(":checked")
 		}
 	}).done(function(data) {
 		window.location.reload(true);
 	}).fail(function(data) {
-		let $loginErrors = $("#login-errors");
+		$loginBtn.toggleClass("hidden", false);
+		$loginLoading.toggleClass("hidden", true);
+
 		try {
 			$loginErrors.html("Ha ocurrido un error al intentar acceder a la web:");
 			$loginErrors.append("<ul>");
@@ -156,7 +177,6 @@ function doLogin(e) {
 			Object.keys(d).forEach(function(k) {
 				$errList.append("<li>"+d[k]+"</li>");
 			}, this);
-
 		} catch (e) {
 			$loginErrors.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
 		}

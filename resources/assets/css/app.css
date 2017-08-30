@@ -221,6 +221,10 @@ input.nospinner[type=number] {
    margin-right: auto;
 }
 
+#login_button i {
+    font-size: 1.8em;
+}
+
 .button {
    font-size: 10pt;
    letter-spacing: 0.8px;
