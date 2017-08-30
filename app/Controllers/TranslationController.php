@@ -396,6 +396,17 @@ class TranslationController
             return $response->withStatus(403);
         }
 
+        // Fetch the latest revision number for this sequence
+        $curRev = $em->createQuery('SELECT MAX(sq.revision) FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num')
+            ->setParameter('sub', $id)
+            ->setParameter('num', $seq->getNumber())
+            ->getSingleScalarResult();
+
+        if ($curRev != $seq->getRevision()) {
+            // Can't edit an outdated revision!
+            return $response->withStatus(400);
+        }
+
         // Update last edition time of parent sub
         $seq->getSubtitle()->setEditTime(new \DateTime());
         $seq->getSubtitle()->setLastEditedBy($auth->getUser());
