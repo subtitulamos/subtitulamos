@@ -124,24 +124,26 @@
         </comment>
     </div>
 </div>
+{% endblock %}
 
-<script type="text/javascript">
-    var subID = {{ sub.id }};
-    var availSecondaryLangs = {{ avail_secondary_langs|raw }};
-    var me = {
-        id: {{ auth.user.id }},
-        username: "{{ auth.user.username }}",
-        roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
-    };
-    var wsAuthToken = "{{ wstok }}";
+{% block scripts %}
+    <script type="text/javascript">
+        var subID = {{ sub.id }};
+        var availSecondaryLangs = {{ avail_secondary_langs|raw }};
+        var me = {
+            id: {{ auth.user.id }},
+            username: "{{ auth.user.username }}",
+            roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
+        };
+        var wsAuthToken = "{{ wstok }}";
 
-    // Permissions
-    var hasTools = me.roles.includes('ROLE_JUNIOR_TT');
-    var hasAdvancedTools = me.roles.includes('ROLE_TT');
-    var canLock = me.roles.includes('ROLE_TT');
-    var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
-    var canDeleteComments = me.roles.includes('ROLE_MOD');
-    var canEditTimes = me.roles.includes('ROLE_SENIOR_TT');
-</script>
-{{ assets.js('translate') }}
+        // Permissions
+        var hasTools = me.roles.includes('ROLE_JUNIOR_TT');
+        var hasAdvancedTools = me.roles.includes('ROLE_TT');
+        var canLock = me.roles.includes('ROLE_TT');
+        var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
+        var canDeleteComments = me.roles.includes('ROLE_MOD');
+        var canEditTimes = me.roles.includes('ROLE_SENIOR_TT');
+    </script>
+    {{ assets.js('translate') }}
 {% endblock %}
