@@ -173,6 +173,12 @@ Vue.component('sequence', {
                     this.toggleLock(state);
                 }
             });
+
+            bus.$on("fix", (num) => {
+                if(this.number == num) {
+                    this.fix();
+                }
+            });
         }
     },
 
@@ -822,6 +828,14 @@ let translation = new Vue({
             this.pageSequences.forEach(function(s) {
                 if(!s.openInfo) {
                     bus.$emit("lock", s.number, state);
+                }
+            });
+        },
+
+        fixPage: function() {
+            this.pageSequences.forEach(function(s) {
+                if(s.openInfo && s.openInfo.by == me.id) {
+                    bus.$emit("fix", s.number);
                 }
             });
         },
