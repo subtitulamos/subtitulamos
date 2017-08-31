@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Código de la plataforma de subtítulos subtitulamos.tv",
   "dependencies": {
+    "concurrently": "^3.5.0",
     "cssnano": "^4.0.0-rc.2",
     "dateformat": "^2.0.0",
     "jquery": "^3.2.1",
@@ -36,7 +37,10 @@
     "prod:js": "npm run build:js -- -p",
     "prod:css": "npm run build:css -- --env production",
     "watch:js": "npm run build:js -- --watch",
-    "watch:css": "npm run build:css -- --watch"
+    "watch:css": "npm run build:css -- --watch",
+    "build": "npm run build:js && npm run build:css",
+    "prod": "npm run prod:js && npm run prod:css",
+    "watch": "concurrently \"npm run watch:js\" \"npm run watch:css\""
   },
   "author": "subtitulamos",
   "license": "AGPL-3.0",
