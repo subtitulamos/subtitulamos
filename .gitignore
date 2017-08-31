@@ -8,6 +8,6 @@ tmp/
 *~
 resources/assets/rev-manifest.json
 resources/assets/manifest.json
-public/css/*.css
+public/css/*.css*
 public/js/*.js
 .php_cs.cache

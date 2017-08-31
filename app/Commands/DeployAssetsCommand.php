@@ -16,16 +16,16 @@ class DeployAssetsCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('app:assets:deploy')
-             ->setDescription('Deploys assets and generates an updated rev-manifest.json')
-             ->setHelp('This command allows you to copy and deploy assets to the public folder,'.
-                       'generating a mapping between asset names and their public folder at rev-manifest.json');
+        $this->setName('app:assets:deploy-css')
+            ->setDescription('Deploys css assets and generates an updated css-manifest.json')
+            ->setHelp('This command allows you to copy and deploy assets to the public folder,' .
+            'generating a mapping between asset names and their public folder at rev-manifest.json');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $assetManager = new AssetManager();
-        $assetManager->redeployAssets();
+        $assetManager->redeployCSS();
 
         $output->writeln('Deploy finished');
     }

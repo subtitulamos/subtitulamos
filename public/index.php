@@ -76,8 +76,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 $twigEnv->addFunction(new Twig_Function('feature_on', 'feature_on'));
 
                 $assetMgr = $c->get('App\Services\AssetManager');
-                $twigEnv->addFunction(new Twig_Function('asset_versioned_name', function ($name) use (&$assetMgr) {
-                    return $assetMgr->getAssetVersionedName($name);
+                $twigEnv->addFunction(new Twig_Function('css_versioned_name', function ($name) use (&$assetMgr) {
+                    return $assetMgr->getCssVersionedName($name);
                 }));
                 $twigEnv->addFunction(new Twig_Function('webpack_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getWebpackVersionedName($name);

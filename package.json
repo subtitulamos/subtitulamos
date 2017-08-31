@@ -1,12 +1,18 @@
 {
   "name": "subtitulamos",
   "version": "1.0.0",
-  "description": "Este es el código de la plataforma de subtítulos subtitulamos.tv, actualmente en construcción.",
+  "description": "Código de la plataforma de subtítulos subtitulamos.tv",
   "dependencies": {
+    "cssnano": "^4.0.0-rc.2",
     "dateformat": "^2.0.0",
     "jquery": "^3.2.1",
+    "postcss-cli": "^4.1.0",
+    "postcss-cssnext": "^3.0.2",
+    "precss": "^2.0.0",
     "reconnecting-websocket": "^3.2.1",
     "sprintf-js": "^1.1.1",
+    "stylelint": "^8.0.0",
+    "stylelint-config-standard": "^17.0.0",
     "timeago.js": "^3.0.2",
     "vue": "^2.4.2"
   },
@@ -26,9 +32,12 @@
     "url": "git+https://github.com/subtitulamos/subtitulamos.git"
   },
   "scripts": {
-    "build": "webpack",
-    "build-prod": "webpack -p",
-    "watch": "webpack --watch"
+    "build:js": "webpack",
+    "build:css": "postcss resources/assets/css/*.css --config postcss.config.js --dir public/css",
+    "prod:js": "npm run build:js -- -p",
+    "prod:css": "npm run build:css -- --env production",
+    "watch:js": "npm run build:js -- --watch",
+    "watch:css": "npm run build:css -- --watch"
   },
   "author": "subtitulamos",
   "license": "AGPL-3.0",

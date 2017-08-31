@@ -10,11 +10,11 @@ namespace App\Services;
 class AssetManager
 {
     /**
-     * Manifest associative array with the asset-version bindings
+     * Manifest associative array with thecss  asset-version bindings
      *
      * @var string
      */
-    private $manifest = [];
+    private $cssManifest = [];
 
     /**
      * Webpack-generated associative array with the asset-version bindings
@@ -28,34 +28,29 @@ class AssetManager
      * Path of the asset directory
      * @var string
      */
-    public const ASSET_PATH = __DIR__.'/../../resources/assets';
+    public const ASSET_PATH = __DIR__ . '/../../resources/assets';
 
     /**
      * Path of the manifest file
      * @var string
      */
-    public const MANIFEST_PATH = self::ASSET_PATH.'/rev-manifest.json';
+    public const CSS_MANIFEST_PATH = self::ASSET_PATH . '/css-manifest.json';
 
     /**
      * Path of the manifest file
      * @var string
      */
-    public const WEBPACK_MANIFEST_PATH = self::ASSET_PATH.'/manifest.json';
+    public const WEBPACK_MANIFEST_PATH = self::ASSET_PATH . '/manifest.json';
 
     /**
      * Path of the deploy directory
      * @var string
      */
-    public const DEPLOY_PATH = __DIR__.'/../../public';
+    public const DEPLOY_PATH = __DIR__ . '/../../public';
 
     public function __construct()
     {
         $this->loadManifest();
-
-        if (DEBUG === true) {
-            // Update manifest & copy files if needed
-            $this->redeployAssets();
-        }
     }
 
     /**
@@ -65,9 +60,9 @@ class AssetManager
      */
     public function loadManifest()
     {
-        $contents = @\file_get_contents(self::MANIFEST_PATH);
+        $contents = @\file_get_contents(self::CSS_MANIFEST_PATH);
         if (!empty($contents)) {
-            $this->manifest = \json_decode($contents, true);
+            $this->cssManifest = \json_decode($contents, true);
         }
 
         $contents = @\file_get_contents(self::WEBPACK_MANIFEST_PATH);
@@ -77,67 +72,40 @@ class AssetManager
     }
 
     /**
-     * Undocumented function
-     *
      * @return void
      */
-    public function redeployAssets()
+    public function redeployCSS()
     {
-        $allowedExts = ['css'];
-        $folders = ['css'];
-
         $manifest = [];
-        foreach ($folders as $folder) {
-            if (DEBUG !== true) {
-                // Clear files on the deploy directory if we're rebuilding on production
-                foreach (new \DirectoryIterator(self::DEPLOY_PATH.'/'.$folder) as $fileInfo) {
-                    if (!$fileInfo->isDot() && $fileInfo->isFile() && \in_array($fileInfo->getExtension(), $allowedExts)) {
-                        unlink($fileInfo->getPathname());
-                    }
-                }
+        foreach (new \DirectoryIterator(self::ASSET_PATH . '/css') as $fileInfo) {
+            $ext = $fileInfo->getExtension();
+
+            if ($fileInfo->isDot() || !$fileInfo->isFile() || !\in_array($fileInfo->getExtension(), ['css'])) {
+                continue;
             }
 
-            foreach (new \DirectoryIterator(self::ASSET_PATH.'/'.$folder) as $fileInfo) {
-                $ext = $fileInfo->getExtension();
+            $fileName = $fileInfo->getFilename();
+            $fullPath = $fileInfo->getPathname();
+            $ver = substr(hash_file('md5', $fullPath), 0, 8);
 
-                if ($fileInfo->isDot() || !$fileInfo->isFile() || !\in_array($fileInfo->getExtension(), $allowedExts)) {
-                    continue;
-                }
+            $newName = str_replace('.' . $ext, '', $fileName) . '-' . $ver . '.' . $ext;
+            \copy(self::DEPLOY_PATH . '/css/' . $fileName, self::DEPLOY_PATH . '/css/' . $newName);
 
-                $fileName = $fileInfo->getFilename();
-                $filePath = $fileInfo->getPathname();
-
-                if (DEBUG !== true) {
-                    $ver = \shell_exec('git log -n 1 --pretty=format:%h -- '.$filePath);
-                    if (!$ver) {
-                        $ver = '00000';
-                    }
-                } else {
-                    $ver = 'local';
-                }
-
-                $manifestPath = $folder.'/'.$fileName;
-                $versionedPath = $folder.'/'.str_replace('.'.$ext, '', $fileName).'-'.$ver.'.'.$ext;
-                if (DEBUG !== true || !isset($manifest[$manifestPath]) || $manifest[$manifestPath] != $ver) {
-                    $targetPath = self::DEPLOY_PATH.'/'.$versionedPath;
-                    \copy($filePath, $targetPath);
-                }
-
-                if (DEBUG === true) {
-                    $versionedPath .= '?v='.time();
-                }
-
-                $manifest[$manifestPath] = $versionedPath;
-            }
+            $manifest[$fileName] = 'css/' . $newName;
         }
 
-        \file_put_contents(self::MANIFEST_PATH, \json_encode($manifest));
-        $this->manifest = $manifest;
+        \file_put_contents(self::CSS_MANIFEST_PATH, \json_encode($manifest));
+        $this->cssManifest = $manifest;
     }
 
-    public function getAssetVersionedName($assetName)
+    public function getCssVersionedName($assetName)
     {
-        return isset($this->manifest[$assetName]) ? $this->manifest[$assetName] : '???';
+        if (DEBUG === true) {
+            $v = feature_on('DEBUG_CSS_NOCACHE') !== true ? substr(hash_file('md5', self::ASSET_PATH . '/css/' . $assetName), 0, 8) : time();
+            return 'css/' . $assetName . '?v=' . $v;
+        }
+
+        return isset($this->cssManifest[$assetName]) ? $this->cssManifest[$assetName] : 'err';
     }
 
     public function getWebpackVersionedName($assetName)
