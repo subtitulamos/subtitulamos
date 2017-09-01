@@ -658,8 +658,7 @@ let translation = new Vue({
         loadedOnce: false,
         newComment: '',
         canReleaseOpenLock: canReleaseOpenLock,
-        hasTools: hasTools,
-        hasAdvancedTools: hasAdvancedTools
+        hasTools: hasTools
     },
     computed: {
         lastPage: function() {
