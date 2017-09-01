@@ -136,7 +136,7 @@ class SearchController
 
         $shows = [];
 
-        if (strlen($q) > 3) {
+        if (mb_strlen($q) > 3) {
             $episode = $season = -1;
 
             if (\preg_match('/(\d+)x(\d+)?|S(\d+)E?(\d+)?/i', $q, $matches)) {
@@ -144,14 +144,13 @@ class SearchController
                 $season = isset($matches[1]) ? (int)$matches[1] : (isset($matches[3]) ? (int)$matches[3] : -1);
                 $episode = isset($matches[2]) ? (int)$matches[2] : (isset($matches[4]) ? (int)$matches[4] : -1);
                 $showName = trim(str_replace($matches[0], '', $q));
-            }
-            else {
+            } else {
                 // No episode in search
                 $showName = $q;
             }
 
             $r = $client->search([
-                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
+                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
                 'type' => 'show',
                 'body' => [
                     'query' => [

@@ -18,7 +18,7 @@ class DeployAssetsCommand extends Command
     {
         $this->setName('app:assets:deploy-css')
             ->setDescription('Deploys css assets and generates an updated css-manifest.json')
-            ->setHelp('This command allows you to copy and deploy assets to the public folder,' .
+            ->setHelp('This command allows you to copy and deploy assets to the public folder,'.
             'generating a mapping between asset names and their public folder at rev-manifest.json');
     }
 

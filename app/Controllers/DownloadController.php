@@ -65,7 +65,7 @@ class DownloadController
             }
 
             $file .= $text;
-            if (substr($text, strlen($text) - 1) != "\n") {
+            if (mb_substr($text, mb_strlen($text) - 1) != "\n") {
                 $file .= "\r\n"; // Add a linebreak if there's none in this last line
             }
 

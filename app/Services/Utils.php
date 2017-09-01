@@ -12,7 +12,7 @@ class Utils
     public static function generateRandomString(int $length, $charPool = 'abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-')
     {
         $tok = '';
-        $max = strlen($charPool);
+        $max = mb_strlen($charPool);
 
         while ($length--) {
             $tok .= $charPool[mt_rand(0, $max - 1)];
