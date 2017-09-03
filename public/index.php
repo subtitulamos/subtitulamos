@@ -105,6 +105,7 @@ $app->get('/search/popular', ['\App\Controllers\SearchController', 'listPopular'
 $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUploads']);
 $app->get('/search/modified', ['\App\Controllers\SearchController', 'listRecentChanged']);
 $app->get('/search/completed', ['\App\Controllers\SearchController', 'listRecentCompleted']);
+$app->get('/search/resyncs', ['\App\Controllers\SearchController', 'listRecentResyncs']);
 $app->get('/search/paused', ['\App\Controllers\SearchController', 'listPaused'])->add($needsRoles('ROLE_TT'));
 
 $app->post('/subtitles/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRoles('ROLE_USER'));

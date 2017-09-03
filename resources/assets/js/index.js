@@ -165,6 +165,10 @@ $(".category_navigation_item").on("click", function() {
         case "paused":
             target = "paused";
             break;
+
+        case "last-resynced":
+            target = "resyncs";
+            break;
     }
 
     if(!target) // Nothing to do
