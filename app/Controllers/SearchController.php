@@ -145,7 +145,7 @@ class SearchController
                 'id' => $ep->getId(),
                 'name' => $fullName,
                 'slug' => $slugify->slugify($fullName),
-                'time' => $sub->getCompleteTime() ? $sub->getCompleteTime()->format(\DateTime::ATOM) : '-',
+                'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
                 'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())).' - '.$sub->getVersion()->getName(),
                 'hide_details' => $hideDetails
             ];
