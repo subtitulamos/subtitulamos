@@ -306,16 +306,6 @@ class Translation
      */
     public static function cleanText(string $text, bool $allowSpecialTags)
     {
-        // Remove multiple spaces concatenated / trim each line
-        $lines = explode("\n", $text);
-        foreach ($lines as &$line) {
-            $line = \mb_substr(trim(preg_replace('/ +/', ' ', $line)), 0, 40);
-        }
-
-        // Make sure that we only have two lines, and convert them back to string
-        $lines = \array_slice($lines, 0, 2);
-        $text = implode("\n", $lines);
-
         if ($allowSpecialTags) {
             $text = strip_tags($text, '<font>');
 
@@ -349,6 +339,7 @@ class Translation
         ];
 
         foreach ($pregReplacements as $k => $v) {
+            // FIXME: This won't work with regex as is implied by the var name
             $text = str_replace($k, $v, $text);
         }
 
@@ -357,6 +348,16 @@ class Translation
             // At least one space
             $text = ' ';
         }
+
+        // Remove multiple spaces concatenated / trim each line
+        $lines = explode("\n", $text);
+        foreach ($lines as &$line) {
+            $line = \mb_substr(trim(preg_replace('/ +/', ' ', $line)), 0, 40);
+        }
+
+        // Make sure that we only have two lines, and convert them back to string
+        $lines = \array_slice($lines, 0, 2);
+        $text = implode("\n", $lines);
 
         return $text;
     }
