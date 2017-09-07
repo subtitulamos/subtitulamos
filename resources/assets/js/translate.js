@@ -5,6 +5,7 @@ import './vue/comment.js';
 import Subtitle from './subtitle.js';
 import ReconnectingWebsocket from 'reconnecting-websocket';
 import dateformat from 'dateformat';
+import accentFold from './accent_fold.js';
 
 let bus = new Vue();
 
@@ -651,7 +652,8 @@ let translation = new Vue({
         filters: {
             onlyUntranslated: false,
             author: 0,
-            text: ''
+            text: '',
+            preciseTextMatching: false
         },
         comments: [],
         loaded: false,
@@ -692,8 +694,15 @@ let translation = new Vue({
 
                 if(this.filters.text != '') {
                     let textFilterFn = (seq) => {
-                        let match = this.filters.text.toLowerCase();
-                        return seq.text.toLowerCase().includes(match) || (seq.secondaryText && seq.secondaryText.toLowerCase().includes(match));
+                        let textToMatch = this.filters.text.toLocaleLowerCase();
+
+                        if(this.filters.preciseTextMatching) {
+                            return seq.text.toLocaleLowerCase().includes(textToMatch) || (seq.secondary_text && seq.secondary_text.toLocaleLowerCase().includes(textToMatch));
+                        }
+
+                        // We're not being precise about diacritics, we're doing simple matching
+                        textToMatch = accentFold(textToMatch);
+                        return accentFold(seq.text.toLocaleLowerCase()).includes(textToMatch) || (seq.secondary_text && accentFold(seq.secondary_text.toLocaleLowerCase()).includes(textToMatch));
                     };
 
                     if(!textFilterFn(seq) && (!seq.history || !seq.history.some(textFilterFn))) {
@@ -746,6 +755,11 @@ let translation = new Vue({
         toggleUntranslatedFilter: function() {
             this.curPage = 1;
             this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
+        },
+
+        togglePreciseTextMatching: function() {
+            this.curPage = 1;
+            this.filters.preciseTextMatching = !this.filters.preciseTextMatching;
         },
 
         updateAuthorFilter: function(e) {

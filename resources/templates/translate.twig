@@ -29,6 +29,10 @@
 
             <div id='filters'>
                 Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
+                <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
+                    :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
+                        <i class="fa fa-bullseye" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
+                </span>
                 &nbsp;&nbsp;-&nbsp;&nbsp;
                 Filtrar por autor:
                 <select id='author-filter' @change="updateAuthorFilter">
