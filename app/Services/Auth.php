@@ -116,8 +116,8 @@ class Auth
         }
 
         $token = ($setRememberToken) ? $this->remember($user) : '';
-        $this->user = $user;
         $this->em->flush();
+        $this->user = $user;
 
         return $token;
     }
