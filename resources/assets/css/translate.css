@@ -469,6 +469,11 @@
     .bullseye-wrapper {
         color: gray;
         margin-left: -20px;
+        cursor: pointer;
+    }
+
+    .bullseye-wrapper:hover i {
+        text-shadow: 2px 2px 2px #afafaf;
     }
 
     .bullseye-active {
