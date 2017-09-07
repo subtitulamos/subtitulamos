@@ -368,7 +368,7 @@ class TranslationController
         $canChangeTimes = $auth->hasRole('ROLE_MOD');
 
         $seqID = $request->getParsedBodyParam('seqID', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ''), false);
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ''));
         $nStartTime = $request->getParsedBodyParam('tstart', 0);
         $nEndTime = $request->getParsedBodyParam('tend', 0);
 
@@ -446,7 +446,7 @@ class TranslationController
         $canChangeTimes = $auth->hasRole('ROLE_MOD');
 
         $seqNum = $request->getParsedBodyParam('number', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ''), false);
+        $text = Translation::cleanText($request->getParsedBodyParam('text', ''));
         $nStartTime = $request->getParsedBodyParam('tstart', 0);
         $nEndTime = $request->getParsedBodyParam('tend', 0);
 

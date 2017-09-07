@@ -60,7 +60,10 @@ class UploadResyncController
         $uploadList = $request->getUploadedFiles();
         if (isset($uploadList['sub'])) {
             $srtParser = new SrtParser();
-            $srtParser->parseFile($uploadList['sub']->file, false);
+            $srtParser->parseFile($uploadList['sub']->file, [
+                'allow_long_lines' => false,
+                'allow_special_tags' => false
+            ]);
             if (!$srtParser->isValid()) {
                 $errors[] = $srtParser->getErrorDesc();
             }

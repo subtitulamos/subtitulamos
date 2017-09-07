@@ -301,11 +301,14 @@ class Translation
      * unplayable on older devices or less standard-compliant ones
      *
      * @param string $text
-     * @param bool $allowSpecialTags
+     * @param array $opts
      * @return void
      */
-    public static function cleanText(string $text, bool $allowSpecialTags)
+    public static function cleanText(string $text, array $opts = [])
     {
+        $allowSpecialTags = isset($opts['allow_special_tags']) && $opts['allow_special_tags'] === true;
+        $allowLongLines = isset($opts['allow_long_lines']) && $opts['allow_long_lines'] === true;
+
         if ($allowSpecialTags) {
             $text = strip_tags($text, '<font>');
 
@@ -352,7 +355,7 @@ class Translation
         // Remove multiple spaces concatenated / trim each line
         $lines = explode("\n", $text);
         foreach ($lines as &$line) {
-            $line = \mb_substr(trim(preg_replace('/ +/', ' ', $line)), 0, 40);
+            $line = \mb_substr(trim(preg_replace('/ +/', ' ', $line)), 0, $allowLongLines ? 80 : 40);
         }
 
         // Make sure that we only have two lines, and convert them back to string

@@ -53,9 +53,9 @@ class SrtParser
      * Parse reads an srt file and processes it
      *
      * @param string $filename
-     * @return boolean
+     * @return array $seqOpts Options for the cleanText call on each sequence
      */
-    public function parseFile(string $filename, bool $allowSpecialTags)
+    public function parseFile(string $filename, array $seqOpts)
     {
         $flines = file($filename);
 
@@ -73,7 +73,7 @@ class SrtParser
                     // We're done with this line
                     if ($sequence) {
                         if (!empty($sequence->getText())) {
-                            $sequence->setText(Translation::cleanText($sequence->getText(), $allowSpecialTags));
+                            $sequence->setText(Translation::cleanText($sequence->getText(), $seqOpts));
                             $sequence->setNumber(++$this->seqNum);
                             $sequences[] = $sequence;
                         }
