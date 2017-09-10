@@ -11,6 +11,7 @@ use App\Entities\Subtitle;
 use App\Entities\SubtitleComment;
 
 use App\Services\Auth;
+use App\Services\Langs;
 use App\Services\Translation;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
@@ -63,17 +64,19 @@ class SubtitleCommentsController
     {
         $resultsPerPage = 20;
         $page = max(1, (int)$request->getParam('page', 1));
-        $commentQuery = $em->createQuery('SELECT sc, sb, v, e FROM App:SubtitleComment sc JOIN sc.subtitle as sb JOIN sb.version as v JOIN v.episode as e WHERE sc.softDeleted = 0')
+        $commentQuery = $em->createQuery('SELECT sc, sb, v, e FROM App:SubtitleComment sc JOIN sc.subtitle as sb JOIN sb.version as v JOIN v.episode as e WHERE sc.softDeleted = 0 ORDER BY sc.id DESC')
             ->setMaxResults($resultsPerPage)
             ->setFirstResult(($page - 1) * $resultsPerPage)
             ->getResult();
 
         $comments = [];
         foreach ($commentQuery as $commentInfo) {
+            $lang = Langs::getLocalizedName(Langs::getLangCode($commentInfo->getSubtitle()->getLang()));
+
             $comment = \json_decode(\json_encode($commentInfo), true);
-            $comment['episode'] = [
-                'id' => $commentInfo->getSubtitle()->getVersion()->getEpisode()->getId(),
-                'name' => $commentInfo->getSubtitle()->getVersion()->getEpisode()->getFullName()
+            $comment['subtitle'] = [
+                'id' => $commentInfo->getSubtitle()->getId(),
+                'name' => $commentInfo->getSubtitle()->getVersion()->getEpisode()->getFullName().' ['.$lang.']'
             ];
 
             $comments[] = $comment;
