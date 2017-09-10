@@ -9,10 +9,10 @@ namespace App\Controllers;
 
 use App\Entities\Episode;
 use App\Entities\EpisodeComment;
-
 use App\Services\Auth;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
+use Slim\Views\Twig;
 
 class EpisodeCommentsController
 {
@@ -54,6 +54,37 @@ class EpisodeCommentsController
                    ->setParameter('id', $epId)
                    ->getResult();
         return $response->withJson($comments);
+    }
+
+    public function listAll($request, $response, EntityManager $em)
+    {
+        $resultsPerPage = 20;
+        $page = max(1, (int)$request->getParam('page', 1));
+        $commentQuery = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.softDeleted = 0')
+            ->setMaxResults($resultsPerPage)
+            ->setFirstResult(($page - 1) * $resultsPerPage)
+            ->getResult();
+
+        $comments = [];
+        foreach ($commentQuery as $commentInfo) {
+            $comment = \json_decode(\json_encode($commentInfo), true);
+            $comment['episode'] = [
+                'id' => $commentInfo->getEpisode()->getId(),
+                'name' => $commentInfo->getEpisode()->getFullName()
+            ];
+
+            $comments[] = $comment;
+        }
+
+        return $response->withJson($comments);
+    }
+
+    public function viewAll($response, EntityManager $em, Twig $twig)
+    {
+        return $twig->render($response, 'comment_list.twig', [
+            'comment_type_name' => 'capítulos',
+            'comment_type' => 'episodes'
+        ]);
     }
 
     public function delete($epId, $cId, $request, $response, EntityManager $em)

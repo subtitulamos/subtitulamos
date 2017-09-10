@@ -14,6 +14,9 @@ Vue.component('comment', {
                     <li class='comment-time'>
                         {{ date }}
                     </li>
+                    <li class='comment-episode' v-if="episode">
+                        [<a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>]
+                    </li>
                     <li class='comment-actions' v-if="canDelete">
                         <i class="fa fa-times" aria-hidden="true" @click="remove"></i>
                     </li>
@@ -27,7 +30,7 @@ Vue.component('comment', {
         </article>
         `,
 
-    props: ['id', 'user', 'text', 'published-at', 'type'],
+    props: ['id', 'user', 'text', 'episode', 'published-at', 'type'],
     data: function() {
         return {
             date: '',

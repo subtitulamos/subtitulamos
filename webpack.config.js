@@ -14,6 +14,7 @@ module.exports = {
         upload: './resources/assets/js/upload.js',
         translate: './resources/assets/js/translate.js',
         user_settings: './resources/assets/js/user_settings.js',
+        comment_list: './resources/assets/js/comment_list.js',
         user_public_profile: './resources/assets/js/user_public_profile.js',
         vendor: ['jquery', 'vue', 'timeago.js']
     },

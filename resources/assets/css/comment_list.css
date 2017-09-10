@@ -1,0 +1,134 @@
+#comment_content {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #e9e7e7 !important;
+}
+
+a {
+    color: inherit;
+}
+
+#comments {
+    width: 940px;
+    margin: 20px auto 0 auto;
+    background-color: #f0eeee;
+    padding: 20px 30px 20px 30px;
+}
+
+#comments article {
+    border-bottom: rgb(196, 216, 216) 1px solid;
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+#comments header ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#comments header li {
+    display: inline;
+    margin-right: 7px;
+}
+
+#comments .comment-user a {
+    color: #111;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#comments .comment-user a:hover {
+    text-decoration: underline !important;
+}
+
+#comments .comment-time {
+    font-size: 13px;
+}
+
+#comments .comment-episode {
+    font-size: 13px;
+}
+
+#comments .comment-episode a {
+    color: #5966ab;
+    font-weight: bold;
+}
+
+#comments .comment-body {
+    padding: 15px 0 15px 0;
+    font-size: 14px;
+
+    overflow: auto;
+    overflow-wrap: break-word;
+}
+
+#comments .newcomment-box {
+    width: 94%;
+    min-height: 110px;
+    margin: 0 auto;
+}
+
+#comments #new-comment {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+#comments .comment-publish {
+    float: right;
+    background-color: #589aea;
+    color: white;
+    padding: 6px;
+    margin-right: -22px;
+    min-width: 130px;
+    border-radius: 3px;
+}
+
+.comment-refresh {
+    float: right;
+    cursor: pointer;
+}
+
+.comment-actions i {
+    cursor: pointer;
+}
+
+.comment-actions .fa-times {
+    color: #d25959;
+}
+
+.comment-body.role-tt, .comment-body.role-mod {
+    font-weight: bold;
+}
+
+.comment-body.role-tt {
+    color: green;
+}
+
+.comment-body.role-mod {
+    color: #0074ca;
+}
+
+#pages {
+    width: 100%;
+    min-height: 25px;
+    padding: 5px;
+}
+
+#prev-page {
+    font-size: 1.2em;
+    float: left;
+    cursor: pointer;
+}
+
+#next-page {
+    font-size: 1.2em;
+    float: right;
+    cursor: pointer;
+}
+
+#prev-page:hover, #next-page:hover {
+    text-shadow: #868686 0px 0px 2px;
+}

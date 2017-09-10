@@ -201,17 +201,21 @@
 						<a href="https://twitter.com/subtitulamostv" target="_blank">
 							<i class="fa fa-twitter-square" aria-hidden="true"></i>
 						</a>
-						<a href="http://foro.subtitulamos.tv" target="_blank">
+						<a href="https://foro.subtitulamos.tv" target="_blank">
 							<i class="fa fa-pencil-square" aria-hidden="true"></i>
+						</a>
+						<a href="https://github.com/subtitulamos/subtitulamos" target="_blank">
+							<i class="fa fa-github-square" aria-hidden="true"></i>
 						</a>
 					</div>
 				</div>
 
 				<div id="website_navigator">
 					<table>
-					  <tr><td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>	<td></td></tr>
-					  <tr><td>Lo más descargado</td>	<td>Últimas subidas</td></tr>
-					  <tr><td>Últimas traducciones</td>	<td>Últimas ediciones</td> </tr>
+						<tr><td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>	<td></td></tr>
+						{% if auth.has_role('ROLE_TT') %}
+							<tr><td><a href='/comments/episodes'>Comentarios de capítulo</a></td>	<td><a href='/comments/subtitles'>Comentarios de traducción</a></td></tr>
+						{% endif %}
 					</table>
 				</div>
 			</div>

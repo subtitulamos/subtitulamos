@@ -150,6 +150,11 @@ $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'vie
 $app->get('/shows/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
 $app->get('/subtitles/{id}/download', ['\App\Controllers\DownloadController', 'download']);
 
+$app->get('/comments/episodes', ['\App\Controllers\EpisodeCommentsController', 'viewAll'])->add($needsRoles('ROLE_TT'));
+$app->get('/comments/episodes/load', ['\App\Controllers\EpisodeCommentsController', 'listAll'])->add($needsRoles('ROLE_TT'));
+$app->get('/comments/subtitles', ['\App\Controllers\SubtitleCommentsController', 'viewAll'])->add($needsRoles('ROLE_TT'));
+$app->get('/comments/subtitles/load', ['\App\Controllers\SubtitleCommentsController', 'listAll'])->add($needsRoles('ROLE_TT'));
+
 $app->get('/login', ['\App\Controllers\LoginController', 'viewLogin']);
 $app->post('/login', ['\App\Controllers\LoginController', 'login']);
 $app->post('/register', ['\App\Controllers\LoginController', 'register']);
