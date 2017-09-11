@@ -93,11 +93,11 @@
                             {% endif %}
                         {% endif %}
 
-                        {% if can_download %}<a href="/subtitles/{{ sub.id }}/download">{% endif %}
+                        {% if can_download %}<a href="/subtitles/{{ sub.id }}/download" rel="nofollow">{% endif %}
                             <div class="subtitle-action download_subtitle {% if not can_download %}unavailable{% endif %}"><i class="fa fa-download" aria-hidden="true"></i></div>
                         {% if can_download %}</a>{% endif %}
 
-                        <a href="/subtitles/{{ sub.id }}/translate"><div class="subtitle-action edit_subtitle hint--bottom hint--rounded"
+                        <a href="/subtitles/{{ sub.id }}/translate" rel="nofollow"><div class="subtitle-action edit_subtitle hint--bottom hint--rounded"
                                 data-hint="Colaborar en la traducción">
                                 <i class="fa fa-file-text" aria-hidden="true"></i>
                             </div>
@@ -125,7 +125,7 @@
         {% endfor %}
 
         <div id="subtitle-actions">
-            <a href='/episodes/{{ episode.id }}/resync'>
+            <a href='/episodes/{{ episode.id }}/resync' rel="nofollow">
                 <div class="resyncreq_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Subir una resincronización">
                     <i class="fa fa-refresh" aria-hidden="true"></i>
                 </div>
