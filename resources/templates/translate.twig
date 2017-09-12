@@ -18,13 +18,13 @@
 
     <div id="translation-details" :class="{'disabled': !loaded}">
         {% verbatim %}
-            <div id='translation-tools' v-if="hasTools">
+            <div id='translation-tools'>
                 <button type="button" @click="openPage">Abrir todo</button>
                 <button type="button" @click="closePage">Cerrar todo</button>
                 <button type="button" @click="savePage">Guardar todo</button>
                 <button type="button" @click="fixPage">Alinear todo</button>
-                <button type="button" @click="lockPage(true)" class="lock-tool">Bloquear todo</button>
-                <button type="button" @click="lockPage(false)" class="lock-tool">Desbloquear todo</button>
+                <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
+                <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
             </div>
 
             <div id='filters'>
@@ -143,7 +143,7 @@
         var wsAuthToken = "{{ wstok }}";
 
         // Permissions
-        var hasTools = me.roles.includes('ROLE_JUNIOR_TT');
+        var hasAdvancedTools = me.roles.includes('ROLE_JUNIOR_TT');
         var canLock = me.roles.includes('ROLE_JUNIOR_TT');
         var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
         var canDeleteComments = me.roles.includes('ROLE_MOD');
