@@ -44,7 +44,7 @@ class ShowController
         $route = $request->getAttribute('route');
         $season = (int)$route->getArgument('season');
         if (!in_array($season, $seasons)) {
-            $season = $seasons[0];
+            $season = $seasons[count($seasons) - 1];
         }
 
         $show = $em->createQuery('SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC')
