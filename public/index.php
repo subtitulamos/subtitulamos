@@ -171,5 +171,7 @@ $app->post('/users/{userId}/ban', ['\App\Controllers\UserController', 'ban'])->a
 $app->get('/users/{userId}/unban', ['\App\Controllers\UserController', 'unban'])->add($needsRoles('ROLE_MOD'));
 
 $app->get('/dmca', ['\App\Controllers\TermsController', 'viewDMCA']);
+$app->get('/rss', ['\App\Controllers\RSSController', 'viewFeed']);
+
 // Run app
 $app->run();
