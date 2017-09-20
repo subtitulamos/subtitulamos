@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 
 class RSSController
 {
-    public const BASIC_RSS_FORMAT = '<?xml version="1.0" ?>
+    public const BASIC_RSS_FORMAT = '<?xml version="1.0"?>
     <rss version="2.0">
         %s
     </rss>';
@@ -27,6 +27,8 @@ class RSSController
         <title>%s</title>
         <link>%s</link>
         <description>%s</description>
+        <pubDate>%s</pubDate>
+        <guid>%s</guid>
     </item>';
 
     public function viewFeed($response, \Slim\Router $router, EntityManager $em)
@@ -41,8 +43,10 @@ class RSSController
             $items .= sprintf(
                 self::RSS_ITEM_FORMAT,
                 $sub->getVersion()->getEpisode()->getFullName(),
-                $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]),
-                $sub->getVersion()->getName()
+                'https://subtitulamos.tv'.$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]),
+                $sub->getVersion()->getName(),
+                $sub->getCompleteTime()->format(\DateTime::ATOM),
+                'sub-done-'.$sub->getId()
             );
         }
 
@@ -58,6 +62,6 @@ class RSSController
             )
         ));
 
-        return $response;
+        return $response->withHeader('Content-Type', 'application/rss+xml');
     }
 }
