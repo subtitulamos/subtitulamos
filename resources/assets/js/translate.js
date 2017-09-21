@@ -519,7 +519,7 @@ Vue.component('sequence', {
                     /*
                     * If next char is also a separator (unless its a space), we do not split yet.
                     */
-                    if (nextChar && nextChar.match(/[.,;?!\-¿¡"']/)) {
+                    if (nextChar && nextChar.match(/[.,;?!\-]/) || (curChar != " " && nextChar.match(/[¿¡"']/))) {
                         continue;
                     }
 
