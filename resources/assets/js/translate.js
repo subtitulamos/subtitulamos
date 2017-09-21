@@ -302,7 +302,7 @@ Vue.component('sequence', {
 
     methods: {
         openSequence: function() {
-            if(this.editing || this.history || this.openByOther || this.saving) {
+            if(this.editing || this.history || this.openByOther || this.saving || (this.locked && !canReleaseOpenLock)) {
                 return true; // Already / no effect / can't open
             }
 
