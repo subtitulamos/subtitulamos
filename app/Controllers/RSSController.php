@@ -7,6 +7,7 @@
 
 namespace App\Controllers;
 
+use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 
 class RSSController
@@ -31,7 +32,7 @@ class RSSController
         <guid>%s</guid>
     </item>';
 
-    public function viewFeed($response, \Slim\Router $router, EntityManager $em)
+    public function viewFeed($request, $response, \Slim\Router $router, EntityManager $em, SlugifyInterface $slugify)
     {
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
             ->setMaxResults(10)
@@ -40,10 +41,12 @@ class RSSController
 
         $items = '';
         foreach ($subs as $sub) {
+            $fullName = $sub->getVersion()->getEpisode()->getFullName();
+
             $items .= sprintf(
                 self::RSS_ITEM_FORMAT,
-                $sub->getVersion()->getEpisode()->getFullName(),
-                'https://subtitulamos.tv'.$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]),
+                $fullName,
+                'https://'.$request->getServerParam('HTTP_HOST').$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]).'/'.$slugify->slugify($fullName),
                 $sub->getVersion()->getName(),
                 $sub->getCompleteTime()->format(\DateTime::ATOM),
                 'sub-done-'.$sub->getId()
