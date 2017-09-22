@@ -19,6 +19,17 @@ $("a[data-action='delete']").on("click", function(e) {
     });
 });
 
+$(function() {
+    let lastLangVal = localStorage.getItem("last-selected-translation-lang");
+    
+    if(lastLangVal !== null) {
+        $("#translate-to-lang").val(lastLangVal);
+    }
+});
+
+$("#translate-to-lang").on("change", function() {
+    localStorage.setItem("last-selected-translation-lang", $(this).val());
+});
 
 let comments = new Vue({
     el: '#subtitle-comments',
