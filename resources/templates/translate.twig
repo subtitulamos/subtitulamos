@@ -123,8 +123,9 @@
             :key="comment.id"
             :id="comment.id"
             :user="comment.user"
-            :text="comment.text"
+            :base-text="comment.text"
             :published-at="comment.published_at"
+            :create-sequence-jumps="true"
             @remove="remove"
         >
         </comment>

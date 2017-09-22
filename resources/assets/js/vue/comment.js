@@ -31,7 +31,7 @@ Vue.component('comment', {
         </article>
         `,
 
-    props: ['id', 'user', 'text', 'episode', 'subtitle', 'published-at', 'type'],
+    props: ['id', 'user', 'base-text', 'episode', 'subtitle', 'published-at', 'type', 'create-sequence-jumps'],
     data: function() {
         return {
             date: '',
@@ -46,6 +46,15 @@ Vue.component('comment', {
                 'role-tt': isTT && !isMod,
                 'role-mod': isMod,
             }
+        },
+
+        text: function() {
+            let text = this.baseText;
+            if(this.createSequenceJumps) {
+                text = text.replace(/#(\d*)/, "<a href='javascript:void(0)' onclick='translation.jumpToSequence($1)'>$&</a>");
+            }
+
+            return text;
         }
     },
     created: function() {

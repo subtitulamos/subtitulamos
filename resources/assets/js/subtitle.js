@@ -139,9 +139,6 @@ Subtitle.prototype.loadComments = function() {
         method: 'GET'
     }).done((reply) => {
         this.state.comments = reply;
-        this.state.comments.forEach(function(ele) {
-            ele.text = ele.text.replace(/#(\d*)/, "<a href='javascript:void(0)' onclick='translation.jumpToSequence($1)'>$&</a>");
-        });
     }).fail(function() {
         alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
     });

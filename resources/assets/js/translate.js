@@ -876,10 +876,13 @@ window.translation = new Vue({
             setTimeout(() => {
                 let isFirstSequence = Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
                 if(isFirstSequence) {
-                    $('#sequences')[0].scrollIntoView({ behavior: 'smooth' });
+                    $('#sequences')[0].scrollIntoView({ behavior: 'instant' });
                 } else {
-                    $('#sequences').children("#seqn-"+(seqn - 1))[0].scrollIntoView({ behavior: 'smooth' });
+                    $('#sequences').children("#seqn-"+seqn)[0].scrollIntoView({ behavior: 'instant' });
                 }
+
+                let scrolledY = window.scrollY;
+                window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
             }, 250);
         }
     }
