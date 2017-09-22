@@ -59,6 +59,8 @@ let episodeList = new Vue({
 let categoryPage = {};
 let rowsPerPage = 0;
 function search(target, page) {
+    document.getElementById('category_navigation_list').scrollIntoView();
+
     $.ajax({
         url: "/search/"+target,
         method: "get",
