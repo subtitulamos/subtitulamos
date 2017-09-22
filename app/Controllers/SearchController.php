@@ -147,6 +147,7 @@ class SearchController
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
                 'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())).' - '.$sub->getVersion()->getName(),
+                'last_edited_by' => $sub->getVersion()->getUser()->getUsername(),
                 'hide_details' => $hideDetails
             ];
         }
