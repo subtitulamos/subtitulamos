@@ -140,7 +140,9 @@
                         <input type="hidden" name="episode" value="{{ episode.id }}" />
                         <select name="lang" id="translate-to-lang">
                             {% for lid, lcode in LANG_LIST %}
-                                <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+                                {% if langs[LANG_NAMES[lcode]] is not defined %}
+                                    <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
 
