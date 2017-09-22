@@ -54,9 +54,12 @@
 							<div class="ep-title">{{ ep.name }}</div>
 							<div class="ep-add-details">
 								<div class="ep-details">
-									{{ ep.additional_info }}
+									{{ ep.lang }}
 									<span v-if="ep.progress">
 										· <b>{{ ep.progress }}%</b>
+									</span>
+									<span v-if="ep.version">
+										· <b>{{ ep.version }}</b>
 									</span>
 									<span v-if="ep.last_edited_by">
 										· {{ ep.last_edited_by }}

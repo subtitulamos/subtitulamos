@@ -63,7 +63,7 @@ class SearchController
                 'season' => $ep->getSeason(),
                 'episode_num' => $ep->getNumber(),
                 'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
-                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 'hide_details' => $hideDetails
             ];
         }
@@ -90,7 +90,7 @@ class SearchController
                 'name' => $fullName,
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getEditTime()->format(\DateTime::ATOM),
-                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 'last_edited_by' => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : '',
                 'progress' => floor($sub->getProgress()),
                 'hide_details' => $hideDetails
@@ -119,7 +119,7 @@ class SearchController
                 'name' => $fullName,
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getCompleteTime()->format(\DateTime::ATOM),
-                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 'hide_details' => $hideDetails
             ];
         }
@@ -146,7 +146,8 @@ class SearchController
                 'name' => $fullName,
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
-                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())).' - '.$sub->getVersion()->getName(),
+                'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'version' => $sub->getVersion()->getName(),
                 'last_edited_by' => $sub->getVersion()->getUser()->getUsername(),
                 'hide_details' => $hideDetails
             ];
@@ -172,13 +173,14 @@ class SearchController
                 $season = isset($matches[1]) ? (int)$matches[1] : (isset($matches[3]) ? (int)$matches[3] : -1);
                 $episode = isset($matches[2]) ? (int)$matches[2] : (isset($matches[4]) ? (int)$matches[4] : -1);
                 $showName = trim(str_replace($matches[0], '', $q));
-            } else {
+            }
+            else {
                 // No episode in search
                 $showName = $q;
             }
 
             $r = $client->search([
-                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
+                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
                 'type' => 'show',
                 'body' => [
                     'query' => [
@@ -246,7 +248,7 @@ class SearchController
                 'season' => $ep->getSeason(),
                 'episode_num' => $ep->getNumber(),
                 'time' => $sub->getPause()->getStart()->format(\DateTime::ATOM),
-                'additional_info' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 'progress' => floor($sub->getProgress()),
                 'hide_details' => $hideDetails
             ];
