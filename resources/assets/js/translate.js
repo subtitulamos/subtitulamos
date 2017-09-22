@@ -821,6 +821,15 @@ let translation = new Vue({
             });
         },
 
+        openUntranslatedPage: function() {
+            this.pageSequences.forEach(function(s) {
+                console.log(s);
+                if(!s.id) {
+                    bus.$emit("open", s.number);
+                }
+            });
+        },
+
         closePage: function() {
             this.pageSequences.forEach(function(s) {
                 if(s.openInfo && s.openInfo.by == me.id) {
