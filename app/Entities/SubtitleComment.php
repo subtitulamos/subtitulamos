@@ -65,7 +65,7 @@ class SubtitleComment implements \JsonSerializable
             ],
             'published_at' => $this->publishTime->format(\DateTime::ATOM),
             'edited_at' => $this->editTime->format(\DateTime::ATOM),
-            'text' => $this->text
+            'text' => htmlspecialchars($this->text)
         ];
     }
 

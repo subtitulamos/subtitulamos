@@ -60,14 +60,14 @@ let comments = new Vue({
             this.page++;
             loadComments(this.page);
             
-            document.getElementById('comments').scrollIntoView();
+            document.getElementById('comments').scrollIntoView({behavior: 'smooth'});
         },
 
         prevPage: function() {
             this.page--;
             loadComments(this.page);
             
-            document.getElementById('comments').scrollIntoView();
+            document.getElementById('comments').scrollIntoView({behavior: 'smooth'});
         }
     }
 });

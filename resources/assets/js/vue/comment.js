@@ -25,9 +25,7 @@ Vue.component('comment', {
                     </li>
                 </ul>
             </header>
-            <section class='comment-body' :class='bodyClasses'>
-                {{ text }}
-            </section>
+            <section class='comment-body' :class='bodyClasses' v-html="text"></section>
             <section class='comment-actions'>
             </section>
         </article>

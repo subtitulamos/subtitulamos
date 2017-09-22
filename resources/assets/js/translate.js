@@ -64,7 +64,7 @@ Vue.component('seqlock', {
 
 Vue.component('sequence', {
     template: `
-        <tr :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
+        <tr :id="!history ? 'seqn-'+number : null" :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
             <td><span v-if="!history">{{ number }}</span></td>
             <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
             <td class="time" @click="openSequence">
@@ -634,7 +634,7 @@ Vue.component('pagelist', {
         },
 
         toPage: function(page) {
-            document.getElementById('translation').scrollIntoView();
+            document.getElementById('translation').scrollIntoView({behavior: 'smooth'});
             this.$emit("change-page", page);
         }
     }
@@ -644,7 +644,7 @@ Vue.component('pagelist', {
 * Boot
 */
 const SEQS_PER_PAGE = 20;
-let translation = new Vue({
+window.translation = new Vue({
     el: '#translation',
     data: {
         sequences: [],
@@ -861,6 +861,27 @@ let translation = new Vue({
                 }
             });
         },
+
+        jumpToSequence: function(seqn) {
+            let totalPages = Math.ceil(this.sequences.length / SEQS_PER_PAGE);
+            let targetPage = Math.ceil(seqn / SEQS_PER_PAGE);
+
+            if(seqn <= 0 || targetPage > totalPages) {
+                return;
+            }
+
+            this.curPage = targetPage;
+
+            // Wait till render
+            setTimeout(() => {
+                let isFirstSequence = Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
+                if(isFirstSequence) {
+                    $('#sequences')[0].scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    $('#sequences').children("#seqn-"+(seqn - 1))[0].scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 250);
+        }
     }
 });
 
