@@ -7,9 +7,9 @@
 
 namespace App\Controllers;
 
+use App\Services\Langs;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
-use App\Services\Langs;
 
 class RSSController
 {
@@ -47,10 +47,10 @@ class RSSController
             $items .= sprintf(
                 self::RSS_ITEM_FORMAT,
                 $fullName,
-                'https://' . $request->getServerParam('HTTP_HOST') . $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]) . '/' . $slugify->slugify($fullName),
+                'https://'.$request->getServerParam('HTTP_HOST').$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]).'/'.$slugify->slugify($fullName),
                 Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 $sub->getCompleteTime()->format(\DateTime::ATOM),
-                'sub-done-' . $sub->getId()
+                'sub-done-'.$sub->getId()
             );
         }
 
@@ -66,6 +66,6 @@ class RSSController
             )
         ));
 
-        return $response->withHeader('Content-Type', 'application/rss+xml');
+        return $response->withHeader('Content-Type', 'application/rss+xml; charset=utf-8');
     }
 }
