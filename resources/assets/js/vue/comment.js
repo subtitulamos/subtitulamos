@@ -51,7 +51,7 @@ Vue.component('comment', {
         text: function() {
             let text = this.baseText;
             if(this.createSequenceJumps) {
-                text = text.replace(/#(\d*)/, "<a href='javascript:void(0)' onclick='translation.jumpToSequence($1)'>$&</a>");
+                text = text.replace(/#(\d+)/, "<a href='javascript:void(0)' onclick='translation.jumpToSequence($1)'>$&</a>");
             }
 
             return text;
