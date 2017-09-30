@@ -42,7 +42,7 @@ class RSSController
 
         $items = '';
         foreach ($subs as $sub) {
-            $fullName = $sub->getVersion()->getEpisode()->getFullName();
+            $fullName = str_replace('&', 'and', $sub->getVersion()->getEpisode()->getFullName());
 
             $items .= sprintf(
                 self::RSS_ITEM_FORMAT,
