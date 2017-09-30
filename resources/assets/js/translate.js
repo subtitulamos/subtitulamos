@@ -634,7 +634,7 @@ Vue.component('pagelist', {
         },
 
         toPage: function(page) {
-            document.getElementById('translation').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('translation').scrollIntoView();
             this.$emit("change-page", page);
         }
     }

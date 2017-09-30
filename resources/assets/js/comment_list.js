@@ -59,15 +59,15 @@ let comments = new Vue({
         nextPage: function() {
             this.page++;
             loadComments(this.page);
-            
-            document.getElementById('comments').scrollIntoView({behavior: 'smooth'});
+
+            document.getElementById('comments').scrollIntoView();
         },
 
         prevPage: function() {
             this.page--;
             loadComments(this.page);
-            
-            document.getElementById('comments').scrollIntoView({behavior: 'smooth'});
+
+            document.getElementById('comments').scrollIntoView();
         }
     }
 });
