@@ -8,13 +8,21 @@
 
 {% block content %}
 <div id="showlist">
-    <h2>{{ show_name }}</h2>
+    <h2>
+        {{ show_name }}
+
+        {% if auth.has_role('ROLE_MOD') %}
+            <div class='show-actions'>
+                <a href='/shows/{{ id }}/properties'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </div>
+        {% endif %}
+    </h2>
 
     <div id='wrapper'>
         <div>
             <ul class="season-tabs">
                 {% for season in seasons %}
-                    <li><a href="/shows/{{ id }}/{{ season }}" class="{% if cur_season == season %}current{% endif %}">Temporada {{ season }}</a></li>
+                    <li><a href="/shows/{{ id }}/season/{{ season }}" class="{% if cur_season == season %}current{% endif %}">Temporada {{ season }}</a></li>
                 {% endfor %}
             </ul>
         </div>

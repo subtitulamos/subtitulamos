@@ -209,3 +209,21 @@
     background-size: 100% 100%, auto;
     cursor: default;
 }
+
+.show-actions {
+    font-size: 0.7em;
+    display: inline-block;
+    margin-left: 20px;
+
+    i {
+        padding: 5px;
+    }
+
+    [data-action=delete] {
+        color: #ff2157;
+    }
+
+    .fa-pencil {
+        color: #3990af;
+    }
+}

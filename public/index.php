@@ -147,7 +147,9 @@ $app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCom
 $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRoles('ROLE_MOD'));
  */
 $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
-$app->get('/shows/{showId}[/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
+$app->get('/shows/{showId}[/season/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
+$app->get('/shows/{showId}/properties', ['\App\Controllers\ShowController', 'editProperties'])->add($needsRoles('ROLE_MOD'))->setName('show-edit');
+$app->post('/shows/{showId}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRoles('ROLE_MOD'));
 $app->get('/subtitles/{id}/download', ['\App\Controllers\DownloadController', 'download']);
 
 $app->get('/comments/episodes', ['\App\Controllers\EpisodeCommentsController', 'viewAll'])->add($needsRoles('ROLE_TT'));

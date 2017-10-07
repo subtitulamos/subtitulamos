@@ -16,7 +16,7 @@
             </div>
         </a>
         <div id="episode_title">
-            <a href='/shows/{{ episode.show.id }}'>{{ episode.show.name }}</a> <span id="season_number"><a href='/shows/{{ episode.show.id }}/{{ episode.season }}'>{{ episode.season }}</a></span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span>- {{ episode.name }}
+            <a href='/shows/{{ episode.show.id }}'>{{ episode.show.name }}</a> <span id="season_number"><a href='/shows/{{ episode.show.id }}/season/{{ episode.season }}'>{{ episode.season }}</a></span>x<span id="episode_number">{% if episode.number < 10 %}0{% endif %}{{ episode.number }}</span>- {{ episode.name }}
 
             {% if auth.has_role('ROLE_MOD') %}
                 <span class='edit-episode'>

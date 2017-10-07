@@ -91,4 +91,60 @@ class ShowController
             'cur_season' => $season
         ]);
     }
+
+    public function canDeleteShow(\App\Entities\Show $show, EntityManager $em)
+    {
+        $episodeCount = $em->createQuery('SELECT COUNT(e.id) FROM App:Episode e WHERE e.show = :show')
+            ->setParameter('show', $show)
+            ->getSingleScalarResult();
+
+        return $episodeCount == 0;
+    }
+
+    public function editProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
+    {
+        $show = $em->getRepository('App:Show')->find($showId);
+        if (!$show) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $canDelete = $this->canDeleteShow($show, $em);
+        return $twig->render($response, 'edit_show.twig', [
+            'show' => $show,
+            'can_delete' => $canDelete
+        ]);
+    }
+
+    public function saveProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, \Elasticsearch\Client $client, Twig $twig, \Slim\Router $router)
+    {
+        $show = $em->getRepository('App:Show')->find($showId);
+        if (!$show) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        $delParam = $request->getParam('delete');
+
+        $canDelete = $this->canDeleteShow($show, $em);
+        if ($delParam && $delParam == 'on' && $canDelete) {
+            // Delete from search
+            $client->delete([
+                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
+                'type' => 'show',
+                'id' => $show->getId()
+            ]);
+
+            // Remove from DB
+            $em->remove($show);
+            $em->flush();
+            return $response->withHeader('location', '/');
+        }
+
+        $newName = trim(strip_tags($request->getParam('name', '')));
+        if ($newName != $show->getName()) {
+            $show->setName($newName);
+            $em->flush();
+        }
+
+        return $response->withHeader('Location', $router->pathFor('show-edit', ['showId' => $showId]));
+    }
 }
