@@ -382,12 +382,13 @@ Vue.component('sequence', {
             }).done((newID) => {
                 sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
                 this.saving = false;
-            }).fail(() => {
-                alertify.error("Ha ocurrido un error al intentar guardar la secuencia");
-            });
 
-            // Discard editing text cache if saved
-            sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+                // Discard editing text cache if saved
+                sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+            }).fail((_, status) => {
+                alertify.error("Ha ocurrido un error al intentar guardar la secuencia: ("+status+")");
+                this.saving = false;
+            });
         },
 
         discard: function() {
@@ -408,14 +409,16 @@ Vue.component('sequence', {
                     seqNum: this.number
                 }
             })
-            .done(() => { this.saving = false; })
-            .fail(() => {
-                sub.openSeq(this.number, me.id, oLockID);
-                alertify.error("Ha ocurrido un error al intentar cerrar la secuencia");
-            });
+            .done(() => {
+                this.saving = false;
 
-            // Discard text cache if saved
-            sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+                // Discard text cache if saved
+                sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+            })
+            .fail((_, status) => {
+                sub.openSeq(this.number, me.id, oLockID);
+                alertify.error("Ha ocurrido un error al intentar cerrar la secuencia  ("+status+")");
+            });
         },
 
         toggleLock: function(newState) {
