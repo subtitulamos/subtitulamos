@@ -19,7 +19,7 @@ use Slim\Views\Twig;
 
 class SubtitleController
 {
-    public function delete($subId, $request, $response, EntityManager $em, \Slim\Router $router)
+    public function delete($subId, $request, $response, EntityManager $em, \Slim\Router $router, \Elasticsearch\Client $client)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
@@ -29,10 +29,22 @@ class SubtitleController
         $version = $sub->getVersion();
         $episode = $version->getEpisode();
         $epId = $episode->getId();
+        $show = $episode->getShow();
 
         $episodeDeleted = false;
-        if (count($version->getSubtitles()) == 1) {
-            if (count($episode->getVersions()) == 1) {
+        if (count($version->getSubtitles()) == 1) { // If this sub was the last of the episode
+            if (count($episode->getVersions()) == 1) { // If this sub was the last of the version
+                if (count($show->getEpisodes()) == 1) { // If this episode was the last of the show
+                    // Remove show from search completely
+                    $client->delete([
+                        'index' => ELASTICSEARCH_NAMESPACE.'_shows',
+                        'type' => 'show',
+                        'id' => $show->getId()
+                    ]);
+
+                    $em->remove($show);
+                }
+
                 $em->remove($episode);
                 $episodeDeleted = true;
             }
