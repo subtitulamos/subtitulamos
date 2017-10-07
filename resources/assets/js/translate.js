@@ -694,13 +694,14 @@ window.translation = new Vue({
 
                 if(this.filters.text != '') {
                     let textFilterFn = (seq) => {
-                        let textToMatch = this.filters.text.toLocaleLowerCase();
+                        let textToMatch = this.filters.text;
 
                         if(this.filters.preciseTextMatching) {
-                            return seq.text.toLocaleLowerCase().includes(textToMatch) || (seq.secondary_text && seq.secondary_text.toLocaleLowerCase().includes(textToMatch));
+                            return seq.text.includes(textToMatch) || (seq.secondary_text && seq.secondary_text.includes(textToMatch));
                         }
 
                         // We're not being precise about diacritics, we're doing simple matching
+                        textToMatch = textToMatch.toLocaleLowerCase();
                         textToMatch = accentFold(textToMatch);
                         return accentFold(seq.text.toLocaleLowerCase()).includes(textToMatch) || (seq.secondary_text && accentFold(seq.secondary_text.toLocaleLowerCase()).includes(textToMatch));
                     };
