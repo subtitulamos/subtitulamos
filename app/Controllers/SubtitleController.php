@@ -190,12 +190,12 @@ class SubtitleController
         }
 
         if (empty($errors) && $vname != $v->getName()) {
-            $version = $em->createQuery('SELECT v FROM App:Version v WHERE v.episode = :ep AND v.name = :name')
+            $existingVersion = $em->createQuery('SELECT v FROM App:Version v WHERE v.episode = :ep AND v.name = :name')
                 ->setParameter('ep', $v->getEpisode())
                 ->setParameter('name', $vname)
                 ->getOneOrNullResult();
 
-            if ($version) {
+            if ($existingVersion && $existingVersion->getId() != $v->getId()) {
                 $errors[] = 'Ya existe una versión con este nombre';
             }
         }
