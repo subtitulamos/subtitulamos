@@ -474,6 +474,7 @@ Vue.component('sequence', {
 
             let originalText = this.editingText;
             let text = originalText.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
+            text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
 
             let dialogLineCount = (text.match(/(?:^|\s)-/g) || []).length;
             let isDialog = text.match(/^\s*-/g) && dialogLineCount == 2;
@@ -544,31 +545,33 @@ Vue.component('sequence', {
                     }
 
                     if (behind >= ahead) {
-                        let j;
-
                         // <dir>IfSplit counts the number of characters that we'd actually have if we ignore spaces
                         let aheadIfSplit = ahead;
                         if (aheadIfSplit > 0) {
-                            j = i + 1;
+                            let j = i + 1;
                             while (j < text.length) {
-                                if (text[j] != " ")
-                                    break;
+                                if (text[j] != " ") {
+                                    j--;
+                                    continue;
+                                }
 
                                 aheadIfSplit--;
                                 j++;
+                                break;
                             }
                         }
 
                         let behindIfSplit = behind;
                         if (behindIfSplit > 0) {
-                            j = i;
+                            let j = i - 1;
                             while (j >= 0) {
                                 if (text[j] != " ") {
-                                    break;
+                                    j--;
+                                    continue;
                                 }
 
                                 behindIfSplit--;
-                                j--;
+                                break;
                             }
                         }
 
@@ -585,8 +588,8 @@ Vue.component('sequence', {
                         }
 
                         let lines = [];
-                        lines[0] = text.slice(0, splitAt + 1).trim().replace(/\s\s+/, " ");
-                        lines[1] = text.slice(splitAt + 1, text.length).trim().replace(/\s\s+/, " ");
+                        lines[0] = text.slice(0, splitAt + 1).trim();
+                        lines[1] = text.slice(splitAt + 1, text.length).trim();
                         return lines;
                     }
 
@@ -835,7 +838,6 @@ window.translation = new Vue({
 
         openUntranslatedPage: function() {
             this.pageSequences.forEach(function(s) {
-                console.log(s);
                 if(!s.id) {
                     bus.$emit("open", s.number);
                 }
