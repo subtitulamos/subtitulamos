@@ -746,6 +746,14 @@ window.translation = new Vue({
                 if(seq.author && !authors[seq.author]) {
                     authors[seq.author] = sub.getUsername(seq.author);
                 }
+
+                if(seq.history) {
+                    seq.history.forEach((hseq) => {
+                        if(!authors[hseq.author]) {
+                            authors[hseq.author] = sub.getUsername(hseq.author);
+                        }
+                    });
+                }
             });
 
             return authors;
