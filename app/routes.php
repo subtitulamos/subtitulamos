@@ -94,4 +94,8 @@ function addRoutes(&$app, &$entityManager)
 
     $app->get('/dmca', ['\App\Controllers\TermsController', 'viewDMCA']);
     $app->get('/rss', ['\App\Controllers\RSSController', 'viewFeed']);
+
+    $app->get('/panel', ['\App\Controllers\Panel\PanelIndexController', 'view'])->add($needsRole('ROLE_MOD'));
+    $app->get('/panel/alerts', ['\App\Controllers\Panel\PanelAlertsController', 'view'])->setName('alerts')->add($needsRole('ROLE_MOD'));
+    $app->post('/panel/alerts', ['\App\Controllers\Panel\PanelAlertsController', 'saveComment'])->add($needsRole('ROLE_MOD'));
 }

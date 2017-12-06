@@ -18,10 +18,10 @@
 
     <div id='info'>
         <form name="" action="" method="POST">
-            {% for error in auth.flash.errors() %}
+            {% for error in auth.flash.errors %}
                 {{ alerts.show('error', error) }}
             {% endfor %}
-            {% for success in auth.flash.successes() %}
+            {% for success in auth.flash.successes %}
                 {{ alerts.show('success', success) }}
             {% endfor %}
             <div class='form-group'>

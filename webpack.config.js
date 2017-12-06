@@ -16,6 +16,7 @@ module.exports = {
         user_settings: './resources/assets/js/user_settings.js',
         comment_list: './resources/assets/js/comment_list.js',
         user_public_profile: './resources/assets/js/user_public_profile.js',
+        panel: './resources/assets/js/panel/adminlte.js',
         vendor: ['jquery', 'vue', 'timeago.js']
     },
     output: {
