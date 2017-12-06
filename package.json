@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build:js": "webpack",
-    "build:css": "postcss resources/assets/css/*.css --config postcss.config.js --dir public/css",
+    "build:css": "postcss resources/assets/css/**/*.css --config postcss.config.js --dir public/css --base resources/assets/css",
     "prod:js": "npm run build:js -- -p",
     "prod:css": "npm run build:css -- --env production",
     "watch:js": "npm run build:js -- --watch",
