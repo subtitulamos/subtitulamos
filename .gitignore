@@ -7,6 +7,6 @@ tmp/
 /logs/*.log
 *~
 resources/assets/*manifest.json
-public/css/*.css*
-public/js/*.js
+public/css/**/*.css*
+public/js/**/*.js
 .php_cs.cache
