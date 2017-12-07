@@ -495,7 +495,7 @@ Vue.component('pagelist', {
 /**
 * Boot
 */
-const SEQS_PER_PAGE = 2;
+const SEQS_PER_PAGE = 20;
 window.translation = new Vue({
     el: '#translation',
     data: {
