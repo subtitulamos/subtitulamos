@@ -150,37 +150,21 @@ Vue.component('sequence', {
         }
     },
 
+    beforeDestroy: function() {
+        bus.$off("open-"+this.number);
+        bus.$off("close-"+this.number);
+        bus.$off("save-"+this.number);
+        bus.$off("fix-"+this.number);
+        bus.$off("lock-"+this.number);
+    },
+
     created: function() {
         if(!this.history) {
-            bus.$on("open", (num) => {
-                if(this.number == num) {
-                    this.openSequence();
-                }
-            });
-
-            bus.$on("close", (num) => {
-                if(this.number == num) {
-                    this.discard();
-                }
-            });
-
-            bus.$on("save", (num) => {
-                if(this.number == num) {
-                    this.save();
-                }
-            });
-
-            bus.$on("lock", (num, state) => {
-                if(this.number == num) {
-                    this.toggleLock(state);
-                }
-            });
-
-            bus.$on("fix", (num) => {
-                if(this.number == num) {
-                    this.fix();
-                }
-            });
+            bus.$on("open-"+this.number, this.openSequence);
+            bus.$on("close-"+this.number, this.discard);
+            bus.$on("save-"+this.number, this.save);
+            bus.$on("fix-"+this.number, this.fix);
+            bus.$on("lock-"+this.number, this.toggleLock);
         }
     },
 
@@ -511,7 +495,7 @@ Vue.component('pagelist', {
 /**
 * Boot
 */
-const SEQS_PER_PAGE = 20;
+const SEQS_PER_PAGE = 2;
 window.translation = new Vue({
     el: '#translation',
     data: {
@@ -693,7 +677,7 @@ window.translation = new Vue({
         openPage: function() {
             this.pageSequences.forEach(function(s) {
                 if(!s.openInfo) {
-                    bus.$emit("open", s.number);
+                    bus.$emit("open-"+s.number);
                 }
             });
         },
@@ -701,7 +685,7 @@ window.translation = new Vue({
         openUntranslatedPage: function() {
             this.pageSequences.forEach(function(s) {
                 if(!s.id) {
-                    bus.$emit("open", s.number);
+                    bus.$emit("open-"+s.number);
                 }
             });
         },
@@ -709,7 +693,7 @@ window.translation = new Vue({
         closePage: function() {
             this.pageSequences.forEach(function(s) {
                 if(s.openInfo && s.openInfo.by == me.id) {
-                    bus.$emit("close", s.number);
+                    bus.$emit("close-"+s.number);
                 }
             });
         },
@@ -717,7 +701,7 @@ window.translation = new Vue({
         savePage: function() {
             this.pageSequences.forEach(function(s) {
                 if(s.openInfo && s.openInfo.by == me.id) {
-                    bus.$emit("save", s.number);
+                    bus.$emit("save-"+s.number);
                 }
             });
         },
@@ -725,7 +709,7 @@ window.translation = new Vue({
         lockPage: function(state) {
             this.pageSequences.forEach(function(s) {
                 if(!s.openInfo) {
-                    bus.$emit("lock", s.number, state);
+                    bus.$emit("lock-"+s.number, state);
                 }
             });
         },
@@ -733,7 +717,7 @@ window.translation = new Vue({
         fixPage: function() {
             this.pageSequences.forEach(function(s) {
                 if(s.openInfo && s.openInfo.by == me.id) {
-                    bus.$emit("fix", s.number);
+                    bus.$emit("fix-"+s.number);
                 }
             });
         },
