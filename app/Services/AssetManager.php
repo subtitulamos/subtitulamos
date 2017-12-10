@@ -71,16 +71,20 @@ class AssetManager
         }
     }
 
-    /**
-     * @return void
-     */
-    public function redeployCSS()
+    public function buildManifest($path, $relativeRoute, &$manifest)
     {
-        $manifest = [];
-        foreach (new \DirectoryIterator(self::ASSET_PATH.'/css') as $fileInfo) {
-            $ext = $fileInfo->getExtension();
+        foreach (new \DirectoryIterator($path) as $fileInfo) {
+            if ($fileInfo->isDot()) {
+                continue;
+            }
 
-            if ($fileInfo->isDot() || !$fileInfo->isFile() || !\in_array($fileInfo->getExtension(), ['css'])) {
+            if ($fileInfo->isDir()) {
+                $this->buildManifest($path.'/'.$fileInfo->getFilename(), $relativeRoute.'/'.$fileInfo->getFilename(), $manifest);
+                continue;
+            }
+
+            $ext = $fileInfo->getExtension();
+            if (!$fileInfo->isFile() || !\in_array($fileInfo->getExtension(), ['css'])) {
                 continue;
             }
 
@@ -89,10 +93,20 @@ class AssetManager
             $ver = mb_substr(hash_file('md5', $fullPath), 0, 8);
 
             $newName = str_replace('.'.$ext, '', $fileName).'-'.$ver.'.'.$ext;
-            \copy(self::DEPLOY_PATH.'/css/'.$fileName, self::DEPLOY_PATH.'/css/'.$newName);
+            \copy(self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$fileName, self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$newName);
 
-            $manifest[$fileName] = 'css/'.$newName;
+            $k = $relativeRoute != '' ? mb_substr($relativeRoute, 1).'/'.$fileName : $fileName;
+            $manifest[$k] = 'css'.$relativeRoute.'/'.$newName;
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function redeployCSS()
+    {
+        $manifest = [];
+        $this->buildManifest(self::ASSET_PATH.'/css', '', $manifest);
 
         \file_put_contents(self::CSS_MANIFEST_PATH, \json_encode($manifest));
         $this->cssManifest = $manifest;
