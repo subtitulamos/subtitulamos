@@ -93,7 +93,12 @@ class AssetManager
             $ver = mb_substr(hash_file('md5', $fullPath), 0, 8);
 
             $newName = str_replace('.'.$ext, '', $fileName).'-'.$ver.'.'.$ext;
-            \copy(self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$fileName, self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$newName);
+
+            if (!file_exists(self::DEPLOY_PATH.'/css'.$relativeRoute.'/')) {
+                mkdir(self::DEPLOY_PATH.'/css'.$relativeRoute, 0740);
+            }
+
+            \copy(self::ASSET_PATH.'/css'.$relativeRoute.'/'.$fileName, self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$newName);
 
             $k = $relativeRoute != '' ? mb_substr($relativeRoute, 1).'/'.$fileName : $fileName;
             $manifest[$k] = 'css'.$relativeRoute.'/'.$newName;
