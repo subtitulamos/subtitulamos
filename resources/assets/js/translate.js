@@ -726,7 +726,7 @@ window.translation = new Vue({
             alertify
             .cancelBtn("Cancelar")
             .okBtn("Enviar")
-            .prompt("Introduce el mensaje que quieres enviar a un moderador sobre este subtítulo",
+            .prompt("Se avisará a un moderador. Añade un comentario a continuación explicando la situación:",
               function (val, ev) {
                 $.ajax({
                     url: '/subtitles/'+subID+'/alert',
@@ -736,7 +736,7 @@ window.translation = new Vue({
                     }
                 }).done((reply) => {
                     if(reply.ok) {
-                        alertify.success("Alerta enviada correctamente.");
+                        alertify.success("Aviso enviado correctamente.");
                     } else {
                         alertify.error(reply.msg);
                     }
