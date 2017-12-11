@@ -95,7 +95,7 @@ class AssetManager
             $newName = str_replace('.'.$ext, '', $fileName).'-'.$ver.'.'.$ext;
 
             if (!file_exists(self::DEPLOY_PATH.'/css'.$relativeRoute.'/')) {
-                mkdir(self::DEPLOY_PATH.'/css'.$relativeRoute, 0740);
+                mkdir(self::DEPLOY_PATH.'/css'.$relativeRoute, 0755);
             }
 
             \copy(self::ASSET_PATH.'/css'.$relativeRoute.'/'.$fileName, self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$newName);
