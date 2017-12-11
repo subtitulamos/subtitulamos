@@ -918,3 +918,7 @@ input.nospinner[type=number] {
     text-align: center;
     padding: 15px;
 }
+
+.alertify input[type="text"] {
+    box-shadow: 0px 1px 9px -3px #4a4a4a inset;
+}

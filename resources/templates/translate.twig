@@ -26,6 +26,7 @@
                 <button type="button" @click="fixPage">Alinear todo</button>
                 <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
                 <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
+                <button type="button" @click="alertMod" class='alert-mod'>Avisar a moderador</button>
             </div>
 
             <div id='filters'>

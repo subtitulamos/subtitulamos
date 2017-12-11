@@ -722,6 +722,30 @@ window.translation = new Vue({
             });
         },
 
+        alertMod: function() {
+            alertify
+            .cancelBtn("Cancelar")
+            .okBtn("Enviar")
+            .prompt("Introduce el mensaje que quieres enviar a un moderador sobre este subtítulo",
+              function (val, ev) {
+                $.ajax({
+                    url: '/subtitles/'+subID+'/alert',
+                    method: 'POST',
+                    data: {
+                        message: val
+                    }
+                }).done((reply) => {
+                    if(reply.ok) {
+                        alertify.success("Alerta enviada correctamente.");
+                    } else {
+                        alertify.error(reply.msg);
+                    }
+                }).fail((_, status) => {
+                    alertify.error("Ha ocurrido un error al intentar enviar la alerta: ("+status+")");
+                });
+              });
+        },
+
         jumpToSequence: function(seqn) {
             let totalPages = Math.ceil(this.sequences.length / SEQS_PER_PAGE);
             let targetPage = Math.ceil(seqn / SEQS_PER_PAGE);

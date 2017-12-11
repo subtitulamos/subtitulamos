@@ -443,27 +443,37 @@
         z-index: 2;
         background-color: #d6d6d6;
         font-size: 15px;
-    }
 
-    #translation-tools button {
-        padding: 5px 11px;
-        margin: 0 5px;
-        border-radius: 3px;
-        background-color: #f1f1f1;
-        border: 1px solid #afafaf;
-    }
 
-    #translation-tools button:hover {
-        box-shadow: rgba(43, 0, 0, 0.21) 0px 0px 4px 1px;
-    }
+        button {
+            padding: 5px 11px;
+            margin: 0 5px;
+            border-radius: 3px;
+            background-color: #f1f1f1;
+            border: 1px solid #afafaf;
+        }
 
-    #translation-tools .lock-tool {
-        background-color: #bae8ba;
-        border: 1px solid #00b10c;
-    }
+        button:hover {
+            box-shadow: rgba(43, 0, 0, 0.21) 0px 0px 4px 1px;
+        }
 
-    #translation-tools .lock-tool:hover {
-        box-shadow: rgba(0, 140, 61, 0.5) 0px 0px 4px 1px !important;
+        .lock-tool {
+            background-color: #bae8ba;
+            border: 1px solid #00b10c;
+        }
+
+        .lock-tool:hover {
+            box-shadow: rgba(0, 140, 61, 0.5) 0px 0px 4px 1px !important;
+        }
+
+        .alert-mod {
+            background-color: #efed9b;
+            border: 1px solid #b6b909;
+        }
+
+        .alert-mod:hover {
+            box-shadow: rgba(150, 152, 18, 0.49) 0px 0px 4px 1px !important;
+        }
     }
 
     .bullseye-wrapper {

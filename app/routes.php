@@ -52,6 +52,7 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRole('ROLE_MOD'));
     $app->get('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('subtitle-edit');
     $app->post('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
+    $app->post('/subtitles/{subId}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']);
 
     $app->get('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'edit'])->add($needsRole('ROLE_MOD'))->setName('ep-edit');
     $app->post('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRole('ROLE_MOD'));
