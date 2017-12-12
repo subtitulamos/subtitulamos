@@ -89,19 +89,9 @@ class AssetManager
             }
 
             $fileName = $fileInfo->getFilename();
-            $fullPath = $fileInfo->getPathname();
-            $ver = mb_substr(hash_file('md5', $fullPath), 0, 8);
-
-            $newName = str_replace('.'.$ext, '', $fileName).'-'.$ver.'.'.$ext;
-
-            if (!file_exists(self::DEPLOY_PATH.'/css'.$relativeRoute.'/')) {
-                mkdir(self::DEPLOY_PATH.'/css'.$relativeRoute, 0755);
-            }
-
-            \copy(self::ASSET_PATH.'/css'.$relativeRoute.'/'.$fileName, self::DEPLOY_PATH.'/css'.$relativeRoute.'/'.$newName);
-
             $k = $relativeRoute != '' ? mb_substr($relativeRoute, 1).'/'.$fileName : $fileName;
-            $manifest[$k] = 'css'.$relativeRoute.'/'.$newName;
+
+            $manifest[$k] = mb_substr(hash_file('md5', $fileInfo->getPathname()), 0, 8);
         }
     }
 
@@ -119,12 +109,13 @@ class AssetManager
 
     public function getCssVersionedName($assetName)
     {
-        if (DEBUG === true) {
+        if (DEBUG !== true) {
+            $v = isset($this->cssManifest[$assetName]) ? $this->cssManifest[$assetName] : 'base';
+        } else {
             $v = feature_on('DEBUG_CSS_NOCACHE') !== true ? mb_substr(hash_file('md5', self::ASSET_PATH.'/css/'.$assetName), 0, 8) : time();
-            return 'css/'.$assetName.'?v='.$v;
         }
 
-        return isset($this->cssManifest[$assetName]) ? $this->cssManifest[$assetName] : 'err';
+        return 'css/'.$assetName.'?v='.$v;
     }
 
     public function getWebpackVersionedName($assetName)
