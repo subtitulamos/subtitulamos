@@ -17,20 +17,20 @@
     </div>
 
     <div id="translation-details" :class="{'disabled': !loaded}">
-        {% verbatim %}
-            <div id='translation-tools'>
-                <button type="button" @click="openPage">Abrir todo</button>
-                <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
-                <button type="button" @click="closePage">Cerrar todo</button>
-                <button type="button" @click="savePage">Guardar todo</button>
-                <button type="button" @click="fixPage">Alinear todo</button>
-                <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
-                <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
-                {% if feature_on('ALERTS') %}
-                    <button type="button" @click="alertMod" class='alert-mod'>Avisar a moderador</button>
-                {% endif %}
-            </div>
+        <div id='translation-tools'>
+            <button type="button" @click="openPage">Abrir todo</button>
+            <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
+            <button type="button" @click="closePage">Cerrar todo</button>
+            <button type="button" @click="savePage">Guardar todo</button>
+            <button type="button" @click="fixPage">Alinear todo</button>
+            <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
+            <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
+            {% if feature_on('ALERTS') %}
+                <button type="button" @click="alertMod" class='alert-mod'>Avisar a moderador</button>
+            {% endif %}
+        </div>
 
+        {% verbatim %}
             <div id='filters'>
                 Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
                 <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
