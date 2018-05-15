@@ -213,14 +213,23 @@
 						<a href="/rss" target="_blank">
 							<i class="fa fa-rss-square" aria-hidden="true"></i>
 						</a>
+						<a href="https://t.me/subtitulamostv" target="_blank">
+							<i class="fa fa-telegram" aria-hidden="true"></i>
+						</a>
 					</div>
 				</div>
 
 				<div id="website_navigator">
 					<table>
-						<tr><td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>	<td></td></tr>
+						<tr>
+							<td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>
+							<td><a href='https://foro.subtitulamos.tv'>Foro</a></td>
+						</tr>
 						{% if auth.has_role('ROLE_TT') %}
-							<tr><td><a href='/comments/episodes'>Comentarios de capítulo</a></td>	<td><a href='/comments/subtitles'>Comentarios de traducción</a></td></tr>
+							<tr>
+								<td><a href='/comments/episodes'>Comentarios de capítulo</a></td>
+								<td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
+							</tr>
 						{% endif %}
 					</table>
 				</div>
