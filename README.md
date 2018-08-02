@@ -1,17 +1,12 @@
-# What is this?
-This repository contains the code that runs the https://subtitulamos.tv website.
-
-You can also find this README in [Spanish](./README.es.md)
-
 # Contributing
-Thanks for your interest in helping out! In order to be able to contribute, you will need an environment in which to develop. A detailed setup is provided below. 
+Thanks for your interest in helping out! In order to be able to contribute, you will need an environment in which to develop. A detailed setup is provided below.
+
+## What can I contribute to?
+You're free to contribute in any open issue that's not being tackled by anyone at the moment. However, if there's not an specific issue for the thing you want to make, **make sure** to open an issue or create a thread in [the forums](https://foro.subtitulamos.tv) first to verify it's something that the community is interested in! Also, when contributing, please follow the contribution rules:
 
 ## Contribution rules
 - Format the code using [php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) before creating a pull request. The rules are shipped with the code, on the `php-cs.dist` file that PHP-CS-Fixer will automatically pick up.
 - The whole codebase is in english: please use english variable names/comments/commit messages and whatnot.
-
-## What can I contribute?
-You're free to contribute in any open issue that's not being tackled by anyone at the moment. However, if there's not an specific issue for the thing you want to make, **make sure** to open an issue or create a thread in [the forums](https://foro.subtitulamos.tv) first to verify it's something that the community is interested in!
 
 # Setup
 You need a bunch of things to be installed on the system in order to run the website (a Linux/UNIX machine is recommended, as most tools are not officially designed to run on other OS. Something like Vagrant is an alternative if your OS is not *nix), so let's get on with that:
@@ -39,19 +34,15 @@ While you're downloading, you can copy the `.env.example` file on the project ro
 
 After `.env` file has been set up and the composer dependencies have all been installed, you must run, from the project root:
 - `./vendor/bin/doctrine orm:schema:update --force` to create the database schema required by the website
-- `php app/console app:bots:synchronize` to create the bot users. 
+- `php app/console app:bots:synchronize` to create the bot users.
 
 At this point, the website will work, but with no styling at all. For that, you will need to compile the javascript & css. Executing `npm run build` will take care of it! Now it truly works. Well, except the translation area...
 
 ### Realtime translation - Setup
 
-The website uses realtime translation based on websockets. Since PHP is not really ideal for the long-running processes that websocket technology requires, a simple Go server is used instead. To get it, run `go get github.com/subtitulamos/subtitulamos-translate` (You may need to set `GOPATH` environment variable if you didn't already). The `go get` command specific above will both download the source from Github and compile the binary.
+The website uses realtime translation based on websockets. Since PHP is not really ideal for the long-running processes that websocket technology requires, a simple Go server is used instead. To get it, run `go get github.com/subtitulamos/subtitulamos-translate` (You may need to set `GOPATH` environment variable if you didn't already). The `go get` command specific above will both download the source from Github and compile the binary. To quickly get the server started, you can use `$GOPATH/bin/subtitulamos-translate -redis-pubsub-env <envname>`, where \<envname\> should equal the value of your `ENVIRONMENT` env variable. Once this is done, you will be able to fully translate.
 
-You will generally not need to modify the Go server since all the relevant logic is on PHP, and it is just broadcasted via Redis pub-sub system to the Go process, which simply relies it to the connected clients.
-
-To quickly get the server started, you can use `$GOPATH/bin/subtitulamos-translate -redis-pubsub-env <envname>`, where \<envname\> should equal the value of your `ENVIRONMENT` env variable.  
-
-All set! Translations should fully work now.
+*Note*: You will generally not need to modify the Go server since all the relevant logic is on PHP, and it is just broadcasted via Redis pub-sub system to the Go process, which simply relies it to the connected clients.
 
 ## Development
 
@@ -64,7 +55,7 @@ Here's an Nginx config that should work with the website provided it's running o
 
     server {
         listen 80;
-        server_name subtitulamos.dev;
+        server_name subtitulamos.test;
 
         root /path/to/subtitulamos/files;
 
