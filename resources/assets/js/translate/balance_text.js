@@ -17,12 +17,12 @@ module.exports = (function(originalText, opinionated) {
         * Looks like we have a dialog. We must preserve each line separated unless that is not possible.
         */
         let fDialogPos = text.indexOf('-');
-        let fDialogPos2 = text.substr(fDialogPos + 1).indexOf('-') + fDialogPos;
+        let fDialogPos2 = text.substr(fDialogPos + 1).indexOf(' -') + fDialogPos;
         if (fDialogPos2 - fDialogPos <= 40 && text.length - 1 - fDialogPos2 <= 40) { //len - 1 due to the space introduced by the line break
             // If they fit in two separate lines, that's how it goes
             let dialogLines = [];
-            dialogLines[0] = text.slice(0, fDialogPos2).trim();
-            dialogLines[1] = text.slice(fDialogPos2, text.length).trim();
+            dialogLines[0] = text.slice(0, fDialogPos2 + 1).trim();
+            dialogLines[1] = text.slice(fDialogPos2 + 1, text.length).trim();
             return dialogLines;
         }
     }
