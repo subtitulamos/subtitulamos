@@ -32,6 +32,6 @@ class UnbannedMiddleware
         $auth = $this->container->get('App\Services\Auth');
         $u = $auth->getUser();
 
-        return $u && !$u->getBan() ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/banned');
+        return $u && !$u->getBan() ? $next($request, $response) : $response->withStatus(302)->withHeader('Location', '/banned');
     }
 }

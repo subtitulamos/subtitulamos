@@ -51,6 +51,6 @@ class RestrictedMiddleware
             $allowed = $allowed || $auth->hasRole($role);
         }
 
-        return $allowed ? $next($request, $response) : $response->withStatus(403)->withHeader('Location', '/login');
+        return $allowed ? $next($request, $response) : $response->withHeader('Location', '/login')->withStatus(302);
     }
 }
