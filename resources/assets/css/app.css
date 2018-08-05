@@ -35,11 +35,12 @@ input.nospinner[type=number] {
 #header a {
   color: white;
 }
+
 #footer {
    background-color: #282b30;
    padding-top: 90px;
+   padding-bottom: 30px;
    width:100%;
-   height:300px;   /* Height of the footer */
 }
 .hidden{
    display: none !important;
@@ -236,6 +237,7 @@ input.nospinner[type=number] {
    vertical-align: middle;
    display: inline-block;
    cursor: pointer;
+   box-sizing:content-box;
 }
 
 .sign_button {
@@ -609,7 +611,7 @@ input.nospinner[type=number] {
    color:#FFFFFF;
    font-weight: 700;
    font-size: 11pt !important;
-   margin-bottom: 10px;
+   margin-top: 10px;
    z-index: 3;
    position: relative;
    width: 290px;
@@ -720,10 +722,10 @@ input.nospinner[type=number] {
 
 /** Search **/
 
-#search{
+#search {
    margin: 20px auto 20px auto;
    background-color: #366fa7;
-   height: 53px;
+   height: 65px;
    padding-top: 11px;
    position: relative;
 }

@@ -1,6 +1,6 @@
 #pages {
     width: 100%;
-    min-height: 25px;
+    min-height: 40px;
     padding: 5px;
 }
 
@@ -73,8 +73,8 @@
 /*Styling for the incategory board */
 #incategory_board{
    position: relative;
-    width: 1000px;
-    margin: 0 auto 40px auto;
+   width: 1000px;
+   margin: 0 auto 40px auto;
    background-color: #5a93ca;
    padding: 20px 20px 12px 20px;
    border-radius: 5px;
@@ -139,7 +139,7 @@
    width: 3px;
    border-left: 1px solid rgba(0,0,0,0.2);
 }
-.ep-title_row{
+.ep-title-row{
     height: 50px;
     vertical-align: top;
     width: 89%;
@@ -147,6 +147,7 @@
     text-align: left;
     display: inline-block;
     padding-top: 7px;
+    line-height: normal;
 }
 .clip_global_info a {
   width: 100%;
@@ -154,7 +155,7 @@
   color: inherit;
 }
 
-.ep-show-hover:not(:hover) .ep-title_row {
+.ep-show-hover:not(:hover) .ep-title-row {
     height: 40px;
     padding-top: 17px;
 }
@@ -169,12 +170,12 @@
    overflow: hidden;
    text-overflow: ellipsis;
 }
-.ep-show-hover:hover .ep-title_row.ep-detailed .ep-title{
+.ep-show-hover:hover .ep-title-row.ep-detailed .ep-title{
    color: #3b72a9;
    font-size: 15px;
    margin-top: 3px;
 }
-.ep-show-hover:hover .ep-title_row.ep-detailed .ep-add-details{
+.ep-show-hover:hover .ep-title-row.ep-detailed .ep-add-details{
    display: inline-block !important;
    position: relative;
    top: -3px;

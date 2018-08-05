@@ -38,11 +38,11 @@
 
 #upload-rules {
     margin: 10px auto;
+    padding-left: 20px;
     width: 50%;
     border: 1px solid grey;
 }
 
 #upload-rules h3 {
-    margin-left: 10px;
     padding: 0;
 }

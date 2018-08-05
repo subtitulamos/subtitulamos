@@ -13,7 +13,7 @@ a {
 
 #subtitle_content_title_container{
    text-align: center;
-   width: 980px;
+   width: 1000px;
    margin: 0 auto;
    margin-bottom: 30px;
    padding: 10px 10px 5px 10px;
@@ -48,7 +48,7 @@ a {
    text-align: center;
    display: inline-block;
    font-size: 16pt;
-   padding-top: 4px;
+   padding-top: 1px;
    cursor: pointer;
 }
 
@@ -227,11 +227,12 @@ a {
 }
 
 .translate_subtitle .fa-plus-circle{
-   padding-top: 7px;
+   padding-top: 6px;
+   padding-left: 1px;
    font-size: 17pt;
 }
 .resyncreq_subtitle .fa-refresh{
-   padding-top: 8px;
+   padding-top: 7px;
    font-size: 16pt;
 }
 .edit_subtitle .fa-file-text{
