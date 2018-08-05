@@ -112,7 +112,7 @@ $("#next-page").on("click", function() {
 
 $(".category_navigation_item").on("click", function() {
     let $categoryClicked = $(this);
-    let $mainState = $("#main_state");
+    let $largeSplash = $("#large_splash");
     let $incategoryState = $("#incategory_state");
     let $categoryNavTitle = $("#category_navigation_title");
     let $searchBarContainer = $("#search");
@@ -131,18 +131,14 @@ $(".category_navigation_item").on("click", function() {
         window.scrollTo(0, 0);
         $categoryClicked.toggleClass("nvbi_active", true);
 
-        $mainState.toggleClass("fade_out", true);
+        $largeSplash.toggleClass("fade_out", true);
+        $whiteLogoSearchBar.toggleClass("hidden", false).attr("style", "display:none");
+        $whiteLogoSearchBar.fadeIn("slow");
+        $largeSplash.slideUp({
+            done: () => {
+            }
+        });
 
-        $searchBarContainer.toggleClass("move_up_searchbar",true);
-        $categoryNavList.toggleClass("move_up_searchbar",true).toggleClass("fade_in", true);
-        $incategoryState.toggleClass("move_up_searchbar",true).toggleClass("fade_in", true);
-        $whiteLogoSearchBar.toggleClass("hidden", false);
-        setTimeout(function(){
-            $mainState.toggleClass("hidden", true);
-            $searchBarContainer.toggleClass("move_up_searchbar", false);
-            $categoryNavList.toggleClass("move_up_searchbar", false).toggleClass("fade_in", false);
-            $incategoryState.toggleClass("move_up_searchbar", false).toggleClass("fade_in", false);
-        }, 580);
     }
 
     let target;
