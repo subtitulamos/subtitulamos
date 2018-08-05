@@ -71,50 +71,6 @@
     font-weight: bold;
 }
 
-
-.rule-tabs {
-    position: relative;
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: 58px;
-    margin: 0 auto;
-	white-space: nowrap;
-}
-
-.rule-tabs li {
-    cursor: pointer;
-    list-style-type: none;
-
-    display: inline-block;
-    text-align: center;
-    line-height: 48px;
-    height: 48px;
-    padding: 0;
-    margin: 0;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.rule-tabs a {
-    box-sizing: border-box;
-
-    color: #315d88;
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 0 24px;
-    font-size: 14px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-.rule-tabs .current {
-    border-bottom: 2px solid #3f83c5;
-    background-color: transparent;
-    color: #3796cc;
-    font-weight: bold;
-}
-
 .spoiler-content
 {
     display: none;

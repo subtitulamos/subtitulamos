@@ -19,10 +19,12 @@
     </h2>
 
     <div id='wrapper'>
-        <div>
-            <ul class="season-tabs">
+        <div class='tabs'>
+            <ul>
                 {% for season in seasons %}
-                    <li><a href="/shows/{{ id }}/season/{{ season }}" class="{% if cur_season == season %}current{% endif %}">Temporada {{ season }}</a></li>
+                    <li class="{% if cur_season == season %}is-active{% endif %}">
+                        <a href="/shows/{{ id }}/season/{{ season }}">Temporada {{ season }}</a>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
