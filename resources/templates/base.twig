@@ -8,11 +8,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{% if ENVIRONMENT_NAME == 'production' %}
 		<link rel="shortcut icon" type="image/png" href="favicon.png"/>
+		{% set min_suffix = "min." %}
 	{% else %}
 		<link rel="shortcut icon" type="image/png" href="favicon_nonprod.png"/>
+		{% set min_suffix = "" %}
 	{% endif %}
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.{{ min_suffix }}css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
 	{{ assets.css('normalize') }}
 	{{ assets.css('app') }}
