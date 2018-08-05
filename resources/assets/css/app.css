@@ -47,60 +47,34 @@ input.nospinner[type=number] {
    visibility: hidden;
 }
 .bounce{
-   -webkit-animation: bounce 0.5s ease-in;
-   -moz-animation: bounce 0.5s ease-in;
-   -o-animation: bounce 0.5s ease-in;
+   animation: bounce 0.5s ease-in;
 }
 .bounce_back{
-   -webkit-animation: bounce_back 0.4s ease-out;
-   -moz-animation: bounce_back 0.4s ease-out;
-   -o-animation: bounce_back 0.4s ease-out;
+   animation: bounce_back 0.4s ease-out;
 }
 .sendleft_remove{
-   -webkit-animation: sendleft_remove 0.3s ease-out;
-   -moz-animation: sendleft_remove 0.3s ease-out;
-   -o-animation: sendleft_remove 0.3s ease-out;
+   animation: sendleft_remove 0.3s ease-out;
 }
 .sendright{
-   -webkit-animation: sendright 0.3s ease-out;
-   -moz-animation: sendright 0.3s ease-out;
-   -o-animation: sendright 0.3s ease-out;
+   animation: sendright 0.3s ease-out;
 }
 .fade_slide_in{
-   -webkit-animation: fade_slide_in 0.4s ease-in;
-   -moz-animation: fade_slide_in 0.4s ease-in;
-   -o-animation: fade_slide_in 0.4s ease-in;
+   animation: fade_slide_in 0.4s ease-in;
 }
 .fade_slide_out{
-   -webkit-animation: fade_slide_out 0.4s ease-out;
-   -moz-animation: fade_slide_out 0.4s ease-out;
-   -o-animation: fade_slide_out 0.4s ease-out;
+   animation: fade_slide_out 0.4s ease-out;
 }
 .fadein_reactions{
-   -webkit-animation: fadein_reactions 0.4s ease-in;
-   -moz-animation: fadein_reactions 0.4s ease-in;
-   -o-animation: fadein_reactions 0.4s ease-in;
+   animation: fadein_reactions 0.4s ease-in;
 }
 .button_bounce_click{
-   -webkit-animation: button_bounce_click 0.5s ease-in;
-   -moz-animation: button_bounce_click 0.5s ease-in;
-   -o-animation: button_bounce_click 0.5s ease-in;
+   animation: button_bounce_click 0.5s ease-in;
 }
 .fade_out{
-   -webkit-animation: fade_out 0.6s ease-out;
-   -moz-animation: fade_out 0.6s ease-out;
-   -o-animation: fade_out 0.6s ease-out;
+   animation: fade_out 0.6s ease-out;
 }
 .fade_in{
-   -webkit-animation: fade_in 0.6s ease-in;
-   -moz-animation: fade_in 0.6s ease-in;
-   -o-animation: fade_in 0.6s ease-in;
-}
-.move_up_searchbar{
-   -webkit-animation: move_up_searchbar 0.6s ease-in;
-   -moz-animation: move_up_searchbar 0.6 ease-in;
-   -o-animation: move_up_searchbar 0.6s ease-in;
-   animation-iteration-count: 1;
+   animation: fade_in 0.6s ease-in;
 }
 
 /*Styling for login / registry*/
