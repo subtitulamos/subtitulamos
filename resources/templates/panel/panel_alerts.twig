@@ -2,20 +2,16 @@
 {% import 'macros/assets.twig' as assets %}
 
 {% block title %}General{% endblock %}
-
-{% block content %}
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Alertas
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="/panel"><i class="fa fa-dashboard"></i> Panel de Moderador</a></li>
-        <li class="active">Alertas</li>
-      </ol>
-    </section>
-
-    <!-- Main content -->
+{% block breadcrumb %}
+  <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="/">Subtitulamos.tv</a></li>
+      <li><a href="/panel">Panel de moderación</a></li>
+      <li class="is-active"><a href="#" aria-current="page">Alertas</a></li>
+    </ul>
+  </nav>
+{% endblock %}
+{% block panel_content %}
     <section class="content">
         {% for error in auth.flash.errors %}
             <div class="alert alert-danger alert-dismissible">
@@ -31,49 +27,60 @@
         {% endfor %}
 
       {% for alert in alerts %}
-        <div class="box {% if alert.closed %}box-success collapsed-box{% else %}box-widget{% endif %}">
-            <div class="box-header with-border">
-              <div class="user-block">
-                <span class="username"><a href='/subtitles/{{ alert.from_sub_id }}/translate'>{{ alert.from_sub }}</a></span>
-                <span class="description">@<a href='/users/{{alert.from_user.id}}'>{{ alert.from_user.username }}</a> - {{ alert.creation_time|date('d/M, H:i') }}</span>
+        <div class="card">
+          <header class="card-header">
+            <div class="card-header-title is-pulled-left">
+              <div>
+                <a href='/subtitles/{{ alert.from_sub_id }}/translate'>{{ alert.from_sub }}</a>
               </div>
-              <div class="box-tools"><button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa {% if alert.closed %}fa-plus{% else %}fa-minus{% endif %}"></i></button></div>
             </div>
+          </header>
 
-            <div class="box-body" style="">
-              <p>{{ alert.first_comment.text }}</p>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer box-comments" style="">
+          <form action="" method="POST">
+            <input type='hidden' name='alert-id' value='{{ alert.id }}'>
+            <div class="card-content">
+              <a href='/users/{{alert.from_user.id}}'>@{{ alert.from_user.username }}</a> (<time datetime="{{ alert.creation_time|date('d-m-Y H:i:s') }}">{{ alert.creation_time|date('d/M/Y, H:i') }}</time>)
+              <p>
+                {{ alert.first_comment.text }}
+              </p>
+
               {% for comment in alert.comments %}
                 {% if not loop.first %}
-                    <div class="box-comment">
-                        <div class="comment-text">
-                            <span class="username">
-                            {{ comment.user.username }}
-                            <span class="text-muted pull-right">{{ comment.creationTime|date('d/M/Y H:i') }}</span>
-                            </span>
-                        {{ comment.text }}
-                        </div>
+                  <article class="message is-dark">
+                    <div class="message-body">
+                      <span class="is-pulled-right">
+                        {{ comment.user.username }}
+                        ({{ comment.creationTime|date('d/M/Y H:i') }})
+                      </span>
+                      <span>
+                      {{ comment.text }}
+                      </span>
                     </div>
+                  </article>
                 {% endif %}
               {% endfor %}
-            </div>
 
-            {% if not alert.closed %}
-                <div class="box-footer">
-                    <form action="" method="POST">
-                        <input type='hidden' name='alert-id' value='{{ alert.id }}'>
-                        <div class='form-group'>
-                            <input class="form-control input-sm" name="comment" placeholder="Introduce un comentario" type="text">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-sm">Comentar</button>
-                        <button type="submit" name="close" class="btn btn-success pull-right btn-sm">Cerrar</button>
-                    </form>
+              {% if not alert.closed %}
+                <div class="field">
+                  <label class="label">Comentario</label>
+                  <div class="control">
+                    <input class="input is-radiusless" name="comment" type="text" placeholder="Algo relacionado con la alerta...">
+                  </div>
                 </div>
-            {% endif %}
+              {% endif %}
+            </div>
+            <footer class="card-footer">
+              {% if not alert.closed %}
+                <button type="submit" class="button is-link card-footer-item is-radiusless">Guardar comentario</button>
+                <button type="submit" name="close" class="button is-primary is-danger card-footer-item is-radiusless">Guardar y cerrar alerta</button>
+              {% else %}
+                <div class="card-footer-item">Esta alerta ya ha sido cerrada</div>
+              {% endif %}
+            </footer>
+          </form>
         </div>
+
+        <br/>
       {% else %}
         <div class="box box-success box-solid">
           <div class="box-header  with-border">

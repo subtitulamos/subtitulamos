@@ -253,13 +253,13 @@ input.nospinner[type=number] {
     font-variant: normal;
 }
 
-.fa-facebook {
+#social .fa-facebook {
     font-size: 0.85em !important;
     margin-top: 5px;
     margin-left: 4px;
 }
 
-.fa-twitter, .fa-pencil {
+#social .fa-twitter, #social .fa-pencil {
     font-size: 0.65em !important;
     margin: 7px;
 }
