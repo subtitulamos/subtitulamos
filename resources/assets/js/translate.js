@@ -9,6 +9,7 @@ import accentFold from './accent_fold.js';
 import balanceText from './translate/balance_text.js';
 
 let bus = new Vue();
+let modifiedSeqList = [];
 
 window.onbeforeunload = function(e) {
     let ask = false;
@@ -200,6 +201,19 @@ Vue.component('sequence', {
 
     watch: {
         editingText: function(nText) {
+            if(nText != this.text) {
+                console.log("differ", nText, this.text);
+                if(!modifiedSeqList.includes(this.number)) {
+                    modifiedSeqList.push(this.number);
+                }
+            } else {
+                // Try to remove it form the modified seq list if it's there
+                let modIdx = modifiedSeqList.indexOf(this.number);
+                if(modIdx !== -1) {
+                    modifiedSeqList.splice(modIdx, 1);
+                }
+            }
+
             sessionStorage.setItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id, nText);
         }
     },
@@ -219,6 +233,10 @@ Vue.component('sequence', {
 
         editing: function() {
             return this.openInfo && this.openInfo.by == me.id;
+        },
+
+        edited: function() {
+            return this.editing && this.originalText != this.editingText;
         },
 
         parsedStartTime: function() {
@@ -370,6 +388,12 @@ Vue.component('sequence', {
 
                 // Discard editing text cache if saved
                 sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+
+                // Try to remove it form the modified seq list if it's there
+                let modIdx = modifiedSeqList.indexOf(this.number);
+                if(modIdx !== -1) {
+                    modifiedSeqList.splice(modIdx, 1);
+                }
             }).fail((_, status) => {
                 alertify.error("Ha ocurrido un error al intentar guardar la secuencia: ("+status+")");
                 this.saving = false;
@@ -399,6 +423,12 @@ Vue.component('sequence', {
 
                 // Discard text cache if saved
                 sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+
+                // Try to remove it form the modified seq list if it's there
+                let modIdx = modifiedSeqList.indexOf(this.number);
+                if(modIdx !== -1) {
+                    modifiedSeqList.splice(modIdx, 1);
+                }
             })
             .fail((_, status) => {
                 sub.openSeq(this.number, me.id, oLockID);
@@ -690,7 +720,28 @@ window.translation = new Vue({
             });
         },
 
-        closePage: function() {
+        closePage: function(ev, skipModifiedCheck) {
+            if(!skipModifiedCheck) {
+                let modTextList = [];
+                this.pageSequences.forEach(function(s) {
+                    if(modifiedSeqList.includes(s.number)) {
+                        modTextList.push("#"+s.number);
+                    }
+                });
+
+                if(modTextList.length > 0) {
+                    let pthis = this;
+                    alertify
+                    .okBtn("Descartar cambios")
+                    .cancelBtn("¡No!")
+                    .confirm("Algunas secuencias de esta página han sido modificadas, pero no guardadas: "+modTextList.join(", ")+". ¿Estás seguro de querer descartar los cambios en estas?", (ev) => {
+                        pthis.closePage(ev, true);
+                    }, function(ev) {/* cancel */});
+
+                    return;
+                }
+            }
+
             this.pageSequences.forEach(function(s) {
                 if(s.openInfo && s.openInfo.by == me.id) {
                     bus.$emit("close-"+s.number);
