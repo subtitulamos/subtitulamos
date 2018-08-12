@@ -71,11 +71,12 @@ class UploadController
         $uploadList = $request->getUploadedFiles();
         if (isset($uploadList['sub'])) {
             $srtParser = new SrtParser();
-            $srtParser->parseFile($uploadList['sub']->file, [
+            $isOk = $srtParser->parseFile($uploadList['sub']->file, [
                 'allow_long_lines' => true,
                 'allow_special_tags' => false
             ]);
-            if (!$srtParser->isValid()) {
+
+            if (!$isOk) {
                 $errors[] = $srtParser->getErrorDesc();
             }
         }

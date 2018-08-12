@@ -19,14 +19,6 @@ const PARSING_STATE_TEXT = 2;
 class SrtParser
 {
     /**
-     * Whether the file in this class is currently
-     * a valid one or not
-     *
-     * @var boolean
-     */
-    private $valid = false;
-
-    /**
      * Description of the error, if any
      *
      * @var string
@@ -39,15 +31,6 @@ class SrtParser
      * @var array
      */
     private $sequences = [];
-
-    /**
-     * getter for the valid property
-     * @return boolean
-     */
-    public function isValid()
-    {
-        return $this->valid;
-    }
 
     /**
      * Parse reads an srt file and processes it
@@ -147,7 +130,11 @@ class SrtParser
         }
 
         $this->sequences = $sequences;
-        $this->valid = true;
+        if (count($sequences) < 3) {
+            $this->errorDesc = 'Formato incorrecto: No se han encontrado al menos 3 secuencias en el fichero de subtítulo.';
+            return false;
+        }
+
         return true;
     }
 
