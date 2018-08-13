@@ -14,7 +14,7 @@
 		{% set min_suffix = "" %}
 	{% endif %}
 
-	{{ assets.css('normalize') }}
+	{# {{ assets.css('normalize') }} #}
 	{% block bulma %}
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.{{ min_suffix }}css">
 	{% endblock %}
@@ -235,7 +235,7 @@
 						</tr>
 						{% if auth.has_role('ROLE_TT') %}
 							<tr>
-								<td><a href='/comments/episodes'>Comentarios de capítulo</a></td>
+								<td><a href='/comments/episodes'>Comentarios de episodio</a></td>
 								<td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
 							</tr>
 						{% endif %}

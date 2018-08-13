@@ -40,6 +40,11 @@ class SrtParser
      */
     public function parseFile(string $filename, array $seqOpts)
     {
+        if (!$filename) {
+            $this->errorDesc = 'El nombre de fichero no puede estar vacío.';
+            return false;
+        }
+
         $flines = file($filename);
 
         $this->lastTimeEnd = 0;
@@ -49,7 +54,9 @@ class SrtParser
 
         $sequences = [];
         $sequence = null;
+        $lineNumber = 0;
         foreach ($flines as $line) {
+            $lineNumber++;
             $line = trim(self::removeUtf8Bom($line));
             if (empty($line)) {
                 if ($parsingState == PARSING_STATE_TEXT) {
@@ -87,14 +94,14 @@ class SrtParser
                 case PARSING_STATE_TIME:
                     preg_match("/([\d:]+)[,.](\d+)\s*-->\s*([\d:]+)[,.](\d+)/", $line, $matches);
                     if (count($matches) != 5) {
-                        $this->errorDesc = 'Formato incorrecto: El formato de los tiempos de la línea '.$line.' es incorrecto';
+                        $this->errorDesc = 'Formato incorrecto: El formato de los tiempos de la línea '.$lineNumber.' es incorrecto';
                         return false;
                     }
 
                     $tstart = Clock::timeToInt($matches[1].','.$matches[2]);
                     $tend = Clock::timeToInt($matches[3].','.$matches[4]);
                     if ($tstart > $tend) {
-                        $this->errorDesc = 'Formato incorrecto: El tiempo de inicio en la secuencia #'.($this->seqNum + 1).' es mayor que su tiempo de fin.';
+                        $this->errorDesc = 'Formato incorrecto: El tiempo de inicio en la secuencia #'.($this->seqNum + 1).' es superior a su tiempo de fin.';
                         return false;
                     }
 
@@ -131,7 +138,7 @@ class SrtParser
 
         $this->sequences = $sequences;
         if (count($sequences) < 3) {
-            $this->errorDesc = 'Formato incorrecto: No se han encontrado al menos 3 secuencias en el fichero de subtítulo.';
+            $this->errorDesc = 'Formato incorrecto: No se ha encontrado el mínimo de 3 secuencias en el fichero de subtítulo.';
             return false;
         }
 

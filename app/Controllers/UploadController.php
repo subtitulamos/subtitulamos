@@ -35,37 +35,37 @@ class UploadController
 
     public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth, \Elasticsearch\Client $client)
     {
-        $showId = $request->getParam('showId', 0);
-        $season = $request->getParam('season', -1);
-        $epNumber = $request->getParam('episode', -1);
-        $langCode = $request->getParam('lang', '');
-        $epName = strip_tags(trim($request->getParam('title', '')));
-        $versionName = strip_tags(trim($request->getParam('version', '')));
-        $comments = strip_tags(trim($request->getParam('comments', '')));
+        $param = $request->getParsedBody();
+
+        $showId = isset($param['show-id']) ? $param['show-id'] : -1;
+        $season = isset($param['season']) ? $param['season'] : -1;
+        $epNumber = isset($param['episode']) ? $param['episode'] : -1;
+        $langCode = isset($param['lang']) ? $param['lang'] : '';
+        $epName = isset($param['title']) ? strip_tags(trim($param['title'])) : '';
+        $versionName = isset($param['version']) ? strip_tags(trim($param['version'])) : '';
+        $comments = isset($param['comments']) ? strip_tags(trim($param['comments'])) : '';
 
         $errors = [];
         if (!\App\Services\Langs::existsCode($langCode)) {
-            $errors[] = 'Elige un idioma válido';
-        }
-
-        if (!v::numeric()->between(0, 99)->validate($season) || !v::numeric()->positive()->between(0, 99)->validate($epNumber)) {
-            $errors[] = 'La temporada o episodio deben estar en el rango [0, 99]';
+            $errors[] = ['lang', 'Elige un idioma válido'];
         }
 
         if (!v::notEmpty()->validate($epName)) {
-            $errors[] = 'El nombre del episodio no puede estar vacío';
+            $errors[] = ['name', 'El nombre del episodio no puede estar vacío'];
+        } elseif (!v::numeric()->between(0, 99)->validate($season) || !v::numeric()->between(0, 99)->validate($epNumber)) {
+            $errors[] = ['name', 'Tanto la temporada como el número de episodio deben estar en el rango [0, 99]'];
         }
 
-        if (!v::notEmpty()->validate($versionName) || !v::notEmpty()->validate($comments)) {
-            $errors[] = 'Ni el nombre de la versión ni los comentarios pueden estar vacíos';
+        if (!v::notEmpty()->validate($versionName)) {
+            $errors[] = ['version', 'El nombre de la versión no puede estar vacío'];
+        } elseif (!v::length(1, 60)->validate($versionName)) {
+            $errors[] = ['version', 'El máximo tamaño de este campo son 60 caracteres'];
         }
 
-        if (!v::length(1, 60)->validate($versionName)) {
-            $errors[] = 'El campo de nombre de versión contiene demasiado texto. Por favor, no superes los 60 caracteres';
-        }
-
-        if (!v::length(1, 200)->validate($comments)) {
-            $errors[] = 'El campo de comentarios contiene demasiado texto. Por favor, no superes los 200 caracteres';
+        if (!v::notEmpty()->validate($comments)) {
+            $errors[] = ['comments', 'Los comentarios no pueden estar vacíos'];
+        } elseif (!v::length(1, 100)->validate($comments)) {
+            $errors[] = ['comments', 'El comentario no puede superar los 100 caracteres'];
         }
 
         $uploadList = $request->getUploadedFiles();
@@ -77,18 +77,18 @@ class UploadController
             ]);
 
             if (!$isOk) {
-                $errors[] = $srtParser->getErrorDesc();
+                $errors[] = ['sub', $srtParser->getErrorDesc()];
             }
         }
 
         $show = null;
         if ($showId != 'NEW') {
             if (!v::numeric()->positive()->validate($showId)) {
-                $errors[] = 'Elige una serie de la lista';
+                $errors[] = ['show-id', 'Elige una serie de la lista'];
             } else {
                 $show = $em->getRepository('App:Show')->find((int)$showId);
                 if (!$show) {
-                    $errors[] = 'La serie que has elegido no existe';
+                    $errors[] = ['show-id', 'La serie que has elegido no existe'];
                 }
             }
 
@@ -102,7 +102,7 @@ class UploadController
                     ->getResult();
 
                 if ($e != null) {
-                    $errors[] = sprintf('El episodio %dx%d de la serie %s ya existe', $season, $epNumber, $show->getName());
+                    $errors[] = ['name', sprintf('El episodio %dx%d de la serie %s ya existe', $season, $epNumber, $show->getName())];
                 }
             }
         } else {
@@ -110,7 +110,7 @@ class UploadController
             $newShowName = trim($request->getParam('new-show'));
             if (v::notEmpty()->length(1, 100)->validate($newShowName)) {
                 if ($em->getRepository('App:Show')->findByName($newShowName)) {
-                    $errors[] = 'La serie no se ha podido crear puesto que ya existe. Por favor, selecciónala en el desplegable';
+                    $errors[] = ['new-show', 'Esta serie ya existe.'];
                 } else {
                     $show = new Show();
                     $show->setName($newShowName);
@@ -120,13 +120,12 @@ class UploadController
                     /* TODO: Log */
                 }
             } else {
-                $errors[] = 'El nombre de la serie no puede estar vacío';
+                $errors[] = ['new-show', 'El nombre no puede estar vacío'];
             }
         }
 
         if (!empty($errors)) {
-            // TODO: Properly present errors via flash messages or something alike
-            return $response->withJson($errors, 412);
+            return $response->withJson($errors, 400);
         }
 
         $episode = new Episode();
@@ -177,8 +176,7 @@ class UploadController
             ]);
         }
 
-        return $response
-            ->withStatus(302)
-            ->withHeader('Location', $router->pathFor('episode', ['id' => $episode->getId()]));
+        $response->getBody()->write($router->pathFor('episode', ['id' => $episode->getId()]));
+        return $response->withStatus(200);
     }
 }

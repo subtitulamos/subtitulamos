@@ -33,7 +33,7 @@
 }
 
 #upload form {
-    width: 890px;
+    width: 600px;
     margin: 0 auto;
 }
 
@@ -46,4 +46,9 @@
 
 #upload-rules h3 {
     padding: 0;
+}
+
+form .file {
+    /* Otherwise there's no support for the help */
+    display: block;
 }
