@@ -1,7 +1,10 @@
 {% extends "panel/panel_base.twig" %}
 {% import 'macros/assets.twig' as assets %}
+{% block panel_css %}
+    {{ assets.css('panel/panel_alerts') }}
+{% endblock %}
 
-{% block title %}General{% endblock %}
+{% block title %}Alertas{% endblock %}
 {% block breadcrumb %}
   <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
     <ul>
@@ -48,7 +51,7 @@
                 {% if not loop.first %}
                   <article class="message is-dark">
                     <div class="message-body">
-                      <span class="is-pulled-right">
+                      <span class="alert-user-info is-pulled-right">
                         {{ comment.user.username }}
                         ({{ comment.creationTime|date('d/M/Y H:i') }})
                       </span>

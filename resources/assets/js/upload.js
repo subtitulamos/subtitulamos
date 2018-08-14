@@ -79,7 +79,6 @@ $(function() {
     // Update of SRT file selection
     $sub.on("change", function(e) {
         let files = $sub[0].files;
-        console.log(files);
         if(files.length > 0) {
             $("#sub-name").html(files[0].name);
         }
