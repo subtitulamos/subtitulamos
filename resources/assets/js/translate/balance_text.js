@@ -8,7 +8,7 @@ module.exports = (function(originalText, opinionated) {
     }
 
     let text = originalText.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
-    text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
+    text = text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
 
     let dialogLineCount = (text.match(/(?:^|\s)-/g) || []).length;
     let isDialog = text.match(/^\s*-/g) && dialogLineCount == 2;
