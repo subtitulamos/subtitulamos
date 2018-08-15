@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import $ from 'jquery';
 
-
 function pad(n, width, z) {
     z = z || '0';
     n = n + '';

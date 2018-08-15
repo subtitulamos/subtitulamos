@@ -12,6 +12,7 @@ module.exports = {
         hammer: './resources/assets/js/hammer.js',
         rules: './resources/assets/js/rules.js',
         upload: './resources/assets/js/upload.js',
+        upload_resync: './resources/assets/js/upload_resync.js',
         translate: './resources/assets/js/translate.js',
         user_settings: './resources/assets/js/user_settings.js',
         comment_list: './resources/assets/js/comment_list.js',

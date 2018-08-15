@@ -138,7 +138,7 @@ class SrtParser
 
         $this->sequences = $sequences;
         if (count($sequences) < 3) {
-            $this->errorDesc = 'Formato incorrecto: No se ha encontrado el mínimo de 3 secuencias en el fichero de subtítulo.';
+            $this->errorDesc = 'Formato incorrecto: Debe haber al menos 3 secuencias en el fichero.';
             return false;
         }
 

@@ -32,8 +32,10 @@ class UploadResyncController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
+        $show = $ep->getShow();
         return $twig->render($response, 'upload_resync.twig', [
-            'ep_full_name' => $ep->getFullName()
+            'show_name' => $show->getName(),
+            'ep_name' => $ep->getNameAndSeason()
         ]);
     }
 
@@ -50,11 +52,15 @@ class UploadResyncController
 
         $errors = [];
         if (!Langs::existsCode($langCode)) {
-            $errors[] = 'Elige un idioma válido';
+            $errors[] = ['lang', 'Elige un idioma válido.'];
         }
 
-        if (!v::notEmpty()->validate($versionName) || !v::notEmpty()->validate($comments)) {
-            $errors[] = 'Ni el nombre de la versión ni los comentarios pueden estar vacíos';
+        if (!v::notEmpty()->validate($versionName)) {
+            $errors[] = ['version', 'El nombre de la versión no puede estar vacío.'];
+        }
+
+        if (!v::notEmpty()->validate($comments)) {
+            $errors[] = ['comments', 'Los comentarios no pueden estar vacíos.'];
         }
 
         $uploadList = $request->getUploadedFiles();
@@ -66,7 +72,7 @@ class UploadResyncController
             ]);
 
             if (!$isOk) {
-                $errors[] = $srtParser->getErrorDesc();
+                $errors[] = ['sub', $srtParser->getErrorDesc()];
             }
         }
 
@@ -83,13 +89,12 @@ class UploadResyncController
                 ->getSingleScalarResult();
 
             if ($subExists) {
-                $errors[] = 'Ya existe un subtítulo en esta versión e idioma.';
+                $errors[] = ['version', 'Ya existe un subtítulo en esta versión e idioma.'];
             }
         }
 
         if (!empty($errors)) {
-            // TODO: Properly present errors via flash messages or something alike
-            return $response->withJson($errors, 412);
+            return $response->withJson($errors, 400);
         }
 
         if (!$version) {
@@ -122,8 +127,7 @@ class UploadResyncController
 
         $em->flush();
 
-        return $response
-            ->withStatus(302)
-            ->withHeader('Location', $router->pathFor('episode', ['id' => $ep->getId()]));
+        $response->getBody()->write($router->pathFor('episode', ['id' => $ep->getId()]));
+        return $response->withStatus(200);
     }
 }
