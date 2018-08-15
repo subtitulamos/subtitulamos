@@ -8,18 +8,6 @@
     margin-left: 40px;
 }
 
-h3 {
-    text-align: center;
-}
-
-ul {
-    list-style: none;
-}
-
-ul > li {
-    margin-left: -20px;
-}
-
 .hammer {
     padding: 5px 4px 5px 4px;
     font-size: 1.2em;

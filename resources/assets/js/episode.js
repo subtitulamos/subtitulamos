@@ -1,33 +1,38 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2017-2018 subtitulamos.tv
+ */
+
 import Vue from 'vue';
 import $ from 'jquery';
 import './vue/comment.js';
 
 let $newTranslationButton = $(".translate_subtitle");
-$newTranslationButton.on("click", function() {
+$newTranslationButton.on("click", function () {
     $("#new-translation-opts").toggleClass("hidden");
 });
 
-$("a[disabled]").on("click", function(e) {
+$("a[disabled]").on("click", function (e) {
     e.preventDefault();
     return false;
 });
 
-$("a[data-action='delete']").on("click", function(e) {
+$("a[data-action='delete']").on("click", function (e) {
     let subId = $(this).data("id");
-    alertify.confirm("¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.", function() {
-        window.location = "/subtitles/"+subId+"/delete";
+    alertify.confirm("¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.", function () {
+        window.location = "/subtitles/" + subId + "/delete";
     });
 });
 
-$(function() {
+$(function () {
     let lastLangVal = localStorage.getItem("last-selected-translation-lang");
-    
-    if(lastLangVal !== null) {
+
+    if (lastLangVal !== null) {
         $("#translate-to-lang").val(lastLangVal);
     }
 });
 
-$("#translate-to-lang").on("change", function() {
+$("#translate-to-lang").on("change", function () {
     localStorage.setItem("last-selected-translation-lang", $(this).val());
 });
 
@@ -39,31 +44,31 @@ let comments = new Vue({
         ]
     },
     methods: {
-        publishComment: function() {
+        publishComment: function () {
             let comment = this.newComment;
             this.newComment = '';
 
             $.ajax({
-                url: '/episodes/'+epId+'/comments/submit',
+                url: '/episodes/' + epId + '/comments/submit',
                 method: 'POST',
                 data: {
                     text: comment
                 }
-            }).done(function() {
+            }).done(function () {
                 // Cheap solution: reload the entire comment box
                 loadComments();
-            }).fail(function() {
+            }).fail(function () {
                 alertify.error("Ha ocurrido un error al enviar tu comentario");
             });
         },
-        refresh: function() {
+        refresh: function () {
             loadComments();
         },
 
-        remove: function(id) {
+        remove: function (id) {
             let c, cidx;
-            for(let i = 0; i < this.comments.length; ++i) {
-                if(this.comments[i].id == id) {
+            for (let i = 0; i < this.comments.length; ++i) {
+                if (this.comments[i].id == id) {
                     // Save comment and remove it from the list
                     c = this.comments[i];
                     cidx = i;
@@ -73,13 +78,13 @@ let comments = new Vue({
             }
 
             $.ajax({
-                url: '/episodes/'+epId+'/comments/'+id,
+                url: '/episodes/' + epId + '/comments/' + id,
                 method: 'DELETE'
-            }).done(function() {
+            }).done(function () {
                 loadComments();
-            }).fail(function() {
+            }).fail(function () {
                 alertify.error('Se ha encontrado un error al borrar el comentario');
-                if(typeof cidx !== 'undefined') {
+                if (typeof cidx !== 'undefined') {
                     // Insert the comment right back where it was
                     this.comments.splice(cidx, 0, c);
                 } else {
@@ -90,14 +95,13 @@ let comments = new Vue({
     }
 });
 
-function loadComments()
-{
+function loadComments() {
     $.ajax({
-        url: '/episodes/'+epId+'/comments',
+        url: '/episodes/' + epId + '/comments',
         method: 'GET'
-    }).done(function(reply) {
+    }).done(function (reply) {
         comments.comments = reply;
-    }).fail(function() {
+    }).fail(function () {
         alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
     })
 }

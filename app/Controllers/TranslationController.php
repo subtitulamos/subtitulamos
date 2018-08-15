@@ -2,7 +2,7 @@
 
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017 subtitulamos.tv
+ * @copyright 2017-2018 subtitulamos.tv
  */
 
 // TODO: Handle zero width space (\U200B), special "", single "..." utf8 codepoint, etc

@@ -1,3 +1,8 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2017-2018 subtitulamos.tv
+ */
+
 import Vue from 'vue';
 import $ from 'jquery';
 
