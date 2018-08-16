@@ -37,9 +37,9 @@ $(function() {
     });
 
     // Logic for splitting season/episode and name
-    $("#name").on("keyup", function() {
+    $("#name").on("keyup input", function() {
         let val = $(this).val().trim();
-        let match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:\s*-?\s*(.+))?)?)?$/);
+        let match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/);
         let error = "";
         if(val == "" || (!match && val == "S")) {
             error = "";
@@ -62,7 +62,7 @@ $(function() {
             uploadInfo = {
                 season: match[1],
                 episode: match[2],
-                name: match[3]
+                name: match[3].trim()
             }
         }
 
