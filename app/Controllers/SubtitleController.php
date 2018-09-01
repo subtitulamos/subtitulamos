@@ -105,16 +105,46 @@ class SubtitleController
         return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]));
     }
 
-    public function viewHammer($subId, $request, $response, EntityManager $em, Twig $twig)
+    public function viewHammer($subId, $request, $response, EntityManager $em, Twig $twig, Translation $translation)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $users = $em->createQuery('SELECT u, COUNT(u) FROM App:User u JOIN App:Sequence sq WHERE sq.author = u AND sq.subtitle = :sub GROUP BY u')
+        $sequences = $em->createQuery('SELECT sq FROM App:User u JOIN App:Sequence sq WHERE sq.author = u AND sq.subtitle = :sub')
             ->setParameter('sub', $sub)
             ->getResult();
+
+        $revisions = [];
+        foreach ($sequences as $seq) {
+            $num = $seq->getNumber();
+            $rev = $seq->getRevision();
+            $revisions[$num] = isset($revisions[$num]) ? max($revisions[$num], $rev) : $rev;
+        }
+
+        $seqByAuthor = [];
+        foreach ($sequences as $seq) {
+            $u = $seq->getAuthor();
+            $uid = $u->getId();
+            if (!isset($seqByAuthor[$uid])) {
+                $seqByAuthor[$uid] = [
+                    'user' => $u,
+                    'counts' => [
+                        'latest' => 0,
+                        'corrected' => 0
+                    ]
+                ];
+            }
+
+            $num = $seq->getNumber();
+            $rev = $seq->getRevision();
+            if ($revisions[$num] > $rev) {
+                $seqByAuthor[$uid]['counts']['corrected']++;
+            } else {
+                $seqByAuthor[$uid]['counts']['latest']++;
+            }
+        }
 
         $ep = $sub->getVersion()->getEpisode();
         $show = $ep->getShow();
@@ -122,7 +152,7 @@ class SubtitleController
             'subtitle' => $sub,
             'episode' => $ep,
             'show' => $show,
-            'users' => $users
+            'seq_by_author' => $seqByAuthor
         ]);
     }
 
@@ -138,31 +168,57 @@ class SubtitleController
             return $response->withStatus(400);
         }
 
-        $seqsToDelete = $em->createQuery('SELECT sq.id, sq.number, sq.revision FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub ORDER BY sq.revision DESC')
-            ->setParameter('sub', $sub)
-            ->setParameter('u', $target)
-            ->getResult();
-
-        foreach ($seqsToDelete as $sq) {
-            $em->createQuery('UPDATE App:Sequence sq SET sq.revision = sq.revision - 1 WHERE sq.number = :num AND sq.revision >= :rev AND sq.subtitle = :sub')
-                ->setParameter('sub', $sub)
-                ->setParameter('num', $sq['number'])
-                ->setParameter('rev', $sq['revision'])
-                ->execute();
-
-            $translation->broadcastDeleteSequence($sub, $sq['id']);
+        $type = $request->getParsedBodyParam('type', 0);
+        if (!$type || !in_array($type, ['complete', 'latest'])) {
+            return $response->withStatus(400);
         }
 
-        $em->createQuery('DELETE FROM App:Sequence sq WHERE sq.author = :u AND sq.subtitle = :sub')
+        $sequences = $em->createQuery('SELECT sq FROM App:User u JOIN App:Sequence sq WHERE sq.author = u AND sq.subtitle = :sub ORDER BY sq.number ASC, sq.revision DESC')
             ->setParameter('sub', $sub)
-            ->setParameter('u', $target)
             ->getResult();
+
+        $revisions = [];
+        foreach ($sequences as $seq) {
+            $num = $seq->getNumber();
+            $rev = $seq->getRevision();
+            $revisions[$num] = isset($revisions[$num]) ? max($revisions[$num], $rev) : $rev;
+        }
+
+        // Begin actual deletion
+        foreach ($sequences as $sq) {
+            if ($sq->getAuthor()->getId() != $target) {
+                continue;
+            }
+
+            $num = $sq->getNumber();
+            $rev = $sq->getRevision();
+            $delete = false;
+            if ($revisions[$num] > $rev && $type == 'complete') {
+                // Not latest revision - Only delete if we're deleting complete
+                $em->createQuery('UPDATE App:Sequence sq SET sq.revision = sq.revision - 1 WHERE sq.number = :num AND sq.revision >= :rev AND sq.subtitle = :sub')
+                    ->setParameter('sub', $sub)
+                    ->setParameter('num', $sq->getNumber())
+                    ->setParameter('rev', $sq->getRevision())
+                    ->execute();
+
+                $delete = true;
+            } elseif ($revisions[$num] == $rev) {
+                // Latest revision, delete always
+                $delete = true;
+            }
+
+            if ($delete) {
+                $translation->broadcastDeleteSequence($sub, $sq->getId()); // Broadcast the deletion
+                $em->remove($sq); // Remove it from the database
+                --$revisions[$num]; // Reduce revision count by one on this sequence
+            }
+        }
 
         // Apply these changes so we can recalculate the proper percentage right after
         $em->flush();
 
-        $translation->recalculateSubtitleProgress($baseSubId, $sub, 0);
-        $em->flush();
+        $baseSubId = $translation->getBaseSubId($sub);
+        $translation->recalculateSubtitleProgress($baseSubId, $sub);
         return $response;
     }
 

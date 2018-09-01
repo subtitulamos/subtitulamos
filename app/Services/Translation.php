@@ -229,7 +229,7 @@ class Translation
      * @param int $modifier
      * @return void
      */
-    public function recalculateSubtitleProgress($baseSub, Subtitle $sub, int $modifier)
+    public function recalculateSubtitleProgress($baseSub, Subtitle $sub)
     {
         if (!$baseSub) {
             $baseSub = $this->getBaseSubId($sub);
@@ -243,13 +243,14 @@ class Translation
             ->setParameter('sub', $sub->getId())
             ->getSingleScalarResult();
 
-        $sub->setProgress(($ourSubSeqCount + $modifier) / $baseSubSeqCount * 100);
+        $sub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
         if ($sub->getProgress() == 100 && !$sub->getPause()) {
             // We're done! Mark as such
             $sub->setCompleteTime(new \DateTime());
         } elseif ($sub->getCompleteTime()) {
             $sub->setCompleteTime(null);
         }
+        $this->em->flush();
     }
 
     /**

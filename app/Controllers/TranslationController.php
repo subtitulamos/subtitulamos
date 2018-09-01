@@ -508,12 +508,10 @@ class TranslationController
         }
 
         $em->persist($seq);
+        $em->flush();
 
         // Update progress
-        $nprogress = $translation->recalculateSubtitleProgress($baseSubId, $curSub, 1);
-
-        // Flush and end
-        $em->flush();
+        $translation->recalculateSubtitleProgress($baseSubId, $curSub);
 
         $translation->broadcastSeqChange($seq);
         $response->getBody()->write($seq->getId());

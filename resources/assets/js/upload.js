@@ -37,7 +37,7 @@ $(function() {
     });
 
     // Logic for splitting season/episode and name
-    $("#name").on("keyup input", function() {
+    $("#name").on("keyup input change", function() {
         let val = $(this).val().trim();
         let match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/);
         let error = "";
