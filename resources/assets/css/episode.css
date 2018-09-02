@@ -1,5 +1,5 @@
 #subtitle_content {
-   padding-top: 40px;
+   padding-top: 15px;
    padding-bottom: 40px;
    background-color: #e9e7e7 !important;
 }
@@ -52,12 +52,9 @@ a {
    cursor: pointer;
 }
 
-#subtitle_content_title_container a[disabled] > div {
+.no-other-episode > div {
     cursor: default;
-}
-
-#subtitle_content_title_container a[disabled] > div {
-    background-color: grey;
+    background-color: grey !important;
 }
 
 #episode_title{
@@ -65,11 +62,10 @@ a {
    font-size: 17px;
    text-align: center;
    display: inline-block;
-   margin-top: 17px;
    color: #315d88;
-   width: 885px;
+   width: 819px;
    position: relative;
-   top: -9px;
+   top: 5px;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
