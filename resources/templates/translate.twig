@@ -1,7 +1,11 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
-{% block bulma %}{# No bulma on this page for now (TODO: Support it!) #}{% endblock %}
+{% block bulma %}
+    {# No bulma on this page for now (TODO: Support it!) #}
+    {# We use normalize instead for the meanwhile #}
+    {{ assets.css('normalize') }}
+{% endblock %}
 {% block title %}Traducir {{ sub.version.episode.fullname }}{% endblock %}
 {% block css %}
     {{ assets.css('translate') }}
@@ -21,7 +25,7 @@
         <div id='translation-tools'>
             <button type="button" @click="openPage">Abrir todo</button>
             <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
-            <button type="button" @click="savePage">Guardar todo</button>
+            <button type="button" @click="savePage" class='hint--top hint--bounce' data-hint="Ctrl+Shift+S">Guardar todo</button>
             <button type="button" @click="fixPage">Alinear todo</button>
             <button type="button" @click="closePage">Cerrar todo</button>
             <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
