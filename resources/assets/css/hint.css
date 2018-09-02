@@ -1,6 +1,6 @@
-/*! Hint.css - v2.4.0 - 2016-09-17
+/*! Hint.css - v2.3.2 - 2016-07-28
 * http://kushagragour.in/lab/hint/
-* Copyright (c) 2016 Kushagra Gour */
+* Copyright (c) 2016 Kushagra Gour; Licensed  */
 
 /*-------------------------------------*	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
@@ -24,7 +24,7 @@
  * Classes added:
  * 	1) hint
  */
-[class*="hint--"] {
+ [class*="hint--"] {
   position: relative;
   display: inline-block;
   /**
@@ -40,7 +40,7 @@
     transform: translate3d(0, 0, 0);
     visibility: hidden;
     opacity: 0;
-    z-index: 1000000 !important;
+    z-index: 1000000;
     pointer-events: none;
     -webkit-transition: 0.3s ease;
     -moz-transition: 0.3s ease;
@@ -62,13 +62,11 @@
     border: 6px solid transparent;
     z-index: 1000001; }
   [class*="hint--"]:after {
-    background: rgba(56,56,56,0.8);
+    background: #383838;
     color: white;
     padding: 8px 10px;
     font-size: 12px;
-    font-family: "Open Sans";
-	letter-spacing: 0 !important;
-	font-weight: normal !important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 12px;
     white-space: nowrap; }
   [class*="hint--"][aria-label]:after {
@@ -96,28 +94,28 @@
  * set default color for tooltip arrows
  */
 .hint--top-left:before {
-  border-top-color: rgba(56,56,56,0.8); }
+  border-top-color: #383838; }
 
 .hint--top-right:before {
-  border-top-color: rgba(56,56,56,0.8); }
+  border-top-color: #383838; }
 
 .hint--top:before {
-  border-top-color: rgba(56,56,56,0.8); }
+  border-top-color: #383838; }
 
 .hint--bottom-left:before {
-  border-bottom-color: rgba(56,56,56,0.8); }
+  border-bottom-color: #383838; }
 
 .hint--bottom-right:before {
-  border-bottom-color: rgba(56,56,56,0.8); }
+  border-bottom-color: #383838; }
 
 .hint--bottom:before {
-  border-bottom-color: rgba(56,56,56,0.8); }
+  border-bottom-color: #383838; }
 
 .hint--left:before {
-  border-left-color: rgba(56,56,56,0.8); }
+  border-left-color: #383838; }
 
 .hint--right:before {
-  border-right-color: rgba(56,56,56,0.8); }
+  border-right-color: #383838; }
 
 /**
  * top tooltip
@@ -362,7 +360,7 @@
 .hint--small:after,
 .hint--medium:after,
 .hint--large:after {
-  white-space: pre-line;
+  white-space: normal;
   line-height: 1.4em;
   word-wrap: break-word; }
 
@@ -385,9 +383,9 @@
   /**
 	 * tooltip body
 	 */ }
-/*[class*="hint--"]:after {
+  [class*="hint--"]:after {
     text-shadow: 0 -1px 0px black;
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); }*/
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); }
 
 /**
  * source: hint-color-types.scss
