@@ -10,12 +10,33 @@
 {% block content %}
 
 <div id="editshow_content_wrapper">
-    <div id="editshow_content">
-        <div id="show_title">
-            <a href='/shows/{{ show.id }}'>{{ show.name }}</a>
+    <div class='container'>
+        <!-- Breadcrumbs -->
+        <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+            <ul>
+                <li><a href="/">Subtitulamos.tv</a></li>
+                <li><a href="/shows/{{ show.id }}">{{ show.name }}</a></li>
+                <li class="is-active">
+                    <a href="#">Propiedades</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div id='wrapper'>
+            <div class='tabs'>
+                <ul>
+                    <li class="is-active">
+                        <a href="/shows/{{ show.id }}/properties">[Propiedades]</a></li>
+                    </li>
+                    {% for season in seasons %}
+                        <li><a href="/shows/{{ show.id }}/season/{{ season }}">Temporada {{ season }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
         <div id='info'>
+            <br/>
             <form name="" action="" method="POST">
                 {% for error in auth.flash.errors() %}
                     {{ alerts.show('error', error) }}

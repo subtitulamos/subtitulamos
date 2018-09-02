@@ -33,7 +33,6 @@ class ShowController
         foreach ($seasonsRes as $seasonRes) {
             $seasons[] = (int)$seasonRes['season'];
         }
-
         sort($seasons);
 
         if (empty($seasons)) {
@@ -84,8 +83,10 @@ class ShowController
         }
 
         return $twig->render($response, 'show_list.twig', [
-            'id' => $showId,
-            'show_name' => $show->getName(),
+            'show' => [
+                'id' => $showId,
+                'name' => $show->getName(),
+            ],
             'seasons' => $seasons,
             'episodes' => $episodeList,
             'cur_season' => $season
@@ -108,10 +109,21 @@ class ShowController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
+        $seasonsRes = $em->createQuery('SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
+            ->setParameter('id', $showId)
+            ->getResult();
+
+        $seasons = [];
+        foreach ($seasonsRes as $seasonRes) {
+            $seasons[] = (int)$seasonRes['season'];
+        }
+        sort($seasons);
+
         $canDelete = $this->canDeleteShow($show, $em);
         return $twig->render($response, 'edit_show.twig', [
             'show' => $show,
-            'can_delete' => $canDelete
+            'can_delete' => $canDelete,
+            'seasons' => $seasons
         ]);
     }
 
