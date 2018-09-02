@@ -11,15 +11,15 @@ import balanceText from './translate/balance_text.js';
 let bus = new Vue();
 let modifiedSeqList = [];
 
-window.onbeforeunload = function(e) {
+window.onbeforeunload = function (e) {
     let ask = false;
     for (var i = 0; i < sessionStorage.length; i++) {
-        if(sessionStorage.key(i).match("sub-"+subID+"-seqtext")) {
+        if (sessionStorage.key(i).match("sub-" + subID + "-seqtext")) {
             ask = true;
         }
     }
 
-    if(ask) {
+    if (ask) {
         let msg = "Parece que tienes secuencias abiertas. ¿Estás seguro de querer salir?";
         (e || window.event).returnValue = msg;
         return msg;
@@ -33,9 +33,9 @@ Vue.component('seqlock', {
     `,
     props: ["id", "seqnum", "uid", "time"],
     methods: {
-        release: function() {
+        release: function () {
             let seq = sub.getDataByNum(this.seqnum);
-            if(!seq) {
+            if (!seq) {
                 console.error("Could not find sequence to release!", this.seqnum);
                 return;
             }
@@ -44,7 +44,7 @@ Vue.component('seqlock', {
             sub.closeSeq(this.seqnum);
 
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/open-lock/'+this.id,
+                url: '/subtitles/' + subID + '/translate/open-lock/' + this.id,
                 method: 'DELETE',
                 data: {}
             }).fail(() => {
@@ -53,11 +53,11 @@ Vue.component('seqlock', {
         }
     },
     computed: {
-        username: function() {
+        username: function () {
             return sub.getUsername(this.uid);
         },
 
-        niceTime: function() {
+        niceTime: function () {
             let d = new Date(this.time);
             return dateformat(d, "d/mmm HH:MM");
         }
@@ -134,7 +134,7 @@ Vue.component('sequence', {
         openInfo: Object
     },
 
-    data: function() {
+    data: function () {
         return {
             editingTime: false,
             editingText: this.text,
@@ -144,28 +144,28 @@ Vue.component('sequence', {
         }
     },
 
-    mounted: function() {
-        let savedText = sessionStorage.getItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
-        if(savedText) {
+    mounted: function () {
+        let savedText = sessionStorage.getItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id);
+        if (savedText) {
             this.editingText = savedText;
         }
     },
 
-    beforeDestroy: function() {
-        bus.$off("open-"+this.number);
-        bus.$off("close-"+this.number);
-        bus.$off("save-"+this.number);
-        bus.$off("fix-"+this.number);
-        bus.$off("lock-"+this.number);
+    beforeDestroy: function () {
+        bus.$off("open-" + this.number);
+        bus.$off("close-" + this.number);
+        bus.$off("save-" + this.number);
+        bus.$off("fix-" + this.number);
+        bus.$off("lock-" + this.number);
     },
 
-    created: function() {
-        if(!this.history) {
-            bus.$on("open-"+this.number, this.openSequence);
-            bus.$on("close-"+this.number, this.discard);
-            bus.$on("save-"+this.number, this.save);
-            bus.$on("fix-"+this.number, this.fix);
-            bus.$on("lock-"+this.number, this.toggleLock);
+    created: function () {
+        if (!this.history) {
+            bus.$on("open-" + this.number, this.openSequence);
+            bus.$on("close-" + this.number, this.discard);
+            bus.$on("save-" + this.number, this.save);
+            bus.$on("fix-" + this.number, this.fix);
+            bus.$on("lock-" + this.number, this.toggleLock);
         }
     },
 
@@ -175,24 +175,24 @@ Vue.component('sequence', {
                 return '00:00:00.000';
 
             let h = 0, m = 0, s = 0;
-            s = Math.floor(ms/1000);
+            s = Math.floor(ms / 1000);
 
-            h = Math.floor(s/3600);
+            h = Math.floor(s / 3600);
             s -= h * 3600;
-            m = Math.floor(s/60);
+            m = Math.floor(s / 60);
             s -= m * 60;
 
-            ms -= (s + m * 60 + h * 3600)*1000;
+            ms -= (s + m * 60 + h * 3600) * 1000;
 
             let stime = "";
-            if(h < 10) stime += "0";
-            stime += h+":";
-            if(m < 10) stime += "0";
-            stime += m+":";
-            if(s < 10) stime += "0";
-            stime += s+".";
-            if(ms < 100) stime += "0";
-            if(ms < 10) stime += "0";
+            if (h < 10) stime += "0";
+            stime += h + ":";
+            if (m < 10) stime += "0";
+            stime += m + ":";
+            if (s < 10) stime += "0";
+            stime += s + ".";
+            if (ms < 100) stime += "0";
+            if (ms < 10) stime += "0";
             stime += ms;
 
             return stime;
@@ -200,60 +200,60 @@ Vue.component('sequence', {
     },
 
     watch: {
-        editingText: function(nText) {
-            if(nText != this.text) {
+        editingText: function (nText) {
+            if (nText != this.text) {
                 console.log("differ", nText, this.text);
-                if(!modifiedSeqList.includes(this.number)) {
+                if (!modifiedSeqList.includes(this.number)) {
                     modifiedSeqList.push(this.number);
                 }
             } else {
                 // Try to remove it form the modified seq list if it's there
                 let modIdx = modifiedSeqList.indexOf(this.number);
-                if(modIdx !== -1) {
+                if (modIdx !== -1) {
                     modifiedSeqList.splice(modIdx, 1);
                 }
             }
 
-            sessionStorage.setItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id, nText);
+            sessionStorage.setItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id, nText);
         }
     },
 
     computed: {
-        canEditTimes: function() {
+        canEditTimes: function () {
             return canEditTimes;
         },
 
-        openByOther: function() {
+        openByOther: function () {
             return this.openInfo && this.openInfo.by && this.openInfo.by != me.id;
         },
 
-        textHint: function() {
-            return this.openByOther ? sub.getUsername(this.openInfo.by)+" está editando esta secuencia" : '';
+        textHint: function () {
+            return this.openByOther ? sub.getUsername(this.openInfo.by) + " está editando esta secuencia" : '';
         },
 
-        editing: function() {
+        editing: function () {
             return this.openInfo && this.openInfo.by == me.id;
         },
 
-        edited: function() {
+        edited: function () {
             return this.editing && this.originalText != this.editingText;
         },
 
-        parsedStartTime: function() {
+        parsedStartTime: function () {
             return this.parseTime(this.editingTimeStart)
         },
 
-        parsedEndTime: function() {
+        parsedEndTime: function () {
             return this.parseTime(this.editingTimeEnd)
         },
 
-        lineCounters: function() {
+        lineCounters: function () {
             let lines = this.editingText.split("\n");
             let lineCounters = [];
 
-            for(let i = 0; i < lines.length; ++i) {
-                let text = lines[i].replace(/ +/g,' ');
-                if(text.trim().length > 0) {
+            for (let i = 0; i < lines.length; ++i) {
+                let text = lines[i].replace(/ +/g, ' ');
+                if (text.trim().length > 0) {
                     lineCounters[i] = text.trim().length;
                 } else {
                     lineCounters[i] = text.length;
@@ -263,25 +263,25 @@ Vue.component('sequence', {
             return lineCounters;
         },
 
-        canSave: function() {
+        canSave: function () {
             return !this.history && this.lineCounters.length > 0 && this.lineCounters.length <= 2 && this.lineCounters[0] > 0 && this.lineCounters[0] <= 40
-                        && (!this.lineCounters[1] || this.lineCounters[1] <= 40)
-                        && (this.parsedStartTime && this.parsedEndTime && this.parsedStartTime < this.parsedEndTime);
+                && (!this.lineCounters[1] || this.lineCounters[1] <= 40)
+                && (this.parsedStartTime && this.parsedEndTime && this.parsedStartTime < this.parsedEndTime);
         },
 
-        canLock: function() {
+        canLock: function () {
             return canLock && !this.history && this.id;
         },
 
-        translated: function() {
+        translated: function () {
             return this.id != 0
         },
 
-        authorName: function() {
+        authorName: function () {
             return this.author ? sub.getUsername(this.author) : " - ";
         },
 
-        shouldFixLevel: function() {
+        shouldFixLevel: function () {
             let tlines = [];
             $.each(this.editingText.split("\n"), function (i, val) {
                 tlines.push(val.trim());
@@ -295,7 +295,7 @@ Vue.component('sequence', {
                 let opinionatedMatch = balanceText(this.editingText, true).join('\n') == full;
 
                 return !unopinionatedMatch && !opinionatedMatch ? 2 : 0;
-            } else if(tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
+            } else if (tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
                 return 1;
             }
 
@@ -304,8 +304,8 @@ Vue.component('sequence', {
     },
 
     methods: {
-        openSequence: function() {
-            if(this.editing || this.history || this.openByOther || this.saving || (this.locked && !canReleaseOpenLock)) {
+        openSequence: function () {
+            if (this.editing || this.history || this.openByOther || this.saving || (this.locked && !canReleaseOpenLock)) {
                 return true; // Already / no effect / can't open
             }
 
@@ -315,13 +315,13 @@ Vue.component('sequence', {
 
             sub.openSeq(this.number, me.id, 0);
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/open',
+                url: '/subtitles/' + subID + '/translate/open',
                 method: 'POST',
                 data: {
                     seqNum: this.number
                 }
             }).done((reply) => {
-                if(!reply.ok) {
+                if (!reply.ok) {
                     sub.closeSeq(this.number);
                     alertify.error(reply.msg);
                 }
@@ -331,33 +331,33 @@ Vue.component('sequence', {
             });
         },
 
-        keyboardActions: function(e) {
-            if(e.altKey && e.key == "f") {
+        keyboardActions: function (e) {
+            if (e.altKey && e.key == "f") {
                 this.fix();
-            } else if(e.key == "s") {
+            } else if (e.key == "s") {
                 this.save();
             }
 
             e.preventDefault();
         },
 
-        save: function() {
-            if(!this.canSave || this.saving) {
+        save: function () {
+            if (!this.canSave || this.saving) {
                 return false;
             }
 
             this.saving = true;
 
             // Process text for spaces and proceed to save/create/cancel
-            let ntext = this.editingText.trim().replace(/ +/g,' ');
-            if(!ntext) {
+            let ntext = this.editingText.trim().replace(/ +/g, ' ');
+            if (!ntext) {
                 ntext = " ";
             }
 
             // Detect if anything changed at all
             let modifiedText = ntext != this.text;
             let modifiedTime = this.parsedEndTime != this.tend || this.parsedStartTime != this.tstart;
-            if(!modifiedText && !modifiedTime) {
+            if (!modifiedText && !modifiedTime) {
                 this.discard();
                 return;
             }
@@ -373,13 +373,13 @@ Vue.component('sequence', {
             let nStartTime = this.parsedStartTime;
             let nEndTime = this.parsedEndTime;
 
-            if(modifiedTime) {
+            if (modifiedTime) {
                 postData.tstart = nStartTime;
                 postData.tend = nEndTime;
             }
 
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/'+action,
+                url: '/subtitles/' + subID + '/translate/' + action,
                 method: 'POST',
                 data: postData
             }).done((newID) => {
@@ -387,21 +387,21 @@ Vue.component('sequence', {
                 this.saving = false;
 
                 // Discard editing text cache if saved
-                sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+                sessionStorage.removeItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id);
 
                 // Try to remove it form the modified seq list if it's there
                 let modIdx = modifiedSeqList.indexOf(this.number);
-                if(modIdx !== -1) {
+                if (modIdx !== -1) {
                     modifiedSeqList.splice(modIdx, 1);
                 }
             }).fail((_, status) => {
-                alertify.error("Ha ocurrido un error al intentar guardar la secuencia: ("+status+")");
+                alertify.error("Ha ocurrido un error al intentar guardar la secuencia: (" + status + ")");
                 this.saving = false;
             });
         },
 
-        discard: function() {
-            if(!this.openInfo) {
+        discard: function () {
+            if (!this.openInfo) {
                 return;
             }
 
@@ -412,42 +412,42 @@ Vue.component('sequence', {
             sub.closeSeq(this.number);
 
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/close',
+                url: '/subtitles/' + subID + '/translate/close',
                 method: 'POST',
                 data: {
                     seqNum: this.number
                 }
             })
-            .done(() => {
-                this.saving = false;
+                .done(() => {
+                    this.saving = false;
 
-                // Discard text cache if saved
-                sessionStorage.removeItem("sub-"+subID+"-seqtext-"+this.number+"-"+this.id);
+                    // Discard text cache if saved
+                    sessionStorage.removeItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id);
 
-                // Try to remove it form the modified seq list if it's there
-                let modIdx = modifiedSeqList.indexOf(this.number);
-                if(modIdx !== -1) {
-                    modifiedSeqList.splice(modIdx, 1);
-                }
-            })
-            .fail((_, status) => {
-                sub.openSeq(this.number, me.id, oLockID);
-                alertify.error("Ha ocurrido un error al intentar cerrar la secuencia  ("+status+")");
-            });
+                    // Try to remove it form the modified seq list if it's there
+                    let modIdx = modifiedSeqList.indexOf(this.number);
+                    if (modIdx !== -1) {
+                        modifiedSeqList.splice(modIdx, 1);
+                    }
+                })
+                .fail((_, status) => {
+                    sub.openSeq(this.number, me.id, oLockID);
+                    alertify.error("Ha ocurrido un error al intentar cerrar la secuencia  (" + status + ")");
+                });
         },
 
-        toggleLock: function(newState) {
-            if(!canLock) {
+        toggleLock: function (newState) {
+            if (!canLock) {
                 return false;
             }
 
-            if(this.locked == newState) {
+            if (this.locked == newState) {
                 return false; // Nothing to do
             }
 
             sub.lockSeq(this.id, newState);
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/lock',
+                url: '/subtitles/' + subID + '/translate/lock',
                 method: 'POST',
                 data: {
                     seqID: this.id
@@ -455,17 +455,17 @@ Vue.component('sequence', {
             }).fail(() => {
                 // Revert, the request failed
                 sub.lockSeq(this.id, !newState);
-                alertify.error("Error al intentar cambiar el estado de bloqueo de #"+this.number);
+                alertify.error("Error al intentar cambiar el estado de bloqueo de #" + this.number);
             });
         },
 
-        fix: function() {
-            if(this.shouldFixLevel <= 0) {
+        fix: function () {
+            if (this.shouldFixLevel <= 0) {
                 return false;
             }
 
             let ntext = balanceText(this.editingText, true).join('\n');
-            if(ntext != this.editingText) {
+            if (ntext != this.editingText) {
                 this.editingText = ntext;
             } else {
                 let tlines = [];
@@ -474,19 +474,19 @@ Vue.component('sequence', {
                 });
 
                 let dialogLineCount = (ntext.match(/(?:^|\s)-/g) || []).length;
-                if(tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
+                if (tlines.length > 1 && tlines[0].length >= 0 && tlines[1].length > 0 && dialogLineCount != 2) {
                     this.editingText = tlines.join(' ');
                 }
             }
         },
 
-        parseTime: function(t) {
+        parseTime: function (t) {
             let matches = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{1,2})[\.,](\d{1,3})$/.exec(t);
-            if(!matches || matches.length < 4) {
+            if (!matches || matches.length < 4) {
                 return null;
             }
 
-            let hs = matches[1] ? Number(matches[1])*3600 : 0;
+            let hs = matches[1] ? Number(matches[1]) * 3600 : 0;
             return (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 + Number(matches[4]);
         }
     },
@@ -505,17 +505,17 @@ Vue.component('pagelist', {
     `,
     props: ["curPage", "pages", "lastPage"],
     methods: {
-        nextPage: function() {
-            if(this.curPage < this.lastPage)
+        nextPage: function () {
+            if (this.curPage < this.lastPage)
                 this.toPage(this.curPage + 1);
         },
 
-        prevPage: function() {
-            if(this.curPage > 1)
+        prevPage: function () {
+            if (this.curPage > 1)
                 this.toPage(this.curPage - 1);
         },
 
-        toPage: function(page) {
+        toPage: function (page) {
             document.getElementById('translation').scrollIntoView();
             this.$emit("change-page", page);
         }
@@ -545,40 +545,40 @@ window.translation = new Vue({
         hasAdvancedTools: hasAdvancedTools
     },
     computed: {
-        lastPage: function() {
+        lastPage: function () {
             return Math.ceil(this.visibleSequences.length / SEQS_PER_PAGE);
         },
 
-        pages: function() {
+        pages: function () {
             let pages = [];
-            for(let i = 1; i <= this.lastPage; ++i) {
+            for (let i = 1; i <= this.lastPage; ++i) {
                 pages.push(i);
             }
 
             return pages;
         },
 
-        visibleSequences: function() {
+        visibleSequences: function () {
             return this.sequences.filter((seq) => {
-                if(this.filters.onlyUntranslated && seq.id) {
+                if (this.filters.onlyUntranslated && seq.id) {
                     return false;
                 }
 
-                if(this.filters.author != 0) {
+                if (this.filters.author != 0) {
                     let authorFilterFn = (seq) => {
                         return seq.author && this.filters.author == seq.author;
                     }
 
-                    if(!authorFilterFn(seq) && (!seq.history || !seq.history.some(authorFilterFn))) {
+                    if (!authorFilterFn(seq) && (!seq.history || !seq.history.some(authorFilterFn))) {
                         return false;
                     }
                 }
 
-                if(this.filters.text != '') {
+                if (this.filters.text != '') {
                     let textFilterFn = (seq) => {
                         let textToMatch = this.filters.text;
 
-                        if(this.filters.preciseTextMatching) {
+                        if (this.filters.preciseTextMatching) {
                             return seq.text.includes(textToMatch) || (seq.secondary_text && seq.secondary_text.includes(textToMatch));
                         }
 
@@ -588,7 +588,7 @@ window.translation = new Vue({
                         return accentFold(seq.text.toLocaleLowerCase()).includes(textToMatch) || (seq.secondary_text && accentFold(seq.secondary_text.toLocaleLowerCase()).includes(textToMatch));
                     };
 
-                    if(!textFilterFn(seq) && (!seq.history || !seq.history.some(textFilterFn))) {
+                    if (!textFilterFn(seq) && (!seq.history || !seq.history.some(textFilterFn))) {
                         return false;
                     }
                 }
@@ -597,16 +597,16 @@ window.translation = new Vue({
             });
         },
 
-        pageSequences: function() {
+        pageSequences: function () {
             return this.visibleSequences.filter((ele, idx) => {
-                return Math.floor(idx/SEQS_PER_PAGE) == this.curPage - 1;
+                return Math.floor(idx / SEQS_PER_PAGE) == this.curPage - 1;
             });
         },
 
-        openLocks: function() {
+        openLocks: function () {
             let locks = [];
             this.sequences.forEach((seq) => {
-                if(seq.openInfo) {
+                if (seq.openInfo) {
                     locks.push({
                         id: seq.openInfo.lockID,
                         uid: seq.openInfo.by,
@@ -619,16 +619,16 @@ window.translation = new Vue({
             return locks;
         },
 
-        authors: function() {
+        authors: function () {
             let authors = {};
             this.sequences.forEach((seq) => {
-                if(seq.author && !authors[seq.author]) {
+                if (seq.author && !authors[seq.author]) {
                     authors[seq.author] = sub.getUsername(seq.author);
                 }
 
-                if(seq.history) {
+                if (seq.history) {
                     seq.history.forEach((hseq) => {
-                        if(!authors[hseq.author]) {
+                        if (!authors[hseq.author]) {
                             authors[hseq.author] = sub.getUsername(hseq.author);
                         }
                     });
@@ -639,51 +639,51 @@ window.translation = new Vue({
         }
     },
     methods: {
-        onChangePage: function(page) {
+        onChangePage: function (page) {
             this.curPage = page;
         },
 
-        toggleUntranslatedFilter: function() {
+        toggleUntranslatedFilter: function () {
             this.curPage = 1;
             this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
         },
 
-        togglePreciseTextMatching: function() {
+        togglePreciseTextMatching: function () {
             this.curPage = 1;
             this.filters.preciseTextMatching = !this.filters.preciseTextMatching;
         },
 
-        updateAuthorFilter: function(e) {
+        updateAuthorFilter: function (e) {
             this.curPage = 1;
             this.filters.author = Number(e.target.value);
         },
 
-        updateTextFilter: function(e) {
+        updateTextFilter: function (e) {
             this.curPage = 1;
             this.filters.text = e.target.value;
         },
 
-        publishComment: function() {
+        publishComment: function () {
             let comment = this.newComment;
             this.newComment = '';
 
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/comments/submit',
+                url: '/subtitles/' + subID + '/translate/comments/submit',
                 method: 'POST',
                 data: {
                     text: comment
                 }
-            }).done(function(id) {
+            }).done(function (id) {
                 sub.addComment(id, sub.getUserObject(me.id), (new Date()).toISOString(), comment);
-            }).fail(function() {
+            }).fail(function () {
                 alertify.error("Ha ocurrido un error al enviar tu comentario");
             });
         },
 
-        remove: function(id) {
+        remove: function (id) {
             let c, cidx;
-            for(let i = 0; i < this.comments.length; ++i) {
-                if(this.comments[i].id == id) {
+            for (let i = 0; i < this.comments.length; ++i) {
+                if (this.comments[i].id == id) {
                     // Save comment and remove it from the list
                     c = this.comments[i];
                     cidx = i;
@@ -693,115 +693,115 @@ window.translation = new Vue({
             }
 
             $.ajax({
-                url: '/subtitles/'+subID+'/translate/comments/'+id,
+                url: '/subtitles/' + subID + '/translate/comments/' + id,
                 method: 'DELETE'
-            }).fail(function() {
+            }).fail(function () {
                 alertify.error('Se ha encontrado un error al borrar el comentario');
-                if(typeof cidx !== 'undefined') {
+                if (typeof cidx !== 'undefined') {
                     // Insert the comment right back where it was
                     this.comments.splice(cidx, 0, c);
                 }
             }.bind(this));
         },
 
-        openPage: function() {
-            this.pageSequences.forEach(function(s) {
-                if(!s.openInfo) {
-                    bus.$emit("open-"+s.number);
+        openPage: function () {
+            this.pageSequences.forEach(function (s) {
+                if (!s.openInfo) {
+                    bus.$emit("open-" + s.number);
                 }
             });
         },
 
-        openUntranslatedPage: function() {
-            this.pageSequences.forEach(function(s) {
-                if(!s.id) {
-                    bus.$emit("open-"+s.number);
+        openUntranslatedPage: function () {
+            this.pageSequences.forEach(function (s) {
+                if (!s.id) {
+                    bus.$emit("open-" + s.number);
                 }
             });
         },
 
-        closePage: function(ev, skipModifiedCheck) {
-            if(!skipModifiedCheck) {
+        closePage: function (ev, skipModifiedCheck) {
+            if (!skipModifiedCheck) {
                 let modTextList = [];
-                this.pageSequences.forEach(function(s) {
-                    if(modifiedSeqList.includes(s.number)) {
-                        modTextList.push("#"+s.number);
+                this.pageSequences.forEach(function (s) {
+                    if (modifiedSeqList.includes(s.number)) {
+                        modTextList.push("#" + s.number);
                     }
                 });
 
-                if(modTextList.length > 0) {
+                if (modTextList.length > 0) {
                     let pthis = this;
                     alertify
-                    .okBtn("Descartar cambios")
-                    .cancelBtn("¡No!")
-                    .confirm("Algunas secuencias de esta página han sido modificadas, pero no guardadas: "+modTextList.join(", ")+". ¿Estás seguro de querer descartar los cambios en estas?", (ev) => {
-                        pthis.closePage(ev, true);
-                    }, function(ev) {/* cancel */});
+                        .okBtn("Descartar cambios")
+                        .cancelBtn("¡No!")
+                        .confirm("Algunas secuencias de esta página han sido modificadas, pero no guardadas: " + modTextList.join(", ") + ". ¿Estás seguro de querer descartar los cambios en estas?", (ev) => {
+                            pthis.closePage(ev, true);
+                        }, function (ev) {/* cancel */ });
 
                     return;
                 }
             }
 
-            this.pageSequences.forEach(function(s) {
-                if(s.openInfo && s.openInfo.by == me.id) {
-                    bus.$emit("close-"+s.number);
+            this.pageSequences.forEach(function (s) {
+                if (s.openInfo && s.openInfo.by == me.id) {
+                    bus.$emit("close-" + s.number);
                 }
             });
         },
 
-        savePage: function() {
-            this.pageSequences.forEach(function(s) {
-                if(s.openInfo && s.openInfo.by == me.id) {
-                    bus.$emit("save-"+s.number);
+        savePage: function () {
+            this.pageSequences.forEach(function (s) {
+                if (s.openInfo && s.openInfo.by == me.id) {
+                    bus.$emit("save-" + s.number);
                 }
             });
         },
 
-        lockPage: function(state) {
-            this.pageSequences.forEach(function(s) {
-                if(!s.openInfo) {
-                    bus.$emit("lock-"+s.number, state);
+        lockPage: function (state) {
+            this.pageSequences.forEach(function (s) {
+                if (!s.openInfo) {
+                    bus.$emit("lock-" + s.number, state);
                 }
             });
         },
 
-        fixPage: function() {
-            this.pageSequences.forEach(function(s) {
-                if(s.openInfo && s.openInfo.by == me.id) {
-                    bus.$emit("fix-"+s.number);
+        fixPage: function () {
+            this.pageSequences.forEach(function (s) {
+                if (s.openInfo && s.openInfo.by == me.id) {
+                    bus.$emit("fix-" + s.number);
                 }
             });
         },
 
-        alertMod: function() {
+        alertMod: function () {
             alertify
-            .cancelBtn("Cancelar")
-            .okBtn("Enviar")
-            .prompt("Se avisará a un moderador. Añade un comentario a continuación explicando la situación:",
-              function (val, ev) {
-                $.ajax({
-                    url: '/subtitles/'+subID+'/alert',
-                    method: 'POST',
-                    data: {
-                        message: val
-                    }
-                }).done((reply) => {
-                    if(reply.ok) {
-                        alertify.success("Aviso enviado correctamente.");
-                    } else {
-                        alertify.error(reply.msg);
-                    }
-                }).fail((_, status) => {
-                    alertify.error("Ha ocurrido un error al intentar enviar la alerta: ("+status+")");
-                });
-              });
+                .cancelBtn("Cancelar")
+                .okBtn("Enviar")
+                .prompt("Se avisará a un moderador. Añade un comentario a continuación explicando la situación:",
+                    function (val, ev) {
+                        $.ajax({
+                            url: '/subtitles/' + subID + '/alert',
+                            method: 'POST',
+                            data: {
+                                message: val
+                            }
+                        }).done((reply) => {
+                            if (reply.ok) {
+                                alertify.success("Aviso enviado correctamente.");
+                            } else {
+                                alertify.error(reply.msg);
+                            }
+                        }).fail((_, status) => {
+                            alertify.error("Ha ocurrido un error al intentar enviar la alerta: (" + status + ")");
+                        });
+                    });
         },
 
-        jumpToSequence: function(seqn) {
+        jumpToSequence: function (seqn) {
             let totalPages = Math.ceil(this.sequences.length / SEQS_PER_PAGE);
             let targetPage = Math.ceil(seqn / SEQS_PER_PAGE);
 
-            if(seqn <= 0 || targetPage > totalPages) {
+            if (seqn <= 0 || targetPage > totalPages) {
                 return;
             }
 
@@ -810,10 +810,10 @@ window.translation = new Vue({
             // Wait till render
             setTimeout(() => {
                 let isFirstSequence = Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
-                if(isFirstSequence) {
+                if (isFirstSequence) {
                     $('#sequences')[0].scrollIntoView({ behavior: 'instant' });
                 } else {
-                    $('#sequences').children("#seqn-"+seqn)[0].scrollIntoView({ behavior: 'instant' });
+                    $('#sequences').children("#seqn-" + seqn)[0].scrollIntoView({ behavior: 'instant' });
                 }
 
                 let scrolledY = window.scrollY;
@@ -827,14 +827,18 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
 // Set up websocket (which will itself load the sub)
 const wsProtocol = window.location.protocol == 'https:' ? 'wss' : 'ws';
-const ws = new ReconnectingWebsocket(wsProtocol + '://'+ window.location.hostname + "/translation-rt?subID="+subID+"&token="+wsAuthToken);
+const ws = new ReconnectingWebsocket(wsProtocol + '://' + window.location.hostname + "/translation-rt?subID=" + subID + "&token=" + wsAuthToken);
 ws.onopen = () => { sub.wsOpen() };
 ws.onmessage = (e) => { sub.wsMessage(e) };
 ws.onerror = (e) => { sub.wsError(e) };
 
 // Absorb and block default Ctrl+S behaviour
-$(document).bind('keydown', function(e) {
-    if(e.ctrlKey && (e.which == 83)) {
+$(document).bind('keydown', function (e) {
+    if (e.ctrlKey && e.which == 83) {
+        if (e.shiftKey) {
+            translation.savePage();
+        }
+
         e.preventDefault();
     }
 });
