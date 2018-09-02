@@ -53,7 +53,11 @@
     padding: 0;
 }
 
-form .file {
+#upload input[type=file] {
+    overflow: hidden;
+}
+
+#upload form .file {
     /* Otherwise there's no support for the help */
     display: block;
 }
