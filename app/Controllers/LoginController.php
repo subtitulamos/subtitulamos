@@ -133,10 +133,4 @@ class LoginController
         $response = FigResponseCookies::expire($response, 'remember');
         return $response->withHeader('Location', '/');
     }
-
-    public function viewLogin($response)
-    {
-        $response->getBody()->write("Necesitas estar identificado para acceder a esta sección. <a href='/'>Ir a la página principal</a>");
-        return $response;
-    }
 }

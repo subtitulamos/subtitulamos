@@ -51,6 +51,13 @@ class RestrictedMiddleware
             $allowed = $allowed || $auth->hasRole($role);
         }
 
-        return $allowed ? $next($request, $response) : $response->withHeader('Location', '/login')->withStatus(302);
+        if ($allowed) { // If allowed, continue with the chain
+            return $next($request, $response);
+        }
+
+        $twig = $this->container->get("Slim\Views\Twig");
+        return $twig->render($response, 'restricted.twig', [
+            'is_logged_in' => $u
+        ]);
     }
 }

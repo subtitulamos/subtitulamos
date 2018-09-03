@@ -18,82 +18,87 @@ function toggleAccessForm() {
 
 	$fadingPan.toggleClass("hidden", false);
 
-	if (formType == "login"){
+	if (formType == "login") {
 		//if Login Form is open and you click on Iniciar Sesion on navigation bar -- close it
-		if (!$loginForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")){
+		if (!$loginForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")) {
 			$loginRegistry.toggleClass("bounce", false);
 			$loginRegistry.toggleClass("bounce_back", true);
-			setTimeout(function(){
+			setTimeout(function () {
 				$loginRegistry.toggleClass("hidden", true)
 				$loginRegistry.toggleClass("bounce", true);
-				$loginRegistry.toggleClass("bounce_back", false);}, 180);
+				$loginRegistry.toggleClass("bounce_back", false);
+			}, 180);
 		}
 		//if Login Form is closed, just open it
-		else if ($loginRegistry.hasClass("hidden")){
+		else if ($loginRegistry.hasClass("hidden")) {
 			$loginRegistry.toggleClass("hidden", false);
 			$regForm.toggleClass("hidden", true);
 			$loginForm.toggleClass("hidden", false);
 		}
 		//if Register Form is open and you click on Iniciar Sesion on navigation bar
-		else{
+		else {
 			$regForm.toggleClass("sendleft_remove", true);
-			setTimeout(function(){
+			setTimeout(function () {
 				$regForm.toggleClass("hidden", true);
 				$loginForm.toggleClass("hidden", false);
-				$loginForm.toggleClass("sendleft", true);}, 250);
-			setTimeout(function(){
+				$loginForm.toggleClass("sendleft", true);
+			}, 250);
+			setTimeout(function () {
 				$regForm.toggleClass("sendleft_remove", false);
-				$loginForm.toggleClass("sendleft", false);}, 400);
+				$loginForm.toggleClass("sendleft", false);
+			}, 400);
 		}
 	}
-	else if (formType == "register"){
+	else if (formType == "register") {
 		//if Register Form is open and you click on Registro on navigation bar -- close it
-		if (!$regForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")){
+		if (!$regForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")) {
 			$loginRegistry.toggleClass("bounce", false);
 			$loginRegistry.toggleClass("bounce_back", true);
-			setTimeout(function(){
+			setTimeout(function () {
 				$loginRegistry.toggleClass("hidden", true)
 				$loginRegistry.toggleClass("bounce", true);
-				$loginRegistry.toggleClass("bounce_back", false);}, 180);
+				$loginRegistry.toggleClass("bounce_back", false);
+			}, 180);
 		}
 		//if Login Form is closed, just open it
-		else if ($loginRegistry.hasClass("hidden")){
+		else if ($loginRegistry.hasClass("hidden")) {
 			$loginForm.toggleClass("hidden", true);
 			$loginRegistry.toggleClass("hidden", false);
 			$regForm.toggleClass("hidden", false);
 		}
 		//if Login Form is open and you click on Registro on navigation bar
-		else{
+		else {
 			$loginForm.toggleClass("sendleft_remove", true);
-			setTimeout(function(){
+			setTimeout(function () {
 				$loginForm.toggleClass("hidden", true);
 				$regForm.toggleClass("hidden", false);
-				$regForm.toggleClass("sendleft", true);}, 250);
-			setTimeout(function(){
+				$regForm.toggleClass("sendleft", true);
+			}, 250);
+			setTimeout(function () {
 				$loginForm.toggleClass("sendleft_remove", false);
-				$regForm.toggleClass("sendleft", false);}, 400);
+				$regForm.toggleClass("sendleft", false);
+			}, 400);
 		}
 	}
 }
 
-function closeLogRegForm()
-{
+function closeLogRegForm() {
 	let $loginRegistry = $("#login_registry");
 	let $fadingPan = $("#login_registry_fade_pan");
 
 	$fadingPan.toggleClass("fade_out", true);
-	setTimeout(function(){
+	setTimeout(function () {
 		$fadingPan.toggleClass("hidden", true);
 		$fadingPan.toggleClass("fade_out", false);
 	}, 580);
 
-	if ($loginRegistry.hasClass("hidden")){
+	if ($loginRegistry.hasClass("hidden")) {
 		$loginRegistry.toggleClass("hidden", false);
 	}
-	else{
+	else {
 		$loginRegistry.toggleClass("bounce", false);
 		$loginRegistry.toggleClass("bounce_back", true);
-		setTimeout(function(){
+		setTimeout(function () {
 			$loginRegistry.toggleClass("hidden", true)
 			$loginRegistry.toggleClass("bounce", true);
 			$loginRegistry.toggleClass("bounce_back", false);
@@ -101,30 +106,28 @@ function closeLogRegForm()
 	}
 }
 
-function shortNumber(number)
-{
-	if(number > 1000) {
-		number = Math.floor(number/100) / 10;
+function shortNumber(number) {
+	if (number > 1000) {
+		number = Math.floor(number / 100) / 10;
 		number = number + "k";
 	}
 
 	return number
 }
 
-function shortTime(seconds)
-{
-	if(seconds < 3600) {
+function shortTime(seconds) {
+	if (seconds < 3600) {
 		let m = Math.floor(seconds / 60);
-		return {number: m, unit: m > 1 ? "minutos" : "minuto"}
+		return { number: m, unit: m > 1 ? "minutos" : "minuto" }
 	}
 
-	if(seconds < 86400) {
+	if (seconds < 86400) {
 		let h = Math.floor(seconds / 3600);
-		return {number: h, unit: h > 1 ? "horas" : "hora"}
+		return { number: h, unit: h > 1 ? "horas" : "hora" }
 	}
 
 	let d = Math.floor(seconds / 86400);
-	return {number: d, unit: d > 1 ? "días" : "día"}
+	return { number: d, unit: d > 1 ? "días" : "día" }
 }
 
 function cleanShowName(name) {
@@ -140,7 +143,7 @@ function doLogin(e) {
 	let username = $("#login_username").val().trim();
 	let pwd = $("#login_password").val();
 
-	if(!username.length || !pwd.length) {
+	if (!username.length || !pwd.length) {
 		$loginErrors.html("Ha ocurrido un error al intentar acceder a la web:");
 		$loginErrors.append("<ul><li>Ni el usuario ni la contraseña pueden estar vacíos</li></ul>");
 		return;
@@ -163,9 +166,9 @@ function doLogin(e) {
 			password: pwd,
 			remember: $("#login_remember_me").is(":checked")
 		}
-	}).done(function(data) {
+	}).done(function (data) {
 		window.location.reload(true);
-	}).fail(function(data) {
+	}).fail(function (data) {
 		$loginBtn.toggleClass("hidden", false);
 		$loginLoading.toggleClass("hidden", true);
 
@@ -174,8 +177,8 @@ function doLogin(e) {
 			$loginErrors.append("<ul>");
 			let $errList = $loginErrors.find("ul");
 			let d = JSON.parse(data.responseText);
-			Object.keys(d).forEach(function(k) {
-				$errList.append("<li>"+d[k]+"</li>");
+			Object.keys(d).forEach(function (k) {
+				$errList.append("<li>" + d[k] + "</li>");
 			}, this);
 		} catch (e) {
 			$loginErrors.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
@@ -183,21 +186,21 @@ function doLogin(e) {
 	});
 }
 
-function closeNotification(){
+function closeNotification() {
 	let $notificationBar = $("#display_notification");
 	$notificationBar.toggleClass("fade_slide_out", true);
 
-	setTimeout(function(){
+	setTimeout(function () {
 		$notificationBar.toggleClass("hidden", true).toggleClass("fade_slide_out", false);
 	}, 350);
 }
 
-function clickReactionsAnimate(){
+function clickReactionsAnimate() {
 	let $this = $(this);
 
 	$this.toggleClass("button_bounce_click", true);
 
-	setTimeout(function(){
+	setTimeout(function () {
 		$this.toggleClass("button_bounce_click", false);
 	}, 500);
 }
@@ -207,7 +210,7 @@ function register(e) {
 
 	var $regForm = $('#fregister');
 
-	if(!$regForm[0].checkValidity()) { // If the form is invalid, submit it to display error messages
+	if (!$regForm[0].checkValidity()) { // If the form is invalid, submit it to display error messages
 		$regForm.find(':submit').click();
 		return false;
 	}
@@ -223,9 +226,9 @@ function register(e) {
 			email: $("#reg_email").val(),
 			terms: $("#reg_terms").val()
 		}
-	}).done(function(data) {
+	}).done(function (data) {
 		window.location.reload(true);
-	}).fail(function(data) {
+	}).fail(function (data) {
 		let $regErrors = $("#reg-errors");
 		try {
 			$regErrors.html("Se han encontrado los siguientes errores en el registro:");
@@ -233,9 +236,9 @@ function register(e) {
 			let $errList = $regErrors.find("ul");
 
 			let d = JSON.parse(data.responseText);
-			Object.keys(d).forEach(function(k) {
-				Object.keys(d[k]).forEach(function(k2) {
-					$errList.append("<li>"+d[k][k2]+"</li>");
+			Object.keys(d).forEach(function (k) {
+				Object.keys(d[k]).forEach(function (k2) {
+					$errList.append("<li>" + d[k][k2] + "</li>");
 				})
 
 			}, this);
@@ -245,11 +248,15 @@ function register(e) {
 	});
 }
 
-$(function() {
-	$("#close_logreg_form, #login_registry_fade_pan").on("click", function(){closeNotification(); closeLogRegForm();});
+$(function () {
+	$("#close_logreg_form, #login_registry_fade_pan").on("click", function () { closeNotification(); closeLogRegForm(); });
 	$("#login, #register").on("click", toggleAccessForm);
 	$("#login_button .sign_button").on("click", doLogin);
 	$("#register_button .sign_button").on("click", register);
 	$("#close_notification, #display_notification").on("click", closeNotification);
 	$("#incategory_board").on("click", ".love_reaction, .share_reaction", clickReactionsAnimate);
+
+	if (window.openLogin) {
+		setTimeout(toggleAccessForm.bind($("#login")), 1500);
+	}
 });

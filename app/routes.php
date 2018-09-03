@@ -78,7 +78,6 @@ function addRoutes(&$app, &$entityManager)
     $app->get('/comments/subtitles', ['\App\Controllers\SubtitleCommentsController', 'viewAll'])->add($needsRole('ROLE_TT'));
     $app->get('/comments/subtitles/load', ['\App\Controllers\SubtitleCommentsController', 'listAll'])->add($needsRole('ROLE_TT'));
 
-    $app->get('/login', ['\App\Controllers\LoginController', 'viewLogin']);
     $app->post('/login', ['\App\Controllers\LoginController', 'login']);
     $app->post('/register', ['\App\Controllers\LoginController', 'register']);
     $app->get('/logout', ['\App\Controllers\LoginController', 'logout']);

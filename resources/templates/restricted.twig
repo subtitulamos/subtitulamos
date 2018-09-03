@@ -1,0 +1,47 @@
+{% extends "base.twig" %}
+{% import 'macros/assets.twig' as assets %}
+
+{% block meta %}
+    {# We do not want these login pages indexed #}
+    <meta name="robots" content="noindex">
+{% endblock %}
+{% block title %}Acceso restringido{% endblock %}
+{% block css %}
+    {{ assets.css('login') }}
+{% endblock %}
+
+{% block content %}
+    <div class="inner-content">
+        <div class='container'>
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="/">Subtitulamos.tv</a></li>
+                    <li class="is-active">
+                        <a href="#">Acceso restringido</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class='has-text-centered'>
+                <div class='forbidden-title'>Acceso restringido</div>
+
+                <i class="fa fa-ban forbidden" aria-hidden="true"></i>
+
+                <div>
+                    {% if not is_logged_in %}
+                        Necesitas acceder a tu cuenta para poder ver esta sección.
+                    {% else %}
+                        No tienes permisos suficientes para ejecutar esta acción.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script type='text/javascript'>
+    window.openLogin = {% if not is_logged_in %}true{% else %}false{% endif %};
+</script>
+{% endblock %}

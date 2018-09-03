@@ -33,7 +33,7 @@
 
                 {% if auth.has_role('ROLE_MOD') %}
                     <span class='edit-episode'>
-                        <a href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
                     </span>
                 {% endif %}
             </div>
