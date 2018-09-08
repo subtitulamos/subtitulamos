@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-module.exports = (function(originalText, opinionated) {
+module.exports = (function (originalText, opinionated) {
     if (typeof opinionated == 'undefined') {
         // The default criteria is opinionated: if there's no difference between
         // leaving a word on either line, it's left on the lower one.
@@ -57,7 +57,7 @@ module.exports = (function(originalText, opinionated) {
             /*
             * If next char is also a separator (unless its a space), we do not split yet.
             */
-            if (nextChar && nextChar.match(/[.,;?!\-]/) || (curChar != " " && nextChar.match(/[¿¡"']/))) {
+            if (nextChar && (nextChar.match(/[.,;?!\-]/) || (curChar != " " && nextChar.match(/[¿¡"']/)))) {
                 continue;
             }
 
@@ -65,7 +65,7 @@ module.exports = (function(originalText, opinionated) {
              * If next char is alphanumeric (/ accented vocal) or yet another separator,
              * and curChar is an opening separator, continue
              */
-            if(nextChar && nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/) && curChar.match(/[¿¡"']/)) {
+            if (nextChar && nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/) && curChar.match(/[¿¡"']/)) {
                 continue;
             }
 
@@ -80,7 +80,7 @@ module.exports = (function(originalText, opinionated) {
 
             if (behind >= ahead) {
                 // Begin splitting
-                if(curChar == " ") {
+                if (curChar == " ") {
                     // Move one back, as the space isn't part of the word!
                     --i;
                     --behind;

@@ -202,7 +202,6 @@ Vue.component('sequence', {
     watch: {
         editingText: function (nText) {
             if (nText != this.text) {
-                console.log("differ", nText, this.text);
                 if (!modifiedSeqList.includes(this.number)) {
                     modifiedSeqList.push(this.number);
                 }
