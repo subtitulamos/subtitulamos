@@ -37,11 +37,15 @@
                 <a href='/subtitles/{{ alert.from_sub_id }}/translate'>{{ alert.from_sub }}</a>
               </div>
             </div>
+            <div class='is-pulled-right unhide-alert'>
+              {% if alert.closed %}{% set direction="down" %}{% else %}{% set direction="up" %}{% endif %}
+              <i class="fa fa-chevron-{{ direction }}" aria-hidden="true"></i>
+            </div>
           </header>
 
           <form action="" method="POST">
             <input type='hidden' name='alert-id' value='{{ alert.id }}'>
-            <div class="card-content">
+            <div class="card-content {% if alert.closed %}hidden{% endif %}">
               <a href='/users/{{alert.from_user.id}}'>@{{ alert.from_user.username }}</a> (<time datetime="{{ alert.creation_time|date('d-m-Y H:i:s') }}">{{ alert.creation_time|date('d/M/Y, H:i') }}</time>)
               <p>
                 {{ alert.first_comment.text }}
@@ -95,4 +99,8 @@
         </div>
       {% endfor %}
     </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ assets.js('panel_alerts') }}
 {% endblock %}

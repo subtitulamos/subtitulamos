@@ -1,3 +1,11 @@
 .alert-user-info {
-    margin-left: 15px;
+  margin-left: 15px;
+}
+
+.unhide-alert {
+  margin: 10px;
+}
+
+.card-footer button {
+  height: 20px;
 }
