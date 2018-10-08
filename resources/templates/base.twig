@@ -127,6 +127,7 @@
 				{% if not auth.logged %}
 					<div class="signing" id="login">INICIAR SESIÓN</div>
 					<div class="signing" id="register">REGISTRO</div>
+					<div class="signing"><a href="/rules">NORMAS</a></div>
 				{% else %}
 					<div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
 					{% if auth.has_role('ROLE_MOD') %}
