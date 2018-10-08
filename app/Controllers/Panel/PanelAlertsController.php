@@ -21,7 +21,7 @@ class PanelAlertsController
     {
         $alerts = [];
 
-        $alertsCursor = $em->createQuery('SELECT a, ac FROM App:Alert a JOIN a.comments ac ORDER BY a.status ASC, a.creationTime ASC, ac.creationTime ASC')->getResult();
+        $alertsCursor = $em->createQuery('SELECT a, ac FROM App:Alert a JOIN a.comments ac ORDER BY a.status ASC, a.creationTime DESC, ac.creationTime ASC')->getResult();
 
         foreach ($alertsCursor as $alert) {
             $comments = $alert->getComments();
