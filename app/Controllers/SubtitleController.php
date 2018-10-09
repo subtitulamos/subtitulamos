@@ -66,7 +66,7 @@ class SubtitleController
 
         if ($sub->getPause()) {
             // Already paused!
-            return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $epId]));
+            return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]));
         }
 
         $pause = new Pause();
