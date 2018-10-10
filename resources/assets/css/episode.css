@@ -57,7 +57,7 @@ a {
     background-color: grey !important;
 }
 
-#episode_title{
+#section-title{
    font-weight: 600;
    font-size: 17px;
    text-align: center;
@@ -65,11 +65,17 @@ a {
    color: #315d88;
    width: 819px;
    position: relative;
-   top: 5px;
+   top: -8px;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
 }
+
+#section-title .show-name {
+  color: rgb(20, 79, 137);
+  font-size: 16px;
+}
+
 #season_number{
    color: #4480bb;
    text-align: center;

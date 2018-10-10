@@ -16,7 +16,7 @@
                 <li><a href="/">Subtitulamos.tv</a></li>
                 <li><a href="/shows/{{ episode.show.id }}">{{ episode.show.name }}</a></li>
                 <li><a href="/shows/{{ episode.show.id }}/season/{{ episode.season }}">Temporada {{ episode.season }}</a></li>
-                <li class="is-active"><a href="#">Episodio {{ episode.number }} - {{ episode.name}}</a></li>
+                <li class="is-active"><a href="#">Episodio {{ episode.number }}</a></li>
             </ul>
         </nav>
 
@@ -28,14 +28,18 @@
                 </div>
             </a>
 
-            <div id="episode_title">
-                {{ episode.name }}
+            <div id="section-title">
+                <div class='show-name'>{{ episode.show.name }}</div>
+                <div class='episode-name'>
+                    {{ episode.season }}x{{ "%02d"|format(episode.number) }} - {{ episode.name }}
 
-                {% if auth.has_role('ROLE_MOD') %}
-                    <span class='edit-episode'>
-                        <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                    </span>
-                {% endif %}
+                    {% if auth.has_role('ROLE_MOD') %}
+                        <span class='edit-episode'>
+                            <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        </span>
+                    {% endif %}
+                </div>
+
             </div>
 
             <a href='{{ next_url }}' {% if not next_url %}disabled='disabled' class='no-other-episode'{% endif %}>
