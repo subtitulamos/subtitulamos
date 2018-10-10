@@ -18,7 +18,7 @@ module.exports = (function (originalText, opinionated) {
         */
         let fDialogPos = text.indexOf('-');
         let fDialogPos2 = text.substr(fDialogPos + 1).indexOf(' -') + fDialogPos;
-        if (fDialogPos2 - fDialogPos <= 40 && text.length - 1 - fDialogPos2 <= 40) { //len - 1 due to the space introduced by the line break
+        if (fDialogPos2 - fDialogPos < 40 && text.length - 2 - fDialogPos2 <= 40) { //len - 1 due to the space introduced by the line break
             // If they fit in two separate lines, that's how it goes
             let dialogLines = [];
             dialogLines[0] = text.slice(0, fDialogPos2 + 1).trim();
