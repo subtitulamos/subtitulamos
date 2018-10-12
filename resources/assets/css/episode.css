@@ -282,6 +282,7 @@ a {
 .progress {
   width: 100%;
   height: inherit;
+  overflow: visible;
 }
 
 .progress_percentage {
