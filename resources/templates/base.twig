@@ -186,31 +186,30 @@
       </a>
     </div>
 
-    <div id="signing">
-      {% if not auth.logged %}
-        <div class="signing" id="login">INICIAR SESIÓN</div>
-        <div class="signing" id="register">REGISTRO</div>
-        <div class="signing"><a href="/rules">NORMAS</a></div>
-      {% else %}
-        <div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
-        {% if auth.has_role('ROLE_MOD') %}
-          <div class="signing"><a href="/panel">PANEL DE MODERADOR</a></div>
+    <nav class="top-links">
+      <ul>
+        {% if not auth.logged %}
+          <li id="login">INICIAR SESIÓN</li>
+          <li id="register">REGISTRO</li>
+          <li><a href="/rules">NORMAS</a></li>
+        {% else %}
+          <li id="user_account_manage">
+            <i class="fa fa-cog" aria-hidden="true"></i>
+            <a href='/me'>{{ auth.user.username }}</a>
+          </li>
+          {% if auth.has_role('ROLE_MOD') %}
+            <li><a href="/panel">PANEL DE MODERADOR</a></li>
+          {% endif %}
+          <li><a href="/rules">NORMAS</a></li>
+          <li id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></li>
+          <li><a href="/logout">SALIR</a></li>
         {% endif %}
-        <div class="signing"><a href="/rules">NORMAS</a></div>
-                  <div class="signing" id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></div>
-        <div class="signing"><a href="/logout">SALIR</a></div>
-      {% endif %}
-
-      {% if feature_on('DONATIONS') %}
-        <div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large"
-          data-hint="Este sitio está mantenido exclusivamente a base de donaciones">DONAR</span>
-        </div>
-      {% endif %}
-    </div>
+      </ul>
+    </nav>
   </header>
 
   {# Background fade pan that displays when the login/reg area is open #}
-  <div id="header-popup-wrapper_fade_pan" class="hidden"></div>
+  <div id="fade-pan" class="hidden"></div>
 
   <div id="container">
     <div class="main_container">
@@ -235,84 +234,82 @@
 
     {# TODO: This should be inside main container! #}
     {% block content %}{% endblock %}
+  </div>
 
-    <div id="footer">
-      <div id="footer_section_1">
-        <div id="tv">
+  <footer id="footer">
+    <div id="footer_section_1">
+      <div id="tv">
+        <div id="tv_fade_out"></div>
+        <div class="tv" id="tv_box_outer"></div>
+        <div class="tv" id="tv_box_inner"></div>
+        <div class="tv" id="tv_sound_line_1"></div>
+        <div class="tv" id="tv_sound_line_2"></div>
+        <div class="tv" id="tv_sound_line_3"></div>
+        <div class="tv" id="tv_sound_line_4"></div>
+        <div class="tv" id="tv_sound_line_5"></div>
+        <div class="tv" id="tv_sound_line_6"></div>
+        <div class="tv" id="tv_sound_line_7"></div>
+        <div class="tv" id="tv_sound_line_8"></div>
+        <div class="tv" id="tv_sound_line_9"></div>
+        <div class="tv" id="tv_sound_line_1"></div>
+        <div class="tv" id="tv_button_1_outer"></div>
+        <div class="tv" id="tv_button_1"></div>
+        <div class="tv" id="tv_button_2_outer"></div>
+        <div class="tv" id="tv_button_2"></div>
 
-          <div id="tv_fade_out"></div>
-          <div class="tv" id="tv_box_outer"></div>
-          <div class="tv" id="tv_box_inner"></div>
-          <div class="tv" id="tv_sound_line_1"></div>
-          <div class="tv" id="tv_sound_line_2"></div>
-          <div class="tv" id="tv_sound_line_3"></div>
-          <div class="tv" id="tv_sound_line_4"></div>
-          <div class="tv" id="tv_sound_line_5"></div>
-          <div class="tv" id="tv_sound_line_6"></div>
-          <div class="tv" id="tv_sound_line_7"></div>
-          <div class="tv" id="tv_sound_line_8"></div>
-          <div class="tv" id="tv_sound_line_9"></div>
-          <div class="tv" id="tv_sound_line_1"></div>
-          <div class="tv" id="tv_button_1_outer"></div>
-          <div class="tv" id="tv_button_1"></div>
-          <div class="tv" id="tv_button_2_outer"></div>
-          <div class="tv" id="tv_button_2"></div>
-
-          <div id="footer_memoria">
-            En memoria de Subtitulos.es (2008-2015)
-          </div>
-          <div id="footer_palabra">
-             DIFUNDE LA PALABRA
-          </div>
-          <div id="footer_disclaimer">
-            <a href="/dmca">DMCA and Disclaimer</a>
-          </div>
+        <div id="footer_memoria">
+          En memoria de Subtitulos.es (2008-2015)
         </div>
-
-      </div>
-      <div id="footer_section_2">
-
-        <div id="useful_links">
-          <div><div class="white_logo"></div> <div id="white_logo_text">© subtitulamos.tv</div></div>
-          <div class="social_footer">
-            <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
-              <i class="fa fa-facebook-square" aria-hidden="true"></i>
-            </a>
-            <a href="https://twitter.com/subtitulamostv" target="_blank">
-              <i class="fa fa-twitter-square" aria-hidden="true"></i>
-            </a>
-            <a href="https://foro.subtitulamos.tv" target="_blank">
-              <i class="fa fa-pencil-square" aria-hidden="true"></i>
-            </a>
-            <a href="https://github.com/subtitulamos/subtitulamos" target="_blank">
-              <i class="fa fa-github-square" aria-hidden="true"></i>
-            </a>
-            <a href="/rss" target="_blank">
-              <i class="fa fa-rss-square" aria-hidden="true"></i>
-            </a>
-            <a href="https://t.me/subtitulamostv" target="_blank">
-              <i class="fa fa-telegram" aria-hidden="true"></i>
-            </a>
-          </div>
+        <div id="footer_palabra">
+            DIFUNDE LA PALABRA
         </div>
-
-        <div id="website_navigator">
-          <table>
-            <tr>
-              <td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>
-              <td><a href='https://foro.subtitulamos.tv'>Foro</a></td>
-            </tr>
-            {% if auth.has_role('ROLE_TT') %}
-              <tr>
-                <td><a href='/comments/episodes'>Comentarios de episodio</a></td>
-                <td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
-              </tr>
-            {% endif %}
-          </table>
+        <div id="footer_disclaimer">
+          <a href="/dmca">DMCA and Disclaimer</a>
         </div>
       </div>
     </div>
-  </div>
+    <div id="footer_section_2">
+      <div id="useful_links">
+        <div><div class="white_logo"></div> <div id="white_logo_text">© subtitulamos.tv</div></div>
+        <div class="social_footer">
+          <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
+            <i class="fa fa-facebook-square" aria-hidden="true"></i>
+          </a>
+          <a href="https://twitter.com/subtitulamostv" target="_blank">
+            <i class="fa fa-twitter-square" aria-hidden="true"></i>
+          </a>
+          <a href="https://foro.subtitulamos.tv" target="_blank">
+            <i class="fa fa-pencil-square" aria-hidden="true"></i>
+          </a>
+          <a href="https://github.com/subtitulamos/subtitulamos" target="_blank">
+            <i class="fa fa-github-square" aria-hidden="true"></i>
+          </a>
+          <a href="/rss" target="_blank">
+            <i class="fa fa-rss-square" aria-hidden="true"></i>
+          </a>
+          <a href="https://t.me/subtitulamostv" target="_blank">
+            <i class="fa fa-telegram" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div id="website_navigator">
+        <table>
+          <tr>
+            <td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>
+            <td><a href='https://foro.subtitulamos.tv'>Foro</a></td>
+          </tr>
+          {% if auth.has_role('ROLE_TT') %}
+            <tr>
+              <td><a href='/comments/episodes'>Comentarios de episodio</a></td>
+              <td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
+            </tr>
+          {% endif %}
+        </table>
+      </div>
+    </div>
+  </footer>
+
   {# Load nonessential CSS #}
   <link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
   {{ assets.css('browser_specific') }}

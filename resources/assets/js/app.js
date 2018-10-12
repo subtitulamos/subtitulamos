@@ -28,7 +28,7 @@ function toggleAccessForm() {
   let $loginForm = $("#login-form");
   let $loginRegistry = $("#header-popup-wrapper");
   let $regForm = $("#register-form");
-  let $fadingPan = $("#header-popup-wrapper_fade_pan");
+  let $fadingPan = $("#fade-pan");
 
   $fadingPan.toggleClass("hidden", false);
 
@@ -97,7 +97,7 @@ function toggleAccessForm() {
 
 function closeLogRegForm() {
   let $loginRegistry = $("#header-popup-wrapper");
-  let $fadingPan = $("#header-popup-wrapper_fade_pan");
+  let $fadingPan = $("#fade-pan");
 
   $fadingPan.toggleClass("fade_out", true);
   setTimeout(function() {
@@ -264,7 +264,7 @@ function register(e) {
 }
 
 $(function() {
-  $("#close_logreg_form, #header-popup-wrapper_fade_pan").on("click", function() {
+  $("#close_logreg_form, #fade-pan").on("click", function() {
     closeLogRegForm();
   });
   $("#login, #register").on("click", toggleAccessForm);
