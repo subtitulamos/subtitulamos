@@ -45,7 +45,6 @@ class TranslationController
 
         $version = $em->createQuery('SELECT v FROM App:Version v WHERE v.episode = :epid ORDER BY v.id ASC')
             ->setParameter('epid', (int)$episodeID)
-            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         if (!$version) {

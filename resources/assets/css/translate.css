@@ -108,7 +108,11 @@
   }
 
   .locked {
-    background-color: #7ccc94;
+    background-color: rgb(186, 232, 186);
+  }
+
+  .locked > td {
+    border-bottom: 2px solid rgb(35, 171, 118) !important;
   }
 
   .tests {
@@ -136,15 +140,12 @@
       #a1d54f 100%
     ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   }
-
   .page-wrapper {
     text-align: center;
   }
-
   .pagination {
     display: inline-block;
   }
-
   .pagination li {
     list-style-type: none;
     display: inline-block;
@@ -155,68 +156,54 @@
     width: 35px;
     line-height: 30px;
     cursor: pointer;
-
     color: black;
     text-decoration: none;
   }
-
   .pagination i {
     color: black;
     font-size: 0.7rem;
   }
-
   .pagination .active {
     background-color: #415b92;
     color: #fff;
   }
-
   .pagination li.target-page:not(.active):hover {
     background-color: #95a0c3;
   }
-
   .pagination li.target-page:not(.active):hover {
     color: #ffffff;
   }
-
   .pagination .active > a {
     color: #ffffff;
   }
-
   #secondary-language-name,
   #target-language-name,
   #author-filter-name {
     color: #964646;
   }
-
   table td:last-child {
     padding-right: 10px;
     text-align: right;
   }
-
   .actions i {
     margin: 2px;
     font-size: 18px;
     cursor: pointer;
   }
-
   .actions .fa-undo {
     font-size: 16px !important;
   }
-
   .actions .fa-floppy-o {
     color: #009c00;
     padding-right: 0px;
   }
-
   .actions .fa-floppy-o.disabled {
     color: #757575;
   }
-
   .actions .fa-times-circle-o {
     color: #ff5858;
     padding-left: 0px;
   }
-
   .translatable textarea {
     display: block;
     width: 89%;
@@ -225,22 +212,18 @@
     margin-top: 3px;
     margin-bottom: 3px;
   }
-
   .text {
     min-width: 375px;
     display: table-cell;
   }
-
   .translatable {
     cursor: pointer;
   }
-
   pre {
     font-family: "Open Sans";
     display: inline-block;
     margin: 0;
   }
-
   .line-status {
     position: absolute;
     text-align: center;
@@ -249,81 +232,66 @@
     padding: 0;
     right: 0;
   }
-
   .line-counter {
     display: block;
     color: green;
     font-weight: bold;
   }
-
   .counter-warning {
     color: #e6ac00;
   }
-
   .counter-error {
     font-weight: bold;
     color: red;
   }
-
   #translation-comments {
     width: 940px;
     margin: 20px auto 0 auto;
     background-color: #f0eeee;
     padding: 20px 30px 20px 30px;
     border-radius: 5px;
-
     article {
       border-bottom: rgb(196, 216, 216) 1px solid;
       margin-bottom: 20px;
       padding-left: 20px;
     }
-
     header ul {
       list-style-type: none;
       padding: 0;
       margin: 0;
     }
-
     header li {
       display: inline;
       margin-right: 7px;
     }
-
     .comment-user a {
       color: #111;
       font-weight: bold;
       font-size: 14px;
     }
-
     .comment-user a:hover {
       text-decoration: underline !important;
     }
-
     .comment-time {
       font-size: 13px;
     }
-
     .comment-body {
       padding: 15px 0 15px 0;
       font-size: 14px;
-
       overflow: auto;
       overflow-wrap: break-word;
     }
-
     .newcomment-box {
       width: 94%;
       min-height: 110px;
       margin: 0 auto;
     }
-
     #new-comment {
       width: 100%;
       height: 60px;
       padding: 10px;
       font-size: 14px;
     }
-
     .comment-publish {
       float: right;
       background-color: #589aea;
@@ -334,12 +302,10 @@
       border-radius: 3px;
     }
   }
-
   .untranslated {
     font-size: 0.9em;
     font-style: italic;
   }
-
   > header {
     text-align: center;
     padding-bottom: 20px;
@@ -349,32 +315,26 @@
     background-color: #c7c7c7;
     text-shadow: #bbbbbb 1px 1px 1px;
   }
-
   #episode-title {
     font-weight: bold;
   }
-
   #episode-title a {
     color: #125596;
   }
-
   #filters {
     font-size: 0.9em;
     width: 1109px;
     padding-top: 20px;
     margin: 0 auto;
   }
-
   #filters input {
     font-size: 10pt;
     padding: 4px 4px 4px 7px;
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
-
   #filters #text-filter {
     padding-right: 20px;
   }
-
   #filters #apply {
     background-color: #4887d2;
     color: white;
@@ -382,46 +342,36 @@
     padding: 4px;
     margin: 3px;
   }
-
   #sequences textarea {
     resize: none;
   }
-
   #translation-locks {
     margin-left: 20px;
   }
-
   .comment-actions i {
     cursor: pointer;
   }
-
   .comment-actions .fa-times {
     color: #d25959;
   }
-
   .comment-body.role-tt,
   .comment-body.role-mod {
     font-weight: bold;
   }
-
   .comment-body.role-tt {
     color: green;
   }
-
   .comment-body.role-mod {
     color: #0074ca;
   }
-
   .open-other {
     float: right;
     margin-top: 3px;
   }
-
   #translation-details.disabled {
     filter: blur(3px);
     pointer-events: none;
   }
-
   #translation-disabled-warning {
     background-color: #f15757;
     position: sticky;
@@ -434,28 +384,24 @@
     text-align: center;
     bottom: 0px;
   }
-
   .time input {
     width: 84px;
     padding: 2px;
     margin: -3px;
     background-color: transparent;
   }
-
   .time input:hover {
     border: 1px solid darkgrey;
     cursor: text;
     background-color: rgba(228, 228, 228, 0.5);
     margin: -4px;
   }
-
   .time input:focus,
   .time input.edited {
     border: 1px solid darkgrey;
     background-color: #fff;
     margin: -4px;
   }
-
   #translation-tools {
     position: sticky;
     top: 0px;
@@ -464,7 +410,6 @@
     z-index: 2;
     background-color: #d6d6d6;
     font-size: 15px;
-
     button {
       padding: 5px 11px;
       margin: 0 5px;
@@ -472,40 +417,32 @@
       background-color: #f1f1f1;
       border: 1px solid #afafaf;
     }
-
     button:hover {
       box-shadow: rgba(43, 0, 0, 0.21) 0px 0px 4px 1px;
     }
-
     .lock-tool {
       background-color: #bae8ba;
       border: 1px solid #00b10c;
     }
-
     .lock-tool:hover {
       box-shadow: rgba(0, 140, 61, 0.5) 0px 0px 4px 1px !important;
     }
-
     .alert-mod {
       background-color: #efed9b;
       border: 1px solid #b6b909;
     }
-
     .alert-mod:hover {
       box-shadow: rgba(150, 152, 18, 0.49) 0px 0px 4px 1px !important;
     }
   }
-
   .bullseye-wrapper {
     color: gray;
     margin-left: -20px;
     cursor: pointer;
   }
-
   .bullseye-wrapper:hover i {
     text-shadow: 2px 2px 2px #afafaf;
   }
-
   .bullseye-active {
     color: #ea0d0d;
   }
