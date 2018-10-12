@@ -190,6 +190,10 @@ a {
   box-shadow: none;
 }
 
+#subtitle-actions a:hover {
+  color: inherit;
+}
+
 .unpause-subtitle:hover {
   background-color: #20a520;
 }
@@ -199,6 +203,9 @@ a {
 
 .delete_subtitle:hover {
   background-color: #ff2157;
+}
+.edit_episode:hover {
+  background-color: #3990af;
 }
 .resyncreq_subtitle:hover {
   background-color: #ecb908;
@@ -239,10 +246,12 @@ a {
   padding-left: 1px;
   font-size: 17pt;
 }
-.resyncreq_subtitle .fa-refresh {
+.resyncreq_subtitle .fa-refresh,
+.edit_episode .fa-pencil {
   padding-top: 7px;
   font-size: 16pt;
 }
+
 .edit_subtitle .fa-file-text {
   padding-top: 12px;
   font-size: 14pt;

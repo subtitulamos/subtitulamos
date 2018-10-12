@@ -32,14 +32,7 @@
         <div class='show-name'>{{ episode.show.name }}</div>
         <div class='episode-name'>
           {{ episode.season }}x{{ "%02d"|format(episode.number) }} - {{ episode.name }}
-
-          {% if auth.has_role('ROLE_MOD') %}
-            <span class='edit-episode'>
-              <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
-            </span>
-          {% endif %}
         </div>
-
       </div>
 
       <a href='{{ next_url }}' {% if not next_url %}disabled='disabled' class='no-other-episode'{% endif %}>
@@ -143,11 +136,18 @@
       {% endfor %}
 
       <div id="subtitle-actions">
+        {% if auth.has_role('ROLE_MOD') %}
+          <div class="edit_episode subtitle-action hint--bottom hint--rounded" data-hint="Editar las propiedades del episodio">
+            <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+          </div>
+        {% endif %}
+
         <a href='/episodes/{{ episode.id }}/resync' rel="nofollow">
           <div class="resyncreq_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Subir una resincronización">
             <i class="fa fa-refresh" aria-hidden="true"></i>
           </div>
         </a>
+
         <div id="new-translation">
           <div class="translate_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Abrir una nueva traducción">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
