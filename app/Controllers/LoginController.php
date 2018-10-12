@@ -74,9 +74,9 @@ class LoginController
     {
         $username = $request->getParam('username', '');
         $password = $request->getParam('password', '');
-        $password_confirmation = $request->getParam('password_confirmation', false); // TODO: Implement
+        $password_confirmation = $request->getParam('password_confirmation', '');
         $email = $request->getParam('email', '');
-        $terms = $request->getParam('terms', false);
+        $terms = $request->getParam('terms', false) == 'true';
 
         $errors = [];
         if (!$terms) {

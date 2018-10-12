@@ -2,7 +2,7 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   min-width: 1000px;
-  background-color: #282b30;
+  background-color: #4480bb;
   font-family: "Open Sans";
 }
 
@@ -31,11 +31,16 @@ input.nospinner[type="number"] {
   z-index: 0;
   background-color: #4480bb;
 }
-#header {
+body > header {
   background-color: #4480bb;
   padding-top: 110px;
 }
-#header a {
+
+body > header a {
+  color: white;
+}
+
+body > header a:hover {
   color: white;
 }
 
@@ -101,29 +106,12 @@ input.nospinner[type="number"] {
 #close_logreg_form:hover {
   color: rgba(0, 0, 0, 0.6);
 }
-#login_registry {
+#header-popup-wrapper {
   width: 100%;
   background-color: rgba(233, 231, 231, 0.98);
   position: fixed;
   z-index: 1000;
-}
-#display_notification {
-  position: fixed;
   top: 0;
-  z-index: 1001;
-  width: 100%;
-  color: white;
-  height: 26px;
-  font-size: 10pt;
-  padding-top: 6px;
-  text-align: center;
-}
-#close_notification {
-  display: inline-block;
-  position: relative;
-  font-style: italic;
-  font-size: 9pt;
-  opacity: 0.5;
 }
 .error_upon_loginregistry {
   background-color: #ec4e4e;
@@ -135,7 +123,7 @@ input.nospinner[type="number"] {
 .error_upon_loginregistry .fa-times-circle {
   cursor: pointer;
 }
-#login_registry_fade_pan {
+#header-popup-wrapper_fade_pan {
   background-color: #000;
   position: fixed;
   z-index: 999;
@@ -144,16 +132,16 @@ input.nospinner[type="number"] {
   top: 0;
   opacity: 0.5;
 }
-#login_form,
-#register_form {
+#login-form,
+#register-form {
   width: 800px;
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 40px;
   padding-top: 40px;
 }
-#register_form table,
-#login_form table {
+#register-form table,
+#login-form table {
   border-spacing: 10px;
   margin-left: auto;
   margin-right: auto;
@@ -194,17 +182,9 @@ input.nospinner[type="number"] {
   font-size: 9pt !important;
 }
 
-#login_button,
-#register_button {
-  margin-top: 20px;
-  text-align: right;
-  width: 650px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#login_button i {
-  font-size: 1.8em;
+#login-button,
+#register-button {
+  text-transform: uppercase;
 }
 
 .button {
@@ -226,22 +206,22 @@ input.nospinner[type="number"] {
   width: 150px;
 }
 
-#login_form .sign_button {
+#login-form .sign_button {
   background-color: #08a762;
 }
-#login_form .sign_button:hover {
+#login-form .sign_button:hover {
   background-color: #1abb75;
 }
-#login_form .sign_button:active {
+#login-form .sign_button:active {
   background-color: #14734a;
 }
-#register_form .sign_button {
+#register-form .sign_button {
   background-color: #dc1c1c;
 }
-#register_form .sign_button:hover {
+#register-form .sign_button:hover {
   background-color: #ff2727;
 }
-#register_form .sign_button:active {
+#register-form .sign_button:active {
   background-color: #b70505;
 }
 
@@ -378,7 +358,6 @@ input.nospinner[type="number"] {
 }
 
 #large_splash {
-  margin-top: 20px;
   position: relative;
   z-index: 2;
   margin-bottom: 10px;
@@ -718,18 +697,13 @@ input.nospinner[type="number"] {
   color: #5490d0;
 }
 
-#reg-errors,
-#login-errors {
+#reg-errors {
   margin: 0 auto;
   width: 100%;
   margin-left: 125px;
   font-size: 0.8em;
   color: #d86666;
   font-weight: bold;
-}
-
-#login-errors {
-  margin-left: 90px;
 }
 
 /** Search **/
@@ -949,4 +923,9 @@ input.nospinner[type="number"] {
 template {
   /* For browsers without template tag support */
   display: none;
+}
+
+/* BULMA Overwrites (ideally through customizing bulma instead, but...) */
+.button.is-primary {
+  background-color: #01c3a6 !important;
 }

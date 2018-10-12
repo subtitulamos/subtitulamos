@@ -25,10 +25,10 @@ export function dateDiff(a, b) {
 function toggleAccessForm() {
   let $this = $(this);
   let formType = $this.attr("id");
-  let $loginForm = $("#login_form");
-  let $loginRegistry = $("#login_registry");
-  let $regForm = $("#register_form");
-  let $fadingPan = $("#login_registry_fade_pan");
+  let $loginForm = $("#login-form");
+  let $loginRegistry = $("#header-popup-wrapper");
+  let $regForm = $("#register-form");
+  let $fadingPan = $("#header-popup-wrapper_fade_pan");
 
   $fadingPan.toggleClass("hidden", false);
 
@@ -96,8 +96,8 @@ function toggleAccessForm() {
 }
 
 function closeLogRegForm() {
-  let $loginRegistry = $("#login_registry");
-  let $fadingPan = $("#login_registry_fade_pan");
+  let $loginRegistry = $("#header-popup-wrapper");
+  let $fadingPan = $("#header-popup-wrapper_fade_pan");
 
   $fadingPan.toggleClass("fade_out", true);
   setTimeout(function() {
@@ -152,29 +152,23 @@ function cleanShowName(name) {
 function doLogin(e) {
   e.preventDefault();
 
-  let $loginErrors = $("#login-errors");
-  let $notificationBar = $("#display_notification");
-
+  const $loginError = $("#login-error");
+  const $pwdField = $("#login_password");
   let username = $("#login_username")
     .val()
     .trim();
-  let pwd = $("#login_password").val();
+  let pwd = $pwdField.val();
 
   if (!username.length || !pwd.length) {
-    $loginErrors.html("Ha ocurrido un error al intentar acceder a la web:");
-    $loginErrors.append(
-      "<ul><li>Ni el usuario ni la contraseña pueden estar vacíos</li></ul>"
-    );
+    $loginError.toggleClass("hidden", false);
+    $pwdField.toggleClass("is-danger", true);
+    $loginError.html("Ni el usuario ni la contraseña pueden estar vacíos");
     return;
   }
 
-  let $btnWrapper = $("#login_button");
-  let $loginBtn = $btnWrapper.find("button");
-  let $loginLoading = $btnWrapper.find("i");
-
-  $loginBtn.toggleClass("hidden", true);
-  $loginLoading.toggleClass("hidden", false);
-  $loginErrors.html(""); // Clear previous errors, just so it's clearer they're new
+  const $loginBtn = $("#login-button");
+  $loginBtn.toggleClass("is-loading", true);
+  $loginError.html(""); // Clear previous errors, just so it's clearer they're new
 
   // Login the user via ajax
   $.ajax({
@@ -183,41 +177,23 @@ function doLogin(e) {
     data: {
       username: username,
       password: pwd,
-      remember: $("#login_remember_me").is(":checked")
-    }
+      remember: $("#login_remember_me").is(":checked"),
+    },
   })
-    .done(function(data) {
+    .done(function() {
       window.location.reload(true);
     })
     .fail(function(data) {
-      $loginBtn.toggleClass("hidden", false);
-      $loginLoading.toggleClass("hidden", true);
-
+      $loginBtn.toggleClass("is-loading", false);
+      $pwdField.toggleClass("is-danger", true);
+      $loginError.toggleClass("hidden", false);
       try {
-        $loginErrors.html("Ha ocurrido un error al intentar acceder a la web:");
-        $loginErrors.append("<ul>");
-        let $errList = $loginErrors.find("ul");
         let d = JSON.parse(data.responseText);
-        Object.keys(d).forEach(function(k) {
-          $errList.append("<li>" + d[k] + "</li>");
-        }, this);
+        $loginError.html(d[0]);
       } catch (e) {
-        $loginErrors.html(
-          "Error desconocido al intentar acceder. Por favor, inténtalo de nuevo."
-        );
+        $loginError.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
       }
     });
-}
-
-function closeNotification() {
-  let $notificationBar = $("#display_notification");
-  $notificationBar.toggleClass("fade_slide_out", true);
-
-  setTimeout(function() {
-    $notificationBar
-      .toggleClass("hidden", true)
-      .toggleClass("fade_slide_out", false);
-  }, 350);
 }
 
 function clickReactionsAnimate() {
@@ -233,13 +209,18 @@ function clickReactionsAnimate() {
 function register(e) {
   e.preventDefault();
 
-  var $regForm = $("#fregister");
+  // Mark button as loading
+  const $regButton = $("#register-button");
+  $regButton.toggleClass("is-loading", true);
 
-  if (!$regForm[0].checkValidity()) {
-    // If the form is invalid, submit it to display error messages
-    $regForm.find(":submit").click();
-    return false;
-  }
+  // Clean up old errors
+  $("#register-form")
+    .find(".is-danger")
+    .toggleClass("is-danger");
+
+  $("#register-form")
+    .find("[data-reg-error]")
+    .remove();
 
   // Login the user via ajax
   $.ajax({
@@ -250,52 +231,46 @@ function register(e) {
       password: $("#reg_password").val(),
       password_confirmation: $("#reg_password_confirmation").val(),
       email: $("#reg_email").val(),
-      terms: $("#reg_terms").val()
-    }
+      terms: $("#reg_terms").is(":checked"),
+    },
   })
-    .done(function(data) {
+    .done(function() {
       window.location.reload(true);
     })
     .fail(function(data) {
-      let $regErrors = $("#reg-errors");
-      try {
-        $regErrors.html(
-          "Se han encontrado los siguientes errores en el registro:"
-        );
-        $regErrors.append("<ul>");
-        let $errList = $regErrors.find("ul");
+      $regButton.toggleClass("is-loading", false);
 
-        let d = JSON.parse(data.responseText);
-        Object.keys(d).forEach(function(k) {
-          Object.keys(d[k]).forEach(function(k2) {
-            $errList.append("<li>" + d[k][k2] + "</li>");
-          });
-        }, this);
+      let d;
+      try {
+        d = JSON.parse(data.responseText);
       } catch (e) {
-        $regErrors.html(
+        alert(
           "Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo."
         );
+      }
+
+      for (let err of d) {
+        Object.keys(err).forEach(field => {
+          const $field = $("#reg_" + field);
+          console.log(field, $field);
+          $field.toggleClass("is-danger", true);
+          $field
+            .parent()
+            .parent()
+            .append("<p class='help is-danger' data-reg-error=''>" + err[field] + "</p>");
+        });
       }
     });
 }
 
 $(function() {
-  $("#close_logreg_form, #login_registry_fade_pan").on("click", function() {
-    closeNotification();
+  $("#close_logreg_form, #header-popup-wrapper_fade_pan").on("click", function() {
     closeLogRegForm();
   });
   $("#login, #register").on("click", toggleAccessForm);
-  $("#login_button .sign_button").on("click", doLogin);
-  $("#register_button .sign_button").on("click", register);
-  $("#close_notification, #display_notification").on(
-    "click",
-    closeNotification
-  );
-  $("#incategory_board").on(
-    "click",
-    ".love_reaction, .share_reaction",
-    clickReactionsAnimate
-  );
+  $("#login-form").on("submit", doLogin);
+  $("#register-form").on("submit", register);
+  $("#incategory_board").on("click", ".love_reaction, .share_reaction", clickReactionsAnimate);
 
   if (window.openLogin) {
     setTimeout(toggleAccessForm.bind($("#login")), 1500);

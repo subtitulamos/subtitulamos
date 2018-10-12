@@ -26,125 +26,193 @@
   <title>{% block title %}{% endblock %} - Subtitulamos.tv - Subtítulos de series</title>
 </head>
 <body>
-  {% if not auth.logged %}
-    <div id="login_registry" class="hidden bounce">
-      <div id="display_notification" class="error_upon_loginregistry fade_slide_in hidden">
-        <span></span> <div id="close_notification">(OK!)</div>
-      </div>
-      <div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
-      <form id="login_form" class="hidden">
-        <div id='login-errors'>
-          <ul></ul>
-        </div>
+  <header class="fade_slide_in">
+    {# Login/Register top-down sliders #}
+    {% if not auth.logged %}
+      <div id="header-popup-wrapper" class="hidden bounce">
+        <div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
 
-        <table>
-          <tr class="registry_line">
-            <td class="form_text">Usuario o correo electrónico</td>
-            <td> <input id="login_username" type="text" class="form_input" required></td>
-          </tr>
-          <tr class="registry_line">
-            <td class="form_text">Contraseña</td>
-            <td> <input type="password" id="login_password" class="form_input" required></td>
-          </tr>
-          <tr class="registry_line">
-            <td class="form_text"><input id="login_remember_me" type="checkbox"></td>
-            <td><div id="remember_me">Recordarme en este equipo</div></td>
-          </tr>
-        </table>
-        <div id="login_button">
-          <button class="button sign_button" type="submit">INICIAR SESIÓN</button>
-                    <i class="fa fa-spinner fa-pulse fa-3x fa-fw hidden"></i>
-        </div>
-      </form>
-      <div id="register_form" class="hidden">
-        <form id="fregister" action="/register" method="POST">
+        <form id="login-form" class="hidden">
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Usuario</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="login_username" class="input" type="text" placeholder="Escribe tu nombre de usuario o correo electrónico" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Contraseña</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="login_password" class="input" type="password" required>
+                </div>
+                <p id="login-error" class="help is-danger hidden"></p>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label">
+              <label class="label"></label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <label class="checkbox">
+                    <input id="login_remember_me" type="checkbox">
+                    Recordarme en este equipo
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-grouped is-grouped-right">
+            <p class="control">
+              <button id="login-button" class="button is-primary" type="submit">Iniciar sesión</button>
+            </p>
+          </div>
+        </form>
+        <form id="register-form" class="hidden" action="/register" method="POST">
           <div id='reg-errors'>
             <ul></ul>
           </div>
-          <button type="submit" style="display:none"></button> {# For javascript trickery only #}
 
-          <table>
-            <tr class="registry_line">
-              <td class="form_text">Usuario</td>
-              <td> <input type="text" id="reg_username" placeholder="Elige un nombre de usuario" class="form_input" required></td>
-            </tr>
-            <tr class="registry_line">
-              <td class="form_text">Correo electrónico</td>
-              <td> <input type="email" id="reg_email" placeholder="Escribe tu correo eletrónico" class="form_input" required></td>
-            </tr>
-            <tr class="registry_line">
-              <td class="form_text">Contraseña</td>
-              <td> <input type="password" id="reg_password" placeholder="Elige una contraseña" class="form_input" required></td>
-            </tr>
-            <tr class="registry_line">
-              <td class="form_text">Repetir contraseña</td>
-              <td> <input type="password" id="reg_password_confirmation" placeholder="Repite tu contraseña" class="form_input" required></td>
-            </tr>
-            <tr class="registry_line">
-              <td class="form_text"><input id="reg_terms" type="checkbox" value="true" required></td>
-              <td><div id="remember_me">Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web</div></td>
-            </tr>
-          </table>
-          <div id="register_button"><button class="button sign_button" tabindex="0">REGISTRAR</button></div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Usuario</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="reg_username" class="input" type="text" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Email</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="reg_email" class="input" type="email" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Contraseña</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="reg_password" class="input" type="password" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Confirmar contraseña</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <input id="reg_password_confirmation" class="input" type="password" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label">
+              <label class="label"></label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <label class="checkbox">
+                    <input id="reg_terms" type="checkbox">
+                    Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-grouped is-grouped-right">
+            <p class="control">
+              <button id="register-button" class="button is-primary" type="submit">Registrar</button>
+            </p>
+          </div>
         </form>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
 
-  <div id="login_registry_fade_pan" class="hidden"></div>
+    {# Top menu #}
+    <div id="social">
+      <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
+        <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="¡Visítanos en Facebook!">
+          <span class="fa-stack icon-facebook icon-social-header">
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-facebook fa-stack-1x"></i>
+          </span>
+        </span>
+      </a>
+
+      <a href="https://twitter.com/subtitulamostv" target="_blank">
+        <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="Síguenos en Twitter">
+          <span class="fa-stack icon-twitter icon-social-header">
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-twitter fa-stack-1x"></i>
+          </span>
+        </span>
+      </a>
+
+      <a href="https://foro.subtitulamos.tv" target="_blank">
+        <span class="hint--bottom hint--bounce hint--rounded" data-hint="Visita nuestro foro">
+          <span class="fa-stack icon-board icon-social-header">
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-pencil fa-stack-1x"></i>
+          </span>
+        </span>
+      </a>
+    </div>
+
+    <div id="signing">
+      {% if not auth.logged %}
+        <div class="signing" id="login">INICIAR SESIÓN</div>
+        <div class="signing" id="register">REGISTRO</div>
+        <div class="signing"><a href="/rules">NORMAS</a></div>
+      {% else %}
+        <div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
+        {% if auth.has_role('ROLE_MOD') %}
+          <div class="signing"><a href="/panel">PANEL DE MODERADOR</a></div>
+        {% endif %}
+        <div class="signing"><a href="/rules">NORMAS</a></div>
+                  <div class="signing" id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></div>
+        <div class="signing"><a href="/logout">SALIR</a></div>
+      {% endif %}
+
+      {% if feature_on('DONATIONS') %}
+        <div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large"
+          data-hint="Este sitio está mantenido exclusivamente a base de donaciones">DONAR</span>
+        </div>
+      {% endif %}
+    </div>
+  </header>
+
+  {# Background fade pan that displays when the login/reg area is open #}
+  <div id="header-popup-wrapper_fade_pan" class="hidden"></div>
+
   <div id="container">
-    <div id="header" class="fade_slide_in">
-      <div id="social">
-        <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
-          <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="¡Visítanos en Facebook!">
-            <span class="fa-stack icon-facebook icon-social-header">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-facebook fa-stack-1x"></i>
-            </span>
-          </span>
-        </a>
-
-        <a href="https://twitter.com/subtitulamostv" target="_blank">
-          <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="Síguenos en Twitter">
-            <span class="fa-stack icon-twitter icon-social-header">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-twitter fa-stack-1x"></i>
-            </span>
-          </span>
-        </a>
-
-        <a href="https://foro.subtitulamos.tv" target="_blank">
-          <span class="hint--bottom hint--bounce hint--rounded" data-hint="Visita nuestro foro">
-            <span class="fa-stack icon-board icon-social-header">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-pencil fa-stack-1x"></i>
-            </span>
-          </span>
-        </a>
-      </div>
-
-      <div id="signing">
-        {% if not auth.logged %}
-          <div class="signing" id="login">INICIAR SESIÓN</div>
-          <div class="signing" id="register">REGISTRO</div>
-          <div class="signing"><a href="/rules">NORMAS</a></div>
-        {% else %}
-          <div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
-          {% if auth.has_role('ROLE_MOD') %}
-            <div class="signing"><a href="/panel">PANEL DE MODERADOR</a></div>
-          {% endif %}
-          <div class="signing"><a href="/rules">NORMAS</a></div>
-                    <div class="signing" id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></div>
-          <div class="signing"><a href="/logout">SALIR</a></div>
-        {% endif %}
-
-        {% if feature_on('DONATIONS') %}
-          <div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large"
-            data-hint="Este sitio está mantenido exclusivamente a base de donaciones">DONAR</span>
-          </div>
-        {% endif %}
-      </div>
-    </div>
     <div class="main_container">
       {% block search %}
         <div id="search">
