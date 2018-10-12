@@ -3,35 +3,35 @@
 
 {% block title %}Pala @ {{ subtitle.version.episode.fullname }}{% endblock %}
 {% block css %}
-    {{ assets.css('hammer') }}
+  {{ assets.css('hammer') }}
 {% endblock %}
 
 {% block content %}
 <div id="hammer">
-    <div class="container">
-        <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-            <ul>
-                <li><a href="/">Subtitulamos.tv</a></li>
-                <li><a href="/shows/{{ show.id }}">{{ show.name }}</a></li>
-                <li><a href="/shows/{{ show.id }}/season/{{ episode.season }}">Temporada {{ episode.season }}</a></li>
-                <li><a href="/episodes/{{ episode.id }}">Episodio {{ episode.number }} - {{ episode.name}}</a></li>
-                <li class="is-active"><a href="#" aria-current="page">Pala</a></li>
-            </ul>
-        </nav>
+  <div class="container">
+    <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/">Subtitulamos.tv</a></li>
+        <li><a href="/shows/{{ show.id }}">{{ show.name }}</a></li>
+        <li><a href="/shows/{{ show.id }}/season/{{ episode.season }}">Temporada {{ episode.season }}</a></li>
+        <li><a href="/episodes/{{ episode.id }}">Episodio {{ episode.number }} - {{ episode.name}}</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Pala</a></li>
+      </ul>
+    </nav>
 
-        <div class='candidates'>
-            {% for user_id, seqs in seq_by_author %}
-                <hammertarget id="{{ user_id }}" username="{{ seqs.user.username }}"
-                     count-latest="{{ seqs.counts.latest }}" count-corrected="{{ seqs.counts.corrected }}"></hammertarget>
-            {% endfor %}
-        </div>
+    <div class='candidates'>
+      {% for user_id, seqs in seq_by_author %}
+        <hammertarget id="{{ user_id }}" username="{{ seqs.user.username }}"
+           count-latest="{{ seqs.counts.latest }}" count-corrected="{{ seqs.counts.corrected }}"></hammertarget>
+      {% endfor %}
     </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript">
-        let subID = {{ subtitle.id }};
-    </script>
-    {{ assets.js('hammer') }}
+  <script type="text/javascript">
+    let subID = {{ subtitle.id }};
+  </script>
+  {{ assets.js('hammer') }}
 {% endblock %}

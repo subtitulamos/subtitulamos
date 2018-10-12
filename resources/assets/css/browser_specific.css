@@ -1,20 +1,22 @@
 /*Styling for Firefox*/
 @-moz-document url-prefix() {
-   #tv_box_outer{
-      margin-top: -40px;
-   }
-   #tv_box_inner{
-      margin-top: -30px;
-   }
-   #tv_fade_out{
-      margin-top: -34px;
-   }
-   .clip_social_reactions{
-      margin-top: 11px;
-   }
+  #tv_box_outer {
+    margin-top: -40px;
+  }
+  #tv_box_inner {
+    margin-top: -30px;
+  }
+  #tv_fade_out {
+    margin-top: -34px;
+  }
+  .clip_social_reactions {
+    margin-top: 11px;
+  }
 }
 
 /*Styling for Microsoft Edge*/
-@supports (-ms-ime-align:auto) {
-  body { overflow-x: hidden; }
+@supports (-ms-ime-align: auto) {
+  body {
+    overflow-x: hidden;
+  }
 }

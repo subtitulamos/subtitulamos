@@ -4,60 +4,61 @@
  */
 
 #upload {
-    background-color: #f0eeee;
-    padding: 10px;
-    font-size: 0.9em;
+  background-color: #f0eeee;
+  padding: 10px;
+  font-size: 0.9em;
 }
 
-#upload #season, #upload #episode {
-    padding: 4px 4px 4px 7px;
-    width: 28px;
-    text-align: center;
+#upload #season,
+#upload #episode {
+  padding: 4px 4px 4px 7px;
+  width: 28px;
+  text-align: center;
 }
 
 #upload .form-group button {
-    margin-left: 40%;
-    width: 20%;
+  margin-left: 40%;
+  width: 20%;
 }
 
 #upload h2 {
-    color: #545252;
-    text-align: center;
-    font-size: 25px;
+  color: #545252;
+  text-align: center;
+  font-size: 25px;
 }
 
 #upload .ep-name {
-    text-align: center;
-    margin-top: -20px;
-    color: #636363;
+  text-align: center;
+  margin-top: -20px;
+  color: #636363;
 }
 
 #upload button {
-    background-color: #08a762;
-    font-weight: bold;
+  background-color: #08a762;
+  font-weight: bold;
 }
 
 #upload form {
-    width: 600px;
-    margin: 0 auto;
+  width: 600px;
+  margin: 0 auto;
 }
 
 #upload-rules {
-    margin: 10px auto;
-    padding-left: 20px;
-    width: 50%;
-    border: 1px solid grey;
+  margin: 10px auto;
+  padding-left: 20px;
+  width: 50%;
+  border: 1px solid grey;
 }
 
 #upload-rules h3 {
-    padding: 0;
+  padding: 0;
 }
 
-#upload input[type=file] {
-    overflow: hidden;
+#upload input[type="file"] {
+  overflow: hidden;
 }
 
 #upload form .file {
-    /* Otherwise there's no support for the help */
-    display: block;
+  /* Otherwise there's no support for the help */
+  display: block;
 }

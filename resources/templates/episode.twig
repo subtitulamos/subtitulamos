@@ -3,203 +3,203 @@
 
 {% block title %}{{ episode.fullname }}{% endblock %}
 {% block css %}
-    {{ assets.css('episode') }}
+  {{ assets.css('episode') }}
 {% endblock %}
 
 {% block content %}
 
 <div id="subtitle_content">
-    <div class="container">
-        <!-- Breadcrumbs -->
-        <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-            <ul>
-                <li><a href="/">Subtitulamos.tv</a></li>
-                <li><a href="/shows/{{ episode.show.id }}">{{ episode.show.name }}</a></li>
-                <li><a href="/shows/{{ episode.show.id }}/season/{{ episode.season }}">Temporada {{ episode.season }}</a></li>
-                <li class="is-active"><a href="#">Episodio {{ episode.number }}</a></li>
-            </ul>
-        </nav>
+  <div class="container">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/">Subtitulamos.tv</a></li>
+        <li><a href="/shows/{{ episode.show.id }}">{{ episode.show.name }}</a></li>
+        <li><a href="/shows/{{ episode.show.id }}/season/{{ episode.season }}">Temporada {{ episode.season }}</a></li>
+        <li class="is-active"><a href="#">Episodio {{ episode.number }}</a></li>
+      </ul>
+    </nav>
 
-        <!-- Sub list (languages, options, etc) -->
-        <div id="subtitle_details">
-            <a href='{{ prev_url }}' {% if not prev_url %}disabled='disabled' class='no-other-episode'{% endif %}>
-                <div id="previous_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Episodio Anterior">
-                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+    <!-- Sub list (languages, options, etc) -->
+    <div id="subtitle_details">
+      <a href='{{ prev_url }}' {% if not prev_url %}disabled='disabled' class='no-other-episode'{% endif %}>
+        <div id="previous_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Episodio Anterior">
+          <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <div id="section-title">
+        <div class='show-name'>{{ episode.show.name }}</div>
+        <div class='episode-name'>
+          {{ episode.season }}x{{ "%02d"|format(episode.number) }} - {{ episode.name }}
+
+          {% if auth.has_role('ROLE_MOD') %}
+            <span class='edit-episode'>
+              <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </span>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <a href='{{ next_url }}' {% if not next_url %}disabled='disabled' class='no-other-episode'{% endif %}>
+        <div id="next_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio">
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <br/>
+      <br/>
+      {% for lang, subs in langs %}
+        <div class="subtitle_language">{{ lang }}</div>
+        {% for sub in subs %}
+          {% if sub.progress < 20 %}
+            {% set progress_class = '019' %}
+          {% elseif sub.progress < 50 %}
+            {% set progress_class = '2049' %}
+          {% elseif sub.progress < 70 %}
+            {% set progress_class = '5069' %}
+          {% elseif sub.progress < 80 %}
+            {% set progress_class = '7079' %}
+          {% elseif sub.progress < 90 %}
+            {% set progress_class = '8089' %}
+          {% elseif sub.progress < 100 %}
+            {% set progress_class = '9099' %}
+          {% elseif sub.progress >= 100 %}
+            {% set progress_class = '100' %}
+          {% endif %}
+
+          {% set pause_class = sub.pause ? 'paused' : '' %}
+          {% set small_class = auth.has_role('ROLE_MOD') ? 'sm' : '' %}
+          {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
+
+          <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
+            <div class="version_name">{{ sub.version.name }}</div>
+            <div id="translation_progress_bar" class='{{ pause_class }} {{ small_class }}'>
+              {% if sub.directUpload %}
+                <div class="progress progress_original_subtitle">
+                  <div id="subtitle_uploader">{% if not sub.resync %}subtítulo original subido{% else %}resincronización subida{% endif %} por <a href="/users/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
                 </div>
-            </a>
-
-            <div id="section-title">
-                <div class='show-name'>{{ episode.show.name }}</div>
-                <div class='episode-name'>
-                    {{ episode.season }}x{{ "%02d"|format(episode.number) }} - {{ episode.name }}
-
-                    {% if auth.has_role('ROLE_MOD') %}
-                        <span class='edit-episode'>
-                            <a rel="nofollow" href='/episodes/{{ episode.id }}/edit'><i class="fa fa-pencil" aria-hidden="true"></i></a>
+              {% else %}
+                <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%">
+                  <div class="progress_percentage">
+                    {{ sub.progress // 1}}%
+                    {% if sub.pause %}
+                      {% if sub.progress >= 100 %}
+                        <span class='revision-clarify hint--rounded hint--top' data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
+                          (En revisión)
                         </span>
+                      {% elseif sub.progress >= 90 %}
+                        <span class='revision-clarify hint--rounded hint--top' data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
+                          (Pendiente de revisión)
+                        </span>
+                      {% endif %}
                     {% endif %}
-                </div>
-
+                  </div></div>
+              {% endif %}
             </div>
-
-            <a href='{{ next_url }}' {% if not next_url %}disabled='disabled' class='no-other-episode'{% endif %}>
-                <div id="next_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio">
-                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                </div>
-            </a>
-
-            <br/>
-            <br/>
-            {% for lang, subs in langs %}
-                <div class="subtitle_language">{{ lang }}</div>
-                {% for sub in subs %}
-                    {% if sub.progress < 20 %}
-                        {% set progress_class = '019' %}
-                    {% elseif sub.progress < 50 %}
-                        {% set progress_class = '2049' %}
-                    {% elseif sub.progress < 70 %}
-                        {% set progress_class = '5069' %}
-                    {% elseif sub.progress < 80 %}
-                        {% set progress_class = '7079' %}
-                    {% elseif sub.progress < 90 %}
-                        {% set progress_class = '8089' %}
-                    {% elseif sub.progress < 100 %}
-                        {% set progress_class = '9099' %}
-                    {% elseif sub.progress >= 100 %}
-                        {% set progress_class = '100' %}
-                    {% endif %}
-
-                    {% set pause_class = sub.pause ? 'paused' : '' %}
-                    {% set small_class = auth.has_role('ROLE_MOD') ? 'sm' : '' %}
-                    {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
-
-                    <div id="progress_buttons_row" class="compact" {# only compact if admin #}>
-                        <div class="version_name">{{ sub.version.name }}</div>
-                        <div id="translation_progress_bar" class='{{ pause_class }} {{ small_class }}'>
-                            {% if sub.directUpload %}
-                                <div class="progress progress_original_subtitle">
-                                    <div id="subtitle_uploader">{% if not sub.resync %}subtítulo original subido{% else %}resincronización subida{% endif %} por <a href="/users/{{ sub.version.user.id }}" class="uploader_name">{{ sub.version.user.username }}</a>{# TODO: , hace 10 días #}</div>
-                                </div>
-                            {% else %}
-                                <div class="progress progress_{{ progress_class }}" style="width: {{ max(sub.progress//1, 7) }}%">
-                                    <div class="progress_percentage">
-                                        {{ sub.progress // 1}}%
-                                        {% if sub.pause %}
-                                            {% if sub.progress >= 100 %}
-                                                <span class='revision-clarify hint--rounded hint--top' data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
-                                                    (En revisión)
-                                                </span>
-                                            {% elseif sub.progress >= 90 %}
-                                                <span class='revision-clarify hint--rounded hint--top' data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
-                                                    (Pendiente de revisión)
-                                                </span>
-                                            {% endif %}
-                                        {% endif %}
-                                    </div></div>
-                            {% endif %}
-                        </div>
-                        <div class="subtitle_buttons">
-                            {% if auth.has_role('ROLE_TT') %}
-                                {% if sub.pause %}
-                                    <a href="/subtitles/{{ sub.id }}/unpause">
-                                        <div class="subtitle-action unpause-subtitle"><i class="fa fa-lock" aria-hidden="true"></i></div>
-                                    </a>
-                                {% else %}
-                                    <a href="/subtitles/{{ sub.id }}/pause">
-                                        <div class="subtitle-action pause_subtitle"><i class="fa fa-unlock-alt" aria-hidden="true"></i></div>
-                                    </a>
-                                {% endif %}
-                            {% endif %}
-
-                            {% if can_download %}<a href="/subtitles/{{ sub.id }}/download" rel="nofollow">{% endif %}
-                                <div class="subtitle-action download_subtitle {% if not can_download %}unavailable{% endif %}"><i class="fa fa-download" aria-hidden="true"></i></div>
-                            {% if can_download %}</a>{% endif %}
-
-                            <a href="/subtitles/{{ sub.id }}/translate" rel="nofollow"><div class="subtitle-action edit_subtitle hint--bottom hint--rounded"
-                                    data-hint="Colaborar en la traducción">
-                                    <i class="fa fa-file-text" aria-hidden="true"></i>
-                                </div>
-                            </a>
-                            {% if auth.has_role('ROLE_MOD') %}
-                                <a data-action="delete" data-id="{{ sub.id }}">
-                                    <div class="subtitle-action delete_subtitle"><i class="fa fa-times" aria-hidden="true"></i></div>
-                                </a>
-                                <a href='/subtitles/{{ sub.id }}/hammer'>
-                                    <div class="subtitle-action hammer_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
-                                </a>
-                                <a href='/subtitles/{{ sub.id }}/properties'>
-                                    <div class="subtitle-action properties_subtitle"><i class="fa fa-pencil" aria-hidden="true"></i></div>
-                                </a>
-                            {% endif %}
-                        </div>
-
-                        {% if sub.directUpload %}
-                            <div class="version_comments {{ small_class }}">
-                                <p><i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-
-            <div id="subtitle-actions">
-                <a href='/episodes/{{ episode.id }}/resync' rel="nofollow">
-                    <div class="resyncreq_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Subir una resincronización">
-                        <i class="fa fa-refresh" aria-hidden="true"></i>
-                    </div>
-                </a>
-                <div id="new-translation">
-                    <div class="translate_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Abrir una nueva traducción">
-                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    </div>
-
-                    <div id="new-translation-opts" class="hidden">
-                        <form action="/subtitles/translate" method="POST">
-                            <input type="hidden" name="episode" value="{{ episode.id }}" />
-                            <select name="lang" id="translate-to-lang">
-                                {% for lid, lcode in LANG_LIST %}
-                                    {% if langs[LANG_NAMES[lcode]] is not defined %}
-                                        <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-
-                            <button type="submit" id="open-translation">Abrir traducción</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="subtitle-comments">
-            <h4>Comentarios <span class='comment-refresh'><i class='fa fa-refresh' @click="refresh"></i></span></h4>
-
-            <comment v-for="comment in comments"
-                :key="comment.id"
-                :id="comment.id"
-                :user="comment.user"
-                :base-text="comment.text"
-                :published-at="comment.published_at"
-                @remove="remove"
-            >
-            </comment>
-
-            <div class='newcomment-box'>
-                {% if auth.logged %}
-                    <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-                    <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+            <div class="subtitle_buttons">
+              {% if auth.has_role('ROLE_TT') %}
+                {% if sub.pause %}
+                  <a href="/subtitles/{{ sub.id }}/unpause">
+                    <div class="subtitle-action unpause-subtitle"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                  </a>
                 {% else %}
-                    <textarea id="new-comment" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
+                  <a href="/subtitles/{{ sub.id }}/pause">
+                    <div class="subtitle-action pause_subtitle"><i class="fa fa-unlock-alt" aria-hidden="true"></i></div>
+                  </a>
                 {% endif %}
+              {% endif %}
+
+              {% if can_download %}<a href="/subtitles/{{ sub.id }}/download" rel="nofollow">{% endif %}
+                <div class="subtitle-action download_subtitle {% if not can_download %}unavailable{% endif %}"><i class="fa fa-download" aria-hidden="true"></i></div>
+              {% if can_download %}</a>{% endif %}
+
+              <a href="/subtitles/{{ sub.id }}/translate" rel="nofollow"><div class="subtitle-action edit_subtitle hint--bottom hint--rounded"
+                  data-hint="Colaborar en la traducción">
+                  <i class="fa fa-file-text" aria-hidden="true"></i>
+                </div>
+              </a>
+              {% if auth.has_role('ROLE_MOD') %}
+                <a data-action="delete" data-id="{{ sub.id }}">
+                  <div class="subtitle-action delete_subtitle"><i class="fa fa-times" aria-hidden="true"></i></div>
+                </a>
+                <a href='/subtitles/{{ sub.id }}/hammer'>
+                  <div class="subtitle-action hammer_subtitle"><i class="fa fa-gavel" aria-hidden="true"></i></div>
+                </a>
+                <a href='/subtitles/{{ sub.id }}/properties'>
+                  <div class="subtitle-action properties_subtitle"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                </a>
+              {% endif %}
             </div>
+
+            {% if sub.directUpload %}
+              <div class="version_comments {{ small_class }}">
+                <p><i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}</p>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+
+      <div id="subtitle-actions">
+        <a href='/episodes/{{ episode.id }}/resync' rel="nofollow">
+          <div class="resyncreq_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Subir una resincronización">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+          </div>
+        </a>
+        <div id="new-translation">
+          <div class="translate_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Abrir una nueva traducción">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+          </div>
+
+          <div id="new-translation-opts" class="hidden">
+            <form action="/subtitles/translate" method="POST">
+              <input type="hidden" name="episode" value="{{ episode.id }}" />
+              <select name="lang" id="translate-to-lang">
+                {% for lid, lcode in LANG_LIST %}
+                  {% if langs[LANG_NAMES[lcode]] is not defined %}
+                    <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+
+              <button type="submit" id="open-translation">Abrir traducción</button>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+    <div id="subtitle-comments">
+      <h4>Comentarios <span class='comment-refresh'><i class='fa fa-refresh' @click="refresh"></i></span></h4>
+
+      <comment v-for="comment in comments"
+        :key="comment.id"
+        :id="comment.id"
+        :user="comment.user"
+        :base-text="comment.text"
+        :published-at="comment.published_at"
+        @remove="remove"
+      >
+      </comment>
+
+      <div class='newcomment-box'>
+        {% if auth.logged %}
+          <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
+          <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+        {% else %}
+          <textarea id="new-comment" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript">
-        let epId = {{ episode.id }};
-        let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-    </script>
-    {{ assets.js('episode') }}
+  <script type="text/javascript">
+    let epId = {{ episode.id }};
+    let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+  </script>
+  {{ assets.js('episode') }}
 {% endblock %}

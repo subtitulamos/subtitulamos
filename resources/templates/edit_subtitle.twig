@@ -4,52 +4,52 @@
 
 {% block title %}Editando {{ episode.fullname }}{% endblock %}
 {% block css %}
-    {{ assets.css('edit_episode') }}
+  {{ assets.css('edit_episode') }}
 {% endblock %}
 
 {% block content %}
 
 <div id="subtitle_content">
-    <div id="subtitle_content_title_container">
-        <div id="section-title">
-            <a href='/episodes/{{ episode.id }}'>{{ episode.fullname }}</a> ({{ version.name }})
-        </div>
+  <div id="subtitle_content_title_container">
+    <div id="section-title">
+      <a href='/episodes/{{ episode.id }}'>{{ episode.fullname }}</a> ({{ version.name }})
     </div>
+  </div>
 
-    <div id='info'>
-        <form name="" action="" method="POST">
-            {% for error in auth.flash.errors() %}
-                {{ alerts.show('error', error) }}
-            {% endfor %}
-            {% for success in auth.flash.successes() %}
-                {{ alerts.show('success', success) }}
-            {% endfor %}
+  <div id='info'>
+    <form name="" action="" method="POST">
+      {% for error in auth.flash.errors() %}
+        {{ alerts.show('error', error) }}
+      {% endfor %}
+      {% for success in auth.flash.successes() %}
+        {{ alerts.show('success', success) }}
+      {% endfor %}
 
-            <div class='form-group'>
-                <label for="vname">Nombre de versión</label>
-                <input id="vname" type="text" class="form_input" name="vname" value="{{ version.name }}" required>
-            </div>
+      <div class='form-group'>
+        <label for="vname">Nombre de versión</label>
+        <input id="vname" type="text" class="form_input" name="vname" value="{{ version.name }}" required>
+      </div>
 
-            <div class='form-group'>
-                <label for="vcomment">Comentario de versión</label>
-                <input id="vcomment" type="text" class="form_input" name="vcomment" value="{{ version.comments }}" required>
-            </div>
+      <div class='form-group'>
+        <label for="vcomment">Comentario de versión</label>
+        <input id="vcomment" type="text" class="form_input" name="vcomment" value="{{ version.comments }}" required>
+      </div>
 
-            <div class='form-group'>
-                <label for="lang">Idioma</label>
-                <select name="lang" id="lang" class="form_input">
-                    <option value="none" disabled>Selecciona un idioma</option>
-                    {% for lid, lcode in LANG_LIST %}
-                        <option value="{{ lcode }}" {% if lang == lcode %}selected{% endif %}>{{ LANG_NAMES[lcode] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+      <div class='form-group'>
+        <label for="lang">Idioma</label>
+        <select name="lang" id="lang" class="form_input">
+          <option value="none" disabled>Selecciona un idioma</option>
+          {% for lid, lcode in LANG_LIST %}
+            <option value="{{ lcode }}" {% if lang == lcode %}selected{% endif %}>{{ LANG_NAMES[lcode] }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-            <div class='form-group'>
-                <button id="save-edit" type="submit" class='button'>GUARDAR</button>
-            </div>
-        </form>
-    </div>
+      <div class='form-group'>
+        <button id="save-edit" type="submit" class='button'>GUARDAR</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
 

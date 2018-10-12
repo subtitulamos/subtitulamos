@@ -4,27 +4,27 @@
  */
 
 #hammer {
-    background-color: #f0eeee;
-    padding: 10px;
-    font-size: 0.95em;
+  background-color: #f0eeee;
+  padding: 10px;
+  font-size: 0.95em;
 }
 
 .candidates {
-    margin-left: 40px;
+  margin-left: 40px;
 }
 
 .hammer {
-    padding: 5px 4px 5px 4px;
-    font-size: 1.2em;
-    transform: rotate(80deg);
+  padding: 5px 4px 5px 4px;
+  font-size: 1.2em;
+  transform: rotate(80deg);
 }
 
 .hammer:hover {
-    color: #ce2828;
-    cursor: pointer;
-    transform: rotate(120deg);
+  color: #ce2828;
+  cursor: pointer;
+  transform: rotate(120deg);
 }
 
 .hammer-user-block {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }

@@ -13,7 +13,7 @@ Vue.component("hammertarget", {
             {{ latest }} secuencias sin corregir <span v-show="latest > 0">- <a href="javascript:void()" @click='latestHammer'>Borrar</a></span>
     </div>`,
   props: ["id", "username", "countCorrected", "countLatest"],
-  data: function () {
+  data: function() {
     return {
       corrected: this.countCorrected * 1,
       latest: this.countLatest * 1,
@@ -21,14 +21,16 @@ Vue.component("hammertarget", {
     };
   },
   computed: {
-    total: function () {
+    total: function() {
       return this.latest + this.corrected;
     }
   },
   methods: {
-    completeHammer: function () {
+    completeHammer: function() {
       alertify.confirm(
-        "Estás a punto de eliminar TODAS las contribuciones de <b>" + this.username + "</b> en el subtítulo.<br/>¿Estás seguro de querer continuar?",
+        "Estás a punto de eliminar TODAS las contribuciones de <b>" +
+          this.username +
+          "</b> en el subtítulo.<br/>¿Estás seguro de querer continuar?",
         () => {
           $.ajax({
             url: "/subtitles/" + subID + "/hammer",
@@ -44,17 +46,19 @@ Vue.component("hammertarget", {
 
             alertify.success(
               "Poof! Las contribuciones de <b>" +
-              this.username +
-              "</b> han sido eliminadas"
+                this.username +
+                "</b> han sido eliminadas"
             );
           });
         }
       );
     },
 
-    latestHammer: function () {
+    latestHammer: function() {
       alertify.confirm(
-        "Estás a punto de eliminar las contribuciones sin corregir de <b>" + this.username + "</b> en el subtítulo.<br/>¿Estás seguro de querer continuar?",
+        "Estás a punto de eliminar las contribuciones sin corregir de <b>" +
+          this.username +
+          "</b> en el subtítulo.<br/>¿Estás seguro de querer continuar?",
         () => {
           $.ajax({
             url: "/subtitles/" + subID + "/hammer",
@@ -66,7 +70,9 @@ Vue.component("hammertarget", {
           }).done(() => {
             this.latest = 0;
             alertify.success(
-              "Las contribuciones sin corregir de <b>" + this.username + "</b> han sido eliminadas"
+              "Las contribuciones sin corregir de <b>" +
+                this.username +
+                "</b> han sido eliminadas"
             );
           });
         }

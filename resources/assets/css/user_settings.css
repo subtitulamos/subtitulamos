@@ -1,22 +1,22 @@
 #user-settings-wrapper {
-   padding-top: 10px;
-   padding-bottom: 80px;   /* Height of the footer + 150 */
-   background-color: #e9e7e7 !important;
+  padding-top: 10px;
+  padding-bottom: 80px; /* Height of the footer + 150 */
+  background-color: #e9e7e7 !important;
 }
 
 #user-settings {
-   margin: 0 auto;
-   max-width: 1200px;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .form-group .details {
-    font-size: 0.95em;
+  font-size: 0.95em;
 }
 
 .form-group button {
-    margin-left: 30%;
-    width: 15%;
-    background-color: #3ea53e;
-    text-transform: uppercase;
-    font-weight: bold;
+  margin-left: 30%;
+  width: 15%;
+  background-color: #3ea53e;
+  text-transform: uppercase;
+  font-weight: bold;
 }

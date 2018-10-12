@@ -2,162 +2,162 @@
 {% import 'macros/assets.twig' as assets %}
 
 {% block bulma %}
-    {# No bulma on this page for now (TODO: Support it!) #}
-    {# We use normalize instead for the meanwhile #}
-    {{ assets.css('normalize') }}
+  {# No bulma on this page for now (TODO: Support it!) #}
+  {# We use normalize instead for the meanwhile #}
+  {{ assets.css('normalize') }}
 {% endblock %}
 {% block title %}Traducir {{ sub.version.episode.fullname }}{% endblock %}
 {% block css %}
-    {{ assets.css('translate') }}
+  {{ assets.css('translate') }}
 {% endblock %}
 
 {% block content %}
 <div id="translation">
-    <header>
-        Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ sub.version.episode.fullname }}</a></span>
-    </header>
+  <header>
+    Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ sub.version.episode.fullname }}</a></span>
+  </header>
 
-    <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
-        Conexión con el servidor de traducción perdida. Reestableciendo...
+  <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
+    Conexión con el servidor de traducción perdida. Reestableciendo...
+  </div>
+
+  <div id="translation-details" :class="{'disabled': !loaded}">
+    <div id='translation-tools'>
+      <button type="button" @click="openPage">Abrir todo</button>
+      <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
+      <button type="button" @click="savePage" class='hint--top hint--bounce' data-hint="Ctrl+Shift+S">Guardar todo</button>
+      <button type="button" @click="fixPage">Alinear todo</button>
+      <button type="button" @click="closePage">Cerrar todo</button>
+      <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
+      <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
+      {% if feature_on('ALERTS') %}
+        <button type="button" @click="alertMod" class='alert-mod'>Avisar a moderador</button>
+      {% endif %}
     </div>
 
-    <div id="translation-details" :class="{'disabled': !loaded}">
-        <div id='translation-tools'>
-            <button type="button" @click="openPage">Abrir todo</button>
-            <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
-            <button type="button" @click="savePage" class='hint--top hint--bounce' data-hint="Ctrl+Shift+S">Guardar todo</button>
-            <button type="button" @click="fixPage">Alinear todo</button>
-            <button type="button" @click="closePage">Cerrar todo</button>
-            <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
-            <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
-            {% if feature_on('ALERTS') %}
-                <button type="button" @click="alertMod" class='alert-mod'>Avisar a moderador</button>
-            {% endif %}
-        </div>
-
-        {% verbatim %}
-            <div id='filters'>
-                Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
-                <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
-                    :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
-                        <i class="fa fa-bullseye" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
-                </span>
-                &nbsp;&nbsp;-&nbsp;&nbsp;
-                Filtrar por autor:
-                <select id='author-filter' @change="updateAuthorFilter">
-                    <option value="0">Todos</option>
-                    <option v-for="(username, uid) in authors" :value="uid">{{ username }}</option>
-                </select>
-                &nbsp;&nbsp;-&nbsp;&nbsp;
-                <input type='checkbox' id='untranslated-filter' @change="toggleUntranslatedFilter">
-                <label for='untranslated-filter'>
-                    Ver solo secuencias sin traducir
-                </label>
-            </div>
-        {% endverbatim %}
-        <div class="page-wrapper">
-            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
-        </div>
-
-        <table id="sequences">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Autor</th>
-                    <th>Tiempos</th>
-                    <th>Idioma secundario{#: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i>#}</th>
-                    <th>Traducción al <span id='target-language-name'>{{ sub_lang }}</span></th>
-                    <th></th>
-                </tr>
-            </thead>
-
-            {% verbatim %}
-                <template v-for="seq in pageSequences">
-                    <sequence v-for="hseq in seq.history"
-                        :key="hseq.id + '-hist-' + seq.number"
-
-                        :id="hseq.id"
-                        :number="seq.number"
-                        :locked="false"
-                        :verified="false"
-                        :author="hseq.author"
-                        :tstart="hseq.tstart"
-                        :tend="hseq.tend"
-                        :secondary-text="seq.secondary_text"
-                        :text="hseq.text"
-                        :history="true">
-                    ></sequence>
-
-                    <sequence
-                        :key="seq.id + '-' + seq.number"
-
-                        :id="seq.id"
-                        :number="seq.number"
-                        :locked="seq.locked"
-                        :verified="seq.verified"
-                        :author="seq.author"
-                        :tstart="seq.tstart"
-                        :tend="seq.tend"
-                        :secondary-text="seq.secondary_text"
-                        :text="seq.text"
-                        :open-info="seq.openInfo ? seq.openInfo : {id: 0}"
-                        :history="false"
-                    ></sequence>
-                </template>
-            {% endverbatim %}
-        </table>
-
-        <div class="page-wrapper">
-            <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
-        </div>
-
-        <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
-            Secuencias abiertas:
-
-            <ul>
-                <seqlock v-for="lock in openLocks" :key="'lock-'+lock.id" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time"></seqlock>
-            </ul>
-        </div>
+    {% verbatim %}
+      <div id='filters'>
+        Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
+        <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
+          :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
+            <i class="fa fa-bullseye" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
+        </span>
+        &nbsp;&nbsp;-&nbsp;&nbsp;
+        Filtrar por autor:
+        <select id='author-filter' @change="updateAuthorFilter">
+          <option value="0">Todos</option>
+          <option v-for="(username, uid) in authors" :value="uid">{{ username }}</option>
+        </select>
+        &nbsp;&nbsp;-&nbsp;&nbsp;
+        <input type='checkbox' id='untranslated-filter' @change="toggleUntranslatedFilter">
+        <label for='untranslated-filter'>
+          Ver solo secuencias sin traducir
+        </label>
+      </div>
+    {% endverbatim %}
+    <div class="page-wrapper">
+      <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
     </div>
 
-    <div id="translation-comments">
-        <h4>Comentarios de traducción</h4>
-        <div class='newcomment-box'>
-            <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-            <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
-        </div>
+    <table id="sequences">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Autor</th>
+          <th>Tiempos</th>
+          <th>Idioma secundario{#: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i>#}</th>
+          <th>Traducción al <span id='target-language-name'>{{ sub_lang }}</span></th>
+          <th></th>
+        </tr>
+      </thead>
 
-        <comment v-for="comment in comments"
-            :key="comment.id"
-            :id="comment.id"
-            :user="comment.user"
-            :base-text="comment.text"
-            :published-at="comment.published_at"
-            :create-sequence-jumps="true"
-            @remove="remove"
-        >
-        </comment>
+      {% verbatim %}
+        <template v-for="seq in pageSequences">
+          <sequence v-for="hseq in seq.history"
+            :key="hseq.id + '-hist-' + seq.number"
+
+            :id="hseq.id"
+            :number="seq.number"
+            :locked="false"
+            :verified="false"
+            :author="hseq.author"
+            :tstart="hseq.tstart"
+            :tend="hseq.tend"
+            :secondary-text="seq.secondary_text"
+            :text="hseq.text"
+            :history="true">
+          ></sequence>
+
+          <sequence
+            :key="seq.id + '-' + seq.number"
+
+            :id="seq.id"
+            :number="seq.number"
+            :locked="seq.locked"
+            :verified="seq.verified"
+            :author="seq.author"
+            :tstart="seq.tstart"
+            :tend="seq.tend"
+            :secondary-text="seq.secondary_text"
+            :text="seq.text"
+            :open-info="seq.openInfo ? seq.openInfo : {id: 0}"
+            :history="false"
+          ></sequence>
+        </template>
+      {% endverbatim %}
+    </table>
+
+    <div class="page-wrapper">
+      <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
     </div>
+
+    <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
+      Secuencias abiertas:
+
+      <ul>
+        <seqlock v-for="lock in openLocks" :key="'lock-'+lock.id" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time"></seqlock>
+      </ul>
+    </div>
+  </div>
+
+  <div id="translation-comments">
+    <h4>Comentarios de traducción</h4>
+    <div class='newcomment-box'>
+      <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
+      <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+    </div>
+
+    <comment v-for="comment in comments"
+      :key="comment.id"
+      :id="comment.id"
+      :user="comment.user"
+      :base-text="comment.text"
+      :published-at="comment.published_at"
+      :create-sequence-jumps="true"
+      @remove="remove"
+    >
+    </comment>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript">
-        var subID = {{ sub.id }};
-        var availSecondaryLangs = {{ avail_secondary_langs|raw }};
-        var me = {
-            id: {{ auth.user.id }},
-            username: "{{ auth.user.username }}",
-            roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
-        };
-        var wsAuthToken = "{{ wstok }}";
+  <script type="text/javascript">
+    var subID = {{ sub.id }};
+    var availSecondaryLangs = {{ avail_secondary_langs|raw }};
+    var me = {
+      id: {{ auth.user.id }},
+      username: "{{ auth.user.username }}",
+      roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
+    };
+    var wsAuthToken = "{{ wstok }}";
 
-        // Permissions
-        var hasAdvancedTools = me.roles.includes('ROLE_JUNIOR_TT');
-        var canLock = me.roles.includes('ROLE_JUNIOR_TT');
-        var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
-        var canDeleteComments = me.roles.includes('ROLE_MOD');
-        var canEditTimes = me.roles.includes('ROLE_SENIOR_TT');
-    </script>
-    {{ assets.js('translate') }}
+    // Permissions
+    var hasAdvancedTools = me.roles.includes('ROLE_JUNIOR_TT');
+    var canLock = me.roles.includes('ROLE_JUNIOR_TT');
+    var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
+    var canDeleteComments = me.roles.includes('ROLE_MOD');
+    var canEditTimes = me.roles.includes('ROLE_SENIOR_TT');
+  </script>
+  {{ assets.js('translate') }}
 {% endblock %}

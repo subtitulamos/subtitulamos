@@ -2,260 +2,260 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<base href="/">
+  <base href="/">
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{% block meta %}{% endblock %}
-	{% if ENVIRONMENT_NAME == 'production' %}
-		<link rel="shortcut icon" type="image/png" href="favicon.png"/>
-		{% set min_suffix = "min." %}
-	{% else %}
-		<link rel="shortcut icon" type="image/png" href="favicon_nonprod.png"/>
-		{% set min_suffix = "" %}
-	{% endif %}
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block meta %}{% endblock %}
+  {% if ENVIRONMENT_NAME == 'production' %}
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    {% set min_suffix = "min." %}
+  {% else %}
+    <link rel="shortcut icon" type="image/png" href="favicon_nonprod.png"/>
+    {% set min_suffix = "" %}
+  {% endif %}
 
-	{% block bulma %}
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.{{ min_suffix }}css">
-	{% endblock %}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.{{ min_suffix }}css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
-	{{ assets.css('app') }}
-	{% block css %}{% endblock %}
+  {% block bulma %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.{{ min_suffix }}css">
+  {% endblock %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.{{ min_suffix }}css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
+  {{ assets.css('app') }}
+  {% block css %}{% endblock %}
 
-	<title>{% block title %}{% endblock %} - Subtitulamos.tv - Subtítulos de series</title>
+  <title>{% block title %}{% endblock %} - Subtitulamos.tv - Subtítulos de series</title>
 </head>
 <body>
-	{% if not auth.logged %}
-		<div id="login_registry" class="hidden bounce">
-			<div id="display_notification" class="error_upon_loginregistry fade_slide_in hidden">
-				<span></span> <div id="close_notification">(OK!)</div>
-			</div>
-			<div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
-			<form id="login_form" class="hidden">
-				<div id='login-errors'>
-					<ul></ul>
-				</div>
+  {% if not auth.logged %}
+    <div id="login_registry" class="hidden bounce">
+      <div id="display_notification" class="error_upon_loginregistry fade_slide_in hidden">
+        <span></span> <div id="close_notification">(OK!)</div>
+      </div>
+      <div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
+      <form id="login_form" class="hidden">
+        <div id='login-errors'>
+          <ul></ul>
+        </div>
 
-				<table>
-					<tr class="registry_line">
-						<td class="form_text">Usuario o correo electrónico</td>
-						<td> <input id="login_username" type="text" class="form_input" required></td>
-					</tr>
-					<tr class="registry_line">
-						<td class="form_text">Contraseña</td>
-						<td> <input type="password" id="login_password" class="form_input" required></td>
-					</tr>
-					<tr class="registry_line">
-						<td class="form_text"><input id="login_remember_me" type="checkbox"></td>
-						<td><div id="remember_me">Recordarme en este equipo</div></td>
-					</tr>
-				</table>
-				<div id="login_button">
-					<button class="button sign_button" type="submit">INICIAR SESIÓN</button>
+        <table>
+          <tr class="registry_line">
+            <td class="form_text">Usuario o correo electrónico</td>
+            <td> <input id="login_username" type="text" class="form_input" required></td>
+          </tr>
+          <tr class="registry_line">
+            <td class="form_text">Contraseña</td>
+            <td> <input type="password" id="login_password" class="form_input" required></td>
+          </tr>
+          <tr class="registry_line">
+            <td class="form_text"><input id="login_remember_me" type="checkbox"></td>
+            <td><div id="remember_me">Recordarme en este equipo</div></td>
+          </tr>
+        </table>
+        <div id="login_button">
+          <button class="button sign_button" type="submit">INICIAR SESIÓN</button>
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw hidden"></i>
-				</div>
-			</form>
-			<div id="register_form" class="hidden">
-				<form id="fregister" action="/register" method="POST">
-					<div id='reg-errors'>
-						<ul></ul>
-					</div>
-					<button type="submit" style="display:none"></button> {# For javascript trickery only #}
+        </div>
+      </form>
+      <div id="register_form" class="hidden">
+        <form id="fregister" action="/register" method="POST">
+          <div id='reg-errors'>
+            <ul></ul>
+          </div>
+          <button type="submit" style="display:none"></button> {# For javascript trickery only #}
 
-					<table>
-						<tr class="registry_line">
-							<td class="form_text">Usuario</td>
-							<td> <input type="text" id="reg_username" placeholder="Elige un nombre de usuario" class="form_input" required></td>
-						</tr>
-						<tr class="registry_line">
-							<td class="form_text">Correo electrónico</td>
-							<td> <input type="email" id="reg_email" placeholder="Escribe tu correo eletrónico" class="form_input" required></td>
-						</tr>
-						<tr class="registry_line">
-							<td class="form_text">Contraseña</td>
-							<td> <input type="password" id="reg_password" placeholder="Elige una contraseña" class="form_input" required></td>
-						</tr>
-						<tr class="registry_line">
-							<td class="form_text">Repetir contraseña</td>
-							<td> <input type="password" id="reg_password_confirmation" placeholder="Repite tu contraseña" class="form_input" required></td>
-						</tr>
-						<tr class="registry_line">
-							<td class="form_text"><input id="reg_terms" type="checkbox" value="true" required></td>
-							<td><div id="remember_me">Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web</div></td>
-						</tr>
-					</table>
-					<div id="register_button"><button class="button sign_button" tabindex="0">REGISTRAR</button></div>
-				</form>
-			</div>
-		</div>
-	{% endif %}
+          <table>
+            <tr class="registry_line">
+              <td class="form_text">Usuario</td>
+              <td> <input type="text" id="reg_username" placeholder="Elige un nombre de usuario" class="form_input" required></td>
+            </tr>
+            <tr class="registry_line">
+              <td class="form_text">Correo electrónico</td>
+              <td> <input type="email" id="reg_email" placeholder="Escribe tu correo eletrónico" class="form_input" required></td>
+            </tr>
+            <tr class="registry_line">
+              <td class="form_text">Contraseña</td>
+              <td> <input type="password" id="reg_password" placeholder="Elige una contraseña" class="form_input" required></td>
+            </tr>
+            <tr class="registry_line">
+              <td class="form_text">Repetir contraseña</td>
+              <td> <input type="password" id="reg_password_confirmation" placeholder="Repite tu contraseña" class="form_input" required></td>
+            </tr>
+            <tr class="registry_line">
+              <td class="form_text"><input id="reg_terms" type="checkbox" value="true" required></td>
+              <td><div id="remember_me">Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web</div></td>
+            </tr>
+          </table>
+          <div id="register_button"><button class="button sign_button" tabindex="0">REGISTRAR</button></div>
+        </form>
+      </div>
+    </div>
+  {% endif %}
 
-	<div id="login_registry_fade_pan" class="hidden"></div>
-	<div id="container">
-		<div id="header" class="fade_slide_in">
-			<div id="social">
-				<a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
-					<span class="hint--bottom-right hint--bounce hint--rounded" data-hint="¡Visítanos en Facebook!">
-						<span class="fa-stack icon-facebook icon-social-header">
-							<i class="fa fa-square fa-stack-2x"></i>
-							<i class="fa fa-facebook fa-stack-1x"></i>
-						</span>
-					</span>
-				</a>
+  <div id="login_registry_fade_pan" class="hidden"></div>
+  <div id="container">
+    <div id="header" class="fade_slide_in">
+      <div id="social">
+        <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
+          <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="¡Visítanos en Facebook!">
+            <span class="fa-stack icon-facebook icon-social-header">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-facebook fa-stack-1x"></i>
+            </span>
+          </span>
+        </a>
 
-				<a href="https://twitter.com/subtitulamostv" target="_blank">
-					<span class="hint--bottom-right hint--bounce hint--rounded" data-hint="Síguenos en Twitter">
-						<span class="fa-stack icon-twitter icon-social-header">
-							<i class="fa fa-square fa-stack-2x"></i>
-							<i class="fa fa-twitter fa-stack-1x"></i>
-						</span>
-					</span>
-				</a>
+        <a href="https://twitter.com/subtitulamostv" target="_blank">
+          <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="Síguenos en Twitter">
+            <span class="fa-stack icon-twitter icon-social-header">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-twitter fa-stack-1x"></i>
+            </span>
+          </span>
+        </a>
 
-				<a href="https://foro.subtitulamos.tv" target="_blank">
-					<span class="hint--bottom hint--bounce hint--rounded" data-hint="Visita nuestro foro">
-						<span class="fa-stack icon-board icon-social-header">
-							<i class="fa fa-square fa-stack-2x"></i>
-							<i class="fa fa-pencil fa-stack-1x"></i>
-						</span>
-					</span>
-				</a>
-			</div>
+        <a href="https://foro.subtitulamos.tv" target="_blank">
+          <span class="hint--bottom hint--bounce hint--rounded" data-hint="Visita nuestro foro">
+            <span class="fa-stack icon-board icon-social-header">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-pencil fa-stack-1x"></i>
+            </span>
+          </span>
+        </a>
+      </div>
 
-			<div id="signing">
-				{% if not auth.logged %}
-					<div class="signing" id="login">INICIAR SESIÓN</div>
-					<div class="signing" id="register">REGISTRO</div>
-					<div class="signing"><a href="/rules">NORMAS</a></div>
-				{% else %}
-					<div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
-					{% if auth.has_role('ROLE_MOD') %}
-						<div class="signing"><a href="/panel">PANEL DE MODERADOR</a></div>
-					{% endif %}
-					<div class="signing"><a href="/rules">NORMAS</a></div>
+      <div id="signing">
+        {% if not auth.logged %}
+          <div class="signing" id="login">INICIAR SESIÓN</div>
+          <div class="signing" id="register">REGISTRO</div>
+          <div class="signing"><a href="/rules">NORMAS</a></div>
+        {% else %}
+          <div id="user_account_manage_icon"><i class="fa fa-cog" aria-hidden="true"></i></div><div class="signing" id="user_account_manage"><a href='/me'>{{ auth.user.username }}</a></div>
+          {% if auth.has_role('ROLE_MOD') %}
+            <div class="signing"><a href="/panel">PANEL DE MODERADOR</a></div>
+          {% endif %}
+          <div class="signing"><a href="/rules">NORMAS</a></div>
                     <div class="signing" id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></div>
-					<div class="signing"><a href="/logout">SALIR</a></div>
-				{% endif %}
+          <div class="signing"><a href="/logout">SALIR</a></div>
+        {% endif %}
 
-				{% if feature_on('DONATIONS') %}
-					<div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large"
-						data-hint="Este sitio está mantenido exclusivamente a base de donaciones">DONAR</span>
-					</div>
-				{% endif %}
-			</div>
-		</div>
-		<div class="main_container">
-			{% block search %}
-				<div id="search">
-					<a href="/"><div id="white-logo-searchbar" class="white_logo"></div></a>
-					<input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" autocomplete="off" />
-					<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+        {% if feature_on('DONATIONS') %}
+          <div class="signing" id="donate"><span class="hint--bottom-left hint--bounce hint--rounded hint--large"
+            data-hint="Este sitio está mantenido exclusivamente a base de donaciones">DONAR</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="main_container">
+      {% block search %}
+        <div id="search">
+          <a href="/"><div id="white-logo-searchbar" class="white_logo"></div></a>
+          <input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" autocomplete="off" />
+          <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
 
-					<ul id="search-results" class='hidden'></ul>
-				</div>
-			{% endblock %}
-		</div>
+          <ul id="search-results" class='hidden'></ul>
+        </div>
+      {% endblock %}
+    </div>
 
-		{% if auth.user is not null and auth.user.ban %}
-			<div class="ban-banner">
-				<b>Aviso</b>: Tu cuenta se encuentra baneada {% if auth.user.ban.until|date('Y') > "+5 years"|date('Y') %}de forma permanente{% else %}temporalmente hasta el {{ auth.user.ban.until|date('d/M/Y H:i (e)') }}{% endif %}
-				por violación de las normas de la web.<br/>
-				Las cuentas baneadas no pueden realizar acciones en la página que requieran identificación (traducir, comentar, subir subtítulos...).
-			</div>
-		{% endif %}
+    {% if auth.user is not null and auth.user.ban %}
+      <div class="ban-banner">
+        <b>Aviso</b>: Tu cuenta se encuentra baneada {% if auth.user.ban.until|date('Y') > "+5 years"|date('Y') %}de forma permanente{% else %}temporalmente hasta el {{ auth.user.ban.until|date('d/M/Y H:i (e)') }}{% endif %}
+        por violación de las normas de la web.<br/>
+        Las cuentas baneadas no pueden realizar acciones en la página que requieran identificación (traducir, comentar, subir subtítulos...).
+      </div>
+    {% endif %}
 
-		{# TODO: This should be inside main container! #}
-		{% block content %}{% endblock %}
+    {# TODO: This should be inside main container! #}
+    {% block content %}{% endblock %}
 
-		<div id="footer">
-			<div id="footer_section_1">
-				<div id="tv">
+    <div id="footer">
+      <div id="footer_section_1">
+        <div id="tv">
 
-					<div id="tv_fade_out"></div>
-					<div class="tv" id="tv_box_outer"></div>
-					<div class="tv" id="tv_box_inner"></div>
-					<div class="tv" id="tv_sound_line_1"></div>
-					<div class="tv" id="tv_sound_line_2"></div>
-					<div class="tv" id="tv_sound_line_3"></div>
-					<div class="tv" id="tv_sound_line_4"></div>
-					<div class="tv" id="tv_sound_line_5"></div>
-					<div class="tv" id="tv_sound_line_6"></div>
-					<div class="tv" id="tv_sound_line_7"></div>
-					<div class="tv" id="tv_sound_line_8"></div>
-					<div class="tv" id="tv_sound_line_9"></div>
-					<div class="tv" id="tv_sound_line_1"></div>
-					<div class="tv" id="tv_button_1_outer"></div>
-					<div class="tv" id="tv_button_1"></div>
-					<div class="tv" id="tv_button_2_outer"></div>
-					<div class="tv" id="tv_button_2"></div>
+          <div id="tv_fade_out"></div>
+          <div class="tv" id="tv_box_outer"></div>
+          <div class="tv" id="tv_box_inner"></div>
+          <div class="tv" id="tv_sound_line_1"></div>
+          <div class="tv" id="tv_sound_line_2"></div>
+          <div class="tv" id="tv_sound_line_3"></div>
+          <div class="tv" id="tv_sound_line_4"></div>
+          <div class="tv" id="tv_sound_line_5"></div>
+          <div class="tv" id="tv_sound_line_6"></div>
+          <div class="tv" id="tv_sound_line_7"></div>
+          <div class="tv" id="tv_sound_line_8"></div>
+          <div class="tv" id="tv_sound_line_9"></div>
+          <div class="tv" id="tv_sound_line_1"></div>
+          <div class="tv" id="tv_button_1_outer"></div>
+          <div class="tv" id="tv_button_1"></div>
+          <div class="tv" id="tv_button_2_outer"></div>
+          <div class="tv" id="tv_button_2"></div>
 
-					<div id="footer_memoria">
-						En memoria de Subtitulos.es (2008-2015)
-					</div>
-					<div id="footer_palabra">
-						 DIFUNDE LA PALABRA
-					</div>
-					<div id="footer_disclaimer">
-						<a href="/dmca">DMCA and Disclaimer</a>
-					</div>
-				</div>
+          <div id="footer_memoria">
+            En memoria de Subtitulos.es (2008-2015)
+          </div>
+          <div id="footer_palabra">
+             DIFUNDE LA PALABRA
+          </div>
+          <div id="footer_disclaimer">
+            <a href="/dmca">DMCA and Disclaimer</a>
+          </div>
+        </div>
 
-			</div>
-			<div id="footer_section_2">
+      </div>
+      <div id="footer_section_2">
 
-				<div id="useful_links">
-					<div><div class="white_logo"></div> <div id="white_logo_text">© subtitulamos.tv</div></div>
-					<div class="social_footer">
-						<a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
-							<i class="fa fa-facebook-square" aria-hidden="true"></i>
-						</a>
-						<a href="https://twitter.com/subtitulamostv" target="_blank">
-							<i class="fa fa-twitter-square" aria-hidden="true"></i>
-						</a>
-						<a href="https://foro.subtitulamos.tv" target="_blank">
-							<i class="fa fa-pencil-square" aria-hidden="true"></i>
-						</a>
-						<a href="https://github.com/subtitulamos/subtitulamos" target="_blank">
-							<i class="fa fa-github-square" aria-hidden="true"></i>
-						</a>
-						<a href="/rss" target="_blank">
-							<i class="fa fa-rss-square" aria-hidden="true"></i>
-						</a>
-						<a href="https://t.me/subtitulamostv" target="_blank">
-							<i class="fa fa-telegram" aria-hidden="true"></i>
-						</a>
-					</div>
-				</div>
+        <div id="useful_links">
+          <div><div class="white_logo"></div> <div id="white_logo_text">© subtitulamos.tv</div></div>
+          <div class="social_footer">
+            <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
+              <i class="fa fa-facebook-square" aria-hidden="true"></i>
+            </a>
+            <a href="https://twitter.com/subtitulamostv" target="_blank">
+              <i class="fa fa-twitter-square" aria-hidden="true"></i>
+            </a>
+            <a href="https://foro.subtitulamos.tv" target="_blank">
+              <i class="fa fa-pencil-square" aria-hidden="true"></i>
+            </a>
+            <a href="https://github.com/subtitulamos/subtitulamos" target="_blank">
+              <i class="fa fa-github-square" aria-hidden="true"></i>
+            </a>
+            <a href="/rss" target="_blank">
+              <i class="fa fa-rss-square" aria-hidden="true"></i>
+            </a>
+            <a href="https://t.me/subtitulamostv" target="_blank">
+              <i class="fa fa-telegram" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
 
-				<div id="website_navigator">
-					<table>
-						<tr>
-							<td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>
-							<td><a href='https://foro.subtitulamos.tv'>Foro</a></td>
-						</tr>
-						{% if auth.has_role('ROLE_TT') %}
-							<tr>
-								<td><a href='/comments/episodes'>Comentarios de episodio</a></td>
-								<td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
-							</tr>
-						{% endif %}
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-	{# Load nonessential CSS #}
-	<link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
-	{{ assets.css('browser_specific') }}
-	{{ assets.css('hint') }}
-	{{ assets.css('effects') }}
+        <div id="website_navigator">
+          <table>
+            <tr>
+              <td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>
+              <td><a href='https://foro.subtitulamos.tv'>Foro</a></td>
+            </tr>
+            {% if auth.has_role('ROLE_TT') %}
+              <tr>
+                <td><a href='/comments/episodes'>Comentarios de episodio</a></td>
+                <td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
+              </tr>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# Load nonessential CSS #}
+  <link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
+  {{ assets.css('browser_specific') }}
+  {{ assets.css('hint') }}
+  {{ assets.css('effects') }}
 
-	{# Load js last #}
-	{{ assets.js('vendor') }}
-	<script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async></script>
+  {# Load js last #}
+  {{ assets.js('vendor') }}
+  <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async></script>
 
-	{{ assets.js('app') }}
-	{{ assets.js('search') }}
-	{% block scripts %}{% endblock %}
+  {{ assets.js('app') }}
+  {{ assets.js('search') }}
+  {% block scripts %}{% endblock %}
 </body>

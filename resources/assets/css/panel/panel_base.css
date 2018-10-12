@@ -1,8 +1,8 @@
 .panel-wrapper {
-    background-color: rgb(233, 231, 231) !important;
-    padding: 10px 0;
+  background-color: rgb(233, 231, 231) !important;
+  padding: 10px 0;
 }
 
 .panel-wrapper > .container {
-    padding: 20px 0;
+  padding: 20px 0;
 }

@@ -3,31 +3,31 @@
 
 {% block title %}Normas{% endblock %}
 {% block css %}
-    {{ assets.css('rules') }}
+  {{ assets.css('rules') }}
 {% endblock %}
 
 {% block content %}
-    <div id="rules-content">
-        <div id='rules'>
-            <div class='tabs is-centered is-fullwidth'>
-                <ul>
-                    <li class="{% if rules_type == 'main' %}is-active{% endif %}">
-                        <a href="/rules">Normas de traducción</a>
-                    </li>
-                    <li class="{% if rules_type == 'community' %}is-active{% endif %}">
-                        <a href="/rules/community">Normas de la comunidad</a>
-                    </li>
-                    <li class="{% if rules_type == 'upload' %}is-active{% endif %}">
-                        <a href="/rules/upload">Normas de subida de subtítulos</a>
-                    </li>
-                </ul>
-            </div>
+  <div id="rules-content">
+    <div id='rules'>
+      <div class='tabs is-centered is-fullwidth'>
+        <ul>
+          <li class="{% if rules_type == 'main' %}is-active{% endif %}">
+            <a href="/rules">Normas de traducción</a>
+          </li>
+          <li class="{% if rules_type == 'community' %}is-active{% endif %}">
+            <a href="/rules/community">Normas de la comunidad</a>
+          </li>
+          <li class="{% if rules_type == 'upload' %}is-active{% endif %}">
+            <a href="/rules/upload">Normas de subida de subtítulos</a>
+          </li>
+        </ul>
+      </div>
 
-            {% include "rules/rules_" ~ rules_type ~ ".twig" %}
-        </div>
+      {% include "rules/rules_" ~ rules_type ~ ".twig" %}
     </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
-    {{ assets.js('rules') }}
+  {{ assets.js('rules') }}
 {% endblock %}

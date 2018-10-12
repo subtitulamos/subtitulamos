@@ -6,88 +6,88 @@
 {% block css %}{{ assets.css('index') }}{% endblock %}
 
 {% block content %}
-	<div class='main_container'>
-		<div id="large_splash">
-			<div id="logo"></div>
-			<div id="website_name">subtitulamos.tv</div>
-			<div id="website_title">{{ catchphrase }}</div>
-		</div>
-		<div id="search">
-			<form>
-				<a href="/"><div id="white-logo-searchbar" class="white_logo hidden"></div></a>
-				<script>/* Intentionally empty. This is a workaround around a Firefox bug with autofocus that causes a FOUC to display. BECAUSE REASONS? */</script>
-				<input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" autofocus autocomplete="off" />
-				<div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
-				<ul id="search-results" class='hidden'></ul>
-			</form>
-		</div>
-		<div id="category_navigation_list">
-			<div id="category_navigation_title">...o explora las siguientes categorías</div>
-			{#<span class="hint--top hint--bounce hint--rounded" data-hint="Los subtítulos más buscados"><div class="category_navigation_item" id="most-downloaded">Lo más descargado</div></span>#}
-			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos"><div class="category_navigation_item" id="last-uploaded">Últimas subidas</div></span>
-			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas"><div class="category_navigation_item" id="last-completed">Últimas traducciones</div></span>
-			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones"><div class="category_navigation_item" id="last-edited">Últimas ediciones</div></span>
-			<span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos resincronizados"><div class="category_navigation_item" id="last-resynced">Últimas resincros</div></span>
-			{% if auth.has_role('ROLE_TT') %}
-				<span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos actualmente en pausa"><div class="category_navigation_item" id="paused">En pausa</div></span>
-			{% endif %}
-		</div>
-		{% verbatim %}
-		<div id="incategory_state" class="hidden">
-			<div id="incategory_board">
-				<div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': ep.hide_details }">
-					<div class="clip_downloads" v-if="ep.download_count">
-						<div class="clip_downloads_times">{{ ep.download_count }}</div>
-						<div class="clip_downloads_text">descargas</div>
-					</div>
+  <div class='main_container'>
+    <div id="large_splash">
+      <div id="logo"></div>
+      <div id="website_name">subtitulamos.tv</div>
+      <div id="website_title">{{ catchphrase }}</div>
+    </div>
+    <div id="search">
+      <form>
+        <a href="/"><div id="white-logo-searchbar" class="white_logo hidden"></div></a>
+        <script>/* Intentionally empty. This is a workaround around a Firefox bug with autofocus that causes a FOUC to display. BECAUSE REASONS? */</script>
+        <input type="text" placeholder="Busca una serie... Ejemplo: Game of Thrones 7x01" id="search_bar" autofocus autocomplete="off" />
+        <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
+        <ul id="search-results" class='hidden'></ul>
+      </form>
+    </div>
+    <div id="category_navigation_list">
+      <div id="category_navigation_title">...o explora las siguientes categorías</div>
+      {#<span class="hint--top hint--bounce hint--rounded" data-hint="Los subtítulos más buscados"><div class="category_navigation_item" id="most-downloaded">Lo más descargado</div></span>#}
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos"><div class="category_navigation_item" id="last-uploaded">Últimas subidas</div></span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas"><div class="category_navigation_item" id="last-completed">Últimas traducciones</div></span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones"><div class="category_navigation_item" id="last-edited">Últimas ediciones</div></span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos resincronizados"><div class="category_navigation_item" id="last-resynced">Últimas resincros</div></span>
+      {% if auth.has_role('ROLE_TT') %}
+        <span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos actualmente en pausa"><div class="category_navigation_item" id="paused">En pausa</div></span>
+      {% endif %}
+    </div>
+    {% verbatim %}
+    <div id="incategory_state" class="hidden">
+      <div id="incategory_board">
+        <div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': ep.hide_details }">
+          <div class="clip_downloads" v-if="ep.download_count">
+            <div class="clip_downloads_times">{{ ep.download_count }}</div>
+            <div class="clip_downloads_text">descargas</div>
+          </div>
 
-					<div class="clip_activity_since" v-if="ep.time">
-						<div class="clip_row_text_faded">hace</div>
-						<div class="clip_row_time">{{ ep.time_ago }}</div>
-						<div class="clip_row_text">{{ ep.time_unit }}</div>
-					</div>
+          <div class="clip_activity_since" v-if="ep.time">
+            <div class="clip_row_text_faded">hace</div>
+            <div class="clip_row_time">{{ ep.time_ago }}</div>
+            <div class="clip_row_text">{{ ep.time_unit }}</div>
+          </div>
 
-					<div class="visual_separator"></div>
+          <div class="visual_separator"></div>
 
-					<a :href='subURI(ep)'>
-						<div class="ep-title-row" :class="{ 'ep-detailed': ep.additional_info != undefined }">
-							<div class="ep-title">{{ ep.name }}</div>
-							<div class="ep-add-details">
-								<div class="ep-details">
-									{{ ep.lang }}
-									<span v-if="ep.progress">
-										· <b>{{ ep.progress }}%</b>
-									</span>
-									<span v-if="ep.version">
-										· <b>{{ ep.version }}</b>
-									</span>
-									<span v-if="ep.last_edited_by">
-										· {{ ep.last_edited_by }}
-									</span>
-									<span v-if="ep.paused_by">
-										· {{ ep.paused_by }}
-									</span>
-								</div>
-								<div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>
-								<div class="ep-new-series" v-if="ep.ep_new_series">Nueva Serie</div>
-							</div>
-						</div>
-					</a>
-				</div>
-				<div id='pages'>
-					<div id='prev-page' class='hidden'>
-						<i class='fa fa-chevron-circle-left'></i> Página anterior
-					</div>
-					<div id='next-page'>
-						Siguiente página <i class='fa fa-chevron-circle-right'></i>
-					</div>
-				</div>
-			</div>
-		</div>
-		{% endverbatim %}
-	</div>
+          <a :href='subURI(ep)'>
+            <div class="ep-title-row" :class="{ 'ep-detailed': ep.additional_info != undefined }">
+              <div class="ep-title">{{ ep.name }}</div>
+              <div class="ep-add-details">
+                <div class="ep-details">
+                  {{ ep.lang }}
+                  <span v-if="ep.progress">
+                    · <b>{{ ep.progress }}%</b>
+                  </span>
+                  <span v-if="ep.version">
+                    · <b>{{ ep.version }}</b>
+                  </span>
+                  <span v-if="ep.last_edited_by">
+                    · {{ ep.last_edited_by }}
+                  </span>
+                  <span v-if="ep.paused_by">
+                    · {{ ep.paused_by }}
+                  </span>
+                </div>
+                <div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>
+                <div class="ep-new-series" v-if="ep.ep_new_series">Nueva Serie</div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div id='pages'>
+          <div id='prev-page' class='hidden'>
+            <i class='fa fa-chevron-circle-left'></i> Página anterior
+          </div>
+          <div id='next-page'>
+            Siguiente página <i class='fa fa-chevron-circle-right'></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endverbatim %}
+  </div>
 {% endblock %}
 
 {% block scripts %}
-	{{ assets.js('index') }}
+  {{ assets.js('index') }}
 {% endblock %}

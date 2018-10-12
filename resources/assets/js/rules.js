@@ -1,10 +1,13 @@
-import Vue from 'vue';
-import $ from 'jquery';
+import Vue from "vue";
+import $ from "jquery";
 
 $(".spoiler-wrapper").on("click", function() {
-    let $this = $(this);
-    let $spoiler = $this.find('.spoiler-content');
-    $this.find('i').toggleClass('fa-caret-down').toggleClass('fa-caret-up');
+  let $this = $(this);
+  let $spoiler = $this.find(".spoiler-content");
+  $this
+    .find("i")
+    .toggleClass("fa-caret-down")
+    .toggleClass("fa-caret-up");
 
-    $spoiler.css('display', $spoiler.css('display') == 'none' ? 'block' : 'none');
+  $spoiler.css("display", $spoiler.css("display") == "none" ? "block" : "none");
 });
