@@ -3,7 +3,6 @@
  * @copyright 2017-2018 subtitulamos.tv
  */
 
-import Vue from "vue";
 import $ from "jquery";
 
 function pad(n, width, z) {
@@ -35,16 +34,20 @@ $(function() {
   });
 
   $("#upload-button").on("click", function(e) {
-    let form = $(this).closest("form")[0];
+    const $this = $(this);
+    let form = $this.closest("form")[0];
+    $this.toggleClass("is-loading", true);
+
     let data = new FormData(form);
     $.ajax({
       url: window.location.pathname,
       contentType: false,
       processData: false,
       method: "POST",
-      data: data
+      data: data,
     })
       .fail(function(jqXHR, textStatus, errorThrown) {
+        $this.toggleClass("is-loading", false);
         $("[data-status]").toggleClass("hidden", true);
 
         if (jqXHR.status == 400 && jqXHR.responseJSON) {
@@ -56,9 +59,7 @@ $(function() {
             }
           });
         } else {
-          alertify.error(
-            "Ha ocurrido un error no identificado al intentar subir el subtítulo"
-          );
+          alertify.error("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         }
       })
       .done(function(data) {

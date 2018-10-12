@@ -3,7 +3,6 @@
  * @copyright 2017-2018 subtitulamos.tv
  */
 
-import Vue from "vue";
 import $ from "jquery";
 
 function pad(n, width, z) {
@@ -15,7 +14,7 @@ function pad(n, width, z) {
 let uploadInfo = {
   season: "",
   episode: "",
-  name: ""
+  name: "",
 };
 
 $(function() {
@@ -46,26 +45,15 @@ $(function() {
     let val = $(this)
       .val()
       .trim();
-    let match = val.match(
-      /^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/
-    );
+    let match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/);
     let error = "";
     if (val == "" || (!match && val == "S")) {
       error = "";
     } else if (!match && val != "S") {
-      error =
-        "Faltan la temporada y número de episodio (Formato: 0x00 - Nombre)";
-    } else if (
-      typeof match[1] != "undefined" &&
-      typeof match[2] == "undefined"
-    ) {
-      error =
-        "Faltan número de episodio y nombre del episodio (Formato: 0x00 - Nombre)";
-    } else if (
-      typeof match[1] != "undefined" &&
-      typeof match[2] != "undefined" &&
-      !match[3]
-    ) {
+      error = "Faltan la temporada y número de episodio (Formato: 0x00 - Nombre)";
+    } else if (typeof match[1] != "undefined" && typeof match[2] == "undefined") {
+      error = "Faltan número de episodio y nombre del episodio (Formato: 0x00 - Nombre)";
+    } else if (typeof match[1] != "undefined" && typeof match[2] != "undefined" && !match[3]) {
       error = "Falta el nombre del episodio";
     }
 
@@ -73,13 +61,13 @@ $(function() {
       uploadInfo = {
         season: "",
         episode: "",
-        name: ""
+        name: "",
       };
     } else {
       uploadInfo = {
         season: match[1],
         episode: match[2],
-        name: match[3].trim()
+        name: match[3].trim(),
       };
     }
 
@@ -89,12 +77,9 @@ $(function() {
       .html(error);
   });
 
-  $("#show-id, #lang, #version, #comments, #new-show, #sub").on(
-    "change",
-    function() {
-      $("#" + $(this).attr("id") + "-status").toggleClass("hidden", true);
-    }
-  );
+  $("#show-id, #lang, #version, #comments, #new-show, #sub").on("change", function() {
+    $("#" + $(this).attr("id") + "-status").toggleClass("hidden", true);
+  });
 
   // SRT FILE
   // Always clear the file input on load
@@ -114,7 +99,10 @@ $(function() {
   });
 
   $("#upload-button").on("click", function(e) {
-    let form = $(this).closest("form")[0];
+    const $this = $(this);
+    let form = $this.closest("form")[0];
+    $this.toggleClass("is-loading", true);
+
     let data = new FormData(form);
     data.delete("name");
     data.append("title", uploadInfo.name);
@@ -125,9 +113,10 @@ $(function() {
       contentType: false,
       processData: false,
       method: "POST",
-      data: data
+      data: data,
     })
       .fail(function(jqXHR, textStatus, errorThrown) {
+        $this.toggleClass("is-loading", false);
         $("[data-status]").toggleClass("hidden", true);
 
         if (jqXHR.status == 400 && jqXHR.responseJSON) {
@@ -139,9 +128,7 @@ $(function() {
             }
           });
         } else {
-          alertify.error(
-            "Ha ocurrido un error no identificado al intentar subir el subtítulo"
-          );
+          alertify.error("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         }
       })
       .done(function(data) {
