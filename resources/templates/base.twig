@@ -198,7 +198,11 @@
             <a href='/me'>{{ auth.user.username }}</a>
           </li>
           {% if auth.has_role('ROLE_MOD') %}
-            <li><a href="/panel">PANEL DE MODERADOR</a></li>
+            <li>
+              <span {% if auth.alert_count > 0 %}class='badge' data-badge='{{ auth.alert_count }}'{% endif %}>
+                <a href="/panel">PANEL DE MODERADOR</a>
+              </span>
+            </li>
           {% endif %}
           <li><a href="/rules">NORMAS</a></li>
           <li id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></li>

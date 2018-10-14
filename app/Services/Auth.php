@@ -161,6 +161,26 @@ class Auth
         \session_destroy();
     }
 
+    /**
+     * Get the amount of pending unanswered alerts
+     *
+     * @return integer
+     */
+    public function getAlertCount(): int
+    {
+        if (!$this->hasRole('ROLE_MOD')) {
+            return 0;
+        }
+
+        $count = $this->em->createQuery('SELECT COUNT(a) FROM App:Alert a WHERE a.status = 0 AND a.id NOT IN (SELECT IDENTITY(ac.alert) FROM App:AlertComment ac WHERE ac.type != 0)')->getSingleScalarResult();
+        return $count;
+    }
+
+    /**
+     * Get the user
+     *
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -233,6 +253,11 @@ class Auth
             public function has_role($role)
             {
                 return $this->auth->hasRole($role);
+            }
+
+            public function alert_count(): int
+            {
+                return $this->auth->getAlertCount();
             }
 
             public function user()
