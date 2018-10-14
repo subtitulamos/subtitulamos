@@ -25,13 +25,14 @@ class PanelAlertsController
 
         foreach ($alertsCursor as $alert) {
             $comments = $alert->getComments();
+            $sub = $alert->getSubtitle();
 
             $alerts[] = [
                 'id' => $alert->getId(),
                 'closed' => $alert->getStatus() == 1,
                 'from_user' => $alert->getByUser(),
-                'from_sub' => $alert->getSubtitle()->getVersion()->getEpisode()->getFullName(),
-                'from_sub_id' => $alert->getSubtitle()->getId(),
+                'from_sub' => $sub ? $sub->getVersion()->getEpisode()->getFullName() : '[Subtítulo borrado]',
+                'from_sub_id' => $sub ? $sub->getId() : 0,
                 'first_comment' => $comments[0],
                 'comments' => $comments,
                 'creation_time' => $alert->getCreationTime()

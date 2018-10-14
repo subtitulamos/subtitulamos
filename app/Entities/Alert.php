@@ -35,7 +35,7 @@ class Alert
 
     /**
      * @ORM\ManyToOne(targetEntity="Subtitle")
-     * @ORM\JoinColumn(name="for_subtitle_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="for_subtitle_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $subtitle;
 

@@ -24,7 +24,7 @@ class AlertComment
 
     /**
      * @ORM\ManyToOne(targetEntity="Alert")
-     * @ORM\JoinColumn(name="alert_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="alert_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $alert;
 
