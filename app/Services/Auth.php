@@ -172,7 +172,7 @@ class Auth
             return 0;
         }
 
-        $count = $this->em->createQuery('SELECT COUNT(a) FROM App:Alert a WHERE a.status = 0 AND a.id NOT IN (SELECT IDENTITY(ac.alert) FROM App:AlertComment ac WHERE ac.type != 0)')->getSingleScalarResult();
+        $count = $this->em->createQuery('SELECT COUNT(a) FROM App:Alert a WHERE a.status = 0')->getSingleScalarResult();
         return $count;
     }
 
