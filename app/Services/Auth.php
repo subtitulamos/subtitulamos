@@ -25,6 +25,12 @@ class Auth
      */
     private $em;
 
+    /**
+     * Alert count cache
+     * @var integer
+     */
+    private $alertCount;
+
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -172,8 +178,12 @@ class Auth
             return 0;
         }
 
-        $count = $this->em->createQuery('SELECT COUNT(a) FROM App:Alert a WHERE a.status = 0')->getSingleScalarResult();
-        return $count;
+        if (!isset($this->alertCount)) {
+            // Query this once and not again
+            $this->alertCount = $this->em->createQuery('SELECT COUNT(a) FROM App:Alert a WHERE a.status = 0')->getSingleScalarResult();
+        }
+
+        return $this->alertCount;
     }
 
     /**

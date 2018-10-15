@@ -23,7 +23,10 @@
   {{ assets.css('app') }}
   {% block css %}{% endblock %}
 
-  <title>{% block title %}{% endblock %} - Subtitulamos.tv - Subtítulos de series</title>
+  <title>
+    {% if auth.alert_count > 0 %}*{% endif %}
+    {% block title %}{% endblock %} - Subtitulamos.tv - Subtítulos de series
+  </title>
 </head>
 <body>
   <header class="fade_slide_in">
