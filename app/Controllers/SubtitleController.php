@@ -36,11 +36,15 @@ class SubtitleController
             if (count($episode->getVersions()) == 1) { // If this sub was the last of the version
                 if (count($show->getEpisodes()) == 1) { // If this episode was the last of the show
                     // Remove show from search completely
-                    $client->delete([
-                        'index' => ELASTICSEARCH_NAMESPACE.'_shows',
-                        'type' => 'show',
-                        'id' => $show->getId()
-                    ]);
+                    try {
+                        $client->delete([
+                            'index' => ELASTICSEARCH_NAMESPACE.'_shows',
+                            'type' => 'show',
+                            'id' => $show->getId()
+                        ]);
+                    } catch (Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+                        // There was nothing to remove
+                    }
 
                     $em->remove($show);
                 }
