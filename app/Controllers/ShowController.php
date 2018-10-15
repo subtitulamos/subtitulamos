@@ -134,23 +134,6 @@ class ShowController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
-        $delParam = $request->getParam('delete');
-
-        $canDelete = $this->canDeleteShow($show, $em);
-        if ($delParam && $delParam == 'on' && $canDelete) {
-            // Delete from search
-            $client->delete([
-                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
-                'type' => 'show',
-                'id' => $show->getId()
-            ]);
-
-            // Remove from DB
-            $em->remove($show);
-            $em->flush();
-            return $response->withHeader('location', '/');
-        }
-
         $newName = trim(strip_tags($request->getParam('name', '')));
         if ($newName != $show->getName()) {
             $show->setName($newName);

@@ -42,7 +42,7 @@ class SubtitleController
                             'type' => 'show',
                             'id' => $show->getId()
                         ]);
-                    } catch (Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+                    } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
                         // There was nothing to remove
                     }
 
