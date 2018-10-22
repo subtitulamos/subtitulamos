@@ -136,6 +136,16 @@ class SrtParser
             }
         }
 
+        // We're done, if the file didn't have a final linebreak we will not have detected
+        // the end of the last sequence, let's see if we need to upload it
+        if (!empty($line) && $parsingState == PARSING_STATE_TEXT && $sequence) {
+            if (!empty($sequence->getText())) {
+                $sequence->setText(Translation::cleanText($sequence->getText(), $seqOpts));
+                $sequence->setNumber(++$this->seqNum);
+                $sequences[] = $sequence;
+            }
+        }
+
         $this->sequences = $sequences;
         if (count($sequences) < 3) {
             $this->errorDesc = 'Formato incorrecto: Debe haber al menos 3 secuencias en el fichero.';
