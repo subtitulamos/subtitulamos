@@ -43,7 +43,7 @@ let comments = new Vue({
   el: "#subtitle-comments",
   data: {
     newComment: "",
-    comments: []
+    comments: [],
   },
   methods: {
     publishComment: function() {
@@ -54,8 +54,8 @@ let comments = new Vue({
         url: "/episodes/" + epId + "/comments/submit",
         method: "POST",
         data: {
-          text: comment
-        }
+          text: comment,
+        },
       })
         .done(function() {
           // Cheap solution: reload the entire comment box
@@ -83,7 +83,7 @@ let comments = new Vue({
 
       $.ajax({
         url: "/episodes/" + epId + "/comments/" + id,
-        method: "DELETE"
+        method: "DELETE",
       })
         .done(function() {
           loadComments();
@@ -99,14 +99,14 @@ let comments = new Vue({
             }
           }.bind(this)
         );
-    }
-  }
+    },
+  },
 });
 
 function loadComments() {
   $.ajax({
     url: "/episodes/" + epId + "/comments",
-    method: "GET"
+    method: "GET",
   })
     .done(function(reply) {
       comments.comments = reply;

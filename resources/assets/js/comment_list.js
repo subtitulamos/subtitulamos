@@ -22,7 +22,7 @@ let comments = new Vue({
   data: {
     newComment: "",
     comments: [],
-    page: 1
+    page: 1,
   },
   methods: {
     refresh: function() {
@@ -43,7 +43,7 @@ let comments = new Vue({
 
       $.ajax({
         url: "/episodes/" + epId + "/comments/" + id,
-        method: "DELETE"
+        method: "DELETE",
       })
         .done(() => {
           loadComments();
@@ -71,14 +71,14 @@ let comments = new Vue({
       loadComments(this.page);
 
       document.getElementById("comments").scrollIntoView();
-    }
-  }
+    },
+  },
 });
 
 function loadComments(page) {
   $.ajax({
     url: "/comments/" + commentType + "/load?page=" + page,
-    method: "GET"
+    method: "GET",
   })
     .done(function(reply) {
       comments.comments = reply;

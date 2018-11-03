@@ -10,9 +10,7 @@ $(function() {
 
   function zeropad(n, width) {
     n = n + "";
-    return n.length >= width
-      ? n
-      : new Array(width - n.length + 1).join("0") + n;
+    return n.length >= width ? n : new Array(width - n.length + 1).join("0") + n;
   }
 
   function search() {
@@ -30,8 +28,8 @@ $(function() {
       url: "/search/query",
       method: "GET",
       data: {
-        q: q
-      }
+        q: q,
+      },
     }).done(function(reply) {
       $searchResults.html("").toggleClass("hidden", false);
 
@@ -50,15 +48,7 @@ $(function() {
               let epURL = "/episodes/" + ep.id;
               $link = $("<a>")
                 .attr("href", epURL)
-                .html(
-                  show.name +
-                    " - " +
-                    ep.season +
-                    "x" +
-                    zeropad(ep.number, 2) +
-                    " " +
-                    ep.name
-                );
+                .html(show.name + " - " + ep.season + "x" + zeropad(ep.number, 2) + " " + ep.name);
               $result = $("<li>").append($link);
               $searchResults.append($result);
 

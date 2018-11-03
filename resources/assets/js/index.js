@@ -6,7 +6,7 @@ let episodeList = new Vue({
   el: "#incategory_board",
   data: {
     category: "",
-    episodes: []
+    episodes: [],
   },
   methods: {
     subURI: function(ep) {
@@ -48,14 +48,14 @@ let episodeList = new Vue({
 
       u(); // Insta update times
       this.interval = setInterval(u, 2000);
-    }
+    },
   },
   watch: {
     episodes: function(newEpisodes) {
       clearInterval(this.interval);
       this.update();
-    }
-  }
+    },
+  },
 });
 
 let categoryPage = {};
@@ -67,8 +67,8 @@ function search(target, page) {
     url: "/search/" + target,
     method: "get",
     data: {
-      page: page
-    }
+      page: page,
+    },
   }).done(function(data) {
     data.forEach(function(_, idx, data) {
       data[idx].time_ago = 0;
@@ -132,12 +132,10 @@ $(".category_navigation_item").on("click", function() {
     $categoryClicked.toggleClass("nvbi_active", true);
 
     $largeSplash.toggleClass("fade_out", true);
-    $whiteLogoSearchBar
-      .toggleClass("hidden", false)
-      .attr("style", "display:none");
+    $whiteLogoSearchBar.toggleClass("hidden", false).attr("style", "display:none");
     $whiteLogoSearchBar.fadeIn("slow");
     $largeSplash.slideUp({
-      done: () => {}
+      done: () => {},
     });
   }
 

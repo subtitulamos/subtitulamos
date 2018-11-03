@@ -20,8 +20,7 @@ window.onbeforeunload = function(e) {
   }
 
   if (ask) {
-    let msg =
-      "Parece que tienes secuencias abiertas. ¿Estás seguro de querer salir?";
+    let msg = "Parece que tienes secuencias abiertas. ¿Estás seguro de querer salir?";
     (e || window.event).returnValue = msg;
     return msg;
   }
@@ -47,11 +46,11 @@ Vue.component("seqlock", {
       $.ajax({
         url: "/subtitles/" + subID + "/translate/open-lock/" + this.id,
         method: "DELETE",
-        data: {}
+        data: {},
       }).fail(() => {
         sub.openSeq(this.seqnum, seqInfoCopy.by, seqInfoCopy.lockID);
       });
-    }
+    },
   },
   computed: {
     username: function() {
@@ -61,8 +60,8 @@ Vue.component("seqlock", {
     niceTime: function() {
       let d = new Date(this.time);
       return dateformat(d, "d/mmm HH:MM");
-    }
-  }
+    },
+  },
 });
 
 Vue.component("sequence", {
@@ -132,7 +131,7 @@ Vue.component("sequence", {
     secondaryText: String,
     text: String,
     history: Boolean,
-    openInfo: Object
+    openInfo: Object,
   },
 
   data: function() {
@@ -141,7 +140,7 @@ Vue.component("sequence", {
       editingText: this.text,
       editingTimeEnd: this.$options.filters.timeFmt(this.tend),
       editingTimeStart: this.$options.filters.timeFmt(this.tstart),
-      saving: false
+      saving: false,
     };
   },
 
@@ -200,7 +199,7 @@ Vue.component("sequence", {
       stime += ms;
 
       return stime;
-    }
+    },
   },
 
   watch: {
@@ -217,11 +216,8 @@ Vue.component("sequence", {
         }
       }
 
-      sessionStorage.setItem(
-        "sub-" + subID + "-seqtext-" + this.number + "-" + this.id,
-        nText
-      );
-    }
+      sessionStorage.setItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id, nText);
+    },
   },
 
   computed: {
@@ -279,9 +275,7 @@ Vue.component("sequence", {
         this.lineCounters[0] > 0 &&
         this.lineCounters[0] <= 40 &&
         (!this.lineCounters[1] || this.lineCounters[1] <= 40) &&
-        (this.parsedStartTime &&
-          this.parsedEndTime &&
-          this.parsedStartTime < this.parsedEndTime)
+        (this.parsedStartTime && this.parsedEndTime && this.parsedStartTime < this.parsedEndTime)
       );
     },
 
@@ -307,10 +301,8 @@ Vue.component("sequence", {
       let msg, hint;
       let dialogLineCount = (full.match(/(?:^|\s)-/g) || []).length;
       if (full.length > 40 || (dialogLineCount == 2 && full.match(/^\s*-/g))) {
-        let unopinionatedMatch =
-          balanceText(this.editingText, false).join("\n") == full;
-        let opinionatedMatch =
-          balanceText(this.editingText, true).join("\n") == full;
+        let unopinionatedMatch = balanceText(this.editingText, false).join("\n") == full;
+        let opinionatedMatch = balanceText(this.editingText, true).join("\n") == full;
 
         return !unopinionatedMatch && !opinionatedMatch ? 2 : 0;
       } else if (
@@ -323,7 +315,7 @@ Vue.component("sequence", {
       }
 
       return 0;
-    }
+    },
   },
 
   methods: {
@@ -347,8 +339,8 @@ Vue.component("sequence", {
         url: "/subtitles/" + subID + "/translate/open",
         method: "POST",
         data: {
-          seqNum: this.number
-        }
+          seqNum: this.number,
+        },
       })
         .done(reply => {
           if (!reply.ok) {
@@ -387,8 +379,7 @@ Vue.component("sequence", {
 
       // Detect if anything changed at all
       let modifiedText = ntext != this.text;
-      let modifiedTime =
-        this.parsedEndTime != this.tend || this.parsedStartTime != this.tstart;
+      let modifiedTime = this.parsedEndTime != this.tend || this.parsedStartTime != this.tstart;
       if (!modifiedText && !modifiedTime) {
         this.discard();
         return;
@@ -399,7 +390,7 @@ Vue.component("sequence", {
       let postData = {
         seqID: this.id,
         number: this.number,
-        text: ntext
+        text: ntext,
       };
 
       let nStartTime = this.parsedStartTime;
@@ -413,23 +404,14 @@ Vue.component("sequence", {
       $.ajax({
         url: "/subtitles/" + subID + "/translate/" + action,
         method: "POST",
-        data: postData
+        data: postData,
       })
         .done(newID => {
-          sub.changeSeq(
-            this.number,
-            Number(newID),
-            me.id,
-            ntext,
-            nStartTime,
-            nEndTime
-          );
+          sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
           this.saving = false;
 
           // Discard editing text cache if saved
-          sessionStorage.removeItem(
-            "sub-" + subID + "-seqtext-" + this.number + "-" + this.id
-          );
+          sessionStorage.removeItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id);
 
           // Try to remove it form the modified seq list if it's there
           let modIdx = modifiedSeqList.indexOf(this.number);
@@ -438,11 +420,7 @@ Vue.component("sequence", {
           }
         })
         .fail((_, status) => {
-          alertify.error(
-            "Ha ocurrido un error al intentar guardar la secuencia: (" +
-              status +
-              ")"
-          );
+          alertify.error("Ha ocurrido un error al intentar guardar la secuencia: (" + status + ")");
           this.saving = false;
         });
     },
@@ -462,16 +440,14 @@ Vue.component("sequence", {
         url: "/subtitles/" + subID + "/translate/close",
         method: "POST",
         data: {
-          seqNum: this.number
-        }
+          seqNum: this.number,
+        },
       })
         .done(() => {
           this.saving = false;
 
           // Discard text cache if saved
-          sessionStorage.removeItem(
-            "sub-" + subID + "-seqtext-" + this.number + "-" + this.id
-          );
+          sessionStorage.removeItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id);
 
           // Try to remove it form the modified seq list if it's there
           let modIdx = modifiedSeqList.indexOf(this.number);
@@ -481,11 +457,7 @@ Vue.component("sequence", {
         })
         .fail((_, status) => {
           sub.openSeq(this.number, me.id, oLockID);
-          alertify.error(
-            "Ha ocurrido un error al intentar cerrar la secuencia  (" +
-              status +
-              ")"
-          );
+          alertify.error("Ha ocurrido un error al intentar cerrar la secuencia  (" + status + ")");
         });
     },
 
@@ -503,14 +475,12 @@ Vue.component("sequence", {
         url: "/subtitles/" + subID + "/translate/lock",
         method: "POST",
         data: {
-          seqID: this.id
-        }
+          seqID: this.id,
+        },
       }).fail(() => {
         // Revert, the request failed
         sub.lockSeq(this.id, !newState);
-        alertify.error(
-          "Error al intentar cambiar el estado de bloqueo de #" + this.number
-        );
+        alertify.error("Error al intentar cambiar el estado de bloqueo de #" + this.number);
       });
     },
 
@@ -541,20 +511,15 @@ Vue.component("sequence", {
     },
 
     parseTime: function(t) {
-      let matches = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{1,2})[\.,](\d{1,3})$/.exec(
-        t
-      );
+      let matches = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{1,2})[\.,](\d{1,3})$/.exec(t);
       if (!matches || matches.length < 4) {
         return null;
       }
 
       let hs = matches[1] ? Number(matches[1]) * 3600 : 0;
-      return (
-        (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 +
-        Number(matches[4])
-      );
-    }
-  }
+      return (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 + Number(matches[4]);
+    },
+  },
 });
 
 /**************************
@@ -581,8 +546,8 @@ Vue.component("pagelist", {
     toPage: function(page) {
       document.getElementById("translation").scrollIntoView();
       this.$emit("change-page", page);
-    }
-  }
+    },
+  },
 });
 
 /**
@@ -598,14 +563,14 @@ window.translation = new Vue({
       onlyUntranslated: false,
       author: 0,
       text: "",
-      preciseTextMatching: false
+      preciseTextMatching: false,
     },
     comments: [],
     loaded: false,
     loadedOnce: false,
     newComment: "",
     canReleaseOpenLock: canReleaseOpenLock,
-    hasAdvancedTools: hasAdvancedTools
+    hasAdvancedTools: hasAdvancedTools,
   },
   computed: {
     lastPage: function() {
@@ -632,10 +597,7 @@ window.translation = new Vue({
             return seq.author && this.filters.author == seq.author;
           };
 
-          if (
-            !authorFilterFn(seq) &&
-            (!seq.history || !seq.history.some(authorFilterFn))
-          ) {
+          if (!authorFilterFn(seq) && (!seq.history || !seq.history.some(authorFilterFn))) {
             return false;
           }
         }
@@ -657,16 +619,11 @@ window.translation = new Vue({
             return (
               accentFold(seq.text.toLocaleLowerCase()).includes(textToMatch) ||
               (seq.secondary_text &&
-                accentFold(seq.secondary_text.toLocaleLowerCase()).includes(
-                  textToMatch
-                ))
+                accentFold(seq.secondary_text.toLocaleLowerCase()).includes(textToMatch))
             );
           };
 
-          if (
-            !textFilterFn(seq) &&
-            (!seq.history || !seq.history.some(textFilterFn))
-          ) {
+          if (!textFilterFn(seq) && (!seq.history || !seq.history.some(textFilterFn))) {
             return false;
           }
         }
@@ -689,7 +646,7 @@ window.translation = new Vue({
             id: seq.openInfo.lockID,
             uid: seq.openInfo.by,
             time: seq.openInfo.since,
-            seq_number: seq.number
+            seq_number: seq.number,
           });
         }
       });
@@ -714,7 +671,7 @@ window.translation = new Vue({
       });
 
       return authors;
-    }
+    },
   },
   methods: {
     onChangePage: function(page) {
@@ -749,16 +706,11 @@ window.translation = new Vue({
         url: "/subtitles/" + subID + "/translate/comments/submit",
         method: "POST",
         data: {
-          text: comment
-        }
+          text: comment,
+        },
       })
         .done(function(id) {
-          sub.addComment(
-            id,
-            sub.getUserObject(me.id),
-            new Date().toISOString(),
-            comment
-          );
+          sub.addComment(id, sub.getUserObject(me.id), new Date().toISOString(), comment);
         })
         .fail(function() {
           alertify.error("Ha ocurrido un error al enviar tu comentario");
@@ -779,7 +731,7 @@ window.translation = new Vue({
 
       $.ajax({
         url: "/subtitles/" + subID + "/translate/comments/" + id,
-        method: "DELETE"
+        method: "DELETE",
       }).fail(
         function() {
           alertify.error("Se ha encontrado un error al borrar el comentario");
@@ -879,8 +831,8 @@ window.translation = new Vue({
               url: "/subtitles/" + subID + "/alert",
               method: "POST",
               data: {
-                message: val
-              }
+                message: val,
+              },
             })
               .done(reply => {
                 if (reply.ok) {
@@ -891,9 +843,7 @@ window.translation = new Vue({
               })
               .fail((_, status) => {
                 alertify.error(
-                  "Ha ocurrido un error al intentar enviar la alerta: (" +
-                    status +
-                    ")"
+                  "Ha ocurrido un error al intentar enviar la alerta: (" + status + ")"
                 );
               });
           }
@@ -913,8 +863,7 @@ window.translation = new Vue({
       // Wait till render
       setTimeout(() => {
         let isFirstSequence =
-          Math.ceil(seqn / SEQS_PER_PAGE) !=
-          Math.ceil((seqn - 1) / SEQS_PER_PAGE);
+          Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
         if (isFirstSequence) {
           $("#sequences")[0].scrollIntoView({ behavior: "instant" });
         } else {
@@ -926,8 +875,8 @@ window.translation = new Vue({
         let scrolledY = window.scrollY;
         window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
       }, 250);
-    }
-  }
+    },
+  },
 });
 
 let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);

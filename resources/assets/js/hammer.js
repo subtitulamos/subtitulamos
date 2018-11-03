@@ -17,13 +17,13 @@ Vue.component("hammertarget", {
     return {
       corrected: this.countCorrected * 1,
       latest: this.countLatest * 1,
-      deleted: false
+      deleted: false,
     };
   },
   computed: {
     total: function() {
       return this.latest + this.corrected;
-    }
+    },
   },
   methods: {
     completeHammer: function() {
@@ -37,17 +37,15 @@ Vue.component("hammertarget", {
             method: "POST",
             data: {
               user: this.id,
-              type: "complete"
-            }
+              type: "complete",
+            },
           }).done(() => {
             this.deleted = true;
             this.corrected = 0;
             this.latest = 0;
 
             alertify.success(
-              "Poof! Las contribuciones de <b>" +
-                this.username +
-                "</b> han sido eliminadas"
+              "Poof! Las contribuciones de <b>" + this.username + "</b> han sido eliminadas"
             );
           });
         }
@@ -65,22 +63,20 @@ Vue.component("hammertarget", {
             method: "POST",
             data: {
               user: this.id,
-              type: "latest"
-            }
+              type: "latest",
+            },
           }).done(() => {
             this.latest = 0;
             alertify.success(
-              "Las contribuciones sin corregir de <b>" +
-                this.username +
-                "</b> han sido eliminadas"
+              "Las contribuciones sin corregir de <b>" + this.username + "</b> han sido eliminadas"
             );
           });
         }
       );
-    }
-  }
+    },
+  },
 });
 
 let page = new Vue({
-  el: "#hammer"
+  el: "#hammer",
 });

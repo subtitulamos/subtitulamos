@@ -4,6 +4,6 @@ let page = new Vue({
   el: "#user-profile",
   data: {
     mode: "normal",
-    duration: ""
-  }
+    duration: "",
+  },
 });

@@ -9,7 +9,7 @@ function Subtitle(id, state, secondaryLang) {
   this.users = {};
   this.users[me.id] = {
     username: me.username,
-    roles: me.roles
+    roles: me.roles,
   };
   this.secondaryLang = secondaryLang;
 }
@@ -40,14 +40,7 @@ Subtitle.prototype.wsMessage = function(event) {
         break;
 
       case "seq-change":
-        this.changeSeq(
-          data.num,
-          Number(data.nid),
-          data.user,
-          data.ntext,
-          data.ntstart,
-          data.ntend
-        );
+        this.changeSeq(data.num, Number(data.nid), data.user, data.ntext, data.ntstart, data.ntend);
         break;
 
       case "seq-lock":
@@ -59,18 +52,10 @@ Subtitle.prototype.wsMessage = function(event) {
         break;
 
       case "com-new":
-        this.addComment(
-          data.id,
-          this.getUserObject(data.user),
-          data.time,
-          data.text
-        );
+        this.addComment(data.id, this.getUserObject(data.user), data.time, data.text);
         if (data.user != me.id) {
           alertify.log(
-            sprintf(
-              "<b>%s</b> ha publicado un comentario",
-              this.getUsername(data.user)
-            )
+            sprintf("<b>%s</b> ha publicado un comentario", this.getUsername(data.user))
           );
         }
         break;
@@ -82,7 +67,7 @@ Subtitle.prototype.wsMessage = function(event) {
       case "uinfo":
         this.users[data.id] = {
           username: data.username,
-          roles: data.roles
+          roles: data.roles,
         };
 
         break;
@@ -96,7 +81,7 @@ Subtitle.prototype.getUserObject = function(uid) {
   return {
     id: uid,
     username: this.getUsername(uid),
-    roles: this.getRoles(uid)
+    roles: this.getRoles(uid),
   };
 };
 
@@ -113,8 +98,8 @@ Subtitle.prototype.loadSequences = function() {
     url: "/subtitles/" + subID + "/translate/load",
     method: "GET",
     data: {
-      secondaryLang: this.secondaryLang
-    }
+      secondaryLang: this.secondaryLang,
+    },
   }).done(reply => {
     let sequenceList = reply.sequences;
     let userList = reply.users;
@@ -153,7 +138,7 @@ Subtitle.prototype.loadSequences = function() {
 Subtitle.prototype.loadComments = function() {
   $.ajax({
     url: "/subtitles/" + subID + "/translate/comments",
-    method: "GET"
+    method: "GET",
   })
     .done(reply => {
       this.state.comments = reply;
@@ -197,7 +182,7 @@ Subtitle.prototype.openSeq = function(seqNum, by, openLockID) {
   let openInfo = {
     lockID: openLockID,
     by: by,
-    since: new Date().toISOString()
+    since: new Date().toISOString(),
   };
 
   this.state.sequences[idx].openInfo = openInfo;
@@ -216,9 +201,7 @@ Subtitle.prototype.closeSeq = function(seqNum) {
 Subtitle.prototype.lockSeq = function(seqID, status) {
   let idx = this.findSeqIdxByID(seqID);
   if (idx < 0) {
-    console.log(
-      "Could not set lock status for sequence " + seqID + " (not found)"
-    );
+    console.log("Could not set lock status for sequence " + seqID + " (not found)");
     return;
   }
 
@@ -270,9 +253,7 @@ Subtitle.prototype.changeSeq = function(
 ) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
-    console.log(
-      "Could not update sequence text for " + seqNum + " (not found)"
-    );
+    console.log("Could not update sequence text for " + seqNum + " (not found)");
     return;
   }
 
@@ -295,7 +276,7 @@ Subtitle.prototype.changeSeq = function(
       author: seq.author,
       text: seq.text,
       tstart: seq.tstart,
-      tend: seq.tend
+      tend: seq.tend,
     });
   }
 
@@ -310,9 +291,7 @@ Subtitle.prototype.changeSeq = function(
 Subtitle.prototype.getDataByNum = function(seqNum) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
-    console.error(
-      "Could not find sequence " + seqNum + " to retrieve its data"
-    );
+    console.error("Could not find sequence " + seqNum + " to retrieve its data");
     return;
   }
 
@@ -329,7 +308,7 @@ Subtitle.prototype.addComment = function(id, user, published_at, text) {
       id: id,
       user: user,
       published_at: published_at,
-      text: text
+      text: text,
     });
 
     this.state.comments.sort((a, b) => {
