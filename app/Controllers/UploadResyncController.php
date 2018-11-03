@@ -52,15 +52,17 @@ class UploadResyncController
 
         $errors = [];
         if (!Langs::existsCode($langCode)) {
-            $errors[] = ['lang', 'Elige un idioma válido.'];
+            $errors[] = ['lang', 'Elige un idioma válido'];
         }
 
         if (!v::notEmpty()->validate($versionName)) {
-            $errors[] = ['version', 'El nombre de la versión no puede estar vacío.'];
+            $errors[] = ['version', 'El nombre de la versión no puede estar vacío'];
         }
 
         if (!v::notEmpty()->validate($comments)) {
-            $errors[] = ['comments', 'Los comentarios no pueden estar vacíos.'];
+            $errors[] = ['comments', 'Los comentarios no pueden estar vacíos'];
+        } elseif (!v::length(1, 150)->validate($comments)) {
+            $errors[] = ['comments', 'Los comentarios no pueden superar los 150 caracteres'];
         }
 
         $uploadList = $request->getUploadedFiles();

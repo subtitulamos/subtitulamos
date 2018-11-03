@@ -64,8 +64,8 @@ class UploadController
 
         if (!v::notEmpty()->validate($comments)) {
             $errors[] = ['comments', 'Los comentarios no pueden estar vacíos'];
-        } elseif (!v::length(1, 100)->validate($comments)) {
-            $errors[] = ['comments', 'El comentario no puede superar los 100 caracteres'];
+        } elseif (!v::length(1, 150)->validate($comments)) {
+            $errors[] = ['comments', 'Los comentarios no pueden superar los 150 caracteres'];
         }
 
         $uploadList = $request->getUploadedFiles();
