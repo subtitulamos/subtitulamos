@@ -70,7 +70,15 @@ Vue.component("seqlock", {
 
 Vue.component("sequence", {
   template: `
-        <tr :id="!history ? 'seqn-'+number : null" :class="{'locked':  locked, 'verified': verified, 'current': !history, 'history': history}">
+        <tr
+          :id="!history ? 'seqn-'+number : null"
+          :class="{
+            'highlighted': !history && highlighted,
+            'locked':  locked,
+            'verified': verified,
+            'current': !history,
+            'history': history
+          }">
             <td><span v-if="!history">{{ number }}</span></td>
             <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
             <td class="time" @click="openSequence">
@@ -128,6 +136,10 @@ Vue.component("sequence", {
     id: Number,
     locked: Boolean,
     verified: Boolean,
+    highlighted: {
+      type: Boolean,
+      default: false,
+    },
     number: Number,
     author: Number,
     tstart: Number,
@@ -560,21 +572,24 @@ Vue.component("pagelist", {
 const SEQS_PER_PAGE = 20;
 window.translation = new Vue({
   el: "#translation",
-  data: {
-    sequences: [],
-    curPage: 1,
-    filters: {
-      onlyUntranslated: false,
-      author: 0,
-      text: "",
-      preciseTextMatching: false,
-    },
-    comments: [],
-    loaded: false,
-    loadedOnce: false,
-    newComment: "",
-    canReleaseOpenLock: canReleaseOpenLock,
-    hasAdvancedTools: hasAdvancedTools,
+  data() {
+    return {
+      sequences: [],
+      curPage: 1,
+      highlightedSequence: 0,
+      filters: {
+        onlyUntranslated: false,
+        author: 0,
+        text: "",
+        preciseTextMatching: false,
+      },
+      comments: [],
+      loaded: false,
+      loadedOnce: false,
+      newComment: "",
+      canReleaseOpenLock: canReleaseOpenLock,
+      hasAdvancedTools: hasAdvancedTools,
+    };
   },
   computed: {
     lastPage: function() {
@@ -687,20 +702,21 @@ window.translation = new Vue({
   methods: {
     onChangePage: function(page) {
       this.curPage = page;
+      this.highlightedSequence = 0; // Clear out the highlight
     },
 
     toggleUntranslatedFilter: function() {
-      this.curPage = 1;
+      this.onChangePage(1);
       this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
     },
 
     togglePreciseTextMatching: function() {
-      this.curPage = 1;
+      this.onChangePage(1);
       this.filters.preciseTextMatching = !this.filters.preciseTextMatching;
     },
 
     updateAuthorFilter: function(e) {
-      this.curPage = 1;
+      this.onChangePage(1);
       this.filters.author = Number(e.target.value);
     },
 
@@ -870,8 +886,9 @@ window.translation = new Vue({
       }
 
       this.curPage = targetPage;
+      this.highlightedSequence = seqn;
 
-      // Wait till render
+      // Delay this a little bit so Vue can run the rerender
       setTimeout(() => {
         let isFirstSequence =
           Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
@@ -885,7 +902,7 @@ window.translation = new Vue({
 
         let scrolledY = window.scrollY;
         window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
-      }, 250);
+      }, 10);
     },
   },
 });

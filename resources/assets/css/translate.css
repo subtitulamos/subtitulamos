@@ -5,6 +5,11 @@
   background-color: #e9e7e7 !important;
   position: relative;
 
+  table {
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+  }
+
   #translation-details {
     background-color: #f0eeee;
     padding-bottom: 30px;
@@ -34,13 +39,13 @@
     background-color: #e2e2e2;
   }
 
-  table td:first-child {
+  td:first-child {
     min-width: 45px;
     text-align: center;
     font-size: 15px;
   }
 
-  table td.user {
+  td.user {
     padding: 0 20px 0 20px;
     max-width: 160px;
     text-align: center;
@@ -49,14 +54,14 @@
     text-overflow: ellipsis;
   }
 
-  table td.time {
+  td.time {
     padding: 0 30px 0 30px;
     max-width: 200px;
     font-size: 14px;
     text-align: center;
   }
 
-  table td.text {
+  td.text {
     min-width: 325px;
     position: relative;
   }
@@ -81,7 +86,7 @@
     color: rgba(0, 151, 177, 0.7);
   }
 
-  table td.actions {
+  td.actions {
     padding: 0 10px 0 10px;
     min-width: 60px;
   }
@@ -108,11 +113,27 @@
   }
 
   .locked {
+    /* If updated, remmeber to update animHighlightLocked animation */
     background-color: rgb(186, 232, 186);
   }
 
   .locked > td {
     border-bottom: 2px solid rgb(35, 171, 118) !important;
+  }
+
+  .highlighted > td:first-child {
+    border-left: 7px solid rgb(128, 180, 241) !important;
+  }
+
+  .highlighted {
+    animation-duration: 10s;
+    animation-name: animHighlight;
+    animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    /* border-bottom: 2px solid rgb(73, 168, 248) !important; */
+  }
+
+  .locked.highlighted {
+    animation-name: animHighlightLocked !important;
   }
 
   .tests {
@@ -207,7 +228,7 @@
   .translatable textarea {
     display: block;
     width: 89%;
-    height: 38px;
+    height: 36px;
     padding: 6px 8px 5px 6px;
     margin-top: 3px;
     margin-bottom: 3px;
@@ -445,5 +466,29 @@
   }
   .bullseye-active {
     color: #ea0d0d;
+  }
+}
+@keyframes animHighlight {
+  from,
+  to {
+    background: transparent;
+  }
+  1% {
+    background: rgb(180, 215, 234);
+  }
+  10% {
+    background: rgb(204, 227, 240);
+  }
+}
+@keyframes animHighlightLocked {
+  from,
+  to {
+    background: rgb(186, 232, 186);
+  }
+  1% {
+    background: rgb(180, 215, 234);
+  }
+  10% {
+    background: rgb(204, 227, 240);
   }
 }
