@@ -29,7 +29,11 @@ window.onbeforeunload = function(e) {
 // Components and such
 Vue.component("seqlock", {
   template: `
-        <li>#{{ seqnum }} por <a :href="'/users/'+uid">{{ username }}</a> [ {{ niceTime }} ] <i class='fa fa-times' aria-hidden='true' @click='release'></i></li>
+  <li>
+    <a href='javascript:void(0)' @click='$emit("jump", seqnum)'>#{{ seqnum }}</a>
+    por <a :href="'/users/'+uid">{{ username }}</a>
+    [ {{ niceTime }} ] <i class='fa fa-times' aria-hidden='true' @click='release'></i>
+  </li>
     `,
   props: ["id", "seqnum", "uid", "time"],
   methods: {
