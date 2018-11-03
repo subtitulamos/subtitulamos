@@ -607,19 +607,26 @@ window.translation = new Vue({
             let textToMatch = this.filters.text;
 
             if (this.filters.preciseTextMatching) {
+              // Precise text matching means we need to find the exact string,
+              // accents and all, but always we strip the linebreaks and turn
+              // them into spaces so they're searchable.
               return (
                 seq.text.includes(textToMatch) ||
-                (seq.secondary_text && seq.secondary_text.includes(textToMatch))
+                (seq.secondary_text &&
+                  seq.secondary_text.replace(/\r?\n|\r/g, " ").includes(textToMatch))
               );
             }
 
             // We're not being precise about diacritics, we're doing simple matching
-            textToMatch = textToMatch.toLocaleLowerCase();
+            // Case doesn't matter, line breaks are of course replaced as in strict search.
+            textToMatch = textToMatch.toLocaleLowerCase().replace(/\r?\n|\r/g, " ");
             textToMatch = accentFold(textToMatch);
             return (
               accentFold(seq.text.toLocaleLowerCase()).includes(textToMatch) ||
               (seq.secondary_text &&
-                accentFold(seq.secondary_text.toLocaleLowerCase()).includes(textToMatch))
+                accentFold(
+                  seq.secondary_text.replace(/\r?\n|\r/g, " ").toLocaleLowerCase()
+                ).includes(textToMatch))
             );
           };
 
