@@ -158,7 +158,7 @@ class UserController
             $ban->setUnbanUser($auth->getUser());
 
             $em->flush();
-            $auth->addFlash('success', 'Suspensión de usuario eliminada');
+            $auth->addFlash('success', 'El usuario ha sido desbaneado');
         } else {
             foreach ($errors as $error) {
                 $auth->addFlash('error', $error);

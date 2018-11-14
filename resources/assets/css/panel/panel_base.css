@@ -6,3 +6,7 @@
 .panel-wrapper > .container {
   padding: 20px 0;
 }
+
+.panel-wrapper a[disabled] {
+  color: #f96666;
+}

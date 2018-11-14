@@ -98,4 +98,5 @@ function addRoutes(&$app, &$entityManager)
     $app->get('/panel', ['\App\Controllers\Panel\PanelIndexController', 'view'])->add($needsRole('ROLE_MOD'));
     $app->get('/panel/alerts', ['\App\Controllers\Panel\PanelAlertsController', 'view'])->setName('alerts')->add($needsRole('ROLE_MOD'));
     $app->post('/panel/alerts', ['\App\Controllers\Panel\PanelAlertsController', 'saveComment'])->add($needsRole('ROLE_MOD'));
+    $app->get('/panel/banlist', ['\App\Controllers\Panel\PanelBanlistController', 'view'])->setName('banlist')->add($needsRole('ROLE_MOD'));
 }
