@@ -9,7 +9,16 @@
 
 {% block content %}
 <div id="user-profile-wrapper">
-  <div id='user-profile'>
+  <div id='user-profile' class='container'>
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/">Subtitulamos.tv</a></li>
+        <li class="is-active"><a href="#">Usuarios</a></li>
+        <li class="is-active"><a href="#">{{ user.username }}</a></li>
+      </ul>
+    </nav>
+
     {% for error in auth.flash.errors() %}
       {{ alerts.show('error', error) }}
     {% endfor %}
@@ -17,19 +26,12 @@
       {{ alerts.show('success', success) }}
     {% endfor %}
 
-    <h2>{{ user.username }}</h2>
-
+    <h1 class="subtitle">Perfil de <b>{{ user.username}}</b></h1>
     {% if auth.has_role('ROLE_MOD') %}
-      <span class='view-normal action hint--left hint--bounce hint--rounded' v-show="mode != 'normal'" data-hint="Ver información">
+      <span class='view-normal action hint--right hint--bounce hint--rounded' v-show="mode != 'normal'" data-hint="Ver información">
         <input type='radio' class='hidden' id='mode-normal' value='normal' v-model='mode'>
         <label for='mode-normal'><i class="fa fa-eye" aria-hidden="true"></i></label>
       </span>
-      {% if user.ban is null %}
-        <span class='view-ban action hint--left hint--bounce hint--rounded' v-show="mode != 'ban'"  data-hint="Banear">
-          <input type='radio' class='hidden' id='mode-ban' value='ban' v-model='mode'>
-          <label for='mode-ban'><i class="fa fa-gavel" aria-hidden="true"></i></label>
-        </span>
-      {% endif %}
     {% endif %}
 
     <template v-if="mode == 'normal'">
@@ -39,10 +41,16 @@
             <b>Baneado hasta</b>: {{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> (<a href='/users/{{ user.id }}/unban'>Desbanear</a>)
           </div>
         {% else %}
-          <br/><br/>
+          <div class='oneline'>
+            <b>Baneado:</b> No
+            <span class='view-ban action hint--right hint--bounce hint--rounded' v-show="mode != 'ban'"  data-hint="Banear">
+              <input type='radio' class='hidden' id='mode-ban' value='ban' v-model='mode'>
+              <label for='mode-ban'><i class="fa fa-gavel" aria-hidden="true"></i></label>
+            </span>
+          </div>
         {% endif %}
         <div class='oneline'>
-          <h4>Última conexión:</h4>
+          <b>Última conexión:</b>
           <span>
             {% if user.lastSeen is not null %}
               {{ user.lastSeen|date('d/M/Y H:i') }}
@@ -52,7 +60,7 @@
           </span>
         </div>
         <div class='oneline'>
-          <h4>Fecha de registro:</h4>
+          <b>Fecha de registro:</b>
           <span>
             {% if user.registeredAt is not null %}
               {{ user.registeredAt|date('d/M/Y H:i') }}
@@ -61,28 +69,35 @@
             {% endif %}
           </span>
         </div>
-        {% if user.ban %}
-        {% endif %}
+
+        <br/>
       {% endif %}
 
-      <h4>Capítulos subidos</h4>
-      <ul>
-        {% for episode in uploaded_episodes %}
-          <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-        {% else %}
-          {{ user.username }} no ha subido ningún capítulo
-        {% endfor %}
-      </ul>
+      <div class="columns is-desktop">
+        <div class="column">
+          <h2 class='subtitle'>Capítulos subidos ({{ uploaded_episodes|length }})</h2>
+          <ul>
+            {% for episode in uploaded_episodes %}
+              <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% else %}
+              {{ user.username }} no ha subido ningún capítulo
+            {% endfor %}
+          </ul>
+        </div>
 
-      <h4>Capítulos en los que ha colaborado</h4>
-      <ul>
-        {% for episode in collaborated_episodes %}
-          <li><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-        {% else %}
-          {{ user.username }} no ha colaborado en ningún capítulo
-        {% endfor %}
-      </ul>
+        <div class='column'>
+          <h2 class='subtitle'>Capítulos en los que ha colaborado ({{ collaborated_episodes|length }})</h2>
+          <ul>
+            {% for episode in collaborated_episodes %}
+              <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% else %}
+              {{ user.username }} no ha colaborado en ningún capítulo
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
     </template>
+
     {% if auth.has_role('ROLE_MOD') %}
       <template v-if="mode == 'ban'">
         <h4>Banear</h4>
