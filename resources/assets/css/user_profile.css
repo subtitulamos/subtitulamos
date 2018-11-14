@@ -73,3 +73,19 @@
   display: inline-block;
   margin: 5px;
 }
+
+.name {
+  font-weight: bold !important;
+}
+
+.user-title {
+  margin-left: 5px;
+}
+
+.user-title.role-mod {
+  background-color: #0074ca !important;
+}
+
+.user-title.role-tt {
+  background-color: green !important;
+}

@@ -379,12 +379,6 @@
   .comment-body.role-mod {
     font-weight: bold;
   }
-  .comment-body.role-tt {
-    color: green;
-  }
-  .comment-body.role-mod {
-    color: #0074ca;
-  }
   .open-other {
     float: right;
     margin-top: 3px;

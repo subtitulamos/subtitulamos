@@ -104,14 +104,6 @@ a {
   font-weight: bold;
 }
 
-.comment-body.role-tt {
-  color: green;
-}
-
-.comment-body.role-mod {
-  color: #0074ca;
-}
-
 #pages {
   width: 100%;
   min-height: 25px;

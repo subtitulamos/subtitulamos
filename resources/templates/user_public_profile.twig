@@ -26,7 +26,17 @@
       {{ alerts.show('success', success) }}
     {% endfor %}
 
-    <h1 class="subtitle">Perfil de <b>{{ user.username}}</b></h1>
+    {# Title, based on role #}
+    <h1 class="subtitle">
+      {% if user.hasRole('ROLE_MOD') %}
+        Perfil de <span class='name role-mod'>{{ user.username }}</span> <span class='user-title role-mod tag is-dark'>Moderador</span>
+      {% elseif user.hasRole('ROLE_TT') %}
+        Perfil de <span class='name role-tt'>{{ user.username }}</span> <span class='user-title role-tt tag is-dark'>Traductor Habitual</span>
+      {% else %}
+        Perfil de <span class='name role-user'>{{ user.username }}</span>
+      {% endif %}
+    </h1>
+
     {% if auth.has_role('ROLE_MOD') %}
       <span class='view-normal action hint--right hint--bounce hint--rounded' v-show="mode != 'normal'" data-hint="Ver información">
         <input type='radio' class='hidden' id='mode-normal' value='normal' v-model='mode'>

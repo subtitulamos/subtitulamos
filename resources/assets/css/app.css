@@ -954,3 +954,11 @@ template {
   border-radius: 50%;
   box-shadow: 0 0 9px rgb(0, 113, 150);
 }
+
+.role-tt {
+  color: green;
+}
+
+.role-mod {
+  color: #0074ca;
+}

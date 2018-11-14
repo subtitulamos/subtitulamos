@@ -138,7 +138,7 @@ class Auth
      */
     public function hasRole($role)
     {
-        return $role == 'ROLE_GUEST' || ($this->user !== null && !$this->user->getBan() && \in_array($role, $this->user->getRoles()));
+        return $role == 'ROLE_GUEST' || ($this->user !== null && !$this->user->getBan() && $this->user->hasRole($role));
     }
 
     /**
