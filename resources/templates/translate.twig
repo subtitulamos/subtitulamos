@@ -15,6 +15,9 @@
 <div id="translation">
   <header>
     Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ sub.version.episode.fullname }}</a></span>
+    {% if feature_on('ALERTS') %}
+      <button type="button" @click="alertMod" class='alert-mod'><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Avisar a un moderador</button>
+    {% endif %}
   </header>
 
   <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
@@ -30,9 +33,6 @@
       <button type="button" @click="closePage">Cerrar todo</button>
       <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
       <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
-      {% if feature_on('ALERTS') %}
-        <button type="button" @click="alertMod" class='alert-mod'>Avisar a moderador</button>
-      {% endif %}
     </div>
 
     {% verbatim %}

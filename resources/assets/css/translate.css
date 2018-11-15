@@ -330,14 +330,14 @@
   > header {
     text-align: center;
     padding-bottom: 20px;
-    font-size: 1.1em;
     margin-top: -20px;
     padding-top: 20px;
     background-color: #c7c7c7;
-    text-shadow: #bbbbbb 1px 1px 1px;
   }
   #episode-title {
     font-weight: bold;
+    font-size: 1.1em;
+    text-shadow: #bbbbbb 1px 1px 1px;
   }
   #episode-title a {
     color: #125596;
@@ -442,13 +442,30 @@
     .lock-tool:hover {
       box-shadow: rgba(0, 140, 61, 0.5) 0px 0px 4px 1px !important;
     }
-    .alert-mod {
-      background-color: #efed9b;
-      border: 1px solid #b6b909;
-    }
-    .alert-mod:hover {
-      box-shadow: rgba(150, 152, 18, 0.49) 0px 0px 4px 1px !important;
-    }
+  }
+  .alert-mod {
+    background-color: #efed9b;
+    border: 1px solid #b6b909;
+    position: absolute;
+    right: 1rem;
+    padding: 5px 11px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    /* A transition displays the rest of the content */
+    max-width: 38px;
+    transition: max-width 2s ease-in-out;
+    height: 33px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .alert-mod:hover {
+    transition: max-width 1.2s ease;
+    max-width: 400px;
+    box-shadow: rgba(150, 152, 18, 0.49) 0px 0px 4px 1px !important;
+  }
+  .alert-mod i {
+    /* Pre-animation: 7px (to get text out). Post-animation: 3px */
+    margin-right: 7px;
   }
   .bullseye-wrapper {
     color: gray;
