@@ -877,7 +877,33 @@ window.translation = new Vue({
         );
     },
 
-    jumpToSequence: function(seqn) {
+    goTo() {
+      // Mark that we're in the goTo prompt
+      this.goingTo = true;
+
+      alertify
+        .cancelBtn("Cancelar")
+        .okBtn("Ir")
+        .prompt(
+          "Escribe el número de secuencia al que navegar",
+          (val, ev) => {
+            // User clicked go
+            if (Number(val) > 0) {
+              this.jumpToSequence(Number(val));
+            } else {
+              alertify.error("Por favor, introduce un número entero y positivo");
+            }
+
+            this.goingTo = false;
+          },
+          () => {
+            // User cancelled, we still have to clear this
+            this.goingTo = false;
+          }
+        );
+    },
+
+    jumpToSequence(seqn) {
       let totalPages = Math.ceil(this.sequences.length / SEQS_PER_PAGE);
       let targetPage = Math.ceil(seqn / SEQS_PER_PAGE);
 
@@ -930,11 +956,19 @@ ws.onerror = e => {
   sub.wsError(e);
 };
 
-// Absorb and block default Ctrl+S behaviour
-$(document).bind("keydown", function(e) {
+// Absorb and block default Ctrl+S / Ctrl+G behaviour
+$(document).on("keydown", function(e) {
   if (e.ctrlKey && e.which == 83) {
     if (e.shiftKey) {
       translation.savePage();
+    }
+
+    e.preventDefault();
+  }
+
+  if (e.ctrlKey && e.which == 71) {
+    if (!translation.goingTo) {
+      translation.goTo();
     }
 
     e.preventDefault();

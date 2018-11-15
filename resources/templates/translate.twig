@@ -26,6 +26,7 @@
 
   <div id="translation-details" :class="{'disabled': !loaded}">
     <div id='translation-tools'>
+      <button type="button" @click="goTo" data-hint="Ctrl+G">Ir a secuencia</button>
       <button type="button" @click="openPage">Abrir todo</button>
       <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
       <button type="button" @click="savePage" class='hint--top hint--bounce' data-hint="Ctrl+Shift+S">Guardar todo</button>
