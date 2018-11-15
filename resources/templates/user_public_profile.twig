@@ -84,17 +84,6 @@
       {% endif %}
 
       <div class="columns is-desktop">
-        <div class="column">
-          <h2 class='subtitle'>Capítulos subidos ({{ uploaded_episodes|length }})</h2>
-          <ul>
-            {% for episode in uploaded_episodes %}
-              <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-            {% else %}
-              {{ user.username }} no ha subido ningún capítulo
-            {% endfor %}
-          </ul>
-        </div>
-
         <div class='column'>
           <h2 class='subtitle'>Capítulos en los que ha colaborado ({{ collaborated_episodes|length }})</h2>
           <ul>
@@ -102,6 +91,17 @@
               <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
             {% else %}
               {{ user.username }} no ha colaborado en ningún capítulo
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="column">
+          <h2 class='subtitle'>Capítulos subidos ({{ uploaded_episodes|length }})</h2>
+          <ul>
+            {% for episode in uploaded_episodes %}
+              <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+            {% else %}
+              {{ user.username }} no ha subido ningún capítulo
             {% endfor %}
           </ul>
         </div>
