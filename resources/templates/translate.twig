@@ -117,7 +117,7 @@
       Secuencias abiertas:
 
       <ul>
-        <seqlock v-for="lock in openLocks" :key="'lock-'+lock.id" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time" @jump="jumpToSequence(lock.seq_number)"></seqlock>
+        <seqlock v-for="lock in openLocks" :key="lock.seq_number" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time" @jump="jumpToSequence(lock.seq_number)"></seqlock>
       </ul>
     </div>
   </div>

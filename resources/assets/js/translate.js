@@ -667,7 +667,7 @@ window.translation = new Vue({
     openLocks: function() {
       let locks = [];
       this.sequences.forEach(seq => {
-        if (seq.openInfo) {
+        if (seq.openInfo && seq.openInfo.lockID) {
           locks.push({
             id: seq.openInfo.lockID,
             uid: seq.openInfo.by,
