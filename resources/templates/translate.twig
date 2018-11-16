@@ -75,7 +75,7 @@
       {% verbatim %}
         <template v-for="seq in pageSequences">
           <sequence v-for="hseq in seq.history"
-            :key="hseq.id + '-hist-' + seq.number"
+            :key="hseq.id"
 
             :id="hseq.id"
             :number="seq.number"
@@ -90,7 +90,7 @@
           ></sequence>
 
           <sequence
-            :key="seq.id + '-' + seq.number"
+            :key="'main-' + seq.number"
 
             :id="seq.id"
             :number="seq.number"
