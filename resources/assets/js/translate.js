@@ -296,7 +296,7 @@ Vue.component("sequence", {
     },
 
     canLock: function() {
-      return canLock && !this.history && this.id;
+      return canLock && !this.history && this.id != 0;
     },
 
     translated: function() {
@@ -314,7 +314,6 @@ Vue.component("sequence", {
       });
 
       let full = tlines.join("\n");
-      let msg, hint;
       let dialogLineCount = (full.match(/(?:^|\s)-/g) || []).length;
       if (full.length > 40 || (dialogLineCount == 2 && full.match(/^\s*-/g))) {
         let unopinionatedMatch = balanceText(this.editingText, false).join("\n") == full;
@@ -833,7 +832,7 @@ window.translation = new Vue({
 
     lockPage: function(state) {
       this.pageSequences.forEach(function(s) {
-        if (!s.openInfo) {
+        if (!s.openInfo && s.id) {
           bus.$emit("lock-" + s.number, state);
         }
       });
