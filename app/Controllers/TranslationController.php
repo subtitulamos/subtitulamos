@@ -94,14 +94,29 @@ class TranslationController
 
                 ++$autofilledSeqCount;
             } else {
-                $blankSequence = Translation::getBlankSequenceConfidence($sequence);
+                $blankConfidence = Translation::getBlankSequenceConfidence($sequence);
 
-                if ($blankSequence > 0) {
+                if ($blankConfidence > 0) {
                     $nseq = clone $sequence;
                     $nseq->setAuthor($modBot);
                     $nseq->setSubtitle($sub);
                     $nseq->setText(' '); //Blank
-                    $nseq->setLocked($blankSequence >= 95 ? 1 : 0); // Only lock if we're sure
+                    $nseq->setLocked($blankConfidence >= 95 ? 1 : 0); // Only lock if we're sure
+                    $em->persist($nseq);
+
+                    ++$autofilledSeqCount;
+                }
+
+                $translationAttempt = Translation::getBasicSequenceTranslation($sequence, $langCode);
+                $translationConfidence = $translationAttempt[0];
+                $translatedText = $translationAttempt[1];
+
+                if ($translatedText != '') {
+                    $nseq = clone $sequence;
+                    $nseq->setAuthor($modBot);
+                    $nseq->setSubtitle($sub);
+                    $nseq->setText($translatedText); //Blank
+                    $nseq->setLocked($translationConfidence >= 95 ? 1 : 0); // Only lock if we're sure
                     $em->persist($nseq);
 
                     ++$autofilledSeqCount;

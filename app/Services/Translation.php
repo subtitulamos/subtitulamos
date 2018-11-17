@@ -284,8 +284,8 @@ class Translation
      */
     public static function getBlankSequenceConfidence($sequence)
     {
-        // Hmm*, Eh, Uh, Oh, Uhm, Mm, Ah, Gah, Mnh, Argh, Ow, Ouch, Ugh... & combinations of those
-        if (preg_match("/^(?:(?:[uhm]h*m+|[euoa]+h|ga+h+|mnh+|s+h+|h+[eua]+h+|u+g+h+|a+rgh+|ow+|ouch)[.!?\s-]*)*$/i", $sequence->getText()) == 1) {
+        // Mmm, Hmm*, Mhm, Uhm, Mm, Eh, Uh, Oh, Ah, Gah, Mnh, Agh, Argh, Ow, Ouch, Ugh, Uhh... & combinations of those
+        if (preg_match("/^(?:(?:[uhm]h*m+|[euoa]+h|ga+h+|mnh+|s+h+|h+[eua]+h+|u+g*h+|a+r*g+h+|ow+|ouch)[.!?\s-]*)*$/i", $sequence->getText()) == 1) {
             return 100;
         }
 
@@ -295,6 +295,64 @@ class Translation
         }
 
         return 0;
+    }
+
+    /**
+     * Determine if a given sequence has an easy translation
+     * @param string $text
+     * @return array{int,string} Degree of confidence that this sequence should be translated, translation
+     */
+    public static function getBasicSequenceTranslation($sequence, $language)
+    {
+        // Basic translation is currently only available for spanish
+        if ($language == 'es-es' || $language == 'es-lat') {
+            $singleLineText = preg_replace("/\n\r/", ' ', $sequence->getText());
+
+            // ---> Previously on <show name>...
+            // Detection is only available for the first 100 sequences
+            if ($sequence->getNumber() < 100) {
+                // Get the show name
+                $showName = $sequence->getSubtitle()->getVersion()->getEpisode()->getShow()->getName();
+                if (preg_match("/^Previously on ['\"]?".$showName."['\"]?(\s*\.\.\.)?$/i", $singleLineText, $matches) === 1) {
+                    $translatedStr = 'Anteriormente en '.$showName;
+                    if ($matches[1]) {
+                        $translatedStr .= '...';
+                    }
+
+                    return [100, $translatedStr];
+                }
+            }
+
+            // ---> Yes/No
+            if (preg_match("/^(yes|no)([\.,!\?]*)$/i", $singleLineText, $matches) === 1) {
+                $translatedStr = '';
+                switch ($matches[1]) {
+                    case 'yes': $translatedStr = 'sí'; break;
+                    case 'Yes': $translatedStr = 'Sí'; break;
+                    case 'no': $translatedStr = 'no'; break;
+                    case 'No': $translatedStr = 'No'; break;
+                }
+
+                if ($matches[2]) {
+                    if ($matches[2] == '!') {
+                        $translatedStr = '¡'.$translatedStr.'!';
+                        $confidence = 100;
+                    } elseif ($matches[2] == '?') {
+                        $translatedStr = '¿'.$translatedStr.'?';
+                        $confidence = 100;
+                    } else {
+                        $translatedStr .= $matches[2];
+                        $confidence = mb_strlen($matches[2]) == 1 ? 100 : 90;
+                    }
+                } else {
+                    $confidence = 95; // Fairly confident we're right here.
+                }
+
+                return [$confidence, $translatedStr];
+            }
+        }
+
+        return [0, ''];
     }
 
     /**
