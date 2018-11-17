@@ -334,13 +334,14 @@ class Translation
                 }
 
                 if ($matches[2]) {
+                    // We can only do this properly with a set of characters
                     if ($matches[2] == '!') {
                         $translatedStr = '¡'.$translatedStr.'!';
                         $confidence = 100;
                     } elseif ($matches[2] == '?') {
                         $translatedStr = '¿'.$translatedStr.'?';
                         $confidence = 100;
-                    } else {
+                    } elseif ($matches[2] == '...' || $matches[2] == ',' || $matches[2] == '.') {
                         $translatedStr .= $matches[2];
                         $confidence = mb_strlen($matches[2]) == 1 ? 100 : 90;
                     }
