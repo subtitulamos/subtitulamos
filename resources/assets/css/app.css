@@ -396,6 +396,7 @@ nav.top-links li:hover {
 /* Styling for the TV BOX */
 
 #tv {
+  position: relative;
   z-index: 1;
   width: 290px;
   margin-left: auto;
