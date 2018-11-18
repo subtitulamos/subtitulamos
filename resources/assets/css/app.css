@@ -28,7 +28,7 @@ input.nospinner[type="number"] {
   width: 100%;
   position: relative;
   top: 0;
-  z-index: 0;
+  z-index: 50;
   background-color: #4480bb;
 }
 body > header {
