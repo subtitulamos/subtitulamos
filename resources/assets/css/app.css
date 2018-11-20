@@ -28,9 +28,9 @@ input.nospinner[type="number"] {
   width: 100%;
   position: relative;
   top: 0;
-  z-index: 50;
   background-color: #4480bb;
 }
+
 body > header {
   background-color: #4480bb;
   padding-top: 110px;
@@ -362,7 +362,6 @@ nav.top-links li:hover {
 
 #large_splash {
   position: relative;
-  z-index: 2;
   margin-bottom: 10px;
 }
 #logo {
@@ -397,7 +396,6 @@ nav.top-links li:hover {
 
 #tv {
   position: relative;
-  z-index: 1;
   width: 290px;
   margin-left: auto;
   margin-right: auto;
@@ -412,7 +410,6 @@ nav.top-links li:hover {
   width: 290px;
   height: 130px;
   position: absolute;
-  z-index: 11;
   margin-top: -40px;
   left: calc(50% - 135px);
   border-radius: 3px;
@@ -432,6 +429,7 @@ nav.top-links li:hover {
     rgba(40, 43, 48, 1) 100%
   ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007db9e8', endColorstr='#282b30',GradientType=0 ); /* IE6-9 */
+  z-index: 1;
 }
 #tv_box_outer {
   width: 280px;
@@ -440,7 +438,6 @@ nav.top-links li:hover {
   border-right: 1px solid #ffffff;
   height: 130px;
   position: absolute;
-  z-index: 10;
   margin-top: -42px;
   left: calc(50% - 130px);
   -moz-border-radius: 3px;
@@ -454,7 +451,6 @@ nav.top-links li:hover {
   border-right: 1px solid #ffffff;
   height: 120px;
   position: absolute;
-  z-index: 1;
   margin-top: -33px;
   left: calc(50% - 120px);
   background-color: rgba(0, 0, 0, 0.3);
@@ -465,7 +461,6 @@ nav.top-links li:hover {
   background: white;
   position: absolute;
   margin-top: -22px;
-  z-index: 2;
   left: calc(50% + 129px);
 }
 #tv_sound_line_2 {
@@ -473,7 +468,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: -17px;
   left: calc(50% + 129px);
 }
@@ -482,7 +476,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: -12px;
   left: calc(50% + 129px);
 }
@@ -491,7 +484,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: -7px;
   left: calc(50% + 129px);
 }
@@ -500,7 +492,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: -2px;
   left: calc(50% + 129px);
 }
@@ -509,7 +500,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: 3px;
   left: calc(50% + 129px);
 }
@@ -518,7 +508,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: 8px;
   left: calc(50% + 129px);
 }
@@ -527,7 +516,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: 13px;
   left: calc(50% + 129px);
 }
@@ -536,7 +524,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: 18px;
   left: calc(50% + 129px);
 }
@@ -545,7 +532,6 @@ nav.top-links li:hover {
   height: 2px;
   background: white;
   position: absolute;
-  z-index: 2;
   margin-top: 23px;
   left: calc(50% + 129px);
 }
@@ -557,7 +543,6 @@ nav.top-links li:hover {
   -webkit-border-radius: 3px;
   border-radius: 3px;
   position: absolute;
-  z-index: 4;
   margin-top: 68px;
   left: calc(50% + 128px);
 }
@@ -569,7 +554,6 @@ nav.top-links li:hover {
   -webkit-border-radius: 3px;
   border-radius: 3px;
   position: absolute;
-  z-index: 4;
   margin-top: 70px;
   left: calc(50% + 130px);
 }
@@ -581,7 +565,6 @@ nav.top-links li:hover {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   position: absolute;
-  z-index: 4;
   margin-top: 43px;
   left: calc(50% + 128px);
 }
@@ -593,7 +576,6 @@ nav.top-links li:hover {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   position: absolute;
-  z-index: 4;
   margin-top: 46px;
   left: calc(50% + 131px);
 }
@@ -614,14 +596,12 @@ nav.top-links li:hover {
   font-weight: 700;
   font-size: 11pt !important;
   margin-top: 10px;
-  z-index: 3;
   position: relative;
   width: 290px;
   margin-left: auto;
   margin-right: auto;
 }
 #footer_memoria {
-  z-index: 3;
   position: relative;
   width: 290px;
   margin-left: auto;
@@ -631,17 +611,18 @@ nav.top-links li:hover {
   padding-top: 2px;
   letter-spacing: 1px;
   font-size: 8pt;
-  z-index: 3;
   position: relative;
   width: 290px;
   margin-left: auto;
   margin-right: auto;
 }
+
 #tv:hover > #footer_disclaimer,
 #tv:hover > #footer_palabra,
 #tv:hover > #footer_memoria {
-  z-index: 11;
+  z-index: 2;
 }
+
 #footer_section_2 {
   padding-top: 50px;
   margin-left: auto;
@@ -743,7 +724,7 @@ nav.top-links li:hover {
   position: relative;
   top: 2px;
   width: 478px;
-  z-index: 999;
+  z-index: 888;
   margin: 0 auto;
   padding: 0;
   border: 1px solid #cbcfe2;
