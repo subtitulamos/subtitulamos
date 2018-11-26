@@ -35,8 +35,8 @@ class PanelBanlistController
     public function view($request, $response, EntityManager $em, Twig $twig)
     {
         $banned_users = [
-            'temporary' => $this->fetchBannedUsersByDate($em, new \DateTime('2038-01-01'), new \DateTime()),
-            'permanent' => $this->fetchBannedUsersByDate($em, new \DateTime('3000-01-01'), new \DateTime('2038-01-01'))
+            'temporary' => $this->fetchBannedUsersByDate($em, new \DateTime('2037-01-01'), new \DateTime()),
+            'permanent' => $this->fetchBannedUsersByDate($em, new \DateTime('3000-01-01'), new \DateTime('2037-01-01'))
         ];
 
         return $twig->render($response, 'panel/panel_banlist.twig', [
