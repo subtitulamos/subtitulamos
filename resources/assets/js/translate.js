@@ -15,6 +15,7 @@ window.onbeforeunload = function(e) {
   let ask = false;
   for (var i = 0; i < sessionStorage.length; i++) {
     if (sessionStorage.key(i).match("sub-" + subID + "-seqtext")) {
+      console.log(i, sessionStorage.key(i), "open");
       ask = true;
     }
   }
@@ -416,17 +417,21 @@ Vue.component("sequence", {
         postData.tend = nEndTime;
       }
 
+      // Save ID to delete the text key afterwards
+      let previousId = this.id;
       $.ajax({
         url: "/subtitles/" + subID + "/translate/" + action,
         method: "POST",
         data: postData,
       })
         .done(newID => {
+          // Update sequence
+          // (though in normal behaviour we will have received this update via websocket faster)
           sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
           this.saving = false;
 
-          // Discard editing text cache if saved
-          sessionStorage.removeItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id);
+          // Delete storage key
+          sessionStorage.removeItem("sub-" + subID + "-seqtext-" + this.number + "-" + previousId);
 
           // Try to remove it form the modified seq list if it's there
           let modIdx = modifiedSeqList.indexOf(this.number);
