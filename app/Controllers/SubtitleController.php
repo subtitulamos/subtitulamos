@@ -263,7 +263,7 @@ class SubtitleController
 
         if (!v::notEmpty()->validate($vname) || !v::notEmpty()->validate($vcomment)) {
             $errors[] = 'Ni el nombre de la versión ni los comentarios pueden estar vacíos';
-        } elseif (!v::length(1, 150)->validate($comments)) {
+        } elseif (!v::length(1, 150)->validate($vcomment)) {
             $errors[] = 'Los comentarios no pueden superar los 150 caracteres';
         }
 
