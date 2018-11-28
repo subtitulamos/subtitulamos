@@ -64,7 +64,7 @@ class SrtParser
                     if ($sequence) {
                         // Clean the text and trim, because cleanText alwawys returns AT LEAST
                         // a single space, never an empty sequence.
-                        $cleanText = trim(Translation::cleanText($sequence->getText(), $seqOpts));
+                        $cleanText = !empty($sequence->getText()) ? trim(Translation::cleanText($sequence->getText(), $seqOpts)) : '';
                         if (!empty($cleanText)) {
                             $sequence->setText($cleanText);
                             $sequence->setNumber(++$this->seqNum);
