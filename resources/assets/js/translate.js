@@ -970,7 +970,7 @@ $(document).on("keydown", function(e) {
     e.preventDefault();
   }
 
-  if (e.ctrlKey && e.which == 71) {
+  if (e.ctrlKey && !e.altKey && e.which == 71) {
     if (!translation.goingTo) {
       translation.goTo();
     }
