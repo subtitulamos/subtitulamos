@@ -18,6 +18,12 @@ use Slim\Views\Twig;
 
 class ShowController
 {
+    public function redirectToView($showId, $season, RequestInterface $request, ResponseInterface $response, \Slim\Router $router)
+    {
+        # It'll be safe to remove this by late 2019
+        return $response->withRedirect($router->pathFor('show', ['showId' => $showId, 'season' => $season]), 301);
+    }
+
     public function view($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
     {
         $show = $em->getRepository('App:Show')->find($showId);
@@ -140,6 +146,6 @@ class ShowController
             $em->flush();
         }
 
-        return $response->withHeader('Location', $router->pathFor('show-edit', ['showId' => $showId]));
+        return $response->withRedirect($router->pathFor('show-edit', ['showId' => $showId]));
     }
 }

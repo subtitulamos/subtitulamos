@@ -68,6 +68,7 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRole('ROLE_MOD'));
     */
     $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
+    $app->get('/shows/{showId}/{season}', ['\App\Controllers\ShowController', 'redirectToView']);
     $app->get('/shows/{showId}[/season/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
     $app->get('/shows/{showId}/properties', ['\App\Controllers\ShowController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('show-edit');
     $app->post('/shows/{showId}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
