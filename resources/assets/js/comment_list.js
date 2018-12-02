@@ -2,25 +2,9 @@ import Vue from "vue";
 import $ from "jquery";
 import "./vue/comment.js";
 
-$("a[disabled]").on("click", function(e) {
-  e.preventDefault();
-  return false;
-});
-
-$("a[data-action='delete']").on("click", function(e) {
-  let subId = $(this).data("id");
-  alertify.confirm(
-    "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
-    function() {
-      window.location = "/subtitles/" + subId + "/delete";
-    }
-  );
-});
-
 let comments = new Vue({
   el: "#comment_content",
   data: {
-    newComment: "",
     comments: [],
     page: 1,
   },
