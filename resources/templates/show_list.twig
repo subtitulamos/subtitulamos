@@ -1,6 +1,11 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
+{% block meta %}
+  {% if add_canonical %}
+    <link rel="canonical" href="/shows/{{ show.id }}/season/{{ cur_season }}" />
+  {% endif %}
+{% endblock %}
 {% block title %}{{ show.name }} (T{{cur_season}}){% endblock %}
 {% block css %}
   {{ assets.css('showlist') }}

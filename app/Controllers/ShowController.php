@@ -47,7 +47,8 @@ class ShowController
 
         // Let's see if the URI contains the season, otherwise, fill it
         $route = $request->getAttribute('route');
-        $season = (int)$route->getArgument('season');
+        $seasonArg = $route->getArgument('season');
+        $season = (int)$seasonArg;
         if (!in_array($season, $seasons)) {
             $season = $seasons[count($seasons) - 1];
         }
@@ -95,7 +96,8 @@ class ShowController
             ],
             'seasons' => $seasons,
             'episodes' => $episodeList,
-            'cur_season' => $season
+            'cur_season' => $season,
+            'add_canonical' => $seasonArg === null
         ]);
     }
 
