@@ -12,6 +12,7 @@ use App\Services\Auth;
 
 use App\Services\Langs;
 
+use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -19,7 +20,7 @@ use Slim\Views\Twig;
 
 class EpisodeController
 {
-    public function view($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router)
+    public function view($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router, SlugifyInterface $slugify)
     {
         $ep = $em->createQuery('SELECT e, sb, v, sw, p FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN e.show sw LEFT JOIN sb.pause p WHERE e.id = :id')
             ->setParameter('id', $id)
@@ -29,6 +30,15 @@ class EpisodeController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
+        // The only correct URL is with a slug (and a right one at that), redirect to the right URI
+        $route = $request->getAttribute('route');
+        $slug = $route->getArgument('slug');
+        $properSlug = $slugify->slugify($ep->getFullName());
+        if (empty($slug) || $slug != $properSlug) {
+            return $response->withRedirect($router->pathFor('episode', ['id' => $ep->getId(), 'slug' => $properSlug]), 301);
+        }
+
+        // Determine which languages this sub is using
         $langs = [];
         foreach ($ep->getVersions() as $version) {
             foreach ($version->getSubtitles() as $sub) {
@@ -45,13 +55,13 @@ class EpisodeController
         $epNumber = $ep->getNumber();
 
         // Get ids for the jump arrows
-        $nextId = $em->createQuery('SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number > :epnumber) OR e.season > :epseason) ORDER BY e.season ASC, e.number ASC')
+        $nextEp = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number > :epnumber) OR e.season > :epseason) ORDER BY e.season ASC, e.number ASC')
             ->setParameter('epseason', $epSeason)
             ->setParameter('epnumber', $epNumber)
             ->setParameter('show', $ep->getShow()->getId())
             ->setMaxResults(1)
             ->getOneOrNullResult();
-        $prevId = $em->createQuery('SELECT e.id FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number < :epnumber) OR e.season < :epseason) ORDER BY e.season DESC, e.number DESC')
+        $prevEp = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number < :epnumber) OR e.season < :epseason) ORDER BY e.season DESC, e.number DESC')
             ->setParameter('epseason', $epSeason)
             ->setParameter('epnumber', $epNumber)
             ->setParameter('show', $ep->getShow()->getId())
@@ -61,8 +71,9 @@ class EpisodeController
         return $twig->render($response, 'episode.twig', [
             'episode' => $ep,
             'langs' => $langs,
-            'prev_url' => $prevId ? $router->pathFor('episode', $prevId) : '',
-            'next_url' => $nextId ? $router->pathFor('episode', $nextId) : ''
+            'slug' => $properSlug,
+            'prev_url' => $prevEp ? $router->pathFor('episode', ['id' => $prevEp->getId(), 'slug' => $slugify->slugify($prevEp->getFullName())]) : '',
+            'next_url' => $nextEp ? $router->pathFor('episode', ['id' => $nextEp->getId(), 'slug' => $slugify->slugify($nextEp->getFullName())]) : ''
         ]);
     }
 
