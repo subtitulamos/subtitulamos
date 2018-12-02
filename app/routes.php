@@ -39,7 +39,7 @@ function addRoutes(&$app, &$entityManager)
     $app->delete('/subtitles/{id}/translate/open-lock/{lockId}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRole('ROLE_JUNIOR_TT'));
 
     $app->get('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{subId}/translate/comments/submit', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
     $app->delete('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRole('ROLE_MOD'));
     /*
     $app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
@@ -60,7 +60,7 @@ function addRoutes(&$app, &$entityManager)
     $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRole('ROLE_USER'));
     $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRole('ROLE_USER'));
     $app->get('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);
-    $app->post('/episodes/{epId}/comments/submit', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRole('ROLE_USER'));
+    $app->post('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRole('ROLE_USER'));
 
     $app->delete('/episodes/{epId}/comments/{cId}', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRole('ROLE_USER'));
     /*

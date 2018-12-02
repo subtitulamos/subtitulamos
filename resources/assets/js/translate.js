@@ -734,7 +734,7 @@ window.translation = new Vue({
       this.newComment = "";
 
       $.ajax({
-        url: "/subtitles/" + subID + "/translate/comments/submit",
+        url: "/subtitles/" + subID + "/translate/comments",
         method: "POST",
         data: {
           text: comment,

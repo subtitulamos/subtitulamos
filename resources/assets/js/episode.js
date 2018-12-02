@@ -51,7 +51,7 @@ let comments = new Vue({
       this.newComment = "";
 
       $.ajax({
-        url: "/episodes/" + epId + "/comments/submit",
+        url: "/episodes/" + epId + "/comments",
         method: "POST",
         data: {
           text: comment,
