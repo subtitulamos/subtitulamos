@@ -24,7 +24,7 @@ class ShowController
         return $response->withRedirect($router->pathFor('show', ['showId' => $showId, 'season' => $season]), 301);
     }
 
-    public function view($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
+    public function view($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router)
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
@@ -48,11 +48,15 @@ class ShowController
         // Let's see if the URI contains the season, otherwise, fill it
         $route = $request->getAttribute('route');
         $seasonArg = $route->getArgument('season');
-        $season = (int)$seasonArg;
-        if (!in_array($season, $seasons)) {
-            $season = $seasons[count($seasons) - 1];
+
+        if (!in_array($seasonArg, $seasons)) {
+            // * Abort request *
+            // If the season passed is not a valid season, redirect to default
+            return $response->withRedirect($router->pathFor('show', ['showId' => $showId]));
         }
 
+        // Set the season to the passed arg, or to latest if not present
+        $season = $seasonArg !== null ? $seasonArg : $seasons[count($seasons) - 1];
         $show = $em->createQuery('SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC')
             ->setParameter('id', $showId)
             ->setParameter('season', $season)
