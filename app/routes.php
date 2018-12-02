@@ -29,50 +29,50 @@ function addRoutes(&$app, &$entityManager)
     $app->get('/search/paused', ['\App\Controllers\SearchController', 'listPaused'])->add($needsRole('ROLE_TT'));
 
     $app->post('/subtitles/translate', ['\App\Controllers\TranslationController', 'newTranslation'])->add($needsRole('ROLE_USER'));
-    $app->get('/subtitles/{id}/translate', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRole('ROLE_USER'));
-    $app->get('/subtitles/{id}/translate/load', ['\App\Controllers\TranslationController', 'loadData'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{id}/translate/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{id}/translate/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{id}/translate/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{id}/translate/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{id}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRole('ROLE_JUNIOR_TT'));
-    $app->delete('/subtitles/{id}/translate/open-lock/{lockId}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRole('ROLE_JUNIOR_TT'));
+    $app->get('/subtitles/{id:[0-9]+}/translate', ['\App\Controllers\TranslationController', 'view'])->setName('translation')->add($needsRole('ROLE_USER'));
+    $app->get('/subtitles/{id:[0-9]+}/translate/load', ['\App\Controllers\TranslationController', 'loadData'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/open', ['\App\Controllers\TranslationController', 'open'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRole('ROLE_JUNIOR_TT'));
+    $app->delete('/subtitles/{id:[0-9]+}/translate/open-lock/{lockId:[0-9]+}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRole('ROLE_JUNIOR_TT'));
 
-    $app->get('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
-    $app->delete('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRole('ROLE_MOD'));
+    $app->get('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
+    $app->delete('/subtitles/{subId:[0-9]+}/translate/comments/{cId:[0-9]+}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRole('ROLE_MOD'));
     /*
     $app->put('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
     */
 
-    $app->get('/subtitles/{subId}/delete', ['\App\Controllers\SubtitleController', 'delete'])->add($needsRole('ROLE_MOD'));
-    $app->get('/subtitles/{subId}/pause', ['\App\Controllers\SubtitleController', 'pause'])->add($needsRole('ROLE_TT'));
-    $app->get('/subtitles/{subId}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRole('ROLE_TT'));
-    $app->get('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'viewHammer'])->add($needsRole('ROLE_MOD'));
-    $app->post('/subtitles/{subId}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRole('ROLE_MOD'));
-    $app->get('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('subtitle-edit');
-    $app->post('/subtitles/{subId}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
-    $app->post('/subtitles/{subId}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']);
+    $app->get('/subtitles/{subId:[0-9]+}/delete', ['\App\Controllers\SubtitleController', 'delete'])->add($needsRole('ROLE_MOD'));
+    $app->get('/subtitles/{subId:[0-9]+}/pause', ['\App\Controllers\SubtitleController', 'pause'])->add($needsRole('ROLE_TT'));
+    $app->get('/subtitles/{subId:[0-9]+}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRole('ROLE_TT'));
+    $app->get('/subtitles/{subId:[0-9]+}/hammer', ['\App\Controllers\SubtitleController', 'viewHammer'])->add($needsRole('ROLE_MOD'));
+    $app->post('/subtitles/{subId:[0-9]+}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRole('ROLE_MOD'));
+    $app->get('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('subtitle-edit');
+    $app->post('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
+    $app->post('/subtitles/{subId:[0-9]+}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']);
 
-    $app->get('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'edit'])->add($needsRole('ROLE_MOD'))->setName('ep-edit');
-    $app->post('/episodes/{epId}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRole('ROLE_MOD'));
+    $app->get('/episodes/{epId:[0-9]+}/edit', ['\App\Controllers\EpisodeController', 'edit'])->add($needsRole('ROLE_MOD'))->setName('ep-edit');
+    $app->post('/episodes/{epId:[0-9]+}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRole('ROLE_MOD'));
 
-    $app->get('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRole('ROLE_USER'));
-    $app->post('/episodes/{epId}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRole('ROLE_USER'));
-    $app->get('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);
-    $app->post('/episodes/{epId}/comments', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRole('ROLE_USER'));
+    $app->get('/episodes/{epId:[0-9]+}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRole('ROLE_USER'));
+    $app->post('/episodes/{epId:[0-9]+}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRole('ROLE_USER'));
+    $app->get('/episodes/{epId:[0-9]+}/comments', ['\App\Controllers\EpisodeCommentsController', 'list']);
+    $app->post('/episodes/{epId:[0-9]+}/comments', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRole('ROLE_USER'));
 
-    $app->delete('/episodes/{epId}/comments/{cId}', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRole('ROLE_USER'));
+    $app->delete('/episodes/{epId:[0-9]+}/comments/{cId:[0-9]+}', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRole('ROLE_USER'));
     /*
     $app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
     $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRole('ROLE_MOD'));
     */
-    $app->get('/episodes/{id}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
-    $app->get('/shows/{showId}/{season}', ['\App\Controllers\ShowController', 'redirectToView']);
-    $app->get('/shows/{showId}[/season/{season}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
-    $app->get('/shows/{showId}/properties', ['\App\Controllers\ShowController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('show-edit');
-    $app->post('/shows/{showId}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
-    $app->get('/subtitles/{id}/download', ['\App\Controllers\DownloadController', 'download']);
+    $app->get('/episodes/{id:[0-9]+}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
+    $app->get('/shows/{showId:[0-9]+}/{season:[0-9]+}', ['\App\Controllers\ShowController', 'redirectToView']);
+    $app->get('/shows/{showId:[0-9]+}[/season/{season:[0-9]+}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
+    $app->get('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('show-edit');
+    $app->post('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
+    $app->get('/subtitles/{id:[0-9]+}/download', ['\App\Controllers\DownloadController', 'download']);
 
     $app->get('/comments/episodes', ['\App\Controllers\EpisodeCommentsController', 'viewAll'])->add($needsRole('ROLE_TT'));
     $app->get('/comments/episodes/load', ['\App\Controllers\EpisodeCommentsController', 'listAll'])->add($needsRole('ROLE_TT'));
@@ -89,9 +89,9 @@ function addRoutes(&$app, &$entityManager)
     $app->get('/me', ['\App\Controllers\UserController', 'viewSettings'])->setName('settings')->add($needsRole('ROLE_USER'));
     $app->post('/me', ['\App\Controllers\UserController', 'saveSettings'])->add($needsRole('ROLE_USER'));
 
-    $app->get('/users/{userId}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
-    $app->post('/users/{userId}/ban', ['\App\Controllers\UserController', 'ban'])->add($needsRole('ROLE_MOD'));
-    $app->get('/users/{userId}/unban', ['\App\Controllers\UserController', 'unban'])->add($needsRole('ROLE_MOD'));
+    $app->get('/users/{userId:[0-9]+}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
+    $app->post('/users/{userId:[0-9]+}/ban', ['\App\Controllers\UserController', 'ban'])->add($needsRole('ROLE_MOD'));
+    $app->get('/users/{userId:[0-9]+}/unban', ['\App\Controllers\UserController', 'unban'])->add($needsRole('ROLE_MOD'));
 
     $app->get('/dmca', ['\App\Controllers\TermsController', 'viewDMCA']);
     $app->get('/rss', ['\App\Controllers\RSSController', 'viewFeed']);
