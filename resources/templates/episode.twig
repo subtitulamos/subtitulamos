@@ -192,7 +192,7 @@
       <div class='newcomment-box'>
         {% if auth.logged %}
           <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-          <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+          <button :class="{'hidden': newComment == '', 'is-loading': submittingComment}" class="button is-primary comment-publish" @click="publishComment">Enviar</button>
         {% else %}
           <textarea id="new-comment" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
         {% endif %}

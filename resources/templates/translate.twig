@@ -126,7 +126,15 @@
     <h4>Comentarios de traducción</h4>
     <div class='newcomment-box'>
       <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-      <button :class="{'hidden': newComment == ''}" class="comment-publish" @click="publishComment">Enviar</button>
+      <button :class="{'hidden': newComment == '', 'is-loading': submittingComment}" class="button is-primary comment-publish" @click="publishComment">
+        <span v-if="!submittingComment">
+          Enviar
+        </span>
+        {# TODO: Remove this when using Bulma on this page (is-loading won't be active until then) #}
+        <span v-else>
+          ...
+        </span>
+      </button>
     </div>
 
     <comment v-for="comment in comments"

@@ -591,6 +591,7 @@ window.translation = new Vue({
       loaded: false,
       loadedOnce: false,
       newComment: "",
+      submittingComment: false,
       canReleaseOpenLock: canReleaseOpenLock,
       hasAdvancedTools: hasAdvancedTools,
     };
@@ -730,21 +731,30 @@ window.translation = new Vue({
     },
 
     publishComment: function() {
-      let comment = this.newComment;
-      this.newComment = "";
+      if (this.submittingComment) {
+        return;
+      }
 
+      this.submittingComment = true;
       $.ajax({
         url: "/subtitles/" + subID + "/translate/comments",
         method: "POST",
         data: {
-          text: comment,
+          text: this.newComment,
         },
       })
-        .done(function(id) {
+        .done(id => {
+          this.newComment = "";
+          this.submittingComment = false;
           sub.addComment(id, sub.getUserObject(me.id), new Date().toISOString(), comment);
         })
-        .fail(function() {
-          alertify.error("Ha ocurrido un error al enviar tu comentario");
+        .fail(jqXHR => {
+          this.submittingComment = false;
+          if (jqXHR.responseText) {
+            alertify.error(jqXHR.responseText);
+          } else {
+            alertify.error("Ha ocurrido un error al enviar tu comentario");
+          }
         });
     },
 

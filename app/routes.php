@@ -42,7 +42,7 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/subtitles/{subId}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
     $app->delete('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRole('ROLE_MOD'));
     /*
-    $app->post('/translate/{subId}/comments/{cId}/edit', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
+    $app->put('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
     */
 
     $app->get('/subtitles/{subId}/delete', ['\App\Controllers\SubtitleController', 'delete'])->add($needsRole('ROLE_MOD'));

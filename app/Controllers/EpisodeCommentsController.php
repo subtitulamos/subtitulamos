@@ -21,7 +21,7 @@ class EpisodeCommentsController
         // Validate input first
         $text = $request->getParsedBodyParam('text', '');
         if (!v::stringType()->length(1, 600)->validate($text)) {
-            $response->getBody()->write('Invalid text parameter value');
+            $response->getBody()->write('El comentario debe tener como máximo 600 caracteres');
             return $response->withStatus(400);
         }
 

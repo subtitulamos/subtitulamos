@@ -43,26 +43,36 @@ let comments = new Vue({
   el: "#subtitle-comments",
   data: {
     newComment: "",
+    submittingComment: false,
     comments: [],
   },
   methods: {
     publishComment: function() {
-      let comment = this.newComment;
-      this.newComment = "";
+      if (this.submittingComment) {
+        return false;
+      }
 
+      this.submittingComment = true;
       $.ajax({
         url: "/episodes/" + epId + "/comments",
         method: "POST",
         data: {
-          text: comment,
+          text: this.newComment,
         },
       })
-        .done(function() {
+        .done(() => {
           // Cheap solution: reload the entire comment box
+          this.newComment = "";
+          this.submittingComment = false;
           loadComments();
         })
-        .fail(function() {
-          alertify.error("Ha ocurrido un error al enviar tu comentario");
+        .fail(jqXHR => {
+          this.submittingComment = false;
+          if (jqXHR.responseText) {
+            alertify.error(jqXHR.responseText);
+          } else {
+            alertify.error("Ha ocurrido un error al enviar tu comentario");
+          }
         });
     },
     refresh: function() {
