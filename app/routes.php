@@ -16,6 +16,10 @@ function addRoutes(&$app, &$entityManager)
     };
 
     $app->add(new \App\Middleware\SessionMiddleware($app->getContainer(), $entityManager));
+    // Dynamically generated robots.txt to include sitemap URL dynamically
+    $app->get('/robots.txt', ['\App\Controllers\RobotsController', 'viewRobots']);
+
+    // People
     $app->get('/', ['\App\Controllers\HomeController', 'view']);
     $app->get('/upload', ['\App\Controllers\UploadController', 'view'])->add($needsRole('ROLE_USER'));
     $app->post('/upload', ['\App\Controllers\UploadController', 'do'])->add($needsRole('ROLE_USER'));

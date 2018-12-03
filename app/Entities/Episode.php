@@ -58,6 +58,11 @@ class Episode
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="datetime", name="creation_time", options={"default": "CURRENT_TIMESTAMP"})
+     */
+    private $creationTime;
+
     public function getFullName()
     {
         return $this->show->getName().' '.$this->season.'x'.\str_pad($this->number, 2, '0', STR_PAD_LEFT).' - '.$this->getName();
@@ -274,5 +279,29 @@ class Episode
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set creationTime
+     *
+     * @param \DateTime $creationTime
+     *
+     * @return Episode
+     */
+    public function setCreationTime($creationTime)
+    {
+        $this->creationTime = $creationTime;
+
+        return $this;
+    }
+
+    /**
+     * Get creationTime
+     *
+     * @return \DateTime
+     */
+    public function getCreationTime()
+    {
+        return $this->creationTime;
     }
 }

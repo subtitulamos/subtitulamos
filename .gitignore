@@ -9,4 +9,5 @@ tmp/
 resources/assets/*manifest.json
 public/css/**/*.css*
 public/js/**/*.js
+public/sitemap*.xml
 .php_cs.cache

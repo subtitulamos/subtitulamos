@@ -6,11 +6,12 @@
  * @copyright 2017-2018 subtitulamos.tv
  */
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__.'/bootstrap.php';
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->add(new \App\Commands\DeployAssetsCommand());
 $application->add(new \App\Commands\ClearTwigCache());
 $application->add(new \App\Commands\CreateUserBots());
+$application->add(new \App\Commands\GenerateSitemaps());
 $application->run();
