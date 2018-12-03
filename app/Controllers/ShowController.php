@@ -62,10 +62,6 @@ class ShowController
             ->setParameter('season', $season)
             ->getOneOrNullResult();
 
-        if (!$show) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
-        }
-
         $episodeList = [];
         foreach ($show->getEpisodes() as $ep) {
             $epInfo = [
@@ -93,7 +89,7 @@ class ShowController
             $episodeList[] = $epInfo;
         }
 
-        return $twig->render($response, 'show_list.twig', [
+        return $twig->render($response, 'show_seasons.twig', [
             'show' => [
                 'id' => $showId,
                 'name' => $show->getName(),
