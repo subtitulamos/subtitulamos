@@ -13,26 +13,6 @@ use Doctrine\ORM\EntityManager;
 
 class RSSController
 {
-    public const BASIC_RSS_FORMAT = '<?xml version="1.0"?>
-    <rss version="2.0">
-        %s
-    </rss>';
-
-    public const RSS_CHAN_FORMAT = '<channel>
-        <title>%s</title>
-        <link>'.SITE_URL.'</link>
-        <description>%s</description>
-        %s
-    </channel>';
-
-    public const RSS_ITEM_FORMAT = '<item>
-        <title>%s</title>
-        <link>%s</link>
-        <description>%s</description>
-        <pubDate>%s</pubDate>
-        <guid>%s</guid>
-    </item>';
-
     public function viewFeed($request, $response, \Slim\Router $router, EntityManager $em, SlugifyInterface $slugify)
     {
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
@@ -40,31 +20,24 @@ class RSSController
             ->setFirstResult(0)
             ->getResult();
 
-        $items = '';
+        $rss = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss version="2.0"></rss>');
+        $channel = $rss->addChild('channel');
+        $channel->addChild('title', 'Últimas traducciones completadas');
+        $channel->addChild('description', 'Listado de las últimas traducciones completadas/liberadas de subtítulos');
+        $channel->addChild('link', SITE_URL);
+
         foreach ($subs as $sub) {
             $fullName = str_replace('&', 'and', $sub->getVersion()->getEpisode()->getFullName());
 
-            $items .= sprintf(
-                self::RSS_ITEM_FORMAT,
-                $fullName,
-                SITE_URL.$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]).'/'.$slugify->slugify($fullName),
-                Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                $sub->getCompleteTime()->format(\DateTime::ATOM),
-                'sub-done-'.$sub->getId()
-            );
+            $item = $channel->addChild('item');
+            $item->addChild('title', $fullName);
+            $item->addChild('link', SITE_URL.$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId(), 'slug' => $slugify->slugify($fullName)]));
+            $item->addChild('description', Langs::getLocalizedName(Langs::getLangCode($sub->getLang())));
+            $item->addChild('pubDate', $sub->getCompleteTime()->format(\DateTime::ATOM));
+            $item->addChild('guid', 'sub-done-'.$sub->getId());
         }
 
-        $feed = self::BASIC_RSS_FORMAT;
-
-        $response->getBody()->write(sprintf(
-            self::BASIC_RSS_FORMAT,
-            sprintf(
-                self::RSS_CHAN_FORMAT,
-                'Últimas traducciones completadas',
-                'Listado de las últimas traducciones completadas/liberadas de subtítulos',
-                $items
-            )
-        ));
+        $response->getBody()->write($rss->asXML());
 
         return $response->withHeader('Content-Type', 'application/rss+xml; charset=utf-8');
     }
