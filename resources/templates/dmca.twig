@@ -1,6 +1,9 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
+{% block meta %}
+  <meta name="robots" content="noindex">
+{% endblock %}
 {% block title %}DMCA & Disclaimer{% endblock %}
 {% block css %}
   {{ assets.css('dmca') }}

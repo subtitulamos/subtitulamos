@@ -2,6 +2,9 @@
 {% import 'macros/assets.twig' as assets %}
 {% import 'macros/alerts.twig' as alerts %}
 
+{% block meta %}
+  <meta name="robots" content="noindex">
+{% endblock %}
 {% block title %}Perfil de {{ user.username }}{% endblock %}
 {% block css %}
   {{ assets.css('user_profile') }}
