@@ -40,7 +40,7 @@ class Alert
     private $subtitle;
 
     /**
-     * @ORM\Column(type="datetime", name="create_time", options={"default": 0})
+     * @ORM\Column(type="datetime", name="create_time", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $creationTime;
 
@@ -48,6 +48,7 @@ class Alert
      * @ORM\OneToMany(targetEntity="AlertComment", mappedBy="alert")
      */
     private $comments;
+
     /**
      * Constructor
      */

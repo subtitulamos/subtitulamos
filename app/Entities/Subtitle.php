@@ -50,7 +50,7 @@ class Subtitle
     private $directUpload;
 
     /**
-     * @ORM\Column(type="datetime", name="upload_time", options={"default": 0})
+     * @ORM\Column(type="datetime", name="upload_time", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $uploadTime;
 

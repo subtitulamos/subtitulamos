@@ -40,12 +40,12 @@ class SubtitleComment implements \JsonSerializable
     private $user;
 
     /**
-     * @ORM\Column(type="datetime", name="publish_time", options={"default": 0})
+     * @ORM\Column(type="datetime", name="publish_time", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $publishTime;
 
     /**
-     * @ORM\Column(type="datetime", name="edit_time", options={"default": 0})
+     * @ORM\Column(type="datetime", name="edit_time", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $editTime;
 
