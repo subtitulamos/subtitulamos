@@ -20,6 +20,7 @@ $env = getenv('ENVIRONMENT');
 define('ENVIRONMENT_NAME', $env ? $env : 'dev');
 define('DEBUG', getenv('DEBUG') == 'true');
 define('ELASTICSEARCH_NAMESPACE', getenv('ELASTICSEARCH_NAMESPACE') ? getenv('ELASTICSEARCH_NAMESPACE') : 'ns');
+define('SITE_URL', getenv('SITE_URL') ? getenv('SITE_URL') : 'https://www.subtitulamos.tv');
 
 // Initialize Doctrine's ORM stuff
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, __DIR__.'/../tmp/doctrine', null, false);
