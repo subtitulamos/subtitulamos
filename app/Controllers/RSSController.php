@@ -20,7 +20,7 @@ class RSSController
 
     public const RSS_CHAN_FORMAT = '<channel>
         <title>%s</title>
-        <link>https://subtitulamos.tv</link>
+        <link>'.SITE_URL.'</link>
         <description>%s</description>
         %s
     </channel>';
@@ -47,7 +47,7 @@ class RSSController
             $items .= sprintf(
                 self::RSS_ITEM_FORMAT,
                 $fullName,
-                'https://'.$request->getServerParam('HTTP_HOST').$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]).'/'.$slugify->slugify($fullName),
+                SITE_URL.$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]).'/'.$slugify->slugify($fullName),
                 Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 $sub->getCompleteTime()->format(\DateTime::ATOM),
                 'sub-done-'.$sub->getId()
@@ -61,7 +61,7 @@ class RSSController
             sprintf(
                 self::RSS_CHAN_FORMAT,
                 'Últimas traducciones completadas',
-                'Listado de las últimas traducciones completadas/liberadas en subtitulamos.tv',
+                'Listado de las últimas traducciones completadas/liberadas de subtítulos',
                 $items
             )
         ));
