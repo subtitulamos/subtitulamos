@@ -11,8 +11,8 @@ use Slim\Views\Twig;
 
 class TermsController
 {
-    public function viewDMCA($response, Twig $twig)
+    public function viewDisclaimer($response, Twig $twig)
     {
-        return $twig->render($response, 'dmca.twig', []);
+        return $twig->render($response, 'disclaimer.twig', []);
     }
 }

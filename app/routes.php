@@ -93,7 +93,7 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/users/{userId:[0-9]+}/ban', ['\App\Controllers\UserController', 'ban'])->add($needsRole('ROLE_MOD'));
     $app->get('/users/{userId:[0-9]+}/unban', ['\App\Controllers\UserController', 'unban'])->add($needsRole('ROLE_MOD'));
 
-    $app->get('/dmca', ['\App\Controllers\TermsController', 'viewDMCA']);
+    $app->get('/disclaimer', ['\App\Controllers\TermsController', 'viewDisclaimer']);
     $app->get('/rss', ['\App\Controllers\RSSController', 'viewFeed']);
 
     $app->get('/panel', ['\App\Controllers\Panel\PanelIndexController', 'view'])->add($needsRole('ROLE_MOD'));
