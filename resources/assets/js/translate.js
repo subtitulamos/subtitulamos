@@ -116,7 +116,7 @@ Vue.component("sequence", {
                         <i class="fa fa-times-circle-o" @click="discard" tabindex="0" @keyup.enter="discard"></i>
                     </template>
 
-                    <template v-if="translated && !history && !editing && id">
+                    <template v-if="translated && !history && !editing">
                         <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
                         <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
                     </template>
@@ -301,7 +301,7 @@ Vue.component("sequence", {
     },
 
     translated: function() {
-      return this.id != 0;
+      return this.id > 0;
     },
 
     authorName: function() {
