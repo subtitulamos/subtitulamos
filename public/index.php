@@ -66,6 +66,10 @@ $app = new class() extends \DI\Bridge\Slim\App {
                     $basePath
                 ));
 
+                if (DEBUG === true) {
+                    $twig->addExtension(new Twig_Extension_Debug());
+                }
+
                 $twigEnv = $twig->getEnvironment();
                 $twigEnv->addGlobal('SITE_URL', SITE_URL);
                 $twigEnv->addGlobal('ENVIRONMENT_NAME', ENVIRONMENT_NAME);
