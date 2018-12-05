@@ -134,6 +134,7 @@ class UploadController
         $episode->setDownloads(0);
         $episode->setName($epName);
         $episode->setShow($show);
+        $episode->setCreationTime(new \DateTime());
 
         $version = new Version();
         $version->setComments($comments);
