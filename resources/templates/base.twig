@@ -192,9 +192,10 @@
     <nav class="top-links">
       <ul>
         {% if not auth.logged %}
-          <li id="login">INICIAR SESIÓN</li>
-          <li id="register">REGISTRO</li>
+          <li><a href="/shows">ÍNDICE DE SERIES</a></li>
           <li><a href="/rules">NORMAS</a></li>
+          <li id="register">REGISTRO</li>
+          <li id="login">INICIAR SESIÓN</li>
         {% else %}
           <li id="user_account_manage">
             <i class="fa fa-cog" aria-hidden="true"></i>
@@ -207,6 +208,7 @@
               </span>
             </li>
           {% endif %}
+          <li><a href="/shows">ÍNDICE DE SERIES</a></li>
           <li><a href="/rules">NORMAS</a></li>
           <li id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></li>
           <li><a href="/logout">SALIR</a></li>

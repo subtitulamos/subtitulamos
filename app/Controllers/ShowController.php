@@ -24,6 +24,40 @@ class ShowController
         return $response->withRedirect($router->pathFor('show', ['showId' => $showId, 'season' => $season]), 301);
     }
 
+    public function viewAll(RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
+    {
+        $shows = $em->getRepository('App:Show')->findAll(); // This hydrates shows on the following query
+        $seasons = $em->createQuery('SELECT e, COUNT(DISTINCT e.season) FROM App:Episode e GROUP BY e.show')->getResult();
+
+        $showListByInitial = [];
+        foreach ($seasons as $res) {
+            $show = $res[0]->getShow();
+            $seasonCount = $res[1];
+
+            $name = $show->getName();
+            $initial = mb_strtolower($name[0]);
+            if (!isset($showListByInitial[$initial])) {
+                $showListByInitial[$initial] = [];
+            }
+
+            $showListByInitial[$initial][] = [
+                'show' => $show,
+                'season_count' => $seasonCount
+            ];
+        }
+
+        foreach ($showListByInitial as $inital => $list) {
+            usort($list, function ($a, $b) {
+                return strnatcmp($a['show']->getName(), $b['show']->getName());
+            });
+        }
+
+        ksort($showListByInitial);
+        return $twig->render($response, 'shows_list.twig', [
+            'shows_by_letter' => $showListByInitial
+        ]);
+    }
+
     public function view($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router)
     {
         $show = $em->getRepository('App:Show')->find($showId);
@@ -48,15 +82,18 @@ class ShowController
         // Let's see if the URI contains the season, otherwise, fill it
         $route = $request->getAttribute('route');
         $seasonArg = $route->getArgument('season');
+        if ($seasonArg !== null) {
+            $season = (int)$seasonArg;
 
-        if (!in_array($seasonArg, $seasons)) {
-            // * Abort request *
-            // If the season passed is not a valid season, redirect to default
-            return $response->withRedirect($router->pathFor('show', ['showId' => $showId]));
+            if (!in_array($season, $seasons)) {
+                // If the season passed is not a valid season, redirect to default
+                return $response->withRedirect($router->pathFor('show', ['showId' => $showId]));
+            }
+        } else {
+            // Default season: latest
+            $season = $seasons[count($seasons) - 1];
         }
 
-        // Set the season to the passed arg, or to latest if not present
-        $season = $seasonArg !== null ? $seasonArg : $seasons[count($seasons) - 1];
         $show = $em->createQuery('SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC')
             ->setParameter('id', $showId)
             ->setParameter('season', $season)
