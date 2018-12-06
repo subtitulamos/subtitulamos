@@ -86,7 +86,7 @@
                           {% endif %}
                         </div></div>
                       </div>
-                      {% if can_download %}<a href="/subtitles/{{ sub.id }}/download" nofollow>{% endif %}
+                      {% if can_download %}<a href="/subtitles/{{ sub.id }}/download" rel="nofollow">{% endif %}
                         <div class="subtitle-action download-subtitle {% if not can_download %}unavailable{% endif %}"><i class="fa fa-download" aria-hidden="true"></i></div>
                       {% if can_download %}</a>{% endif %}
                     </div>

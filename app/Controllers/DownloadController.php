@@ -74,6 +74,7 @@ class DownloadController
         }
 
         $filename = $sub->getVersion()->getEpisode()->getFullName().'.'.$sub->getVersion()->getName().'.'.Langs::getLangCode($sub->getLang());
+        $response = $response->withHeader('X-Robots-Tag', 'noindex');
         $response = $response->withHeader('Content-Type', 'text/srt');
         $response = $response->withHeader('Content-Disposition', sprintf('attachment; filename="%s.srt"', $filename));
         $response->getBody()->write($file);
