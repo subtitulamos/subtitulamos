@@ -324,13 +324,13 @@ class Translation
             }
 
             // ---> Yes/No
-            if (preg_match("/^(yes|no)([\.,!\?]*)$/i", $singleLineText, $matches) === 1) {
+            if (preg_match("/^([Yy]es|[Nn]o|NO|YES)([\.,!\?]*)$/", $singleLineText, $matches) === 1) {
                 $translatedStr = '';
                 switch ($matches[1]) {
                     case 'yes': $translatedStr = 'sí'; break;
-                    case 'Yes': $translatedStr = 'Sí'; break;
+                    case 'Yes': case 'YES': $translatedStr = 'Sí'; break;
                     case 'no': $translatedStr = 'no'; break;
-                    case 'No': $translatedStr = 'No'; break;
+                    case 'No': case 'NO': $translatedStr = 'No'; break;
                 }
 
                 if ($matches[2]) {
