@@ -10,12 +10,17 @@ module.exports = function(originalText, opinionated) {
   let text = originalText.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
   text = text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
 
+  if (text.length > 80) {
+    // We cannot do anything with this, it's beyond max
+    return [originalText];
+  }
+
   let dialogLineCount = (text.match(/(?:^|\s)-/g) || []).length;
   let isDialog = text.match(/^\s*-/g) && dialogLineCount == 2;
   if (isDialog) {
     /*
-        * Looks like we have a dialog. We must preserve each line separated unless that is not possible.
-        */
+     * Looks like we have a dialog. We must preserve each line separated unless that is not possible.
+     */
     let fDialogPos = text.indexOf("-");
     let fDialogPos2 = text.substr(fDialogPos + 1).indexOf(" -") + fDialogPos;
     if (fDialogPos2 - fDialogPos < 40 && text.length - 2 - fDialogPos2 <= 40) {
@@ -55,12 +60,11 @@ module.exports = function(originalText, opinionated) {
       let prevChar = i > 0 ? text[i - 1] : null;
 
       /*
-            * If next char is also a separator (unless its a space), we do not split yet.
-            */
+       * If next char is also a separator (unless its a space), we do not split yet.
+       */
       if (
         nextChar &&
-        (nextChar.match(/[.,;?!\-]/) ||
-          (curChar != " " && nextChar.match(/[¿¡"']/)))
+        (nextChar.match(/[.,;?!\-]/) || (curChar != " " && nextChar.match(/[¿¡"']/)))
       ) {
         continue;
       }
@@ -69,19 +73,15 @@ module.exports = function(originalText, opinionated) {
        * If next char is alphanumeric (/ accented vocal) or yet another separator,
        * and curChar is an opening separator, continue
        */
-      if (
-        nextChar &&
-        nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/) &&
-        curChar.match(/[¿¡"']/)
-      ) {
+      if (nextChar && nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/) && curChar.match(/[¿¡"']/)) {
         continue;
       }
 
       /*
-            * Numbers, format: 123.578.213
-            * If we're at a dot or space, look forward and backwards. If there's a number, and the
-            * next character also is a number, keep consuming characters.
-            */
+       * Numbers, format: 123.578.213
+       * If we're at a dot or space, look forward and backwards. If there's a number, and the
+       * next character also is a number, keep consuming characters.
+       */
       if (
         (curChar == "." || curChar == " ") &&
         nextChar &&
@@ -138,8 +138,7 @@ module.exports = function(originalText, opinionated) {
         let splitAt = i;
 
         let diff =
-          Math.abs(aheadWithWord - behindWithoutWord) -
-          Math.abs(aheadIfSplit - behindIfSplit);
+          Math.abs(aheadWithWord - behindWithoutWord) - Math.abs(aheadIfSplit - behindIfSplit);
         if (diff < 0 || (opinionated && diff == 0)) {
           // Should've split on the last separator
           splitAt = curWordPos;
