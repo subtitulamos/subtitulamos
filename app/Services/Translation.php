@@ -306,7 +306,8 @@ class Translation
     {
         // Basic translation is currently only available for spanish
         if ($language == 'es-es' || $language == 'es-lat') {
-            $singleLineText = preg_replace("/\n\r/", ' ', $sequence->getText());
+            // Strip newlines and compact multiple spaces together into one
+            $singleLineText = preg_replace("/\s{2,}/", ' ', preg_replace("/[\n\r]+/", ' ', $sequence->getText()));
 
             // ---> Previously on <show name>...
             // Detection is only available for the first 100 sequences
@@ -324,21 +325,24 @@ class Translation
             }
 
             // ---> Yes/No
-            if (preg_match("/^([Yy]es|[Nn]o|NO|YES)([\.,!\?]*)$/", $singleLineText, $matches) === 1) {
+            if (preg_match("/^([Yy]es|[Nn]o|NO|YES)([\.,]*)([!\?])*$/", $singleLineText, $matches) === 1) {
                 $translatedStr = '';
                 switch ($matches[1]) {
-                    case 'yes': $translatedStr = 'sí'; break;
-                    case 'Yes': case 'YES': $translatedStr = 'Sí'; break;
-                    case 'no': $translatedStr = 'no'; break;
-                    case 'No': case 'NO': $translatedStr = 'No'; break;
+                    case 'yes': case 'Yes': case 'YES': $translatedStr = 'Sí'; break;
+                    case 'no': case 'No': case 'NO': $translatedStr = 'No'; break;
                 }
 
-                if ($matches[2]) {
+                if (!$translatedStr) {
+                    // We couldn't translate it for some reason
+                    return [0, ''];
+                }
+
+                if ($matches[2] || $matches[3]) {
                     // We can only do this properly with a set of characters
-                    if ($matches[2] == '!') {
+                    if ($matches[3] == '!') {
                         $translatedStr = '¡'.$translatedStr.'!';
                         $confidence = 100;
-                    } elseif ($matches[2] == '?') {
+                    } elseif ($matches[3] == '?') {
                         $translatedStr = '¿'.$translatedStr.'?';
                         $confidence = 100;
                     } elseif ($matches[2] == '...' || $matches[2] == ',' || $matches[2] == '.') {
@@ -346,7 +350,7 @@ class Translation
                         $confidence = mb_strlen($matches[2]) == 1 ? 100 : 90;
                     }
                 } else {
-                    $confidence = 95; // Fairly confident we're right here.
+                    $confidence = 95; // Fairly confident the translation's right in this situation.
                 }
 
                 return [$confidence, $translatedStr];
