@@ -52,6 +52,8 @@ class UploadController
 
         if (!v::notEmpty()->validate($epName)) {
             $errors[] = ['name', 'El nombre del episodio no puede estar vacío'];
+        } elseif (!v::length(1, 100)->validate($epName)) {
+            $errors[] = ['name', 'El nombre del episodio debe estar entre 1 y 100 caracteres'];
         } elseif (!v::numeric()->between(0, 99)->validate($season) || !v::numeric()->between(0, 99)->validate($epNumber)) {
             $errors[] = ['name', 'Tanto la temporada como el número de episodio deben estar en el rango [0, 99]'];
         }
