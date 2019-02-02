@@ -7,7 +7,8 @@ module.exports = function(originalText, opinionated) {
     opinionated = true;
   }
 
-  let text = originalText.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
+  let text = originalText.replace(/\s(["'])[\n\r]([\w¿¡ñáéíóú])/g, " $1$2"); // Remove linebreaks between "/' and text.
+  text = text.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
   text = text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
 
   if (text.length > 80) {
