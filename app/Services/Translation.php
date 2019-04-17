@@ -361,12 +361,25 @@ class Translation
     }
 
     /**
+     * Detect whether a string contains characters outside the ISO 8859 character set
+     * We restrict the characters to this character set to guarantee compatibility
+     * across players
+     *
+     * @param string $text
+     * @return bool
+     */
+    public static function containsInvalidCharacters(string $text)
+    {
+        return preg_match("/[^\x{0000}-\x{00ff}]/u", $text) === 1;
+    }
+
+    /**
      * Clear the text from artifacts that would render it
      * unplayable on older devices or less standard-compliant ones
      *
      * @param string $text
      * @param array $opts
-     * @return void
+     * @return string The cleaned text
      */
     public static function cleanText(string $text, array $opts = [])
     {
@@ -398,6 +411,7 @@ class Translation
             $text = strip_tags($text);
         }
 
+        // NOTE: If these are updated here, please update the ones in the frontend as well (translate.js)
         $pregReplacements = [
             '/…/' => '...',
             '/“/' => '"',

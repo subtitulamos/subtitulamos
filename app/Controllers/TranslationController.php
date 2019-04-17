@@ -5,8 +5,6 @@
  * @copyright 2017-2018 subtitulamos.tv
  */
 
-// TODO: Handle zero width space (\U200B), special "", single "..." utf8 codepoint, etc
-
 namespace App\Controllers;
 
 use App\Entities\OpenLock;
@@ -391,6 +389,10 @@ class TranslationController
             return $response->withStatus(400);
         }
 
+        if (Translation::containsInvalidCharacters($text)) {
+            return $response->withStatus(400);
+        }
+
         $seq = $em->getRepository('App:Sequence')->find($seqID);
         if (!$seq) {
             throw new \Slim\Exception\NotFoundException($request, $response);
@@ -466,6 +468,10 @@ class TranslationController
         $nEndTime = $request->getParsedBodyParam('tend', 0);
 
         if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
+            return $response->withStatus(400);
+        }
+
+        if (Translation::containsInvalidCharacters($text)) {
             return $response->withStatus(400);
         }
 

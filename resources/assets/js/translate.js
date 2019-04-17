@@ -393,6 +393,28 @@ Vue.component("sequence", {
         ntext = " ";
       }
 
+      // Clean out some characters that may end up here by accident but we know how to substitute
+      // NOTE: If this is modified, please modify the server's list as well
+      let replacements = [
+        [/…/g, "..."],
+        [/“/g, '"'],
+        [/”/g, '"'],
+        [/[\u200B-\u200D]/g, ""], //(0-width space: https://stackoverflow.com/a/11305926/2205532)
+      ];
+
+      for (let pair of replacements) {
+        ntext = ntext.replace(pair[0], pair[1]);
+      }
+
+      // Make sure there are no characters outside ISO-8859-1
+      if (/[^\u0000-\u00ff]/g.test(ntext) === true) {
+        alertify.error(
+          "En las secuencias solo se permiten caracteres que pertenezcan a la codificación ISO-8859-1"
+        );
+        this.saving = false;
+        return;
+      }
+
       // Detect if anything changed at all
       let modifiedText = ntext != this.text;
       let modifiedTime = this.parsedEndTime != this.tend || this.parsedStartTime != this.tstart;
