@@ -338,20 +338,23 @@ class Translation
 
                     // Make sure our translated sequence is not too long
                     // This is a veeery simplified version of the algorithm
-                    if (mb_strlen($translatedStr) > 40) {
+                    $translatedLength = mb_strlen($translatedStr);
+                    if ($translatedLength > 40) {
                         $fragments = explode(' ', $translatedStr);
-                        $idealLineLength = floor(mb_strlen($translatedStr) / 2);
-                        $curLen = 0;
+                        $curCharCount = 0;
+                        $bestSplitPos = -1;
+                        $bestSplitCount = $translatedLength;
                         foreach ($fragments as $i => $fragment) {
-                            $curLen += mb_strlen($fragment);
-                            if ($curLen > $idealLineLength) {
-                                // OK, break here
-                                $partOne = array_slice($fragments, 0, $i + 1);
-                                $partTwo = array_slice($fragments, $i + 1);
-                                $translatedStr = implode(' ', $partOne)."\n".implode(' ', $partTwo);
-                                break;
+                            $curCharCount += mb_strlen($fragment);
+                            $splitCountHere = abs($curCharCount - $translatedLength/2);
+                            if ($bestSplitCount > $splitCountHere) {
+                                // If this is a better middle split, record the pos
+                                $bestSplitPos = $i;
+                                $bestSplitCount = $splitCountHere;
                             }
                         }
+
+                        $translatedStr = implode(' ', array_slice($fragments, 0, $bestSplitPos))."\n".implode(' ', array_slice($fragments, $bestSplitPos));
                     }
 
                     return [100, $translatedStr];
