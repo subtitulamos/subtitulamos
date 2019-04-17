@@ -399,15 +399,14 @@ class Translation
         }
 
         $pregReplacements = [
-            '…' => '...',
-            '“' => '"',
-            '”' => '"',
+            '/…/' => '...',
+            '/“/' => '"',
+            '/”/' => '"',
             '/[\x{200B}-\x{200D}]/u' => '', //(Remove all 0-width space: https://stackoverflow.com/a/11305926/2205532)
         ];
 
         foreach ($pregReplacements as $k => $v) {
-            // FIXME: This won't work with regex as is implied by the var name
-            $text = str_replace($k, $v, $text);
+            $text = preg_replace($k, $v, $text);
         }
 
         $text = trim($text);
