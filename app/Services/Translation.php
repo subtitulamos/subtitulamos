@@ -320,6 +320,24 @@ class Translation
                         $translatedStr .= '...';
                     }
 
+                    // Make sure our translated sequence is not too long
+                    // This is a veeery simplified version of the algorithm
+                    if (mb_strlen($translatedStr) > 40) {
+                        $fragments = explode(' ', $translatedStr);
+                        $idealLineLength = floor(mb_strlen($translatedStr) / 2);
+                        $curLen = 0;
+                        foreach ($fragments as $i => $fragment) {
+                            $curLen += mb_strlen($fragment);
+                            if ($curLen > $idealLineLength) {
+                                // OK, break here
+                                $partOne = array_slice($fragments, 0, $i + 1);
+                                $partTwo = array_slice($fragments, $i + 1);
+                                $translatedStr = implode(' ', $partOne)."\n".implode(' ', $partTwo);
+                                break;
+                            }
+                        }
+                    }
+
                     return [100, $translatedStr];
                 }
             }
