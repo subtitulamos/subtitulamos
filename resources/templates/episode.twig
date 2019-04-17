@@ -185,7 +185,9 @@
         :user="comment.user"
         :base-text="comment.text"
         :published-at="comment.published_at"
+        :pinned="comment.pinned"
         @remove="remove"
+        @pin="pin"
       >
       </comment>
 
@@ -204,8 +206,9 @@
 
 {% block scripts %}
   <script type="text/javascript">
-    let epId = {{ episode.id }};
-    let canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var epId = {{ episode.id }};
+    var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
   </script>
   {{ assets.js('episode') }}
 {% endblock %}

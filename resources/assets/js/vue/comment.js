@@ -1,33 +1,32 @@
 import Vue from "vue";
 import $ from "jquery";
 import timeago from "timeago.js";
-//TODO: Turn into a .vue file ^^
+//TODO: Turn into a .vue file
 
 Vue.component("comment", {
   template: `
-        <article class='comment'>
-            <header>
-                <ul>
-                    <li class='comment-user'>
-                        <a :href="'/users/' + user.id">{{ user.username }}</a>
-                    </li>
-                    <li class='comment-time'>
-                        {{ date }}
-                    </li>
-                    <li class='comment-episode' v-if="episode">
-                        <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
-                    </li>
-                    <li class='comment-episode' v-if="subtitle">
-                        <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
-                    </li>
-                    <li class='comment-actions' v-if="canDelete">
-                        <i class="fa fa-times" aria-hidden="true" @click="remove"></i>
-                    </li>
-                </ul>
-            </header>
-            <section class='comment-body' :class='bodyClasses' v-html="text"></section>
-            <section class='comment-actions'>
-            </section>
+        <article class='comment' :class="{'comment-pinned': pinned}">
+          <header>
+            <ul>
+              <li class='comment-user'>
+                <a :href="'/users/' + user.id">{{ user.username }}</a>
+              </li>
+              <li class='comment-time'>
+                {{ date }}
+              </li>
+              <li class='comment-episode' v-if="episode">
+                <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
+              </li>
+              <li class='comment-episode' v-if="subtitle">
+                <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
+              </li>
+              <li class='comment-actions'>
+                <i class="fa fa-times" aria-hidden="true" @click="remove" v-if="canDelete"></i>
+                <i class="fa fa-thumb-tack" aria-hidden="true" @click="$emit('pin', id)" v-if="canPin"></i>
+              </li>
+            </ul>
+          </header>
+          <section class='comment-body' :class='bodyClasses' v-html="text"></section>
         </article>
         `,
 
@@ -39,12 +38,14 @@ Vue.component("comment", {
     "subtitle",
     "published-at",
     "type",
-    "create-sequence-jumps"
+    "pinned",
+    "create-sequence-jumps",
   ],
   data: function() {
     return {
       date: "",
-      canDelete: canDeleteComments
+      canDelete: canDeleteComments,
+      canPin: canPinComments,
     };
   },
   computed: {
@@ -53,7 +54,7 @@ Vue.component("comment", {
       let isMod = this.user.roles.includes("ROLE_MOD");
       return {
         "role-tt": isTT && !isMod,
-        "role-mod": isMod
+        "role-mod": isMod,
       };
     },
 
@@ -67,7 +68,7 @@ Vue.component("comment", {
       }
 
       return text;
-    }
+    },
   },
   created: function() {
     this.update = setInterval(this.updateDate, 10000);
@@ -85,6 +86,6 @@ Vue.component("comment", {
           this.$emit("remove", this.id);
         }.bind(this)
       );
-    }
-  }
+    },
+  },
 });

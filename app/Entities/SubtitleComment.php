@@ -54,6 +54,17 @@ class SubtitleComment implements \JsonSerializable
      */
     private $softDeleted;
 
+    /**
+     * @ORM\Column(type="boolean", name="pinned")
+     */
+    private $pinned;
+
+    /**
+     * Function called when wanting to serialize this objet into JSON
+     * Called implicitly by Slim on $request->withJSON
+     *
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [
@@ -65,7 +76,8 @@ class SubtitleComment implements \JsonSerializable
             ],
             'published_at' => $this->publishTime->format(\DateTime::ATOM),
             'edited_at' => $this->editTime->format(\DateTime::ATOM),
-            'text' => htmlspecialchars($this->text)
+            'text' => htmlspecialchars($this->text),
+            'pinned' => $this->pinned
         ];
     }
 
@@ -217,5 +229,29 @@ class SubtitleComment implements \JsonSerializable
     public function getSoftDeleted()
     {
         return $this->softDeleted;
+    }
+
+    /**
+     * Set pinned
+     *
+     * @param boolean $pinned
+     *
+     * @return SubtitleComment
+     */
+    public function setPinned($pinned)
+    {
+        $this->pinned = $pinned;
+
+        return $this;
+    }
+
+    /**
+     * Get pinned
+     *
+     * @return boolean
+     */
+    public function getPinned()
+    {
+        return $this->pinned;
     }
 }

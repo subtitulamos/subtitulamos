@@ -33,13 +33,27 @@ let comments = new Vue({
           loadComments();
         })
         .fail(() => {
-          alertify.error("Se ha encontrado un error al borrar el comentario");
+          alertify.error("Ha ocurrido un error al borrar el comentario");
           if (typeof cidx !== "undefined") {
             // Insert the comment right back where it was
             this.comments.splice(cidx, 0, c);
           } else {
             loadComments(this.page);
           }
+        });
+    },
+
+    pin: function(id) {
+      $.ajax({
+        url: "/episodes/" + epId + "/comments/" + id + "/pin",
+        method: "POST",
+      })
+        .done(() => {
+          loadComments();
+        })
+        .fail(() => {
+          alertify.error("Ha ocurrido un error al intentar fijar el comentario");
+          loadComments();
         });
     },
 

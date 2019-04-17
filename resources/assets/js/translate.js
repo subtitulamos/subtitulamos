@@ -758,17 +758,18 @@ window.translation = new Vue({
       }
 
       this.submittingComment = true;
+      let commentSent = this.newComment;
       $.ajax({
         url: "/subtitles/" + subID + "/translate/comments",
         method: "POST",
         data: {
-          text: this.newComment,
+          text: commentSent,
         },
       })
         .done(id => {
           this.newComment = "";
           this.submittingComment = false;
-          sub.addComment(id, sub.getUserObject(me.id), new Date().toISOString(), comment);
+          sub.addComment(id, sub.getUserObject(me.id), new Date().toISOString(), commentSent);
         })
         .fail(jqXHR => {
           this.submittingComment = false;
@@ -797,13 +798,22 @@ window.translation = new Vue({
         method: "DELETE",
       }).fail(
         function() {
-          alertify.error("Se ha encontrado un error al borrar el comentario");
+          alertify.error("Ha ocurrido un error al borrar el comentario");
           if (typeof cidx !== "undefined") {
             // Insert the comment right back where it was
             this.comments.splice(cidx, 0, c);
           }
         }.bind(this)
       );
+    },
+
+    pin: function(id) {
+      $.ajax({
+        url: "/subtitles/" + subID + "/translate/comments/" + id + "/pin",
+        method: "POST",
+      }).fail(function() {
+        alertify.error("Ha ocurrido un error al fijar el comentario");
+      });
     },
 
     openPage: function() {

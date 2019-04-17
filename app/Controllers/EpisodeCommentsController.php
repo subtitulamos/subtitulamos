@@ -40,6 +40,7 @@ class EpisodeCommentsController
         $comment->setPublishTime(new \DateTime());
         $comment->setEditTime(new \DateTime());
         $comment->setSoftDeleted(false);
+        $comment->setPinned(false);
 
         $em->persist($comment);
         $em->flush();
@@ -50,7 +51,7 @@ class EpisodeCommentsController
 
     public function list($epId, $response, EntityManager $em)
     {
-        $comments = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0')
+        $comments = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0 ORDER BY ec.pinned DESC')
                    ->setParameter('id', $epId)
                    ->getResult();
         return $response->withJson($comments);
@@ -99,6 +100,23 @@ class EpisodeCommentsController
         }
 
         $comment->setSoftDeleted(true);
+        $em->flush();
+
+        return $response;
+    }
+
+    public function togglePin($epId, $cId, $request, $response, EntityManager $em)
+    {
+        $comment = $em->getRepository('App:EpisodeComment')->find($cId);
+        if (!$comment) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        if ($comment->getEpisode()->getId() != $epId) {
+            $response->withStatus(400);
+        }
+
+        $comment->setPinned(!$comment->getPinned());
         $em->flush();
 
         return $response;

@@ -20,7 +20,9 @@
       :episode="comment.episode"
       :subtitle="comment.subtitle"
       :published-at="comment.published_at"
+      :pinned="comment.pinned"
       @remove="remove"
+      @pin="pin"
     >
     </comment>
 
@@ -40,6 +42,7 @@
   <script type="text/javascript">
     var commentType = "{{ comment_type }}";
     var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
   </script>
   {{ assets.js('comment_list') }}
 {% endblock %}

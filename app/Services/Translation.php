@@ -192,6 +192,22 @@ class Translation
     }
 
     /**
+     * Broadcasts comment being pinned/unpinned
+     *
+     * @param \App\Entities\SubtitleComment $c
+     * @return void
+     */
+    public function broadcastCommentPinChange(SubtitleComment $c)
+    {
+        $sub = $c->getSubtitle();
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            'type' => 'com-pin',
+            'id' => $c->getId(),
+            'pinned' => $c->getPinned()
+        ]));
+    }
+
+    /**
      * Broadcasts comment being deleted
      *
      * @param \App\Entities\Subtitle $sub

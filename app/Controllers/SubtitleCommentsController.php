@@ -42,6 +42,7 @@ class SubtitleCommentsController
         $comment->setPublishTime(new \DateTime());
         $comment->setEditTime(new \DateTime());
         $comment->setSoftDeleted(false);
+        $comment->setPinned(false);
 
         $em->persist($comment);
         $em->flush();
@@ -53,7 +54,7 @@ class SubtitleCommentsController
 
     public function list($subId, $response, EntityManager $em)
     {
-        $comments = $em->createQuery('SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0 ORDER BY sc.id DESC')
+        $comments = $em->createQuery('SELECT sc FROM App:SubtitleComment sc WHERE sc.subtitle = :id AND sc.softDeleted = 0 ORDER BY sc.pinned DESC, sc.id DESC')
             ->setParameter('id', $subId)
             ->getResult();
 
@@ -108,6 +109,24 @@ class SubtitleCommentsController
         $em->flush();
 
         $translation->broadcastDeleteComment($comment);
+        return $response;
+    }
+
+    public function togglePin($subId, $cId, $request, $response, EntityManager $em, Translation $translation)
+    {
+        $comment = $em->getRepository('App:SubtitleComment')->find($cId);
+        if (!$comment) {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+
+        if ($comment->getSubtitle()->getId() != $subId) {
+            $response->withStatus(400);
+        }
+
+        $comment->setPinned(!$comment->getPinned());
+        $em->flush();
+
+        $translation->broadcastCommentPinChange($comment);
         return $response;
     }
 }

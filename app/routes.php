@@ -45,6 +45,7 @@ function addRoutes(&$app, &$entityManager)
     $app->get('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
     $app->delete('/subtitles/{subId:[0-9]+}/translate/comments/{cId:[0-9]+}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRole('ROLE_MOD'));
+    $app->post('/subtitles/{subId:[0-9]+}/translate/comments/{cId:[0-9]+}/pin', ['\App\Controllers\SubtitleCommentsController', 'togglePin'])->add($needsRole('ROLE_MOD'));
     /*
     $app->put('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
     */
@@ -67,6 +68,7 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/episodes/{epId:[0-9]+}/comments', ['\App\Controllers\EpisodeCommentsController', 'create'])->add($needsRole('ROLE_USER'));
 
     $app->delete('/episodes/{epId:[0-9]+}/comments/{cId:[0-9]+}', ['\App\Controllers\EpisodeCommentsController', 'delete'])->add($needsRole('ROLE_USER'));
+    $app->post('/episodes/{epId:[0-9]+}/comments/{cId:[0-9]+}/pin', ['\App\Controllers\EpisodeCommentsController', 'togglePin'])->add($needsRole('ROLE_MOD'));
     /*
     $app->post('/episodes/{epId}/comments/{cId}/edit', ['\App\Controllers\EpisodeCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
     $app->post('/episodes/{id}/comments/{cid}/pin', ['\App\Controllers\TranslationController', 'pin'])->add($needsRole('ROLE_MOD'));

@@ -483,6 +483,10 @@ a {
   margin: 3px;
 }
 
+.comment-pinned {
+  box-shadow: 0px 4px 10px -5px #808080;
+}
+
 .comment-refresh {
   float: right;
   cursor: pointer;

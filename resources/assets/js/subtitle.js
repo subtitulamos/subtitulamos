@@ -64,6 +64,10 @@ Subtitle.prototype.wsMessage = function(event) {
         this.deleteComment(data.id);
         break;
 
+      case "com-pin":
+        this.setCommentPin(data.id, data.pinned);
+        break;
+
       case "uinfo":
         this.users[data.id] = {
           username: data.username,
@@ -309,20 +313,33 @@ Subtitle.prototype.addComment = function(id, user, published_at, text) {
       user: user,
       published_at: published_at,
       text: text,
+      pinned: false,
     });
 
-    this.state.comments.sort((a, b) => {
-      if (a.published_at < b.published_at) {
-        return 1;
-      }
+    this.sortComments();
+  }
+};
 
-      if (a.published_at > b.published_at) {
+Subtitle.prototype.sortComments = function() {
+  this.state.comments.sort((a, b) => {
+    if (a.published_at < b.published_at) {
+      if (a.pinned && !b.pinned) {
+        // Pinned ones have preference
         return -1;
       }
+      return 1;
+    }
 
-      return 0;
-    });
-  }
+    if (a.published_at > b.published_at) {
+      if (!a.pinned && b.pinned) {
+        // Pinned ones have preference
+        return 1;
+      }
+      return -1;
+    }
+
+    return 0;
+  });
 };
 
 Subtitle.prototype.deleteComment = function(id) {
@@ -332,6 +349,17 @@ Subtitle.prototype.deleteComment = function(id) {
 
   if (idx != -1) {
     this.state.comments.splice(idx, 1);
+  }
+};
+
+Subtitle.prototype.setCommentPin = function(id, pinned) {
+  let idx = this.state.comments.findIndex(c => {
+    return c.id == id;
+  });
+
+  if (idx != -1) {
+    this.state.comments[idx].pinned = pinned;
+    this.sortComments();
   }
 };
 

@@ -143,8 +143,10 @@
       :user="comment.user"
       :base-text="comment.text"
       :published-at="comment.published_at"
+      :pinned="comment.pinned"
       :create-sequence-jumps="true"
       @remove="remove"
+      @pin="pin"
     >
     </comment>
   </div>
@@ -167,6 +169,7 @@
     var canLock = me.roles.includes('ROLE_JUNIOR_TT');
     var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
     var canDeleteComments = me.roles.includes('ROLE_MOD');
+    var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditTimes = me.roles.includes('ROLE_SENIOR_TT');
   </script>
   {{ assets.js('translate') }}
