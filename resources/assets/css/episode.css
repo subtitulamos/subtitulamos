@@ -216,7 +216,7 @@ a {
 .translate_subtitle:hover {
   background-color: #ec1bdf;
 }
-.hammer_subtitle:hover {
+.mod-subtitle:hover {
   background-color: #6039af;
 }
 .properties_subtitle:hover {
@@ -260,7 +260,8 @@ a {
   padding-top: 8px;
   font-size: 17pt;
 }
-.hammer_subtitle .fa-gavel {
+
+.mod-subtitle > .fa-scissors {
   padding-top: 9px;
   font-size: 16pt;
 }
@@ -390,7 +391,7 @@ a {
   padding-top: 8px;
   font-size: 15pt;
 }
-.compact .hammer_subtitle .fa-gavel {
+.compact .mod-subtitle .fa-scissors {
   padding-top: 9px;
   font-size: 14pt;
 }
