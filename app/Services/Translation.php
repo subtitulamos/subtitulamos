@@ -276,7 +276,7 @@ class Translation
      */
     public static function containsCreditsText(string $text)
     {
-        if (preg_match("/(?:(www\.)?addic7ed\.com)|(?:corrected by elderman)|(?:^[-*\[]?credito?s[-*\]]?$)|(?:(www\.)?tusubtitulo\.com)/i", $text) == 1) {
+        if (preg_match("/(?:(www\.)?addic7ed\.com)|(?:sync corrections by [^\s]+)|(?:corrected by elderman)|(?:^[-*\[]?credito?s[-*\]]?$)|(?:(www\.)?tusubtitulo\.com)/i", $text) == 1) {
             return true;
         }
 
