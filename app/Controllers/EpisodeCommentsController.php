@@ -51,7 +51,7 @@ class EpisodeCommentsController
 
     public function list($epId, $response, EntityManager $em)
     {
-        $comments = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0 ORDER BY ec.pinned DESC')
+        $comments = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0 ORDER BY ec.pinned DESC, ec.id ASC')
                    ->setParameter('id', $epId)
                    ->getResult();
         return $response->withJson($comments);
