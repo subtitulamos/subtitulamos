@@ -71,7 +71,6 @@ class TranslationController
         $sub = new Subtitle();
         $sub->setLang($lang);
         $sub->setVersion($version);
-        $sub->setProgress(0); // TODO: This progress could be more than 0% if sequences are autofilled
         $sub->setDirectUpload(false);
         $sub->setResync(false);
         $sub->setUploadTime(new \DateTime());
@@ -125,8 +124,10 @@ class TranslationController
             $baseSequenceNumbers[$sequence->getNumber()] = true;
         }
 
-        if ($autofilledSeqCount > 0) {
+        if ($autofilledSeqCount) {
             $sub->setProgress($autofilledSeqCount / count($baseSequenceNumbers) * 100);
+        } else {
+            $sub->setProgress(0);
         }
 
         $em->persist($sub);
