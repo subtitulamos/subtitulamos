@@ -346,10 +346,10 @@ class Translation
                         $bestSplitCount = $translatedLength;
                         foreach ($fragments as $i => $fragment) {
                             $curCharCount += mb_strlen($fragment);
-                            $splitCountHere = abs($curCharCount - $translatedLength/2);
+                            $splitCountHere = abs($curCharCount + $i - $translatedLength/2);
                             if ($bestSplitCount > $splitCountHere) {
                                 // If this is a better middle split, record the pos
-                                $bestSplitPos = $i;
+                                $bestSplitPos = $i + 1;
                                 $bestSplitCount = $splitCountHere;
                             }
                         }
