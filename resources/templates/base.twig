@@ -15,6 +15,8 @@
     {% set min_suffix = "" %}
   {% endif %}
 
+  <script type="text/javascript" src="js/hotload.js?{{ 'now'|date('YmdHi') }}"></script>
+
   {% block bulma %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.{{ min_suffix }}css">
   {% endblock %}

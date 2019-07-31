@@ -1,4 +1,3 @@
-//import Vue from 'vue';
 import $ from "jquery";
 
 export function dateDiff(a, b) {
@@ -118,37 +117,6 @@ function closeLogRegForm() {
   }
 }
 
-function shortNumber(number) {
-  if (number > 1000) {
-    number = Math.floor(number / 100) / 10;
-    number = number + "k";
-  }
-
-  return number;
-}
-
-function shortTime(seconds) {
-  if (seconds < 3600) {
-    let m = Math.floor(seconds / 60);
-    return { number: m, unit: m > 1 ? "minutos" : "minuto" };
-  }
-
-  if (seconds < 86400) {
-    let h = Math.floor(seconds / 3600);
-    return { number: h, unit: h > 1 ? "horas" : "hora" };
-  }
-
-  let d = Math.floor(seconds / 86400);
-  return { number: d, unit: d > 1 ? "días" : "día" };
-}
-
-function cleanShowName(name) {
-  return name
-    .toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^a-z0-9-]/, "");
-}
-
 function doLogin(e) {
   e.preventDefault();
 
@@ -194,16 +162,6 @@ function doLogin(e) {
         $loginError.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
       }
     });
-}
-
-function clickReactionsAnimate() {
-  let $this = $(this);
-
-  $this.toggleClass("button_bounce_click", true);
-
-  setTimeout(function() {
-    $this.toggleClass("button_bounce_click", false);
-  }, 500);
 }
 
 function register(e) {
@@ -270,7 +228,6 @@ $(function() {
   $("#login, #register").on("click", toggleAccessForm);
   $("#login-form").on("submit", doLogin);
   $("#register-form").on("submit", register);
-  $("#incategory_board").on("click", ".love_reaction, .share_reaction", clickReactionsAnimate);
 
   if (window.openLogin) {
     setTimeout(toggleAccessForm.bind($("#login")), 1500);
