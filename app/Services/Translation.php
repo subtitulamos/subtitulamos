@@ -365,8 +365,12 @@ class Translation
             if (preg_match("/^([Yy]es|[Nn]o|NO|YES)([\.,]*)([!\?])*$/", $singleLineText, $matches) === 1) {
                 $translatedStr = '';
                 switch ($matches[1]) {
-                    case 'yes': case 'Yes': case 'YES': $translatedStr = 'Sí'; break;
-                    case 'no': case 'No': case 'NO': $translatedStr = 'No'; break;
+                    case 'Yes': case 'YES': $translatedStr = 'Sí'; break;
+                    case 'No': case 'NO': $translatedStr = 'No'; break;
+
+                    // On these, we cannot be sure about whether the case is a typo
+                    case 'yes': $translatedStr = 'sí'; $confidence = 50; break;
+                    case 'no': $translatedStr = 'no'; $confidence = 50; break;
                 }
 
                 if (!$translatedStr) {
@@ -378,19 +382,18 @@ class Translation
                     // We can only do this properly with a set of characters
                     if ($matches[3] == '!') {
                         $translatedStr = '¡'.$translatedStr.'!';
-                        $confidence = 100;
+                        $confidence = $confidence ?? 100;
                     } elseif ($matches[3] == '?') {
                         $translatedStr = '¿'.$translatedStr.'?';
-                        $confidence = 100;
+                        $confidence = $confidence ?? 100;
                     } elseif ($matches[2] == '...' || $matches[2] == ',' || $matches[2] == '.') {
                         $translatedStr .= $matches[2];
-                        $confidence = mb_strlen($matches[2]) == 1 ? 100 : 90;
+                        $confidence = $confidence ?? (mb_strlen($matches[2]) == 1 ? 100 : 90);
                     }
-                } else {
-                    $confidence = 95; // Fairly confident the translation's right in this situation.
                 }
 
-                return [$confidence, $translatedStr];
+                // Yield a 95% confidence unless set otherwise
+                return [$confidence ?? 95, $translatedStr];
             }
         }
 
