@@ -86,6 +86,12 @@
     color: rgba(0, 151, 177, 0.7);
   }
 
+  .seq-num-clickable {
+    cursor: pointer;
+    color: #004aa9;
+    padding: 5px 10px;
+  }
+
   td.actions {
     padding: 0 10px 0 10px;
     min-width: 60px;

@@ -104,6 +104,8 @@
             :text="seq.text"
             :open-info="seq.openInfo ? seq.openInfo : {id: 0}"
             :history="false"
+            @highlight-on="highlight(seq.number)"
+            @highlight-off="highlight(0)"
           ></sequence>
         </template>
       {% endverbatim %}

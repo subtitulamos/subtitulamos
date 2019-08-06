@@ -138,10 +138,7 @@ Subtitle.prototype.loadSequences = function() {
     }
 
     if (window.location.hash) {
-      let seqNum = window.location.hash.substr(1);
-      if (Number(seqNum)) {
-        this.state.jumpToSequence(Number(seqNum));
-      }
+      this.state.jumpToUrlSequence();
     }
   });
 };

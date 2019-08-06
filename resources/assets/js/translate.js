@@ -80,7 +80,7 @@ Vue.component("sequence", {
             'current': !history,
             'history': history
           }">
-            <td><span v-if="!history">{{ number }}</span></td>
+            <td><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></td>
             <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
             <td class="time" @click="openSequence">
                 <div v-if="!editing || !canEditTimes">
@@ -158,6 +158,7 @@ Vue.component("sequence", {
       editingTimeEnd: this.$options.filters.timeFmt(this.tend),
       editingTimeStart: this.$options.filters.timeFmt(this.tstart),
       saving: false,
+      window: window,
     };
   },
 
@@ -561,6 +562,18 @@ Vue.component("sequence", {
       let hs = matches[1] ? Number(matches[1]) * 3600 : 0;
       return (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 + Number(matches[4]);
     },
+
+    seqNumClick: function() {
+      if (window.location.hash.includes(this.number)) {
+        // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
+        // @src: https://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-url-with-javascript-without-page-r/5298684#5298684
+        history.pushState("", document.title, window.location.pathname + window.location.search);
+        this.$emit("highlight-off");
+      } else {
+        window.location.hash = "#" + this.number;
+        this.$emit("highlight-on");
+      }
+    },
   },
 });
 
@@ -595,6 +608,11 @@ Vue.component("pagelist", {
 /**
  * Boot
  */
+function getSeqNumFromHash() {
+  let seqNum = window.location.hash.substr(1);
+  return Number(seqNum);
+}
+
 const SEQS_PER_PAGE = 20;
 window.translation = new Vue({
   el: "#translation",
@@ -750,6 +768,10 @@ window.translation = new Vue({
     updateTextFilter: function(e) {
       this.curPage = 1;
       this.filters.text = e.target.value;
+    },
+
+    highlight(seqNum) {
+      this.highlightedSequence = seqNum;
     },
 
     publishComment: function() {
@@ -975,6 +997,13 @@ window.translation = new Vue({
         let scrolledY = window.scrollY;
         window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
       }, 10);
+    },
+
+    jumpToUrlSequence() {
+      let seqNum = getSeqNumFromHash();
+      if (seqNum) {
+        this.jumpToSequence(Number(seqNum));
+      }
     },
   },
 });
