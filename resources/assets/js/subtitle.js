@@ -136,6 +136,13 @@ Subtitle.prototype.loadSequences = function() {
     if (isFirstLoad) {
       this.state.curPage = 1;
     }
+
+    if (window.location.hash) {
+      let seqNum = window.location.hash.substr(1);
+      if (Number(seqNum)) {
+        this.state.jumpToSequence(Number(seqNum));
+      }
+    }
   });
 };
 
