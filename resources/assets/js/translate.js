@@ -617,6 +617,19 @@ function getSeqNumFromHash() {
   return Number(seqNum);
 }
 
+function isElementInViewport(el) {
+  var rect = el.getBoundingClientRect();
+
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */ &&
+    rect.right <=
+      (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+  );
+}
+
 const SEQS_PER_PAGE = 20;
 window.translation = new Vue({
   el: "#translation",
@@ -985,20 +998,22 @@ window.translation = new Vue({
       this.highlightedSequence = seqn;
 
       // Delay this a little bit so Vue can run the rerender
-      setTimeout(() => {
-        let isFirstSequence =
-          Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
-        if (isFirstSequence) {
-          $("#sequences")[0].scrollIntoView({ behavior: "instant" });
-        } else {
-          $("#sequences")
-            .children("#seqn-" + seqn)[0]
-            .scrollIntoView({ behavior: "instant" });
-        }
+      if (!isElementInViewport($("#sequences").children("#seqn-" + seqn)[0])) {
+        setTimeout(() => {
+          let isFirstSequence =
+            Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
+          if (isFirstSequence) {
+            $("#sequences")[0].scrollIntoView({ behavior: "instant" });
+          } else {
+            $("#sequences")
+              .children("#seqn-" + seqn)[0]
+              .scrollIntoView({ behavior: "instant" });
+          }
 
-        let scrolledY = window.scrollY;
-        window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
-      }, 10);
+          let scrolledY = window.scrollY;
+          window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
+        }, 10);
+      }
     },
 
     jumpToUrlSequence() {
