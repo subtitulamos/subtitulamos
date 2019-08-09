@@ -59,7 +59,7 @@ $(function() {
             }
           });
         } else {
-          alertify.error("Ha ocurrido un error no identificado al intentar subir el subtítulo");
+          Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         }
       })
       .done(function(data) {

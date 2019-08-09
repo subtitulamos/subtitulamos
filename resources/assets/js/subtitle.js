@@ -16,7 +16,7 @@ function Subtitle(id, state, secondaryLang) {
 
 Subtitle.prototype.wsOpen = function() {
   if (this.state.loadedOnce) {
-    alertify.log("Reconectado al servidor de traducción");
+    Toasts.info.fire("Reconectado al servidor de traducción");
   }
 
   this.loadSequences();
@@ -54,7 +54,7 @@ Subtitle.prototype.wsMessage = function(event) {
       case "com-new":
         this.addComment(data.id, this.getUserObject(data.user), data.time, data.text);
         if (data.user != me.id) {
-          alertify.log(
+          Toasts.info.fire(
             sprintf("<b>%s</b> ha publicado un comentario", this.getUsername(data.user))
           );
         }
@@ -152,7 +152,7 @@ Subtitle.prototype.loadComments = function() {
       this.state.comments = reply;
     })
     .fail(function() {
-      alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
+      Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 };
 

@@ -329,9 +329,22 @@
 
   {# Load js last #}
   {{ assets.js('vendor') }}
-  <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js" async></script>
-
   {{ assets.js('app') }}
   {{ assets.js('search') }}
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script>
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-end',
+      showConfirmButton: false,
+      timer: 4000
+    });
+    const Toasts = {
+      error: Toast.mixin({type: 'error', timer: 8000}),
+      success: Toast.mixin({type: 'success', timer: 5000}),
+      info: Toast.mixin({type: 'info', timer: 5000})
+    };
+  </script>
   {% block scripts %}{% endblock %}
 </body>

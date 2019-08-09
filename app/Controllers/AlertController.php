@@ -45,7 +45,7 @@ class AlertController
             $em->flush();
         } else {
             $res['ok'] = false;
-            $res['msg'] = 'Por favor, detalla la razón de aviso';
+            $res['msg'] = 'Por favor, detalla la situación';
         }
 
         return $response->withJSON($res);

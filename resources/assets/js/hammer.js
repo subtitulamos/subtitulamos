@@ -26,12 +26,18 @@ Vue.component("hammertarget", {
     },
   },
   methods: {
-    completeHammer: function() {
-      alertify.confirm(
-        "Estás a punto de eliminar TODAS las contribuciones de <b>" +
+    completeHammer() {
+      Swal.fire({
+        type: "warning",
+        confirmButtonText: "Borrar todas",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        html:
+          "Estás a punto de eliminar TODAS las contribuciones de <b>" +
           this.username +
-          "</b> en el subtítulo.<br/>¿Estás seguro de querer continuar?",
-        () => {
+          "</b> en el subtítulo.<br/><br/>¿Estás seguro de querer continuar?",
+      }).then(result => {
+        if (result.value) {
           $.ajax({
             url: "/subtitles/" + subID + "/hammer",
             method: "POST",
@@ -44,20 +50,26 @@ Vue.component("hammertarget", {
             this.corrected = 0;
             this.latest = 0;
 
-            alertify.success(
+            Toasts.success.fire(
               "Poof! Las contribuciones de <b>" + this.username + "</b> han sido eliminadas"
             );
           });
         }
-      );
+      });
     },
 
-    latestHammer: function() {
-      alertify.confirm(
-        "Estás a punto de eliminar las contribuciones sin corregir de <b>" +
+    latestHammer() {
+      Swal.fire({
+        type: "warning",
+        confirmButtonText: "Borrar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        html:
+          "Estás a punto de eliminar las contribuciones sin corregir de <b>" +
           this.username +
-          "</b> en el subtítulo.<br/>¿Estás seguro de querer continuar?",
-        () => {
+          "</b> en el subtítulo.<br/><br/>¿Estás seguro de querer continuar?",
+      }).then(result => {
+        if (result.value) {
           $.ajax({
             url: "/subtitles/" + subID + "/hammer",
             method: "POST",
@@ -67,12 +79,12 @@ Vue.component("hammertarget", {
             },
           }).done(() => {
             this.latest = 0;
-            alertify.success(
+            Toasts.success.fire(
               "Las contribuciones sin corregir de <b>" + this.username + "</b> han sido eliminadas"
             );
           });
         }
-      );
+      });
     },
   },
 });

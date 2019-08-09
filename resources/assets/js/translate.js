@@ -362,12 +362,12 @@ Vue.component("sequence", {
         .done(reply => {
           if (!reply.ok) {
             sub.closeSeq(this.number);
-            alertify.error(reply.msg);
+            Toasts.error.fire(reply.msg);
           }
         })
         .fail(() => {
           sub.closeSeq(this.number);
-          alertify.error("Ha ocurrido un error desconocido al intentar editar");
+          Toasts.error.fire("Ha ocurrido un error desconocido al intentar editar");
         });
     },
 
@@ -409,7 +409,7 @@ Vue.component("sequence", {
 
       // Make sure there are no characters outside ISO-8859-1
       if (/[^\u0000-\u00ff]/g.test(ntext) === true) {
-        alertify.error(
+        Toasts.error.fire(
           "En las secuencias solo se permiten caracteres que pertenezcan a la codificación ISO-8859-1"
         );
         this.saving = false;
@@ -463,7 +463,9 @@ Vue.component("sequence", {
           }
         })
         .fail((_, status) => {
-          alertify.error("Ha ocurrido un error al intentar guardar la secuencia: (" + status + ")");
+          Toasts.error.fire(
+            "Ha ocurrido un error al intentar guardar la secuencia: (" + status + ")"
+          );
           this.saving = false;
         });
     },
@@ -500,7 +502,9 @@ Vue.component("sequence", {
         })
         .fail((_, status) => {
           sub.openSeq(this.number, me.id, oLockID);
-          alertify.error("Ha ocurrido un error al intentar cerrar la secuencia  (" + status + ")");
+          Toasts.error.fire(
+            "Ha ocurrido un error al intentar cerrar la secuencia  (" + status + ")"
+          );
         });
     },
 
@@ -523,7 +527,7 @@ Vue.component("sequence", {
       }).fail(() => {
         // Revert, the request failed
         sub.lockSeq(this.id, !newState);
-        alertify.error("Error al intentar cambiar el estado de bloqueo de #" + this.number);
+        Toasts.error.fire("Error al intentar cambiar el estado de bloqueo de #" + this.number);
       });
     },
 
@@ -796,9 +800,9 @@ window.translation = new Vue({
         .fail(jqXHR => {
           this.submittingComment = false;
           if (jqXHR.responseText) {
-            alertify.error(jqXHR.responseText);
+            Toasts.error.fire(jqXHR.responseText);
           } else {
-            alertify.error("Ha ocurrido un error al enviar tu comentario");
+            Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
           }
         });
     },
@@ -820,7 +824,7 @@ window.translation = new Vue({
         method: "DELETE",
       }).fail(
         function() {
-          alertify.error("Ha ocurrido un error al borrar el comentario");
+          Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
           if (typeof cidx !== "undefined") {
             // Insert the comment right back where it was
             this.comments.splice(cidx, 0, c);
@@ -834,7 +838,7 @@ window.translation = new Vue({
         url: "/subtitles/" + subID + "/translate/comments/" + id + "/pin",
         method: "POST",
       }).fail(function() {
-        alertify.error("Ha ocurrido un error al fijar el comentario");
+        Toasts.error.fire("Ha ocurrido un error al fijar el comentario");
       });
     },
 
@@ -865,21 +869,21 @@ window.translation = new Vue({
 
         if (modTextList.length > 0) {
           let pthis = this;
-          alertify
-            .okBtn("Descartar cambios")
-            .cancelBtn("¡No!")
-            .confirm(
+          Swal.fire({
+            type: "warning",
+            confirmButtonText: "Descartar",
+            cancelButtonText: "No",
+            showCancelButton: true,
+            title: "¿Descartar cambios?",
+            text:
               "Algunas secuencias de esta página han sido modificadas, pero no guardadas: " +
-                modTextList.join(", ") +
-                ". ¿Estás seguro de querer descartar los cambios en estas?",
-              ev => {
-                pthis.closePage(ev, true);
-              },
-              function(ev) {
-                /* cancel */
-              }
-            );
-
+              modTextList.join(", ") +
+              ". ¿Estás seguro de querer descartar los cambios en estas?",
+          }).then(result => {
+            if (result.value) {
+              pthis.closePage(ev, true);
+            }
+          });
           return;
         }
       }
@@ -916,59 +920,57 @@ window.translation = new Vue({
     },
 
     alertMod: function() {
-      alertify
-        .cancelBtn("Cancelar")
-        .okBtn("Enviar")
-        .prompt(
-          "Se avisará a un moderador. Añade un comentario a continuación explicando la situación:",
-          function(val, ev) {
-            $.ajax({
-              url: "/subtitles/" + subID + "/alert",
-              method: "POST",
-              data: {
-                message: val,
-              },
+      Swal.fire({
+        confirmButtonText: "Enviar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        input: "textarea",
+        title: "Avisar a un moderador",
+        text: "Añade un comentario explicando la situación",
+        showLoaderOnConfirm: true,
+        preConfirm: msg => {
+          return $.ajax({
+            url: "/subtitles/" + subID + "/alert",
+            method: "POST",
+            data: {
+              message: msg,
+            },
+          })
+            .done(reply => {
+              if (!reply.ok) {
+                Swal.showValidationMessage(reply.msg);
+              }
             })
-              .done(reply => {
-                if (reply.ok) {
-                  alertify.success("Aviso enviado correctamente.");
-                } else {
-                  alertify.error(reply.msg);
-                }
-              })
-              .fail((_, status) => {
-                alertify.error(
-                  "Ha ocurrido un error al intentar enviar la alerta: (" + status + ")"
-                );
-              });
-          }
-        );
+            .fail((_, status) => {
+              Swal.showValidationMessage(
+                "Ha ocurrido un error al intentar enviar la alerta: (" + status + ")"
+              );
+            });
+        },
+      }).then(result => {
+        if (result.value && result.value.ok) {
+          Toasts.success.fire("Aviso enviado correctamente.");
+        }
+      });
     },
 
     goTo() {
-      // Mark that we're in the goTo prompt
-      this.goingTo = true;
-
-      alertify
-        .cancelBtn("Cancelar")
-        .okBtn("Ir")
-        .prompt(
-          "Escribe el número de secuencia al que navegar",
-          (val, ev) => {
-            // User clicked go
-            if (Number(val) > 0) {
-              this.jumpToSequence(Number(val));
-            } else {
-              alertify.error("Por favor, introduce un número entero y positivo");
-            }
-
-            this.goingTo = false;
-          },
-          () => {
-            // User cancelled, we still have to clear this
-            this.goingTo = false;
+      Swal.fire({
+        confirmButtonText: "Ir",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        input: "text",
+        text: "Escribe el número de secuencia al que navegar",
+        inputValidator: val => {
+          if (Number(val) <= 0) {
+            return "Por favor, introduce un número positivo";
           }
-        );
+        },
+      }).then(result => {
+        if (result.value) {
+          this.jumpToSequence(Number(result.value));
+        }
+      });
     },
 
     jumpToSequence(seqn) {
@@ -1042,10 +1044,7 @@ $(document).on("keydown", function(e) {
   }
 
   if (e.ctrlKey && !e.altKey && e.which == 71) {
-    if (!translation.goingTo) {
-      translation.goTo();
-    }
-
+    translation.goTo();
     e.preventDefault();
   }
 });

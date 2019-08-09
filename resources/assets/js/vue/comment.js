@@ -80,12 +80,20 @@ Vue.component("comment", {
     },
 
     remove: function() {
-      alertify.confirm(
-        "¿Seguro que deseas borrar este comentario?",
-        function() {
-          this.$emit("remove", this.id);
-        }.bind(this)
-      );
+      Swal.fire({
+        type: "warning",
+        confirmButtonText: "Borrar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        title: "Borrar comentario",
+        html: "Esta acción es irreversible. <br/> ¿Seguro que deseas borrar este comentario?",
+      })
+        .then(result => {
+          if (result.value) {
+            this.$emit("remove", this.id);
+          }
+        })
+        .bind(this);
     },
   },
 });

@@ -19,12 +19,17 @@ $("a[disabled]").on("click", function(e) {
 
 $("a[data-action='delete']").on("click", function(e) {
   let subId = $(this).data("id");
-  alertify.confirm(
-    "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
-    function() {
+
+  Swal.fire({
+    type: "warning",
+    cancelButtonText: "Cancelar",
+    showCancelButton: true,
+    text: "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
+  }).then(result => {
+    if (result.value) {
       window.location = "/subtitles/" + subId + "/delete";
     }
-  );
+  });
 });
 
 $(function() {
@@ -69,9 +74,9 @@ let comments = new Vue({
         .fail(jqXHR => {
           this.submittingComment = false;
           if (jqXHR.responseText) {
-            alertify.error(jqXHR.responseText);
+            Toasts.error.fire(jqXHR.responseText);
           } else {
-            alertify.error("Ha ocurrido un error al enviar tu comentario");
+            Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
           }
         });
     },
@@ -100,7 +105,7 @@ let comments = new Vue({
         })
         .fail(
           function() {
-            alertify.error("Ha ocurrido un error al borrar el comentario");
+            Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
             if (typeof cidx !== "undefined") {
               // Insert the comment right back where it was
               this.comments.splice(cidx, 0, c);
@@ -120,7 +125,7 @@ let comments = new Vue({
           loadComments();
         })
         .fail(function() {
-          alertify.error("Ha ocurrido un error al intentar fijar el comentario");
+          Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
         });
     },
   },
@@ -135,7 +140,7 @@ function loadComments() {
       comments.comments = reply;
     })
     .fail(function() {
-      alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
+      Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 }
 

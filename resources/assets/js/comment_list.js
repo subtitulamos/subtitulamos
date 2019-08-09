@@ -33,7 +33,10 @@ let comments = new Vue({
           loadComments();
         })
         .fail(() => {
-          alertify.error("Ha ocurrido un error al borrar el comentario");
+          Toast.fire({
+            type: "error",
+            title: "Ha ocurrido un error al borrar el comentario",
+          });
           if (typeof cidx !== "undefined") {
             // Insert the comment right back where it was
             this.comments.splice(cidx, 0, c);
@@ -52,7 +55,7 @@ let comments = new Vue({
           loadComments();
         })
         .fail(() => {
-          alertify.error("Ha ocurrido un error al intentar fijar el comentario");
+          Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
           loadComments();
         });
     },
@@ -82,7 +85,7 @@ function loadComments(page) {
       comments.comments = reply;
     })
     .fail(function() {
-      alertify.error("Ha ocurrido un error tratando de cargar los comentarios");
+      Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 }
 

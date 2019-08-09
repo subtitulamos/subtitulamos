@@ -900,10 +900,6 @@ nav.top-links li:hover {
   padding: 15px;
 }
 
-.alertify input[type="text"] {
-  box-shadow: 0px 1px 9px -3px #4a4a4a inset;
-}
-
 template {
   /* For browsers without template tag support */
   display: none;
