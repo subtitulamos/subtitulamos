@@ -996,6 +996,7 @@ window.translation = new Vue({
 
       this.curPage = targetPage;
       this.highlightedSequence = seqn;
+      window.location.hash = "#" + seqn;
 
       // Delay this a little bit so Vue can run the rerender
       if (!isElementInViewport($("#sequences").children("#seqn-" + seqn)[0])) {
