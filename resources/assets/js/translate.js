@@ -8,6 +8,11 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 
+function removeWindowHash() {
+  // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
+  history.replaceState("", document.title, window.location.pathname + window.location.search);
+}
+
 let bus = new Vue();
 let modifiedSeqList = [];
 
@@ -569,9 +574,7 @@ Vue.component("sequence", {
 
     seqNumClick: function() {
       if (window.location.hash.includes(this.number)) {
-        // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
-        // @src: https://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-url-with-javascript-without-page-r/5298684#5298684
-        history.pushState("", document.title, window.location.pathname + window.location.search);
+        removeWindowHash();
         this.$emit("highlight-off");
       } else {
         window.location.hash = "#" + this.number;
@@ -765,6 +768,7 @@ window.translation = new Vue({
     onChangePage: function(page) {
       this.curPage = page;
       this.highlightedSequence = 0; // Clear out the highlight
+      removeWindowHash();
     },
 
     toggleUntranslatedFilter: function() {
