@@ -105,7 +105,7 @@ Vue.component("sequence", {
 
                 <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
 
-                <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
+                <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="new-password"></textarea>
                 <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
                     <i class="fa fa-wrench" aria-hidden="true"></i>
                 </div>
