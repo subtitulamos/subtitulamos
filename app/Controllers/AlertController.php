@@ -10,7 +10,6 @@ namespace App\Controllers;
 use App\Entities\Alert;
 use App\Entities\AlertComment;
 
-use App\Entities\Subtitle;
 use App\Services\Auth;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;

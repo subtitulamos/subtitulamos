@@ -20,7 +20,6 @@ class PanelAlertsController
     public function view($request, $response, Twig $twig, EntityManager $em)
     {
         $alerts = [];
-
         $alertsCursor = $em->createQuery('SELECT a, ac FROM App:Alert a JOIN a.comments ac ORDER BY a.status ASC, a.creationTime DESC, ac.creationTime ASC')->getResult();
 
         foreach ($alertsCursor as $alert) {
