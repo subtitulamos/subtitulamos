@@ -127,9 +127,12 @@
   <div id="translation-comments">
     <h4>Comentarios de traducción</h4>
     <div class='newcomment-box'>
-      <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..." autocomplete="off"></textarea>
-      <button :class="{'hidden': newComment == '', 'is-loading': submittingComment}" class="button is-primary comment-publish" @click="publishComment">
-        <span v-if="!submittingComment">
+      <textarea id="new-comment" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." autocomplete="off"></textarea>
+      {% verbatim %}
+      <span class='comment-char-counter'><span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}</span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span></span>
+      {% endverbatim %}
+      <button :class="{'hidden': newComment == '', 'is-loading': submittingComment, 'is-primary': newComment.length <= maxCommentLength, 'is-danger': newComment.length > maxCommentLength}" class="button comment-publish" @click="publishComment">
+         <span v-if="!submittingComment">
           Enviar
         </span>
         {# TODO: Remove this when using Bulma on this page (is-loading won't be active until then) #}

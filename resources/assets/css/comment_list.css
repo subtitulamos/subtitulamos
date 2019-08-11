@@ -63,29 +63,6 @@ a {
   overflow-wrap: break-word;
 }
 
-#comments .newcomment-box {
-  width: 94%;
-  min-height: 110px;
-  margin: 0 auto;
-}
-
-#comments #new-comment {
-  width: 100%;
-  height: 60px;
-  padding: 10px;
-  font-size: 14px;
-}
-
-#comments .comment-publish {
-  float: right;
-  background-color: #589aea;
-  color: white;
-  padding: 6px;
-  margin-right: -22px;
-  min-width: 130px;
-  border-radius: 3px;
-}
-
 .comment-refresh {
   float: right;
   cursor: pointer;

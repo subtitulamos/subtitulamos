@@ -651,6 +651,7 @@ window.translation = new Vue({
       loaded: false,
       loadedOnce: false,
       newComment: "",
+      maxCommentLength: 600,
       submittingComment: false,
       canReleaseOpenLock: canReleaseOpenLock,
       hasAdvancedTools: hasAdvancedTools,
@@ -786,7 +787,7 @@ window.translation = new Vue({
       this.filters.author = Number(e.target.value);
     },
 
-    updateTextFilter: function(e) {
+    updateTextFilter(e) {
       this.curPage = 1;
       this.filters.text = e.target.value;
     },
@@ -795,9 +796,18 @@ window.translation = new Vue({
       this.highlightedSequence = seqNum;
     },
 
-    publishComment: function() {
+    publishComment() {
       if (this.submittingComment) {
         return;
+      }
+
+      if (this.newComment.length > this.maxCommentLength) {
+        Toasts.error.fire(
+          "Por favor, escribe un comentario más corto (de hasta " +
+            this.maxCommentLength +
+            " caracteres)"
+        );
+        return false;
       }
 
       this.submittingComment = true;

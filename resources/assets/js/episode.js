@@ -50,10 +50,20 @@ let comments = new Vue({
     newComment: "",
     submittingComment: false,
     comments: [],
+    maxCommentLength: 600, // Max char limit!
   },
   methods: {
-    publishComment: function() {
+    publishComment() {
       if (this.submittingComment) {
+        return false;
+      }
+
+      if (this.newComment.length > this.maxCommentLength) {
+        Toasts.error.fire(
+          "Por favor, escribe un comentario más corto (de hasta " +
+            this.maxCommentLength +
+            " caracteres)"
+        );
         return false;
       }
 

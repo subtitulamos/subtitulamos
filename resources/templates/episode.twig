@@ -193,10 +193,13 @@
 
       <div class='newcomment-box'>
         {% if auth.logged %}
-          <textarea id="new-comment" v-model="newComment" placeholder="Escribe aquí tu comentario..."></textarea>
-          <button :class="{'hidden': newComment == '', 'is-loading': submittingComment}" class="button is-primary comment-publish" @click="publishComment">Enviar</button>
+          {% verbatim %}
+            <textarea id="new-comment" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+            <span class='comment-char-counter'><span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}</span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span></span>
+            <button :class="{'hidden': newComment == '', 'is-loading': submittingComment, 'is-primary': newComment.length <= maxCommentLength, 'is-danger': newComment.length > maxCommentLength}" class="button comment-publish" @click="publishComment">Enviar</button>
+          {% endverbatim %}
         {% else %}
-          <textarea id="new-comment" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
+          <textarea id="new-comment"  class="textarea" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
         {% endif %}
       </div>
     </div>

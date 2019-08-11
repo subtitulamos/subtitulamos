@@ -1,5 +1,4 @@
 import Vue from "vue";
-import $ from "jquery";
 import timeago from "timeago.js";
 //TODO: Turn into a .vue file
 
