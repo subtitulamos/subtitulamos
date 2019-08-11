@@ -477,6 +477,18 @@ a {
   padding: 1px 3px;
 }
 
+.comment-char-counter.normal-count {
+  color: gray;
+}
+
+.comment-char-counter.close-to-max {
+  color: orange;
+}
+
+.comment-char-counter.too-many {
+  color: red;
+}
+
 .comment-publish {
   position: relative;
   left: 92%;

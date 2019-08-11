@@ -195,7 +195,16 @@
         {% if auth.logged %}
           {% verbatim %}
             <textarea id="new-comment" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
-            <span class='comment-char-counter'><span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}</span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span></span>
+            <span
+              class='comment-char-counter'
+              :class='{
+                "normal-count": newComment.length <= maxCommentLength*0.9,
+                "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
+                "too-many": newComment.length > maxCommentLength
+              }'
+            >
+              <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
+              </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span></span>
             <button :class="{'hidden': newComment == '', 'is-loading': submittingComment, 'is-primary': newComment.length <= maxCommentLength, 'is-danger': newComment.length > maxCommentLength}" class="button comment-publish" @click="publishComment">Enviar</button>
           {% endverbatim %}
         {% else %}
