@@ -199,7 +199,7 @@
             <button :class="{'hidden': newComment == '', 'is-loading': submittingComment, 'is-primary': newComment.length <= maxCommentLength, 'is-danger': newComment.length > maxCommentLength}" class="button comment-publish" @click="publishComment">Enviar</button>
           {% endverbatim %}
         {% else %}
-          <textarea id="new-comment"  class="textarea" disabled placeholder="Debes estar identificado para poder dejar comentarios"></textarea>
+          <textarea id="new-comment"  class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
         {% endif %}
       </div>
     </div>
