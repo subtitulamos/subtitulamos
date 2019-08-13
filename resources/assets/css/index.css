@@ -191,6 +191,9 @@
 }
 .ep-details {
   font-size: 10pt;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ep-show-hover:hover .ep-details {
   display: inline-block !important;
