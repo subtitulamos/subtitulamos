@@ -23,8 +23,11 @@
   text-shadow: white 0px 0px 2px;
 }
 
-.ep-show-hover .ep-add-details {
-  display: none;
+@media only screen and (min-width: 840px) {
+  /* Only hide details for small screens */
+  .ep-show-hover .ep-add-details {
+    display: none;
+  }
 }
 
 .ep-show-hover:hover .ep-add-details {
@@ -74,7 +77,7 @@
 /*Styling for the incategory board */
 #incategory_board {
   position: relative;
-  width: 1000px;
+  max-width: 1000px;
   margin: 0 auto 40px auto;
   background-color: #5a93ca;
   padding: 20px 20px 12px 20px;
@@ -147,7 +150,7 @@
 .ep-title-row {
   height: 50px;
   vertical-align: top;
-  width: 89%;
+  width: 87%;
   padding-left: 10px;
   text-align: left;
   display: inline-block;
@@ -160,9 +163,11 @@
   color: inherit;
 }
 
-.ep-show-hover:not(:hover) .ep-title-row {
-  height: 40px;
-  padding-top: 17px;
+@media only screen and (min-width: 840px) {
+  .ep-show-hover:not(:hover) .ep-title-row {
+    height: 40px;
+    padding-top: 17px;
+  }
 }
 
 .ep-title {
@@ -170,7 +175,6 @@
   font-weight: 600;
   font-size: 17px;
   display: block;
-  width: 760px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -352,4 +356,35 @@ navigation buttons */
 #refresh:active {
   -webkit-filter: brightness(90%); /* Chrome, Safari, Opera */
   filter: brightness(90%);
+}
+
+@media only screen and (max-width: 840px) {
+  #incategory_board {
+    padding: 10px 10px 12px 10px !important;
+  }
+
+  .category_navigation_item {
+    width: 165px;
+  }
+
+  #category_navigation_list {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  .clip_activity_since {
+    width: 33px;
+    margin-left: 7px;
+    margin-right: 3px;
+  }
+
+  .ep-title-row {
+    width: 80%;
+    padding-left: 3px;
+  }
+
+  /* Reduce font size, else the two texts don't fit */
+  #next-page {
+    font-size: 1.1em;
+  }
 }
