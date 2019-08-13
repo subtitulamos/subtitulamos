@@ -254,13 +254,12 @@ body > header a:hover {
   /* Center top links */
   body > header {
     justify-content: center !important;
-    padding: 10px;
+    padding: 10px 10px 0 10px;
   }
 
   /* Put two columns of links */
   nav.top-links {
     width: 100%;
-    margin-bottom: 10px;
   }
 
   nav.top-links ul {
