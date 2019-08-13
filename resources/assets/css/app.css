@@ -34,7 +34,7 @@ input.nospinner[type="number"] {
 body > header {
   background-color: #4480bb;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 50px 0;
   box-sizing: border-box;
 }
