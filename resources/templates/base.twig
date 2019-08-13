@@ -31,6 +31,12 @@
   </title>
 </head>
 <body>
+  <div id="top-site-banner">
+    <a href="/">
+      <div class="white_logo"></div>
+      <span class="site-name white_logo_text">subtitulamos.tv</span>
+    </a>
+  </div>
   <header class="fade_slide_in">
     {# Login/Register top-down sliders #}
     {% if not auth.logged %}
@@ -160,7 +166,6 @@
         </form>
       </div>
     {% endif %}
-
     {# Top menu #}
     <div id="social">
       <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
@@ -281,7 +286,7 @@
     </div>
     <div id="footer_section_2">
       <div id="useful_links">
-        <div><div class="white_logo"></div> <div id="white_logo_text">© subtitulamos.tv</div></div>
+        <div><div class="white_logo"></div> <div class="white_logo_text">© subtitulamos.tv</div></div>
         <div class="social_footer">
           <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
             <i class="fa fa-facebook-square" aria-hidden="true"></i>

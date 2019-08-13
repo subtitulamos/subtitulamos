@@ -1,7 +1,7 @@
 body {
   margin: 0 !important;
   padding: 0 !important;
-  min-width: 1000px;
+  /* min-width: 1000px; */
   background-color: #4480bb;
   font-family: "Open Sans";
 }
@@ -33,7 +33,10 @@ input.nospinner[type="number"] {
 
 body > header {
   background-color: #4480bb;
-  padding-top: 110px;
+  display: flex;
+  justify-content: end;
+  padding: 50px 0;
+  box-sizing: border-box;
 }
 
 body > header a {
@@ -225,6 +228,53 @@ body > header a:hover {
   background-color: #b70505;
 }
 
+@media only screen and (max-width: 1000px) {
+  /* Hide social icons on navbar on low res */
+  #social {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 840px) {
+  /* Start showing the top banner, with logo & site name */
+  #top-site-banner {
+    display: block !important;
+  }
+
+  /* ... and therefore hide the logo from the search */
+  #white-logo-searchbar {
+    display: none;
+  }
+
+  /* ... and the splash on the main screen */
+  #large_splash {
+    display: none;
+  }
+
+  /* Center top links */
+  body > header {
+    justify-content: center !important;
+    padding: 10px;
+  }
+
+  /* Put two columns of links */
+  nav.top-links {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  nav.top-links ul {
+    text-align: center;
+  }
+
+  nav.top-links li {
+    width: 40%;
+    vertical-align: middle;
+    margin: 6px 10px !important;
+    text-align: center;
+  }
+}
+
 /* Styling for header */
 #social {
   color: #ffffff;
@@ -315,15 +365,13 @@ nav.top-links {
   font-variant: normal;
   color: #ffffff;
   letter-spacing: 1.8px;
-  position: absolute;
-  right: 0px;
-  margin-top: -60px;
 }
 
 nav.top-links li {
   display: inline-block;
   cursor: pointer;
   margin-right: 40px;
+  box-sizing: border-box;
 }
 
 nav.top-links li:hover {
@@ -371,6 +419,7 @@ nav.top-links li:hover {
   margin-left: auto;
   margin-right: auto;
 }
+
 #website_name {
   font-size: 40px;
   font-style: normal;
@@ -389,6 +438,19 @@ nav.top-links li:hover {
   letter-spacing: 4px;
   color: #ffffff;
   text-align: center;
+}
+
+@media only screen and (max-width: 767px) {
+  /* Smaller logo & font on mobile */
+  #logo {
+    width: 90px !important;
+    height: 90px !important;
+    background-size: 90px !important;
+  }
+
+  #website_name {
+    font-size: 34px;
+  }
 }
 
 /* Styling for footer */
@@ -588,7 +650,6 @@ nav.top-links li:hover {
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 35px;
-  width: 900px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 #footer_disclaimer {
@@ -627,7 +688,8 @@ nav.top-links li:hover {
   padding-top: 50px;
   margin-left: auto;
   margin-right: auto;
-  width: 800px;
+  max-width: 800px;
+  text-align: center;
 }
 .white_logo {
   background-image: url("../img/logo_notext_sm.png");
@@ -637,7 +699,7 @@ nav.top-links li:hover {
   display: inline-block;
   vertical-align: middle;
 }
-#white_logo_text {
+.white_logo_text {
   font-size: 13pt;
   font-weight: 700;
   color: #ffffff;
@@ -655,10 +717,12 @@ nav.top-links li:hover {
 #useful_links {
   display: inline-block;
   vertical-align: middle;
+  margin-bottom: 30px;
 }
 #website_navigator {
-  float: right;
+  display: inline-block;
   vertical-align: middle;
+  text-align: right;
 }
 #website_navigator table {
   font-size: 9pt;
@@ -667,10 +731,12 @@ nav.top-links li:hover {
   color: rgba(255, 255, 255, 0.8);
 }
 #website_navigator td {
-  padding-right: 60px;
+  padding-right: 30px;
+  padding-left: 30px;
   padding-bottom: 5px;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.5);
+  text-align: center;
 }
 #website_navigator a,
 #footer_disclaimer a {
@@ -690,10 +756,17 @@ nav.top-links li:hover {
   font-weight: bold;
 }
 
-/** Search **/
+#top-site-banner {
+  text-align: center;
+  padding: 10px;
+  background-color: #366fa7;
+  margin-bottom: 10px;
+  display: none;
+}
 
+/** Search **/
 #search {
-  margin: 20px auto 20px auto;
+  margin: 20px auto;
   background-color: #366fa7;
   height: 65px;
   padding-top: 11px;
@@ -716,6 +789,11 @@ nav.top-links li:hover {
   vertical-align: middle;
 }
 
+@media only screen and (max-width: 540px) {
+  #search_bar {
+    width: 85% !important;
+  }
+}
 #search_bar:focus + #search-results {
   display: block;
 }

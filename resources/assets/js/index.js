@@ -116,21 +116,19 @@ $(".category_navigation_item").on("click", function() {
   let $categoryClicked = $(this);
   let $largeSplash = $("#large_splash");
   let $incategoryState = $("#incategory_state");
-  let $categoryNavTitle = $("#category_navigation_title");
-  let $searchBarContainer = $("#search");
-  let $categoryNavList = $("#category_navigation_list");
   let $whiteLogoSearchBar = $("#white-logo-searchbar");
 
-  $categoryNavTitle.toggleClass("hidden", true);
   $incategoryState.toggleClass("hidden", false);
 
   if ($(".category_navigation_item").hasClass("nvbi_active")) {
     $(".category_navigation_item").toggleClass("nvbi_active", false);
-    $categoryClicked.toggleClass("nvbi_active", true);
-  } else {
-    window.scrollTo(0, 0);
-    $categoryClicked.toggleClass("nvbi_active", true);
+  }
 
+  $categoryClicked.toggleClass("nvbi_active", true);
+  var viewport_w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  if (viewport_w >= 840 && $largeSplash.hasClass("fade_out") == false) {
+    // Only display the white logo for large viewports
+    window.scrollTo(0, 0);
     $largeSplash.toggleClass("fade_out", true);
     $whiteLogoSearchBar.toggleClass("hidden", false).attr("style", "display:none");
     $whiteLogoSearchBar.fadeIn("slow");
