@@ -373,7 +373,8 @@ nav.top-links li {
   box-sizing: border-box;
 }
 
-nav.top-links li:hover {
+nav.top-links li:hover span,
+nav.top-links li:hover a {
   border-bottom: solid 1px;
 }
 #user_account_manage_icon {

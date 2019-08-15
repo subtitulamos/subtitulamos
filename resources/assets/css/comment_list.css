@@ -15,6 +15,10 @@ a {
   padding: 20px 30px 20px 30px;
 }
 
+#comments h2 {
+  margin-bottom: 10px;
+}
+
 #comments article {
   border-bottom: rgb(196, 216, 216) 1px solid;
   margin-bottom: 20px;

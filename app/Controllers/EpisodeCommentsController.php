@@ -83,7 +83,7 @@ class EpisodeCommentsController
     public function viewAll($response, EntityManager $em, Twig $twig)
     {
         return $twig->render($response, 'comment_list.twig', [
-            'comment_type_name' => 'capítulos',
+            'comment_type_name' => 'episodios',
             'comment_type' => 'episodes'
         ]);
     }
