@@ -1,3 +1,9 @@
+/* Prevent a white border by the bottom */
+html {
+  background-color: #282b30;
+  height: 100%;
+}
+
 body {
   margin: 0 !important;
   padding: 0 !important;
