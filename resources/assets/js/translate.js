@@ -1012,8 +1012,9 @@ window.translation = new Vue({
       this.highlightedSequence = seqn;
       window.location.hash = "#" + seqn;
 
-      // Delay this a little bit so Vue can run the rerender
-      if (!isElementInViewport($("#sequences").children("#seqn-" + seqn)[0])) {
+      let seqEle = $("#sequences").children("#seqn-" + seqn)[0];
+      if (!seqEle || !isElementInViewport(seqEle)) {
+        // Delay this a little bit so Vue can run the rerender
         setTimeout(() => {
           let isFirstSequence =
             Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
