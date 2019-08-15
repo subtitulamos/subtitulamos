@@ -41,8 +41,9 @@ body > header {
   background-color: #4480bb;
   display: flex;
   justify-content: flex-end;
-  padding: 50px 0;
+  padding: 37px 0;
   box-sizing: border-box;
+  align-items: center;
 }
 
 body > header a {
@@ -260,7 +261,7 @@ body > header a:hover {
   /* Center top links */
   body > header {
     justify-content: center !important;
-    padding: 10px 10px 0 10px;
+    padding: 10px 10px 10px 10px;
   }
 
   /* Put two columns of links */
@@ -283,9 +284,9 @@ body > header a:hover {
 /* Styling for header */
 #social {
   color: #ffffff;
-  position: absolute;
-  left: 20px;
-  top: 40px;
+  margin-right: auto;
+  margin-left: 10px;
+  margin-top: -10px;
 }
 
 .icon-social-header {
@@ -772,7 +773,7 @@ nav.top-links li:hover a {
 
 /** Search **/
 #search {
-  margin: 20px auto;
+  margin: 0 auto 20px auto;
   background-color: #366fa7;
   height: 65px;
   padding-top: 11px;
