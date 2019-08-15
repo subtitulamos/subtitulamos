@@ -1,5 +1,4 @@
 #shows_list {
-  padding-top: 10px;
-  padding-bottom: 80px; /* Height of the footer + 150 */
+  padding: 10px;
   background-color: #e9e7e7 !important;
 }
