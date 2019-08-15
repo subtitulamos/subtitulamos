@@ -39,15 +39,17 @@
 }
 
 #upload form {
-  width: 600px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 #upload-rules {
   margin: 10px auto;
-  padding-left: 20px;
-  width: 50%;
+  padding-left: 30px;
+  max-width: 551px;
   border: 1px solid grey;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 #upload-rules h3 {
