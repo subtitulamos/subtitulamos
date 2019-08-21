@@ -11,8 +11,8 @@ module.exports = function(originalText, opinionated) {
   text = text.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
   text = text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
 
-  if (text.length > 80) {
-    // We cannot do anything with this, it's beyond max
+  if (text.length > 81) {
+    // We cannot do anything with this, it's beyond max (40+40+1 space)
     return [originalText];
   }
 
