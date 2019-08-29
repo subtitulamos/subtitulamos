@@ -108,17 +108,16 @@ class SrtParser
                         return false;
                     }
 
-                        if ($tstart <= $this->lastTimeEnd) {
-                            if ($tstart + 50 < $tend && $tstart + 50 > $this->lastTimeEnd) {
-                                // Autocorrección del solapamiento si es inferior a 50ms
-                                $tstart += $this->lastTimeEnd - $tstart + 1;
-                            } else {
-                                $this->errorDesc = 'Formato incorrecto: Los tiempos de las secuencias #'.$this->seqNum.' y #'.($this->seqNum + 1).' '+
-                                                   'tienen un solapamiento significativo.';
-                                return false;
-                            }
+                    if ($tstart <= $this->lastTimeEnd) {
+                        if ($tstart + 50 < $tend && $tstart + 50 > $this->lastTimeEnd) {
+                            // Autocorrección del solapamiento si es inferior a 50ms
+                            $tstart += $this->lastTimeEnd - $tstart + 1;
+                        } else {
+                            $this->errorDesc = 'Formato incorrecto: Los tiempos de las secuencias #'.$this->seqNum.' y #'.($this->seqNum + 1);
+                            $this->errorDesc .= ' tienen un solapamiento significativo.';
+                            return false;
                         }
-
+                    }
 
                     $sequence->setStartTime($tstart);
                     $sequence->setEndTime($tend);
