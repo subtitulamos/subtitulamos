@@ -24,10 +24,10 @@ class AlertController
         }
 
         if (!$auth->getUser()) {
-            return [
+            return $response->withJSON([
                 'ok' => false,
                 'msg' => 'Por favor, recarga la página e intentálo de nuevo'
-            ];
+            ]);
         }
 
         $msg = trim(strip_tags($request->getParam('message', '')));
