@@ -23,6 +23,13 @@ class AlertController
             throw new \Slim\Exception\NotFoundException($request, $response);
         }
 
+        if (!$auth->getUser()) {
+            return [
+                'ok' => false,
+                'msg' => 'Por favor, recarga la página e intentálo de nuevo'
+            ];
+        }
+
         $msg = trim(strip_tags($request->getParam('message', '')));
         $res = ['ok' => true];
         if (v::notEmpty()->validate($msg)) {
