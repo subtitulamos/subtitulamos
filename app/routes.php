@@ -57,7 +57,7 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/subtitles/{subId:[0-9]+}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRole('ROLE_MOD'));
     $app->get('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('subtitle-edit');
     $app->post('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
-    $app->post('/subtitles/{subId:[0-9]+}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']);
+    $app->post('/subtitles/{subId:[0-9]+}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']); // "Access" managed at the controller level
 
     $app->get('/episodes/{epId:[0-9]+}/edit', ['\App\Controllers\EpisodeController', 'edit'])->add($needsRole('ROLE_MOD'))->setName('ep-edit');
     $app->post('/episodes/{epId:[0-9]+}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRole('ROLE_MOD'));
