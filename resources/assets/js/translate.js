@@ -637,16 +637,19 @@ const SEQS_PER_PAGE = 20;
 window.translation = new Vue({
   el: "#translation",
   data() {
-    return {
+    const defaultFilterValues = {
+      onlyUntranslated: false,
+      author: 0,
+      text: "",
+      preciseTextMatching: false
+    };
+
+    let data = {
       sequences: [],
       curPage: 1,
       highlightedSequence: 0,
-      filters: {
-        onlyUntranslated: false,
-        author: 0,
-        text: "",
-        preciseTextMatching: false,
-      },
+      filters: {},
+      defaultFilterValues: defaultFilterValues,
       comments: [],
       loaded: false,
       loadedOnce: false,
@@ -656,6 +659,12 @@ window.translation = new Vue({
       canReleaseOpenLock: canReleaseOpenLock,
       hasAdvancedTools: hasAdvancedTools,
     };
+
+    for (let filter of Object.keys(defaultFilterValues)) {
+      data.filters[filter] = defaultFilterValues[filter];
+    }
+
+    return data;
   },
   computed: {
     lastPage: function () {
@@ -767,10 +776,15 @@ window.translation = new Vue({
   },
   methods: {
     resetFilters() {
-      this.filters.onlyUntranslated = false;
-      this.filters.author = 0;
-      this.filters.text = "";
-      this.filters.preciseTextMatching = false;
+      let changed = false;
+      for (let filter of Object.keys(this.defaultFilterValues)) {
+        if (this.filters[filter] != this.defaultFilterValues[filter]) {
+          this.filters[filter] = this.defaultFilterValues[filter];
+          changed = true;
+        }
+      }
+
+      return changed;
     },
 
     onChangePage: function (page) {
@@ -800,7 +814,7 @@ window.translation = new Vue({
     },
 
     highlight(seqNum) {
-      this.highlightedSequence = seqNum;
+      this.jumpToSequence(seqNum);
     },
 
     publishComment() {
@@ -1008,7 +1022,7 @@ window.translation = new Vue({
     },
 
     jumpToSequence(seqn) {
-      this.resetFilters();
+      const filtersReset = this.resetFilters();
 
       let totalPages = Math.ceil(this.sequences.length / SEQS_PER_PAGE);
       let targetPage = Math.ceil(seqn / SEQS_PER_PAGE);
@@ -1022,7 +1036,7 @@ window.translation = new Vue({
       window.location.hash = "#" + seqn;
 
       let seqEle = $("#sequences").children("#seqn-" + seqn)[0];
-      if (!seqEle || !isElementInViewport(seqEle)) {
+      if (!seqEle || !isElementInViewport(seqEle) || filtersReset) {
         // Delay this a little bit so Vue can run the rerender
         setTimeout(() => {
           let isFirstSequence =
