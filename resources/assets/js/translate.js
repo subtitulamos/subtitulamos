@@ -16,7 +16,7 @@ function removeWindowHash() {
 let bus = new Vue();
 let modifiedSeqList = [];
 
-window.onbeforeunload = function(e) {
+window.onbeforeunload = function (e) {
   let ask = false;
   for (var i = 0; i < sessionStorage.length; i++) {
     if (sessionStorage.key(i).match("sub-" + subID + "-seqtext")) {
@@ -43,7 +43,7 @@ Vue.component("seqlock", {
     `,
   props: ["id", "seqnum", "uid", "time"],
   methods: {
-    release: function() {
+    release: function () {
       let seq = sub.getDataByNum(this.seqnum);
       if (!seq) {
         console.error("Could not find sequence to release!", this.seqnum);
@@ -63,11 +63,11 @@ Vue.component("seqlock", {
     },
   },
   computed: {
-    username: function() {
+    username: function () {
       return sub.getUsername(this.uid);
     },
 
-    niceTime: function() {
+    niceTime: function () {
       let d = new Date(this.time);
       return dateformat(d, "d/mmm HH:MM");
     },
@@ -156,7 +156,7 @@ Vue.component("sequence", {
     openInfo: Object,
   },
 
-  data: function() {
+  data: function () {
     return {
       editingTime: false,
       editingText: this.text,
@@ -167,7 +167,7 @@ Vue.component("sequence", {
     };
   },
 
-  mounted: function() {
+  mounted: function () {
     let savedText = sessionStorage.getItem(
       "sub-" + subID + "-seqtext-" + this.number + "-" + this.id
     );
@@ -176,7 +176,7 @@ Vue.component("sequence", {
     }
   },
 
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     bus.$off("open-" + this.number);
     bus.$off("close-" + this.number);
     bus.$off("save-" + this.number);
@@ -184,7 +184,7 @@ Vue.component("sequence", {
     bus.$off("lock-" + this.number);
   },
 
-  created: function() {
+  created: function () {
     if (!this.history) {
       bus.$on("open-" + this.number, this.openSequence);
       bus.$on("close-" + this.number, this.discard);
@@ -195,7 +195,7 @@ Vue.component("sequence", {
   },
 
   filters: {
-    timeFmt: function(ms) {
+    timeFmt: function (ms) {
       if (!ms) return "00:00:00.000";
 
       let h = 0,
@@ -226,7 +226,7 @@ Vue.component("sequence", {
   },
 
   watch: {
-    editingText: function(nText) {
+    editingText: function (nText) {
       if (nText != this.text) {
         if (!modifiedSeqList.includes(this.number)) {
           modifiedSeqList.push(this.number);
@@ -244,37 +244,37 @@ Vue.component("sequence", {
   },
 
   computed: {
-    canEditTimes: function() {
+    canEditTimes: function () {
       return canEditTimes;
     },
 
-    openByOther: function() {
+    openByOther: function () {
       return this.openInfo && this.openInfo.by && this.openInfo.by != me.id;
     },
 
-    textHint: function() {
+    textHint: function () {
       return this.openByOther
         ? sub.getUsername(this.openInfo.by) + " está editando esta secuencia"
         : "";
     },
 
-    editing: function() {
+    editing: function () {
       return this.openInfo && this.openInfo.by == me.id;
     },
 
-    edited: function() {
+    edited: function () {
       return this.editing && this.originalText != this.editingText;
     },
 
-    parsedStartTime: function() {
+    parsedStartTime: function () {
       return this.parseTime(this.editingTimeStart);
     },
 
-    parsedEndTime: function() {
+    parsedEndTime: function () {
       return this.parseTime(this.editingTimeEnd);
     },
 
-    lineCounters: function() {
+    lineCounters: function () {
       let lines = this.editingText.split("\n");
       let lineCounters = [];
 
@@ -290,7 +290,7 @@ Vue.component("sequence", {
       return lineCounters;
     },
 
-    canSave: function() {
+    canSave: function () {
       return (
         !this.history &&
         this.lineCounters.length > 0 &&
@@ -302,21 +302,21 @@ Vue.component("sequence", {
       );
     },
 
-    canLock: function() {
+    canLock: function () {
       return canLock && !this.history && this.id != 0;
     },
 
-    translated: function() {
+    translated: function () {
       return this.id > 0;
     },
 
-    authorName: function() {
+    authorName: function () {
       return this.author ? sub.getUsername(this.author) : " - ";
     },
 
-    shouldFixLevel: function() {
+    shouldFixLevel: function () {
       let tlines = [];
-      $.each(this.editingText.split("\n"), function(i, val) {
+      $.each(this.editingText.split("\n"), function (i, val) {
         tlines.push(val.trim());
       });
 
@@ -341,7 +341,7 @@ Vue.component("sequence", {
   },
 
   methods: {
-    openSequence: function() {
+    openSequence: function () {
       if (
         this.editing ||
         this.history ||
@@ -376,7 +376,7 @@ Vue.component("sequence", {
         });
     },
 
-    keyboardActions: function(e) {
+    keyboardActions: function (e) {
       if (e.altKey && e.key == "f") {
         this.fix();
       } else if (e.key == "s") {
@@ -386,7 +386,7 @@ Vue.component("sequence", {
       e.preventDefault();
     },
 
-    save: function() {
+    save: function () {
       if (!this.canSave || this.saving) {
         return false;
       }
@@ -475,7 +475,7 @@ Vue.component("sequence", {
         });
     },
 
-    discard: function() {
+    discard: function () {
       if (!this.openInfo) {
         return;
       }
@@ -513,7 +513,7 @@ Vue.component("sequence", {
         });
     },
 
-    toggleLock: function(newState) {
+    toggleLock: function (newState) {
       if (!canLock) {
         return false;
       }
@@ -536,7 +536,7 @@ Vue.component("sequence", {
       });
     },
 
-    fix: function() {
+    fix: function () {
       if (this.shouldFixLevel <= 0) {
         return false;
       }
@@ -546,7 +546,7 @@ Vue.component("sequence", {
         this.editingText = ntext;
       } else {
         let tlines = [];
-        $.each(this.editingText.split("\n"), function(i, val) {
+        $.each(this.editingText.split("\n"), function (i, val) {
           tlines.push(val.trim());
         });
 
@@ -562,7 +562,7 @@ Vue.component("sequence", {
       }
     },
 
-    parseTime: function(t) {
+    parseTime: function (t) {
       let matches = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{1,2})[\.,](\d{1,3})$/.exec(t);
       if (!matches || matches.length < 4) {
         return null;
@@ -572,7 +572,7 @@ Vue.component("sequence", {
       return (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 + Number(matches[4]);
     },
 
-    seqNumClick: function() {
+    seqNumClick: function () {
       if (window.location.hash.includes(this.number)) {
         removeWindowHash();
         this.$emit("highlight-off");
@@ -597,15 +597,15 @@ Vue.component("pagelist", {
     `,
   props: ["curPage", "pages", "lastPage"],
   methods: {
-    nextPage: function() {
+    nextPage: function () {
       if (this.curPage < this.lastPage) this.toPage(this.curPage + 1);
     },
 
-    prevPage: function() {
+    prevPage: function () {
       if (this.curPage > 1) this.toPage(this.curPage - 1);
     },
 
-    toPage: function(page) {
+    toPage: function (page) {
       document.getElementById("translation").scrollIntoView();
       this.$emit("change-page", page);
     },
@@ -627,9 +627,9 @@ function isElementInViewport(el) {
     rect.top >= 0 &&
     rect.left >= 0 &&
     rect.bottom <=
-      (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */ &&
+    (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */ &&
     rect.right <=
-      (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
   );
 }
 
@@ -658,11 +658,11 @@ window.translation = new Vue({
     };
   },
   computed: {
-    lastPage: function() {
+    lastPage: function () {
       return Math.ceil(this.visibleSequences.length / SEQS_PER_PAGE);
     },
 
-    pages: function() {
+    pages: function () {
       let pages = [];
       for (let i = 1; i <= this.lastPage; ++i) {
         pages.push(i);
@@ -671,7 +671,7 @@ window.translation = new Vue({
       return pages;
     },
 
-    visibleSequences: function() {
+    visibleSequences: function () {
       return this.sequences.filter(seq => {
         if (this.filters.onlyUntranslated && seq.id) {
           return false;
@@ -724,13 +724,13 @@ window.translation = new Vue({
       });
     },
 
-    pageSequences: function() {
+    pageSequences: function () {
       return this.visibleSequences.filter((ele, idx) => {
         return Math.floor(idx / SEQS_PER_PAGE) == this.curPage - 1;
       });
     },
 
-    openLocks: function() {
+    openLocks: function () {
       let locks = [];
       this.sequences.forEach(seq => {
         if (seq.openInfo && seq.openInfo.lockID) {
@@ -746,7 +746,7 @@ window.translation = new Vue({
       return locks;
     },
 
-    authors: function() {
+    authors: function () {
       let authors = {};
       this.sequences.forEach(seq => {
         if (seq.author && !authors[seq.author]) {
@@ -766,23 +766,30 @@ window.translation = new Vue({
     },
   },
   methods: {
-    onChangePage: function(page) {
+    resetFilters() {
+      this.filters.onlyUntranslated = false;
+      this.filters.author = 0;
+      this.filters.text = "";
+      this.filters.preciseTextMatching = false;
+    },
+
+    onChangePage: function (page) {
       this.curPage = page;
       this.highlightedSequence = 0; // Clear out the highlight
       removeWindowHash();
     },
 
-    toggleUntranslatedFilter: function() {
+    toggleUntranslatedFilter: function () {
       this.onChangePage(1);
       this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
     },
 
-    togglePreciseTextMatching: function() {
+    togglePreciseTextMatching: function () {
       this.onChangePage(1);
       this.filters.preciseTextMatching = !this.filters.preciseTextMatching;
     },
 
-    updateAuthorFilter: function(e) {
+    updateAuthorFilter: function (e) {
       this.onChangePage(1);
       this.filters.author = Number(e.target.value);
     },
@@ -804,8 +811,8 @@ window.translation = new Vue({
       if (this.newComment.length > this.maxCommentLength) {
         Toasts.error.fire(
           "Por favor, escribe un comentario más corto (de hasta " +
-            this.maxCommentLength +
-            " caracteres)"
+          this.maxCommentLength +
+          " caracteres)"
         );
         return false;
       }
@@ -834,7 +841,7 @@ window.translation = new Vue({
         });
     },
 
-    remove: function(id) {
+    remove: function (id) {
       let c, cidx;
       for (let i = 0; i < this.comments.length; ++i) {
         if (this.comments[i].id == id) {
@@ -850,7 +857,7 @@ window.translation = new Vue({
         url: "/subtitles/" + subID + "/translate/comments/" + id,
         method: "DELETE",
       }).fail(
-        function() {
+        function () {
           Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
           if (typeof cidx !== "undefined") {
             // Insert the comment right back where it was
@@ -860,35 +867,35 @@ window.translation = new Vue({
       );
     },
 
-    pin: function(id) {
+    pin: function (id) {
       $.ajax({
         url: "/subtitles/" + subID + "/translate/comments/" + id + "/pin",
         method: "POST",
-      }).fail(function() {
+      }).fail(function () {
         Toasts.error.fire("Ha ocurrido un error al fijar el comentario");
       });
     },
 
-    openPage: function() {
-      this.pageSequences.forEach(function(s) {
+    openPage: function () {
+      this.pageSequences.forEach(function (s) {
         if (!s.openInfo) {
           bus.$emit("open-" + s.number);
         }
       });
     },
 
-    openUntranslatedPage: function() {
-      this.pageSequences.forEach(function(s) {
+    openUntranslatedPage: function () {
+      this.pageSequences.forEach(function (s) {
         if (!s.id) {
           bus.$emit("open-" + s.number);
         }
       });
     },
 
-    closePage: function(ev, skipModifiedCheck) {
+    closePage: function (ev, skipModifiedCheck) {
       if (!skipModifiedCheck) {
         let modTextList = [];
-        this.pageSequences.forEach(function(s) {
+        this.pageSequences.forEach(function (s) {
           if (modifiedSeqList.includes(s.number)) {
             modTextList.push("#" + s.number);
           }
@@ -915,38 +922,38 @@ window.translation = new Vue({
         }
       }
 
-      this.pageSequences.forEach(function(s) {
+      this.pageSequences.forEach(function (s) {
         if (s.openInfo && s.openInfo.by == me.id) {
           bus.$emit("close-" + s.number);
         }
       });
     },
 
-    savePage: function() {
-      this.pageSequences.forEach(function(s) {
+    savePage: function () {
+      this.pageSequences.forEach(function (s) {
         if (s.openInfo && s.openInfo.by == me.id) {
           bus.$emit("save-" + s.number);
         }
       });
     },
 
-    lockPage: function(state) {
-      this.pageSequences.forEach(function(s) {
+    lockPage: function (state) {
+      this.pageSequences.forEach(function (s) {
         if (!s.openInfo && s.id) {
           bus.$emit("lock-" + s.number, state);
         }
       });
     },
 
-    fixPage: function() {
-      this.pageSequences.forEach(function(s) {
+    fixPage: function () {
+      this.pageSequences.forEach(function (s) {
         if (s.openInfo && s.openInfo.by == me.id) {
           bus.$emit("fix-" + s.number);
         }
       });
     },
 
-    alertMod: function() {
+    alertMod: function () {
       Swal.fire({
         confirmButtonText: "Enviar",
         cancelButtonText: "Cancelar",
@@ -1001,6 +1008,8 @@ window.translation = new Vue({
     },
 
     jumpToSequence(seqn) {
+      this.resetFilters();
+
       let totalPages = Math.ceil(this.sequences.length / SEQS_PER_PAGE);
       let targetPage = Math.ceil(seqn / SEQS_PER_PAGE);
 
@@ -1047,12 +1056,12 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 const wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
 const ws = new ReconnectingWebsocket(
   wsProtocol +
-    "://" +
-    window.location.hostname +
-    "/translation-rt?subID=" +
-    subID +
-    "&token=" +
-    wsAuthToken
+  "://" +
+  window.location.hostname +
+  "/translation-rt?subID=" +
+  subID +
+  "&token=" +
+  wsAuthToken
 );
 ws.onopen = () => {
   sub.wsOpen();
@@ -1065,7 +1074,7 @@ ws.onerror = e => {
 };
 
 // Absorb and block default Ctrl+S / Ctrl+G behaviour
-$(document).on("keydown", function(e) {
+$(document).on("keydown", function (e) {
   if (e.ctrlKey && e.which == 83) {
     if (e.shiftKey) {
       translation.savePage();
