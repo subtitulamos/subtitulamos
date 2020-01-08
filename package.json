@@ -16,7 +16,7 @@
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^17.0.0",
     "timeago.js": "^3.0.2",
-    "vue": "^2.6.10"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
