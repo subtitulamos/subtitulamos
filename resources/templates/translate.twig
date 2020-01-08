@@ -38,19 +38,19 @@
 
     {% verbatim %}
       <div id='filters'>
-        Filtrar por cadena: <input type="text" id="text-filter" @keyup="updateTextFilter" />
+        Filtrar por cadena: <input type="text" id="text-filter" @keyup="onChangePage(1)" v-model="filters.text" />
         <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
           :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
             <i class="fa fa-bullseye" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
         </span>
         &nbsp;&nbsp;-&nbsp;&nbsp;
         Filtrar por autor:
-        <select id='author-filter' @change="updateAuthorFilter">
+        <select id='author-filter' @change="onChangePage(1)" v-model="filters.author">
           <option value="0">Todos</option>
           <option v-for="(username, uid) in authors" :value="uid">{{ username }}</option>
         </select>
         &nbsp;&nbsp;-&nbsp;&nbsp;
-        <input type='checkbox' id='untranslated-filter' @change="toggleUntranslatedFilter">
+        <input type='checkbox' id='untranslated-filter' @change="onChangePage(1)" v-model="filters.onlyUntranslated">
         <label for='untranslated-filter'>
           Ver solo secuencias sin traducir
         </label>

@@ -686,9 +686,10 @@ window.translation = new Vue({
           return false;
         }
 
-        if (this.filters.author != 0) {
+        const author_filter = Number(this.filters.author);
+        if (author_filter != 0) {
           let authorFilterFn = seq => {
-            return seq.author && this.filters.author == seq.author;
+            return seq.author && author_filter == seq.author;
           };
 
           if (!authorFilterFn(seq) && (!seq.history || !seq.history.some(authorFilterFn))) {
@@ -793,24 +794,9 @@ window.translation = new Vue({
       removeWindowHash();
     },
 
-    toggleUntranslatedFilter: function () {
-      this.onChangePage(1);
-      this.filters.onlyUntranslated = !this.filters.onlyUntranslated;
-    },
-
     togglePreciseTextMatching: function () {
       this.onChangePage(1);
       this.filters.preciseTextMatching = !this.filters.preciseTextMatching;
-    },
-
-    updateAuthorFilter: function (e) {
-      this.onChangePage(1);
-      this.filters.author = Number(e.target.value);
-    },
-
-    updateTextFilter(e) {
-      this.curPage = 1;
-      this.filters.text = e.target.value;
     },
 
     highlight(seqNum) {
