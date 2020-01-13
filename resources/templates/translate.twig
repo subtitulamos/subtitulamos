@@ -38,7 +38,7 @@
 
     {% verbatim %}
       <div id='filters'>
-        Filtrar por cadena: <input type="text" id="text-filter" @keyup="onChangePage(1)" v-model="filters.text" />
+        Filtrar por cadena: <input type="text" id="text-filter" @keyup="(e) => { filters.text = e.target.value; onChangePage(1) }" :value="filters.text" />
         <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
           :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
             <i class="fa fa-bullseye" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
