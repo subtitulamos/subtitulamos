@@ -122,8 +122,8 @@ class Translation
             'num' => $seq->getNumber(),
             'nid' => $seq->getId(),
             'ntext' => $seq->getText(),
-            'ntstart' => (int)$seq->getStartTime(),
-            'ntend' => (int)$seq->getEndTime()
+            'ntstart' => (int) $seq->getStartTime(),
+            'ntend' => (int) $seq->getEndTime()
         ]));
     }
 
@@ -234,7 +234,7 @@ class Translation
      */
     public function setWSAuthToken(string $token, Subtitle $sub)
     {
-        $this->redis->set('authtok-'.ENVIRONMENT_NAME.'-'.$token, $sub->getId(), 24 * 60 * 60);
+        $this->redis->set('authtok-' . ENVIRONMENT_NAME . '-' . $token, $sub->getId(), 24 * 60 * 60);
     }
 
     /**
@@ -330,8 +330,8 @@ class Translation
             if ($sequence->getNumber() < 100) {
                 // Get the show name
                 $showName = $sequence->getSubtitle()->getVersion()->getEpisode()->getShow()->getName();
-                if (preg_match("/^Previously,? on ['\"]?".preg_quote($showName)."['\"]?(\s*\.\.\.)?:?$/i", $singleLineText, $matches) === 1) {
-                    $translatedStr = 'Anteriormente en '.$showName;
+                if (preg_match("/^Previously,?\s*on\s*['\"]?\s*" . preg_quote($showName) . "(?:\s*\.+)?\s*['\"]?(?:\s*\.+)?\s*:?$/i", $singleLineText, $matches) === 1) {
+                    $translatedStr = 'Anteriormente en ' . $showName;
                     if ($matches[1]) {
                         $translatedStr .= '...';
                     }
@@ -346,7 +346,7 @@ class Translation
                         $bestSplitCount = $translatedLength;
                         foreach ($fragments as $i => $fragment) {
                             $curCharCount += mb_strlen($fragment);
-                            $splitCountHere = abs($curCharCount + $i - $translatedLength/2);
+                            $splitCountHere = abs($curCharCount + $i - $translatedLength / 2);
                             if ($bestSplitCount > $splitCountHere) {
                                 // If this is a better middle split, record the pos
                                 $bestSplitPos = $i + 1;
@@ -354,7 +354,7 @@ class Translation
                             }
                         }
 
-                        $translatedStr = implode(' ', array_slice($fragments, 0, $bestSplitPos))."\n".implode(' ', array_slice($fragments, $bestSplitPos));
+                        $translatedStr = implode(' ', array_slice($fragments, 0, $bestSplitPos)) . "\n" . implode(' ', array_slice($fragments, $bestSplitPos));
                     }
 
                     return [100, $translatedStr];
@@ -365,12 +365,24 @@ class Translation
             if (preg_match("/^([Yy]es|[Nn]o|NO|YES)([\.,]*)([!\?])*$/", $singleLineText, $matches) === 1) {
                 $translatedStr = '';
                 switch ($matches[1]) {
-                    case 'Yes': case 'YES': $translatedStr = 'Sí'; break;
-                    case 'No': case 'NO': $translatedStr = 'No'; break;
+                    case 'Yes':
+                    case 'YES':
+                        $translatedStr = 'Sí';
+                        break;
+                    case 'No':
+                    case 'NO':
+                        $translatedStr = 'No';
+                        break;
 
-                    // On these, we cannot be sure about whether the case is a typo
-                    case 'yes': $translatedStr = 'sí'; $confidence = 50; break;
-                    case 'no': $translatedStr = 'no'; $confidence = 50; break;
+                        // On these, we cannot be sure about whether the case is a typo
+                    case 'yes':
+                        $translatedStr = 'sí';
+                        $confidence = 50;
+                        break;
+                    case 'no':
+                        $translatedStr = 'no';
+                        $confidence = 50;
+                        break;
                 }
 
                 if (!$translatedStr) {
@@ -381,10 +393,10 @@ class Translation
                 if ($matches[2] || $matches[3]) {
                     // We can only do this properly with a set of characters
                     if ($matches[3] == '!') {
-                        $translatedStr = '¡'.$translatedStr.'!';
+                        $translatedStr = '¡' . $translatedStr . '!';
                         $confidence = $confidence ?? 100;
                     } elseif ($matches[3] == '?') {
-                        $translatedStr = '¿'.$translatedStr.'?';
+                        $translatedStr = '¿' . $translatedStr . '?';
                         $confidence = $confidence ?? 100;
                     } elseif ($matches[2] == '...' || $matches[2] == ',' || $matches[2] == '.') {
                         $translatedStr .= $matches[2];
@@ -430,7 +442,7 @@ class Translation
             $text = strip_tags($text, '<font>');
 
             $dom = new \DOMDocument();
-            $dom->loadHTML(mb_convert_encoding('<div>'.$text.'</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+            $dom->loadHTML(mb_convert_encoding('<div>' . $text . '</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
 
             $xpath = new \DOMXPath($dom);
             $nodes = $xpath->query('//font');
