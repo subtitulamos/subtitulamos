@@ -56,8 +56,7 @@ class RestrictedMiddleware
         }
 
         $twig = $this->container->get("Slim\Views\Twig");
-        $response->withStatus(401);
-        return $twig->render($response, 'restricted.twig', [
+        return $twig->render($response->withStatus(401), 'restricted.twig', [
             'is_logged_in' => $u
         ]);
     }
