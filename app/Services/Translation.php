@@ -331,10 +331,7 @@ class Translation
                 // Get the show name
                 $showName = $sequence->getSubtitle()->getVersion()->getEpisode()->getShow()->getName();
                 if (preg_match("/^Previously,?\s*on\s*['\"]?\s*" . preg_quote($showName) . "(?:\s*\.+)?\s*['\"]?(?:\s*\.+)?\s*:?$/i", $singleLineText, $matches) === 1) {
-                    $translatedStr = 'Anteriormente en ' . $showName;
-                    if ($matches[1]) {
-                        $translatedStr .= '...';
-                    }
+                    $translatedStr = 'Anteriormente en ' . $showName . '...';
 
                     // Make sure our translated sequence is not too long
                     // This is a veeery simplified version of the algorithm
