@@ -1,0 +1,7 @@
+# Disallow pages that we don't want/need indexed
+User-agent: *
+Disallow: /subtitles/*/download
+Disallow: /subtitles/*/translate
+Disallow: /episodes/*/resync
+Disallow: /disclaimer
+Disallow: /users/*
