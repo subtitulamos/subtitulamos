@@ -55,7 +55,7 @@ Subtitle.prototype.wsMessage = function(event) {
         this.addComment(data.id, this.getUserObject(data.user), data.time, data.text);
         if (data.user != me.id) {
           Toasts.info.fire(
-            sprintf("<b>%s</b> ha publicado un comentario", this.getUsername(data.user))
+            sprintf("<b>%s</b>&nbsp;ha publicado un comentario", this.getUsername(data.user))
           );
         }
         break;
