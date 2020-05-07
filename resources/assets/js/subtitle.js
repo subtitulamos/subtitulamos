@@ -97,7 +97,11 @@ Subtitle.prototype.getUsername = function(uid) {
   return this.users[uid] ? this.users[uid].username : "u#" + uid;
 };
 
-Subtitle.prototype.loadSequences = function() {
+Subtitle.prototype.loadSequences = function () {
+  function decode(s) {
+    return s.replace(/[a-zA-Z]/g, function (c) { return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26); })
+  }
+
   $.ajax({
     url: "/subtitles/" + subID + "/translate/load",
     method: "GET",
@@ -113,6 +117,9 @@ Subtitle.prototype.loadSequences = function() {
     this.state.loadedOnce = true;
     Object.keys(sequenceList).forEach(k => {
       let seq = sequenceList[k];
+      seq.text = decode(seq.text);
+      seq.secondary_text = decode(seq.secondary_text);
+
       let idx = this.findSeqIdxByNum(seq.number);
       if (idx == -1) {
         this.state.sequences.push(seq);

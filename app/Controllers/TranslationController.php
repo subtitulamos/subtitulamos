@@ -232,6 +232,7 @@ class TranslationController
 
             if (!isset($sequences[$snum])) {
                 $sequences[$snum] = $seq->jsonSerialize();
+                $sequences[$snum]['text'] = str_rot13($sequences[$snum]['text']);
                 $sequences[$snum]['openInfo'] = !isset($openInfo[$snum]) ? null : $openInfo[$snum];
 
                 $u = $seq->getAuthor();
@@ -300,7 +301,7 @@ class TranslationController
                     $sequences[$snum]['openInfo'] = !isset($openInfo[$snum]) ? null : $openInfo[$snum];
                 }
 
-                $sequences[$snum]['secondary_text'] = $altSeq->getText();
+                $sequences[$snum]['secondary_text'] = str_rot13($altSeq->getText());
             }
         }
 
