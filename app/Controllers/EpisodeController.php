@@ -2,12 +2,11 @@
 
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017-2019 subtitulamos.tv
+ * @copyright 2020 subtitulamos.tv
  */
 
 namespace App\Controllers;
 
-use App\Entities\Episode;
 use App\Services\Auth;
 
 use App\Services\Langs;

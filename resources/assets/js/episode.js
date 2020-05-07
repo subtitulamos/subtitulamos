@@ -1,6 +1,6 @@
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017-2019 subtitulamos.tv
+ * @copyright 2020 subtitulamos.tv
  */
 
 import Vue from "vue";
@@ -8,16 +8,16 @@ import $ from "jquery";
 import "./vue/comment.js";
 
 let $newTranslationButton = $(".translate_subtitle");
-$newTranslationButton.on("click", function() {
+$newTranslationButton.on("click", function () {
   $("#new-translation-opts").toggleClass("hidden");
 });
 
-$("a[disabled]").on("click", function(e) {
+$("a[disabled]").on("click", function (e) {
   e.preventDefault();
   return false;
 });
 
-$("a[data-action='delete']").on("click", function(e) {
+$("a[data-action='delete']").on("click", function (e) {
   let subId = $(this).data("id");
 
   Swal.fire({
@@ -32,7 +32,7 @@ $("a[data-action='delete']").on("click", function(e) {
   });
 });
 
-$(function() {
+$(function () {
   let lastLangVal = localStorage.getItem("last-selected-translation-lang");
 
   if (lastLangVal !== null) {
@@ -40,7 +40,7 @@ $(function() {
   }
 });
 
-$("#translate-to-lang").on("change", function() {
+$("#translate-to-lang").on("change", function () {
   localStorage.setItem("last-selected-translation-lang", $(this).val());
 });
 
@@ -61,8 +61,8 @@ let comments = new Vue({
       if (this.newComment.length > this.maxCommentLength) {
         Toasts.error.fire(
           "Por favor, escribe un comentario más corto (de hasta " +
-            this.maxCommentLength +
-            " caracteres)"
+          this.maxCommentLength +
+          " caracteres)"
         );
         return false;
       }
@@ -90,11 +90,11 @@ let comments = new Vue({
           }
         });
     },
-    refresh: function() {
+    refresh: function () {
       loadComments();
     },
 
-    remove: function(id) {
+    remove: function (id) {
       let c, cidx;
       for (let i = 0; i < this.comments.length; ++i) {
         if (this.comments[i].id == id) {
@@ -110,11 +110,11 @@ let comments = new Vue({
         url: "/episodes/" + epId + "/comments/" + id,
         method: "DELETE",
       })
-        .done(function() {
+        .done(function () {
           loadComments();
         })
         .fail(
-          function() {
+          function () {
             Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
             if (typeof cidx !== "undefined") {
               // Insert the comment right back where it was
@@ -126,15 +126,15 @@ let comments = new Vue({
         );
     },
 
-    pin: function(id) {
+    pin: function (id) {
       $.ajax({
         url: "/episodes/" + epId + "/comments/" + id + "/pin",
         method: "POST",
       })
-        .done(function() {
+        .done(function () {
           loadComments();
         })
-        .fail(function() {
+        .fail(function () {
           Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
         });
     },
@@ -146,10 +146,10 @@ function loadComments() {
     url: "/episodes/" + epId + "/comments",
     method: "GET",
   })
-    .done(function(reply) {
+    .done(function (reply) {
       comments.comments = reply;
     })
-    .fail(function() {
+    .fail(function () {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 }

@@ -1,6 +1,6 @@
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017-2019 subtitulamos.tv
+ * @copyright 2020 subtitulamos.tv
  */
 
 import $ from "jquery";
@@ -17,10 +17,10 @@ let uploadInfo = {
   name: "",
 };
 
-$(function() {
+$(function () {
   let newShowTemplate = $("#new-show-tpl").prop("content");
   let $newShow;
-  $("#show-id").on("change", function() {
+  $("#show-id").on("change", function () {
     let val = $(this).val();
 
     if (val == "NEW") {
@@ -41,7 +41,7 @@ $(function() {
   });
 
   // Logic for splitting season/episode and name
-  $("#name").on("keyup input change", function() {
+  $("#name").on("keyup input change", function () {
     let val = $(this)
       .val()
       .trim();
@@ -77,7 +77,7 @@ $(function() {
       .html(error);
   });
 
-  $("#show-id, #lang, #version, #comments, #new-show, #sub").on("change", function() {
+  $("#show-id, #lang, #version, #comments, #new-show, #sub").on("change", function () {
     $("#" + $(this).attr("id") + "-status").toggleClass("hidden", true);
   });
 
@@ -87,18 +87,18 @@ $(function() {
   $("#sub").replaceWith($sub);
 
   // Update of SRT file selection
-  $sub.on("change", function(e) {
+  $sub.on("change", function (e) {
     let files = $sub[0].files;
     if (files.length > 0) {
       $("#sub-name").html(files[0].name);
     }
   });
 
-  $("form").on("submit", function(e) {
+  $("form").on("submit", function (e) {
     e.preventDefault(); // Don't submit the form
   });
 
-  $("#upload-button").on("click", function(e) {
+  $("#upload-button").on("click", function (e) {
     const $this = $(this);
     let form = $this.closest("form")[0];
     $this.toggleClass("is-loading", true);
@@ -115,12 +115,12 @@ $(function() {
       method: "POST",
       data: data,
     })
-      .fail(function(jqXHR, textStatus, errorThrown) {
+      .fail(function (jqXHR, textStatus, errorThrown) {
         $this.toggleClass("is-loading", false);
         $("[data-status]").toggleClass("hidden", true);
 
         if (jqXHR.status == 400 && jqXHR.responseJSON) {
-          jqXHR.responseJSON.forEach(function(e, idx, arr) {
+          jqXHR.responseJSON.forEach(function (e, idx, arr) {
             let $status = $("#" + e[0] + "-status");
             if ($status) {
               console.log("Enabling " + e[0]);
@@ -131,7 +131,7 @@ $(function() {
           Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         }
       })
-      .done(function(data) {
+      .done(function (data) {
         window.location.href = data;
       });
   });

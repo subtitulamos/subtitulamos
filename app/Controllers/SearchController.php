@@ -2,12 +2,11 @@
 
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017-2019 subtitulamos.tv
+ * @copyright 2020 subtitulamos.tv
  */
 
 namespace App\Controllers;
 
-use App\Entities\Episode;
 use App\Services\Auth;
 
 use App\Services\Langs;
@@ -16,7 +15,6 @@ use Doctrine\ORM\EntityManager;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Views\Twig;
 
 class SearchController
 {
@@ -173,14 +171,13 @@ class SearchController
                 $season = isset($matches[1]) ? (int)$matches[1] : (isset($matches[3]) ? (int)$matches[3] : -1);
                 $episode = isset($matches[2]) ? (int)$matches[2] : (isset($matches[4]) ? (int)$matches[4] : -1);
                 $showName = trim(str_replace($matches[0], '', $q));
-            }
-            else {
+            } else {
                 // No episode in search
                 $showName = $q;
             }
 
             $r = $client->search([
-                'index' => ELASTICSEARCH_NAMESPACE . '_shows',
+                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
                 'type' => 'show',
                 'body' => [
                     'query' => [

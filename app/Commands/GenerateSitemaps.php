@@ -2,15 +2,13 @@
 
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017-2019 subtitulamos.tv
+ * @copyright 2020 subtitulamos.tv
  */
 
 namespace App\Commands;
 
 use Cocur\Slugify\Slugify;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

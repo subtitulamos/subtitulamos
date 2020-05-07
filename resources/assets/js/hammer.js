@@ -1,6 +1,6 @@
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2017-2019 subtitulamos.tv
+ * @copyright 2020 subtitulamos.tv
  */
 
 import Vue from "vue";
@@ -13,7 +13,7 @@ Vue.component("hammertarget", {
             {{ latest }} secuencias sin corregir <span v-show="latest > 0">- <a href="javascript:void()" @click='latestHammer'>Borrar</a></span>
     </div>`,
   props: ["id", "username", "countCorrected", "countLatest"],
-  data: function() {
+  data: function () {
     return {
       corrected: this.countCorrected * 1,
       latest: this.countLatest * 1,
@@ -21,7 +21,7 @@ Vue.component("hammertarget", {
     };
   },
   computed: {
-    total: function() {
+    total: function () {
       return this.latest + this.corrected;
     },
   },
