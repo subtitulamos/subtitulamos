@@ -67,7 +67,7 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 ));
 
                 if (DEBUG === true) {
-                    $twig->addExtension(new Twig_Extension_Debug());
+                    $twig->addExtension(new Twig\Extension\DebugExtension());
                 }
 
                 $twigEnv = $twig->getEnvironment();
@@ -78,13 +78,13 @@ $app = new class() extends \DI\Bridge\Slim\App {
 
                 $auth = $c->get('App\Services\Auth');
                 $twigEnv->addGlobal('auth', $auth->getTwigInterface());
-                $twigEnv->addFunction(new Twig_Function('feature_on', 'feature_on'));
+                $twigEnv->addFunction(new Twig\TwigFunction('feature_on', 'feature_on'));
 
                 $assetMgr = $c->get('App\Services\AssetManager');
-                $twigEnv->addFunction(new Twig_Function('css_versioned_name', function ($name) use (&$assetMgr) {
+                $twigEnv->addFunction(new Twig\TwigFunction('css_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getCssVersionedName($name);
                 }));
-                $twigEnv->addFunction(new Twig_Function('webpack_versioned_name', function ($name) use (&$assetMgr) {
+                $twigEnv->addFunction(new Twig\TwigFunction('webpack_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getWebpackVersionedName($name);
                 }));
 

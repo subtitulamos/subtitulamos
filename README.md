@@ -111,3 +111,7 @@ Here's an Nginx config that should work with the website provided it's running o
     upstream php {
         server unix:</path/to/php-fpm/socket/file>;
     }
+
+### Appendix: Running with in-built PHP server
+You can run the PHP side of things usiung the built-in PHP server: `php -S localhost:8888 -t ./public`.
+Make sure to set SITE_URL to http://localhost:8888 or else things won't load!
