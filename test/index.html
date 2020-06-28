@@ -1,0 +1,526 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Mocha Tests</title>
+  <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+  <script src="https://cdn.rawgit.com/jquery/jquery/2.1.4/dist/jquery.min.js"></script>
+  <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+  <script src="http://chaijs.com/chai.js"></script>
+</head>
+
+<body>
+  <div id="mocha"></div>
+
+  <script>
+    chai.config.truncateThreshold = 0;
+    let balanceText = function (originalText, opinionated) {
+      if (typeof opinionated == "undefined") {
+        // The default criteria is opinionated: if there's no difference between
+        // leaving a word on either line, it's left on the lower one.
+        opinionated = true;
+      }
+
+      let text = originalText.replace(/\s(["'])[\n\r]([\w¿¡ñáéíóú])/g, " $1$2"); // Remove linebreaks between "/' and text.
+      text = text.replace(/[\n\r]/g, " "); // Delete line breaks, we'll do those
+      text = text.replace(/\s\s+/, " "); // Remove multiple consecutive spaces, not relevant
+
+      if (text.length > 81) {
+        // We cannot do anything with this, it's beyond max (40+40+1 space)
+        return [originalText];
+      }
+
+      let dialogLineCount = (text.match(/(?:^|\s)-/g) || []).length;
+      let isDialog = text.match(/^\s*-/g) && dialogLineCount == 2;
+      if (isDialog) {
+        /*
+         * Looks like we have a dialog. We must preserve each line separated unless that is not possible.
+         */
+        let fDialogPos = text.indexOf("-");
+        let fDialogPos2 = text.substr(fDialogPos + 1).indexOf(" -") + fDialogPos;
+        if (fDialogPos2 - fDialogPos < 40 && text.length - 2 - fDialogPos2 <= 40) {
+          //len - 1 due to the space introduced by the line break
+          // If they fit in two separate lines, that's how it goes
+          let dialogLines = [];
+          dialogLines[0] = text.slice(0, fDialogPos2 + 1).trim();
+          dialogLines[1] = text.slice(fDialogPos2 + 1, text.length).trim();
+          return dialogLines;
+        }
+      }
+
+      if (text.length <= 40) {
+        // Nothing to divide
+        return [originalText];
+      }
+
+      let behind = 0;
+      let ahead = text.length;
+      let curWordPos = 0;
+      let ignoreSepUntilNextWord = false;
+      for (let i = 0; i < text.length; ++i) {
+        behind++;
+        ahead--;
+
+        let curChar = text[i];
+        if (curChar == "-") {
+          ignoreSepUntilNextWord = true;
+          continue;
+        }
+
+        // If we find a word separator...
+        if (curChar.match(/[ .,;?!\-¿¡"']/)) {
+          if (ignoreSepUntilNextWord) continue;
+
+          let nextChar = i + 1 < text.length ? text[i + 1] : null;
+          let prevChar = i > 0 ? text[i - 1] : null;
+
+          /*
+           * If next char is also a separator (unless its a space), we do not split yet.
+           */
+          if (
+            nextChar &&
+            (nextChar.match(/[.,;?!\-]/) || (curChar != " " && nextChar.match(/[¿¡"']/)))
+          ) {
+            continue;
+          }
+
+          /**
+           * If next char is alphanumeric (/ accented vocal) or yet another separator,
+           * and curChar is an opening separator, continue
+           */
+          if (nextChar && nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/i) && curChar.match(/[¿¡"']/)) {
+            continue;
+          }
+
+          /*
+           * Numbers, format: 123.578.213
+           * If we're at a dot or space, look forward and backwards. If there's a number, and the
+           * next character also is a number, keep consuming characters.
+           */
+          if (
+            (curChar == "." || curChar == " ") &&
+            nextChar &&
+            prevChar &&
+            $.isNumeric(nextChar) &&
+            $.isNumeric(prevChar)
+          ) {
+            continue;
+          }
+
+          if (behind >= ahead) {
+            // Begin splitting
+            if (curChar == " ") {
+              // Move one back, as the space isn't part of the word!
+              --i;
+              --behind;
+              ++ahead;
+            }
+
+            // <dir>IfSplit counts the number of characters that we'd actually have if we ignore spaces
+            let aheadIfSplit = ahead;
+            if (aheadIfSplit > 0) {
+              let j = i + 1;
+              while (j < text.length) {
+                if (text[j] != " ") {
+                  j--;
+                  continue;
+                }
+
+                aheadIfSplit--;
+                j++;
+                break;
+              }
+            }
+
+            let behindIfSplit = behind;
+            if (behindIfSplit > 0) {
+              let j = i - 1;
+              while (j >= 0) {
+                if (text[j] != " ") {
+                  j--;
+                  continue;
+                }
+
+                behindIfSplit--;
+                break;
+              }
+            }
+
+            // Split
+            let curWordSize = i - curWordPos;
+            let aheadWithWord = aheadIfSplit + curWordSize;
+            let behindWithoutWord = behindIfSplit - curWordSize;
+            let splitAt = i;
+
+            let diff =
+              Math.abs(aheadWithWord - behindWithoutWord) - Math.abs(aheadIfSplit - behindIfSplit);
+            if (diff < 0 || (opinionated && diff == 0)) {
+              // Should've split on the last separator
+              splitAt = curWordPos;
+            }
+
+            let lines = [];
+            lines[0] = text.slice(0, splitAt + 1).trim();
+            lines[1] = text.slice(splitAt + 1, text.length).trim();
+            return lines;
+          }
+
+          curWordPos = i;
+        } else if (ignoreSepUntilNextWord) {
+          // We found a char that's not a separator so remove the flag and carry on
+          ignoreSepUntilNextWord = false;
+        }
+      }
+
+      // No division
+      return [text];
+    };
+  </script>
+  <script>
+    mocha.setup("bdd");
+  </script>
+  <script>
+    var assert = chai.assert;
+    describe("Global leak", () => {
+      it("there might not be a global leak from Vue devtools extension, but if there is this will capture it", () => { });
+    });
+
+    describe("balanceText", () => {
+      it("should return the text untouched when text is very short", () => {
+        var text = "short text";
+        assert.deepEqual([text], balanceText(text));
+      });
+
+      it("should return the text untouched when text is exactly 40 characters", () => {
+        var text = "This text is precisely fourty chars long";
+        assert.deepEqual([text], balanceText(text));
+      });
+
+      it("shouldn't remove linebreaks on a string below 40 chars (convention)", () => {
+        var text = "Text\nshould remain like this!";
+        assert.deepEqual([text], balanceText(text));
+      });
+
+      it("should balance lines above 40 chars", () => {
+        var text = "Text\nshould definitely not remain like this!";
+        assert.deepEqual(
+          ["Text should definitely", "not remain like this!"],
+          balanceText(text)
+        );
+      });
+
+      it("should correctly balance lines where a comma is right on the calculated division spot", () => {
+        var text = "Text\nshould definitely, never remain like this!";
+        assert.deepEqual(
+          ["Text should definitely,", "never remain like this!"],
+          balanceText(text)
+        );
+      });
+
+      it("should correctly balance lines where a dot is right on the division spot", () => {
+        var text =
+          "Text\nshould always be balanced. Never should it remain like this!";
+        assert.deepEqual(
+          [
+            "Text should always be balanced.",
+            "Never should it remain like this!"
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("should correctly split via a separator (comma, dot) even if no spaces surround it", () => {
+        var text =
+          "Text\nshould always be balanced.Never should it remain like this!";
+        assert.deepEqual(
+          [
+            "Text should always be balanced.",
+            "Never should it remain like this!"
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split triple dots (...) even if they are on the division spot", () => {
+        var text =
+          "Text should always be\nbalanced... And it should remain like that!";
+        assert.deepEqual(
+          [
+            "Text should always be balanced...",
+            "And it should remain like that!"
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("should correctly split via a question mark", () => {
+        var text =
+          "Text\nshould always be balanced! Never should it remain like this!";
+        assert.deepEqual(
+          [
+            "Text should always be balanced!",
+            "Never should it remain like this!"
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("should correctly split via an exclamation mark", () => {
+        var text =
+          "Should\ntext always be balanced? Why, yes! It should of course be.";
+        assert.deepEqual(
+          [
+            "Should text always be balanced?",
+            "Why, yes! It should of course be."
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("should correctly split via an exclamation mark", () => {
+        var text =
+          "Should\ntext always be balanced? Why, yes! It should of course be.";
+        assert.deepEqual(
+          [
+            "Should text always be balanced?",
+            "Why, yes! It should of course be."
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split numbers", () => {
+        var text =
+          "Number in the middle: 1.658.102, extra. Should work fine.";
+        assert.deepEqual(
+          ["Number in the middle: 1.658.102,", "extra. Should work fine."],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split weird numbers", () => {
+        var text =
+          "Number in the middle: 1 658 102, extra. Should work fine.";
+        assert.deepEqual(
+          ["Number in the middle: 1 658 102,", "extra. Should work fine."],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split numbers, no matter how long they are", () => {
+        var text =
+          "Number in the middle: 1.658.102.458.123! It should be splitting here.";
+        assert.deepEqual(
+          [
+            "Number in the middle: 1.658.102.458.123!",
+            "It should be splitting here."
+          ],
+          balanceText(text)
+        );
+      });
+
+      it('should split dialog into two uneven lines if there\'s no space on the first line for text besides the hyphen ("-")', () => {
+        var text =
+          "- Ni siquiera deberías estar aquí. - ¡Soy el motivo por el que tú estás aquí!";
+        assert.deepEqual(
+          [
+            "- Ni siquiera deberías estar aquí. - ¡Soy",
+            "el motivo por el que tú estás aquí!"
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("should split dialog into two lines so long both fit just right", () => {
+        var text =
+          "- No quiero, pero debería. - ¡Soy\nel motivo por el que está aquí!";
+        assert.deepEqual(
+          [
+            "- No quiero, pero debería.",
+            "- ¡Soy el motivo por el que está aquí!"
+          ],
+          balanceText(text)
+        );
+      });
+
+      it("should split after the last separator if multiple separators are together", () => {
+        var text =
+          "Trato de atraparlo, ¿de acuerdo?, pero necesitaré tu ayuda.";
+        assert.deepEqual(
+          ["Trato de atraparlo, ¿de acuerdo?,", "pero necesitaré tu ayuda."],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't put a - at the end of a sentence", () => {
+        var text =
+          "- Claire. - Por favor, no... - No, Claire, salió al jardín...";
+        assert.deepEqual(
+          [
+            "- Claire. - Por favor, no...",
+            "- No, Claire, salió al jardín..."
+          ],
+          balanceText(text)
+        );
+      });
+
+      it('shouldn\'t break "-"-separated words', () => {
+        var text =
+          "Esta palabra no-debe-ser-para-nada separada en ningún caso.";
+        assert.deepEqual(
+          ["Esta palabra no-debe-ser-para-nada", "separada en ningún caso."],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't leave leftover spaces at the end of lines", () => {
+        var text = "Line number one with a space Line number two.";
+        assert.deepEqual(
+          ["Line number one with a", "space Line number two."],
+          balanceText(text)
+        );
+      });
+
+      it("should split taking into account newlines", () => {
+        var text = "de un periodo oscuro de la historia estadounidense.";
+        assert.deepEqual(
+          ["de un periodo oscuro de la", "historia estadounidense."],
+          balanceText(text)
+        );
+      });
+
+      it("should split taking into account newline spaces being removed (bis)", () => {
+        var text = "¿Qué tenía de malo empalar? Me encanta empalar.";
+        assert.deepEqual(
+          ["¿Qué tenía de malo empalar?", "Me encanta empalar."],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split hyphen-separated words combined with dialog", () => {
+        var text = "- para ir a buscar a Abu-Saeed. - ¿Buscarlo?";
+        assert.deepEqual(
+          ["- para ir a buscar a Abu-Saeed.", "- ¿Buscarlo?"],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split hyphen-separated words combined with dialog (pt2)", () => {
+        var text = "- para ir Not-Dialog a Abu-Saeed. - ¿Buscarlo?";
+        assert.deepEqual(
+          ["- para ir Not-Dialog a Abu-Saeed.", "- ¿Buscarlo?"],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't take into account excess spaces at the start of the line", () => {
+        var text =
+          "                                                - para ir Not-Dialog a Abu-Saeed. - ¿Buscarlo?";
+        assert.deepEqual(
+          ["- para ir Not-Dialog a Abu-Saeed.", "- ¿Buscarlo?"],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't take into account excess spaces at the end of the line", () => {
+        var text =
+          "- para ir Not-Dialog a Abu-Saeed. - ¿Buscarlo?                                                ";
+        assert.deepEqual(
+          ["- para ir Not-Dialog a Abu-Saeed.", "- ¿Buscarlo?"],
+          balanceText(text)
+        );
+      });
+
+      it("should split despite long words existing with a final dot", function () {
+        var text = "CÁLIDO. MUY CÁLIDO. #ELCALENTAMIENTOGLOBALESREAL.";
+        assert.deepEqual(
+          ["CÁLIDO. MUY CÁLIDO.", "#ELCALENTAMIENTOGLOBALESREAL."],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't improperly split dialog when the 2nd line is 40 characters long", function () {
+        var text =
+          "- Los compro yo.\n- Entonces, ¿por qué mientes sobre ello?";
+        assert.deepEqual(
+          ["- Los compro yo.", "- Entonces, ¿por qué mientes sobre ello?"],
+          balanceText(text)
+        );
+      });
+
+      it("should properly split dialog in lines when the 2nd line is 41 characters long", function () {
+        var text =
+          "- Los compro yo.\n- Entonces, ¿por qué mientes sobre ello!?";
+        assert.deepEqual(
+          ["- Los compro yo. - Entonces,", "¿por qué mientes sobre ello!?"],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split dialog into lines when the 1st line is 40 characters long", function () {
+        var text =
+          "- Entonces, ¿por qué mientes sobre ello!\n- Los compro yo.";
+        assert.deepEqual(
+          ["- Entonces, ¿por qué mientes sobre ello!", "- Los compro yo."],
+          balanceText(text)
+        );
+      });
+
+      it("should split dialog into lines when the 1st line is 41 characters long", function () {
+        var text =
+          "- Entonces, ¿por qué mientes sobre ello!?\n- Los compro yo.";
+        assert.deepEqual(
+          ["- Entonces, ¿por qué mientes", "sobre ello!? - Los compro yo."],
+          balanceText(text)
+        );
+      });
+
+      it("should consider quotes and text together even on a linebreak", function () {
+        var text = '- Y Duffy dij: "\nSocialmente, un periodista';
+        assert.deepEqual(
+          ["- Y Duffy dij:", '"Socialmente, un periodista'],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't consider quotes and text together even on a linebreak if the quotes are close to another piece of text", function () {
+        var text = '- Y Duffy blabl "dij"\nSocialmente, un periodista';
+        assert.deepEqual(
+          ['- Y Duffy blabl "dij"', "Socialmente, un periodista"],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split on ¿ or ¡ when followed by an accented character", function () {
+        var text = '¡Usa el melocotón! ¡Úsalo! ¡Usa el melocotón!';
+        assert.deepEqual(
+          ['¡Usa el melocotón!', "¡Úsalo! ¡Usa el melocotón!"],
+          balanceText(text)
+        );
+      });
+
+      it("shouldn't split on ¿ or ¡ when followed by a not accented character", function () {
+        var text = '¡Usa el melocotón! ¡Usalo! ¡Usa el melocotón!';
+        assert.deepEqual(
+          ['¡Usa el melocotón!', "¡Usalo! ¡Usa el melocotón!"],
+          balanceText(text)
+        );
+      });
+
+      it("should split in spite of long words existing on the 2nd part", function () {
+        var text = "CÁLIDO. MUY CÁLIDO. #ELCALENTAMIENTOGLOBALESREAL";
+        assert.deepEqual(
+          ["CÁLIDO. MUY CÁLIDO.", "#ELCALENTAMIENTOGLOBALESREAL"],
+          balanceText(text)
+        );
+      });
+    });
+  </script>
+  <script>
+    mocha.checkLeaks();
+    mocha.globals(["jQuery"]);
+    mocha.run();
+  </script>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-module.exports = function(originalText, opinionated) {
+module.exports = function (originalText, opinionated) {
   if (typeof opinionated == "undefined") {
     // The default criteria is opinionated: if there's no difference between
     // leaving a word on either line, it's left on the lower one.
@@ -74,7 +74,7 @@ module.exports = function(originalText, opinionated) {
        * If next char is alphanumeric (/ accented vocal) or yet another separator,
        * and curChar is an opening separator, continue
        */
-      if (nextChar && nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/) && curChar.match(/[¿¡"']/)) {
+      if (nextChar && nextChar.match(/[\w¿¡"'àèìòùáéíóúâêîôû]/i) && curChar.match(/[¿¡"']/)) {
         continue;
       }
 
