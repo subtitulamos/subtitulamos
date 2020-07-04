@@ -11,7 +11,7 @@
     "postcss-cli": "^4.1.1",
     "postcss-cssnext": "^3.1.0",
     "precss": "^2.0.0",
-    "reconnecting-websocket": "^3.2.2",
+    "robust-websocket": "^1.0.0",
     "sprintf-js": "^1.1.2",
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^17.0.0",

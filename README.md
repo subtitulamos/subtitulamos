@@ -20,15 +20,13 @@ You need a bunch of things to be installed on the system in order to run the web
 > _Note_: Installation instructions for the following software are not provided since that would greatly increase the length of this guide. All of it is fairly popular and well-documented, so you should be able to easily find this stuff online. Do note that the versions specified in the list are not necessarily minimal requirements, it's just that the website has simply not been tested with releases prior to those, and it may not work correctly.
 
 - PHP 7.1+
-  - Plus the [phpredis](https://github.com/phpredis/phpredis) extension. Also available on PECL (`pecl install redis`).
-- Redis 3+
 - MySQL
 - Nginx + php-fpm (you can find a sample Nginx config at the end) / Apache
+    - Alternatively, for local development, you can run from the built-in PHP server (see Appendix 2)
 - Composer
 - NodeJS (latest stable version)
 - ElasticSearch 5.5+ [[Instructions]](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/_installation.html)
-  - ElasticSearch requires a recent JDK 8 version. You may need to [use a backport](https://linux-tips.com/t/how-to-install-java-8-on-debian-jessie/349/2) from a newer OS release.
-- Go 1.8+
+  - ElasticSearch requires a recent JDK 8 version. You may need to [use a backport](https://linux-tips.com/t/how-to-install-java-8-on-debian-jessie/349/2) from a newer OS release
 
 ## First time setup
 
@@ -112,6 +110,6 @@ Here's an Nginx config that should work with the website provided it's running o
         server unix:</path/to/php-fpm/socket/file>;
     }
 
-### Appendix: Running with in-built PHP server
+### Appendix 2: Running with in-built PHP server
 You can run the PHP side of things usiung the built-in PHP server: `php -S localhost:8888 -t ./public`.
 Make sure to set SITE_URL to http://localhost:8888 or else things won't load!

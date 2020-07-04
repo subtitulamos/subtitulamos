@@ -1,9 +1,8 @@
 import Vue from "vue";
 import $ from "jquery";
-import timeago from "timeago.js";
 import "./vue/comment.js";
 import Subtitle from "./subtitle.js";
-import ReconnectingWebsocket from "reconnecting-websocket";
+import RobustWebSocket from "robust-websocket";
 import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
@@ -1054,7 +1053,7 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
 // Set up websocket (which will itself load the sub)
 const wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
-const ws = new ReconnectingWebsocket(
+const ws = new RobustWebSocket(
   wsProtocol +
   "://" +
   window.location.hostname +
@@ -1063,15 +1062,20 @@ const ws = new ReconnectingWebsocket(
   "&token=" +
   wsAuthToken
 );
-ws.onopen = () => {
+
+ws.addEventListener("open", () => {
   sub.wsOpen();
-};
-ws.onmessage = e => {
+});
+ws.addEventListener("message", e => {
   sub.wsMessage(e);
-};
-ws.onerror = e => {
+});
+ws.addEventListener("error", e => {
   sub.wsError(e);
-};
+});
+
+ws.addEventListener("close", e => {
+  sub.wsError(e);
+});
 
 // Absorb and block default Ctrl+S / Ctrl+G behaviour
 $(document).on("keydown", function (e) {

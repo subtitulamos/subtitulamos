@@ -23,19 +23,9 @@ class Translation
      */
     private $em = null;
 
-    /**
-     * Connection to the redis server
-     * @var \Redis
-     */
-    private $redis = null;
-
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-
-        $redis = new \Redis();
-        $redis->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'));
-        $this->redis = $redis;
     }
 
     /**
@@ -68,11 +58,6 @@ class Translation
             ->getOneOrNullResult();
     }
 
-    public function getPubSubChanName(Subtitle $sub)
-    {
-        return sprintf('%s-translate-%d', ENVIRONMENT_NAME, $sub->getId());
-    }
-
     /**
      * Broadcasts to pub/sub channel the opening of a sequence on a sub
      *
@@ -84,12 +69,12 @@ class Translation
      */
     public function broadcastOpen(Subtitle $sub, User $byUser, int $seqNum, OpenLock $lock)
     {
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'seq-open',
             'user' => $byUser->getId(),
             'num' => $seqNum,
             'openLockID' => $lock->getId()
-        ]));
+        ]);
     }
 
     /**
@@ -101,10 +86,10 @@ class Translation
      */
     public function broadcastClose(Subtitle $sub, int $seqNum)
     {
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'seq-close',
             'num' => $seqNum
-        ]));
+        ]);
     }
 
     /**
@@ -116,7 +101,7 @@ class Translation
     public function broadcastSeqChange(Sequence $seq)
     {
         $sub = $seq->getSubtitle();
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'seq-change',
             'user' => $seq->getAuthor()->getId(),
             'num' => $seq->getNumber(),
@@ -124,7 +109,7 @@ class Translation
             'ntext' => $seq->getText(),
             'ntstart' => (int) $seq->getStartTime(),
             'ntend' => (int) $seq->getEndTime()
-        ]));
+        ]);
     }
 
     /**
@@ -136,11 +121,11 @@ class Translation
     public function broadcastLockChange(Sequence $seq)
     {
         $sub = $seq->getSubtitle();
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'seq-lock',
             'id' => $seq->getId(),
             'status' => $seq->getLocked()
-        ]));
+        ]);
     }
 
     /**
@@ -152,10 +137,10 @@ class Translation
      */
     public function broadcastDeleteSequence(Subtitle $sub, int $seqId)
     {
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'seq-del',
             'id' => $seqId
-        ]));
+        ]);
     }
 
     /**
@@ -167,13 +152,13 @@ class Translation
     public function broadcastNewComment(SubtitleComment $c)
     {
         $sub = $c->getSubtitle();
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'com-new',
             'id' => $c->getId(),
             'user' => $c->getUser()->getId(),
             'time' => $c->getPublishTime()->format(\DateTime::ATOM),
             'text' => $c->getText()
-        ]));
+        ]);
     }
 
     /**
@@ -185,10 +170,10 @@ class Translation
     public function broadcastDeleteComment(SubtitleComment $c)
     {
         $sub = $c->getSubtitle();
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'com-del',
             'id' => $c->getId()
-        ]));
+        ]);
     }
 
     /**
@@ -200,11 +185,11 @@ class Translation
     public function broadcastCommentPinChange(SubtitleComment $c)
     {
         $sub = $c->getSubtitle();
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'com-pin',
             'id' => $c->getId(),
             'pinned' => $c->getPinned()
-        ]));
+        ]);
     }
 
     /**
@@ -216,12 +201,12 @@ class Translation
      */
     public function broadcastUserInfo(Subtitle $sub, User $u)
     {
-        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+        $this->publish($sub, [
             'type' => 'uinfo',
             'id' => $u->getId(),
             'username' => $u->getUsername(),
             'roles' => $u->getRoles()
-        ]));
+        ]);
     }
 
     /**
@@ -234,7 +219,10 @@ class Translation
      */
     public function setWSAuthToken(string $token, Subtitle $sub)
     {
-        $this->redis->set('authtok-' . ENVIRONMENT_NAME . '-' . $token, $sub->getId(), 24 * 60 * 60);
+        $this->messageTranslationServer('allow', [
+            'sub_id' => $sub->getId(),
+            'token' => $token
+        ]);
     }
 
     /**
@@ -267,6 +255,44 @@ class Translation
             $sub->setCompleteTime(null);
         }
         $this->em->flush();
+    }
+
+    /**
+     * Publish an event to redis
+     *
+     * @return void
+     */
+    private function publish(Subtitle $sub, array $contents)
+    {
+        $this->messageTranslationServer('message', [
+            'sub_id' => $sub->getId(),
+            'data' => $contents
+        ]);
+    }
+
+    /**
+     * Send an internal POST request to the translation server
+     *
+     * @return boolean Whether or not the request succeeded
+     */
+    private function messageTranslationServer($endpoint, $data)
+    {
+        $host = getenv('TRANSLATION_SV_HOST');
+        $port = getenv('TRANSLATION_SV_PORT');
+        if (!$host || !is_numeric($port)) {
+            return false;
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://$host:$port/$endpoint");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $server_output = curl_exec($ch);
+        curl_close($ch);
+
+        return $server_output === 'OK';
     }
 
     /**
