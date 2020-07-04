@@ -13,18 +13,18 @@ You're free to contribute in any open issue that's not being tackled by anyone a
 
 # Setup
 
-You need a bunch of things to be installed on the system in order to run the website (a Linux/UNIX machine is recommended, as most tools are not officially designed to run on other OS. Something like Vagrant is an alternative if your OS is not \*nix), so let's get on with that:
+You need a bunch of things to be installed on the system in order to run the website (a Linux/UNIX machine is recommended for full functionality, but you can perfectly get it to run on a Windows with Nginx + MariaDB + NodeJS + PHP, albeit without search). Something like Vagrant might be an interesting alternative if your OS is not \*nix).
 
 ## Required software
 
 > _Note_: Installation instructions for the following software are not provided since that would greatly increase the length of this guide. All of it is fairly popular and well-documented, so you should be able to easily find this stuff online. Do note that the versions specified in the list are not necessarily minimal requirements, it's just that the website has simply not been tested with releases prior to those, and it may not work correctly.
 
 - PHP 7.1+
-- MySQL
+- MariaDB (Though MySQL should work)
 - Nginx + php-fpm (you can find a sample Nginx config at the end) / Apache
     - Alternatively, for local development, you can run from the built-in PHP server (see Appendix 2)
 - Composer
-- NodeJS (latest stable version)
+- NodeJS (10.x+, latest stable version should be fine)
 - ElasticSearch 5.5+ [[Instructions]](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/_installation.html)
   - ElasticSearch requires a recent JDK 8 version. You may need to [use a backport](https://linux-tips.com/t/how-to-install-java-8-on-debian-jessie/349/2) from a newer OS release
 
@@ -41,17 +41,17 @@ After `.env` file has been set up and the composer dependencies have all been in
 - `./vendor/bin/doctrine orm:schema:update --force` to create the database schema required by the website
 - `php app/console app:bots:synchronize` to create the bot users.
 
-At this point, the website will work, but with no styling at all. For that, you will need to compile the javascript & css. Executing `npm run build` will take care of it! Now it truly works. Well, except the translation area...
+At this point, the website will work, but with no styling at all. For that, you will need to compile the javascript & css. Executing `npm run prod` will take care of it! Now it truly works. Well, except the translation area...
 
 ### Realtime translation - Setup
 
-The website uses realtime translation based on websockets. Since PHP is not really ideal for the long-running processes that websocket technology requires, a simple Go server is used instead. To get it, run `go get github.com/subtitulamos/subtitulamos-translate` (You may need to set `GOPATH` environment variable if you didn't already). The `go get` command specific above will both download the source from Github and compile the binary. To quickly get the server started, you can use `$GOPATH/bin/subtitulamos-translate -redis-pubsub-env <envname>`, where \<envname\> should equal the value of your `ENVIRONMENT` env variable. Once this is done, you will be able to fully translate.
+The website uses realtime translation based on websockets. Since PHP is not really ideal for the long-running processes that websocket technology requires, a simple NodeJS server is used instead. To get it, run `go get github.com/subtitulamos/subtitulamos-new`.
 
-_Note_: You will generally not need to modify the Go server since all the relevant logic is on PHP, and it is just broadcasted via Redis pub-sub system to the Go process, which simply relies it to the connected clients.
+_Note_: You will generally not need to modify the NodeJS server since all the relevant logic is on PHP, and it is just broadcasted via simple HTTP requests to the NodeJS process, which simply relies it to the connected clients.
 
 ## Development
 
-Once set up, you will see that any modification to a javascript or CSS file requires you to rebuild said file. To greatly speed up development, you can run `npm run watch`, which will start a webpack and postcss watcher and automatically compile the JS/CSS the moment you change them.
+Once set up, you will see that any modification to a javascript or CSS file requires you to rebuild said file. To greatly speed up development, you can run `npm run dev`, which will start a webpack watcher and automatically compile the JS/CSS the moment you change them.
 
 Aditionally, it may be annoying to run the realtime translation service every time. For that, [supervisord](http://supervisord.org/) is actually a fairly simple and great way to automatically launch/restart the binary. Once again there're better tutorials out in the web than anything that could be written here, specially since the rt translation binary is so simple and doesn't really require much setup besides passing the args (for detail on those, see [the docs](https://github.com/subtitulamos/subtitulamos-translate).
 
@@ -90,7 +90,7 @@ Here's an Nginx config that should work with the website provided it's running o
         }
 
         location /translation-rt {
-            proxy_pass http://127.0.0.1:8080;
+            proxy_pass http://127.0.0.1:9001;
             proxy_redirect off;
 
             proxy_set_header X-Real-IP $remote_addr;
@@ -105,7 +105,7 @@ Here's an Nginx config that should work with the website provided it's running o
         }
     }
 
-    # Define fastcgi pass upstream (php-fpm must be configured to listen on a unix socket)
+    # Define fastcgi pass upstream (php-fpm must be configured to listen on a unix socket, which it is by default)
     upstream php {
         server unix:</path/to/php-fpm/socket/file>;
     }
