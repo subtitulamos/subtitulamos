@@ -5,7 +5,7 @@
 
 import Vue from "vue";
 import $ from "jquery";
-import { dateDiff } from "./app.js";
+import { dateDiff } from "./utils.js";
 import '../css/index.css';
 
 let episodeList = new Vue({
