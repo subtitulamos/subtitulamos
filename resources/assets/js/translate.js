@@ -1063,18 +1063,36 @@ const ws = new RobustWebSocket(
   wsAuthToken
 );
 
+let pingInterval = null;
 ws.addEventListener("open", () => {
   sub.wsOpen();
+
+  if (pingInterval) {
+    clearInterval(pingInterval);
+  }
+
+  pingInterval = setInterval(() => {
+    ws.send("ping");
+  }, 47500);
 });
+
 ws.addEventListener("message", e => {
+  if (e.data === "pong") {
+    return;
+  }
+
   sub.wsMessage(e);
 });
+
 ws.addEventListener("error", e => {
   sub.wsError(e);
 });
-
 ws.addEventListener("close", e => {
   sub.wsError(e);
+
+  if (pingInterval) {
+    clearInterval(pingInterval);
+  }
 });
 
 // Absorb and block default Ctrl+S / Ctrl+G behaviour
