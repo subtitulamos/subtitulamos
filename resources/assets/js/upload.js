@@ -4,6 +4,7 @@
  */
 
 import $ from "jquery";
+import "../css/upload.css";
 
 function pad(n, width, z) {
   z = z || "0";

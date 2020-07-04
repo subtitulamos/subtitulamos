@@ -1,6 +1,7 @@
 const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 
 module.exports = {
@@ -16,26 +17,51 @@ module.exports = {
         translate: './resources/assets/js/translate.js',
         user_settings: './resources/assets/js/user_settings.js',
         comment_list: './resources/assets/js/comment_list.js',
-        user_public_profile: './resources/assets/js/user_public_profile.js',
+        user_profile: './resources/assets/js/user_profile.js',
         panel: './resources/assets/js/panel/adminlte.js',
         panel_alerts: './resources/assets/js/panel/alerts.js',
-        vendor: ['jquery', 'vue', 'timeago.js']
+        // Vendor JS package
+        vendor: ['jquery', 'vue', 'timeago.js'],
+
+        // These pages don't have JS, but need to exist to create the corresponding CSS files
+        banned_error: './resources/assets/js/banned_error.js',
+        edit_episode: './resources/assets/js/edit_episode.js',
+        shows_list: './resources/assets/js/shows_list.js',
+        show_seasons: './resources/assets/js/show_seasons.js',
+        panel_banlist: './resources/assets/js/panel/banlist.js',
+        panel_base: './resources/assets/js/panel/base.js',
+
     },
     output: {
-        filename: 'js/[name].[chunkhash].bundle.js',
+        filename: 'js/[name].[contenthash].bundle.js',
         path: path.resolve(__dirname, 'public')
     },
     plugins: [
-        new CleanWebpackPlugin(['public/js']),
-        new ManifestPlugin({
-            fileName: '../resources/assets/manifest.json'
+        new CleanWebpackPlugin(['public/js', 'public/css', 'public/img']),
+        new MiniCssExtractPlugin({
+            filename: 'css/[name].[contenthash].css',
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "vendor",
-            filename: "js/vendor.[chunkhash].js",
-            minChunks: Infinity,
-        })
+        new ManifestPlugin({
+            fileName: '../resources/assets/manifest.json',
+            filter: (FileDescriptor) => {
+                // Fix for file-loader imported assets (https://github.com/danethurber/webpack-manifest-plugin/issues/208#issuecomment-589080673)
+                // ...otherwise this maps CSS files wrong
+                return FileDescriptor.isChunk;
+            }
+        }),
     ],
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    chunks: "initial",
+                    test: "vendor",
+                    name: "vendor",
+                    enforce: true
+                }
+            }
+        }
+    },
     module: {
         rules: [
             {
@@ -47,7 +73,27 @@ module.exports = {
                         presets: ['env']
                     }
                 }
-            }
+            },
+            {
+                test: /\.s?css$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                        },
+                    },
+                    'css-loader',
+                    'sass-loader'
+                ],
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader?name=/img/[hash].[ext]',
+                ],
+            },
         ]
     },
     resolve: {

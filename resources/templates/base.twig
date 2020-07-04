@@ -22,7 +22,6 @@
   {% endblock %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.{{ min_suffix }}css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
-  {{ assets.css('app') }}
   {% block css %}{% endblock %}
 
   <title>
@@ -328,14 +327,10 @@
 
   {# Load nonessential CSS #}
   <link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
-  {{ assets.css('browser_specific') }}
-  {{ assets.css('hint') }}
-  {{ assets.css('effects') }}
 
   {# Load js last #}
   {{ assets.js('vendor') }}
   {{ assets.js('app') }}
-  {{ assets.js('search') }}
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   <script>

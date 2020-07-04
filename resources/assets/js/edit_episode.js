@@ -3,14 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-@import 'app.css';
-
-#hammer {
-  background-color: #f0eeee;
-  padding: 10px;
-  font-size: 0.95em;
-}
-
-.candidates {
-  margin-left: 40px;
-}
+/**
+ * This file exists because the CSS processed by webpack needs to exist in a file first
+ */
+import "../css/edit_episode.css";

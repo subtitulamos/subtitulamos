@@ -1,3 +1,8 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import Vue from "vue";
 import $ from "jquery";
 import { sprintf, vsprintf } from "sprintf-js";
@@ -14,7 +19,7 @@ function Subtitle(id, state, secondaryLang) {
   this.secondaryLang = secondaryLang;
 }
 
-Subtitle.prototype.wsOpen = function() {
+Subtitle.prototype.wsOpen = function () {
   if (this.state.loadedOnce) {
     Toasts.info.fire("Reconectado al servidor de traducción");
   }
@@ -23,11 +28,11 @@ Subtitle.prototype.wsOpen = function() {
   this.loadComments();
 };
 
-Subtitle.prototype.wsError = function() {
+Subtitle.prototype.wsError = function () {
   this.state.loaded = false;
 };
 
-Subtitle.prototype.wsMessage = function(event) {
+Subtitle.prototype.wsMessage = function (event) {
   try {
     let data = JSON.parse(event.data);
     switch (data.type) {
@@ -81,7 +86,7 @@ Subtitle.prototype.wsMessage = function(event) {
   }
 };
 
-Subtitle.prototype.getUserObject = function(uid) {
+Subtitle.prototype.getUserObject = function (uid) {
   return {
     id: uid,
     username: this.getUsername(uid),
@@ -89,11 +94,11 @@ Subtitle.prototype.getUserObject = function(uid) {
   };
 };
 
-Subtitle.prototype.getRoles = function(uid) {
+Subtitle.prototype.getRoles = function (uid) {
   return this.users[uid] ? this.users[uid].roles : [""];
 };
 
-Subtitle.prototype.getUsername = function(uid) {
+Subtitle.prototype.getUsername = function (uid) {
   return this.users[uid] ? this.users[uid].username : "u#" + uid;
 };
 
@@ -150,7 +155,7 @@ Subtitle.prototype.loadSequences = function () {
   });
 };
 
-Subtitle.prototype.loadComments = function() {
+Subtitle.prototype.loadComments = function () {
   $.ajax({
     url: "/subtitles/" + subID + "/translate/comments",
     method: "GET",
@@ -158,12 +163,12 @@ Subtitle.prototype.loadComments = function() {
     .done(reply => {
       this.state.comments = reply;
     })
-    .fail(function() {
+    .fail(function () {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 };
 
-Subtitle.prototype.findSeqIdxByID = function(seqID) {
+Subtitle.prototype.findSeqIdxByID = function (seqID) {
   let key = -1;
   Object.keys(this.state.sequences).forEach(k => {
     if (this.state.sequences[k].id == seqID) {
@@ -175,7 +180,7 @@ Subtitle.prototype.findSeqIdxByID = function(seqID) {
   return key;
 };
 
-Subtitle.prototype.findSeqIdxByNum = function(seqNum) {
+Subtitle.prototype.findSeqIdxByNum = function (seqNum) {
   let key = -1;
   Object.keys(this.state.sequences).forEach(k => {
     if (this.state.sequences[k].number == seqNum) {
@@ -187,7 +192,7 @@ Subtitle.prototype.findSeqIdxByNum = function(seqNum) {
   return key;
 };
 
-Subtitle.prototype.openSeq = function(seqNum, by, openLockID) {
+Subtitle.prototype.openSeq = function (seqNum, by, openLockID) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
     console.error("Could not open sequence " + seqNum + " (not found)");
@@ -203,7 +208,7 @@ Subtitle.prototype.openSeq = function(seqNum, by, openLockID) {
   this.state.sequences[idx].openInfo = openInfo;
 };
 
-Subtitle.prototype.closeSeq = function(seqNum) {
+Subtitle.prototype.closeSeq = function (seqNum) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
     console.log("Could not close sequence " + seqNum + " (not found)");
@@ -213,7 +218,7 @@ Subtitle.prototype.closeSeq = function(seqNum) {
   this.state.sequences[idx].openInfo = null;
 };
 
-Subtitle.prototype.lockSeq = function(seqID, status) {
+Subtitle.prototype.lockSeq = function (seqID, status) {
   let idx = this.findSeqIdxByID(seqID);
   if (idx < 0) {
     console.log("Could not set lock status for sequence " + seqID + " (not found)");
@@ -223,7 +228,7 @@ Subtitle.prototype.lockSeq = function(seqID, status) {
   this.state.sequences[idx].locked = status;
 };
 
-Subtitle.prototype.deleteSeq = function(seqID, status) {
+Subtitle.prototype.deleteSeq = function (seqID, status) {
   const removeFn = (s, hkey, replaceMain) => {
     if (hkey >= 0) {
       if (replaceMain && hkey == s.history.length - 1) {
@@ -258,7 +263,7 @@ Subtitle.prototype.deleteSeq = function(seqID, status) {
   });
 };
 
-Subtitle.prototype.changeSeq = function(
+Subtitle.prototype.changeSeq = function (
   seqNum,
   newSeqID,
   newAuthorID,
@@ -303,7 +308,7 @@ Subtitle.prototype.changeSeq = function(
   seq.openInfo = null;
 };
 
-Subtitle.prototype.getDataByNum = function(seqNum) {
+Subtitle.prototype.getDataByNum = function (seqNum) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
     console.error("Could not find sequence " + seqNum + " to retrieve its data");
@@ -313,7 +318,7 @@ Subtitle.prototype.getDataByNum = function(seqNum) {
   return this.state.sequences[idx];
 };
 
-Subtitle.prototype.addComment = function(id, user, published_at, text) {
+Subtitle.prototype.addComment = function (id, user, published_at, text) {
   let exists = this.state.comments.some(c => {
     return c.id == id;
   });
@@ -331,7 +336,7 @@ Subtitle.prototype.addComment = function(id, user, published_at, text) {
   }
 };
 
-Subtitle.prototype.sortComments = function() {
+Subtitle.prototype.sortComments = function () {
   this.state.comments.sort((a, b) => {
     if (a.published_at < b.published_at) {
       if (a.pinned && !b.pinned) {
@@ -353,7 +358,7 @@ Subtitle.prototype.sortComments = function() {
   });
 };
 
-Subtitle.prototype.deleteComment = function(id) {
+Subtitle.prototype.deleteComment = function (id) {
   let idx = this.state.comments.findIndex(c => {
     return c.id == id;
   });
@@ -363,7 +368,7 @@ Subtitle.prototype.deleteComment = function(id) {
   }
 };
 
-Subtitle.prototype.setCommentPin = function(id, pinned) {
+Subtitle.prototype.setCommentPin = function (id, pinned) {
   let idx = this.state.comments.findIndex(c => {
     return c.id == id;
   });

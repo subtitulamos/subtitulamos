@@ -1,4 +1,10 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import $ from "jquery";
+import './search';
 
 export function dateDiff(a, b) {
   let utcA = Date.UTC(
@@ -36,7 +42,7 @@ function toggleAccessForm() {
     if (!$loginForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")) {
       $loginRegistry.toggleClass("bounce", false);
       $loginRegistry.toggleClass("bounce_back", true);
-      setTimeout(function() {
+      setTimeout(function () {
         $loginRegistry.toggleClass("hidden", true);
         $loginRegistry.toggleClass("bounce", true);
         $loginRegistry.toggleClass("bounce_back", false);
@@ -51,12 +57,12 @@ function toggleAccessForm() {
     //if Register Form is open and you click on Iniciar Sesion on navigation bar
     else {
       $regForm.toggleClass("sendleft_remove", true);
-      setTimeout(function() {
+      setTimeout(function () {
         $regForm.toggleClass("hidden", true);
         $loginForm.toggleClass("hidden", false);
         $loginForm.toggleClass("sendleft", true);
       }, 250);
-      setTimeout(function() {
+      setTimeout(function () {
         $regForm.toggleClass("sendleft_remove", false);
         $loginForm.toggleClass("sendleft", false);
       }, 400);
@@ -66,7 +72,7 @@ function toggleAccessForm() {
     if (!$regForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")) {
       $loginRegistry.toggleClass("bounce", false);
       $loginRegistry.toggleClass("bounce_back", true);
-      setTimeout(function() {
+      setTimeout(function () {
         $loginRegistry.toggleClass("hidden", true);
         $loginRegistry.toggleClass("bounce", true);
         $loginRegistry.toggleClass("bounce_back", false);
@@ -81,12 +87,12 @@ function toggleAccessForm() {
     //if Login Form is open and you click on Registro on navigation bar
     else {
       $loginForm.toggleClass("sendleft_remove", true);
-      setTimeout(function() {
+      setTimeout(function () {
         $loginForm.toggleClass("hidden", true);
         $regForm.toggleClass("hidden", false);
         $regForm.toggleClass("sendleft", true);
       }, 250);
-      setTimeout(function() {
+      setTimeout(function () {
         $loginForm.toggleClass("sendleft_remove", false);
         $regForm.toggleClass("sendleft", false);
       }, 400);
@@ -99,7 +105,7 @@ function closeLogRegForm() {
   let $fadingPan = $("#fade-pan");
 
   $fadingPan.toggleClass("fade_out", true);
-  setTimeout(function() {
+  setTimeout(function () {
     $fadingPan.toggleClass("hidden", true);
     $fadingPan.toggleClass("fade_out", false);
   }, 580);
@@ -109,7 +115,7 @@ function closeLogRegForm() {
   } else {
     $loginRegistry.toggleClass("bounce", false);
     $loginRegistry.toggleClass("bounce_back", true);
-    setTimeout(function() {
+    setTimeout(function () {
       $loginRegistry.toggleClass("hidden", true);
       $loginRegistry.toggleClass("bounce", true);
       $loginRegistry.toggleClass("bounce_back", false);
@@ -148,10 +154,10 @@ function doLogin(e) {
       remember: $("#login_remember_me").is(":checked"),
     },
   })
-    .done(function() {
+    .done(function () {
       window.location.reload(true);
     })
-    .fail(function(data) {
+    .fail(function (data) {
       $loginBtn.toggleClass("is-loading", false);
       $pwdField.toggleClass("is-danger", true);
       $loginError.toggleClass("hidden", false);
@@ -192,10 +198,10 @@ function register(e) {
       terms: $("#reg_terms").is(":checked"),
     },
   })
-    .done(function() {
+    .done(function () {
       window.location.reload(true);
     })
-    .fail(function(data) {
+    .fail(function (data) {
       $regButton.toggleClass("is-loading", false);
 
       let d;
@@ -221,8 +227,8 @@ function register(e) {
     });
 }
 
-$(function() {
-  $("#close_logreg_form, #fade-pan").on("click", function() {
+$(function () {
+  $("#close_logreg_form, #fade-pan").on("click", function () {
     closeLogRegForm();
   });
   $("#login, #register").on("click", toggleAccessForm);

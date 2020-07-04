@@ -5,6 +5,7 @@
 
 import Vue from "vue";
 import $ from "jquery";
+import "../css/hammer.css";
 
 Vue.component("hammertarget", {
   template: `<div v-if='!deleted' class='hammer-user-block'>

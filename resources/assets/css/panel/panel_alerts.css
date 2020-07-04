@@ -1,3 +1,5 @@
+@import './panel_base.css';
+
 .alert-user-info {
   margin-left: 15px;
 }

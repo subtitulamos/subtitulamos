@@ -1,6 +1,12 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import Vue from "vue";
 import $ from "jquery";
 import { dateDiff } from "./app.js";
+import '../css/index.css';
 
 let episodeList = new Vue({
   el: "#incategory_board",
@@ -9,14 +15,14 @@ let episodeList = new Vue({
     episodes: [],
   },
   methods: {
-    subURI: function(ep) {
+    subURI: function (ep) {
       return "/episodes/" + ep.id + "/" + ep.slug;
     },
 
-    update: function() {
+    update: function () {
       let self = this;
-      let u = function() {
-        self.episodes.forEach(function(ep, idx, arr) {
+      let u = function () {
+        self.episodes.forEach(function (ep, idx, arr) {
           let diff = dateDiff(new Date(ep.time), new Date(Date.now())) / 1000;
           let unit = "";
           if (diff >= 60) {
@@ -51,7 +57,7 @@ let episodeList = new Vue({
     },
   },
   watch: {
-    episodes: function(newEpisodes) {
+    episodes: function (newEpisodes) {
       clearInterval(this.interval);
       this.update();
     },
@@ -69,8 +75,8 @@ function search(target, page) {
     data: {
       page: page,
     },
-  }).done(function(data) {
-    data.forEach(function(_, idx, data) {
+  }).done(function (data) {
+    data.forEach(function (_, idx, data) {
       data[idx].time_ago = 0;
       data[idx].time_unit = "sec";
     });
@@ -92,7 +98,7 @@ function search(target, page) {
   });
 }
 
-$("#prev-page").on("click", function() {
+$("#prev-page").on("click", function () {
   let targetPage = Math.max(categoryPage[episodeList.category] - 1, 1);
   if (targetPage == 1) {
     $(this).toggleClass("hidden", true);
@@ -102,7 +108,7 @@ $("#prev-page").on("click", function() {
   search(episodeList.category, targetPage);
 });
 
-$("#next-page").on("click", function() {
+$("#next-page").on("click", function () {
   let targetPage = Math.min(categoryPage[episodeList.category] + 1, 10);
   if (targetPage >= 10) {
     $(this).toggleClass("hidden", true);
@@ -112,7 +118,7 @@ $("#next-page").on("click", function() {
   search(episodeList.category, targetPage);
 });
 
-$(".category_navigation_item").on("click", function() {
+$(".category_navigation_item").on("click", function () {
   let $categoryClicked = $(this);
   let $largeSplash = $("#large_splash");
   let $incategoryState = $("#incategory_state");
@@ -133,7 +139,7 @@ $(".category_navigation_item").on("click", function() {
     $whiteLogoSearchBar.toggleClass("hidden", false).attr("style", "display:none");
     $whiteLogoSearchBar.fadeIn("slow");
     $largeSplash.slideUp({
-      done: () => {},
+      done: () => { },
     });
   }
 

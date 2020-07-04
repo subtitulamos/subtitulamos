@@ -19,12 +19,13 @@ session_start();
 
 function feature_on($name)
 {
-    $v = getenv($name.'_ENABLED');
+    $v = getenv($name . '_ENABLED');
     return $v == 'true' || $v == '1' || $v == 'yes';
 }
 
 // $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class() extends \DI\Bridge\Slim\App {
+$app = new class () extends \DI\Bridge\Slim\App
+{
     protected function configureContainer(\DI\ContainerBuilder $builder)
     {
         global $entityManager;
@@ -54,8 +55,8 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 return \Elasticsearch\ClientBuilder::create()->build();
             },
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
-                $twig = new \Slim\Views\Twig(__DIR__.'/../resources/templates', [
-                    'cache' => __DIR__.'/../tmp/twig',
+                $twig = new \Slim\Views\Twig(__DIR__ . '/../resources/templates', [
+                    'cache' => __DIR__ . '/../tmp/twig',
                     'strict_variables' => getenv('TWIG_STRICT') || true,
                     'debug' => DEBUG
                 ]);
@@ -81,9 +82,6 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 $twigEnv->addFunction(new Twig\TwigFunction('feature_on', 'feature_on'));
 
                 $assetMgr = $c->get('App\Services\AssetManager');
-                $twigEnv->addFunction(new Twig\TwigFunction('css_versioned_name', function ($name) use (&$assetMgr) {
-                    return $assetMgr->getCssVersionedName($name);
-                }));
                 $twigEnv->addFunction(new Twig\TwigFunction('webpack_versioned_name', function ($name) use (&$assetMgr) {
                     return $assetMgr->getWebpackVersionedName($name);
                 }));

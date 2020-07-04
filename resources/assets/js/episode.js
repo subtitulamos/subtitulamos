@@ -6,6 +6,7 @@
 import Vue from "vue";
 import $ from "jquery";
 import "./vue/comment.js";
+import "../css/episode.css";
 
 let $newTranslationButton = $(".translate_subtitle");
 $newTranslationButton.on("click", function () {

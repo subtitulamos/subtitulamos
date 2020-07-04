@@ -1,6 +1,12 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import Vue from "vue";
 import $ from "jquery";
 import "./vue/comment.js";
+import "../css/comment_list.css";
 
 let comments = new Vue({
   el: "#comment_content",
@@ -9,11 +15,11 @@ let comments = new Vue({
     page: 1,
   },
   methods: {
-    refresh: function() {
+    refresh: function () {
       loadComments(this.page);
     },
 
-    remove: function(id) {
+    remove: function (id) {
       let c, cidx;
       for (let i = 0; i < this.comments.length; ++i) {
         if (this.comments[i].id == id) {
@@ -46,7 +52,7 @@ let comments = new Vue({
         });
     },
 
-    pin: function(id) {
+    pin: function (id) {
       $.ajax({
         url: "/episodes/" + epId + "/comments/" + id + "/pin",
         method: "POST",
@@ -60,14 +66,14 @@ let comments = new Vue({
         });
     },
 
-    nextPage: function() {
+    nextPage: function () {
       this.page++;
       loadComments(this.page);
 
       document.getElementById("comments").scrollIntoView();
     },
 
-    prevPage: function() {
+    prevPage: function () {
       this.page--;
       loadComments(this.page);
 
@@ -81,10 +87,10 @@ function loadComments(page) {
     url: "/comments/" + commentType + "/load?page=" + page,
     method: "GET",
   })
-    .done(function(reply) {
+    .done(function (reply) {
       comments.comments = reply;
     })
-    .fail(function() {
+    .fail(function () {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 }

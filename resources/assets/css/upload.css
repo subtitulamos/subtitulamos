@@ -3,6 +3,8 @@
  * @copyright 2020 subtitulamos.tv
  */
 
+@import 'app.css';
+
 #upload {
   background-color: #f0eeee;
   padding: 10px;

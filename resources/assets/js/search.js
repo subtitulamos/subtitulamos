@@ -1,7 +1,12 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import Vue from "vue";
 import $ from "jquery";
 
-$(function() {
+$(function () {
   let $searchBar = $("#search_bar");
   let $searchResults = $("#search-results");
   let searchTimerHandle = null;
@@ -30,11 +35,11 @@ $(function() {
       data: {
         q: q,
       },
-    }).done(function(reply) {
+    }).done(function (reply) {
       $searchResults.html("").toggleClass("hidden", false);
 
       if (reply.length > 0) {
-        reply.forEach(function(show) {
+        reply.forEach(function (show) {
           let url = "/shows/" + show.id;
           let $link = $("<a>")
             .attr("href", url)
@@ -44,7 +49,7 @@ $(function() {
           linkResultList.push(url);
 
           if (show.episodes) {
-            show.episodes.forEach(function(ep) {
+            show.episodes.forEach(function (ep) {
               let epURL = "/episodes/" + ep.id;
               $link = $("<a>")
                 .attr("href", epURL)
@@ -78,7 +83,7 @@ $(function() {
     });
   }
 
-  $searchBar.on("keyup", function(e) {
+  $searchBar.on("keyup", function (e) {
     if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
       window.location = linkResultList[0];
       e.preventDefault();
@@ -92,16 +97,16 @@ $(function() {
   });
 
   let hideTimeoutHandle = null;
-  $searchBar.on("focusin", function() {
+  $searchBar.on("focusin", function () {
     clearTimeout(hideTimeoutHandle);
     $searchResults.toggleClass("hidden", $searchBar.val() == "");
   });
-  $searchBar.on("focusout", function() {
-    hideTimeoutHandle = setTimeout(function() {
+  $searchBar.on("focusout", function () {
+    hideTimeoutHandle = setTimeout(function () {
       $searchResults.toggleClass("hidden", true);
     }, 500);
   });
-  $searchBar.parent().on("submit", function(e) {
+  $searchBar.parent().on("submit", function (e) {
     e.preventDefault();
   });
 });

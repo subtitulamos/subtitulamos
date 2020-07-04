@@ -1,5 +1,5 @@
 {% macro css(name) %}
-  <link href="{{ css_versioned_name(name ~ ".css") }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ webpack_versioned_name(name ~ ".css") }}" rel="stylesheet" type="text/css"/>
 {% endmacro %}
 
 {% macro js(name, props) %}

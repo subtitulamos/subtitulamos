@@ -50,7 +50,7 @@ class UserController
             ];
         }
 
-        return $twig->render($response, 'user_public_profile.twig', [
+        return $twig->render($response, 'user_profile.twig', [
             'user' => $user,
             'uploaded_episodes' => $uploadedEpisodes,
             'collaborated_episodes' => $colaboratedEpisodes
@@ -102,8 +102,8 @@ class UserController
         if ($request->getParam('duration-type', '') == 'permanent') {
             $until->modify('+20 years');
         } else {
-            $d = (int)$request->getParam('days', 0);
-            $h = (int)$request->getParam('hours', 0);
+            $d = (int) $request->getParam('days', 0);
+            $h = (int) $request->getParam('hours', 0);
 
             if ($d >= 0 && $h >= 0 && $d + $h > 0) {
                 $until->modify(sprintf('+%d days', $d));
@@ -130,7 +130,7 @@ class UserController
             $em->persist($ban);
             $em->flush();
 
-            $auth->addFlash('success', 'Usuario baneado hasta el '.$until->format('d/M/Y H:i'));
+            $auth->addFlash('success', 'Usuario baneado hasta el ' . $until->format('d/M/Y H:i'));
         } else {
             foreach ($errors as $error) {
                 $auth->addFlash('error', $error);

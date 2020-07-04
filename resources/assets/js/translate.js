@@ -1,3 +1,8 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import Vue from "vue";
 import $ from "jquery";
 import "./vue/comment.js";
@@ -6,6 +11,7 @@ import RobustWebSocket from "robust-websocket";
 import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
+import "../css/translate.scss";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)

@@ -1,3 +1,5 @@
+@import 'app.css';
+
 #user-settings-wrapper {
   padding-top: 10px;
   padding-bottom: 80px; /* Height of the footer + 150 */
