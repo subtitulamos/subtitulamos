@@ -1,0 +1,54 @@
+version: '3'
+
+# NOTE: This is a development-only docker-compose file
+#       It is very similar to the production configuration, but less optimized
+
+services:
+  nginx:
+    container_name: subs_nginx
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./config/site.conf:/etc/nginx/conf.d/default.conf
+      - ./app:/code/app:cached
+      - ./public:/code/public:cached
+      - ./resources:/code/resources
+    restart: on-failure
+    links:
+      - phpsv
+
+  phpsv:
+    container_name: subs_phpsv
+    image: subs_phpsv
+    build: .
+    working_dir: /code
+    links:
+      - mariadb
+      - redis
+    volumes:
+      - ./app:/code/app
+      - ./public:/code/public
+      - ./resources:/code/resources
+      - ./composer.json:/code/composer.json
+      - ./composer.lock:/code/composer.lock
+      - ./cli-config.php:/code/cli-config.php
+
+  mariadb:
+    container_name: subs_mariadb
+    image: mariadb/server:10.4
+    ports:
+      - "33066:3306"
+    restart: on-failure
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_TCP_PORT=3306
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+
+  redis:
+    container_name: subs_redis
+    image: redis:6.0-alpine
+    volumes:
+      - ./data/redis:/data

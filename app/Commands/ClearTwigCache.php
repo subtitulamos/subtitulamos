@@ -23,7 +23,7 @@ class ClearTwigCache extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cacheDir = __DIR__.'/../../tmp/twig';
+        $cacheDir = SUBS_TMP_DIR.'/twig';
         if (!\is_dir($cacheDir)) {
             $output->writeln('Twig template cache folder does not exist, nothing to clear');
             return;

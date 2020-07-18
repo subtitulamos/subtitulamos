@@ -10,26 +10,36 @@ require __DIR__.'/../vendor/autoload.php';
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
+function getEnvOrDefault($varname, $default)
+{
+    $envValue = getenv($varname);
+    if (!$envValue) {
+        $envValue = $default;
+    }
+
+    return $envValue;
+}
+
 // Load env variables from file
 if (!getenv('SKIP_ENV_FILE')) {
     $dotenv = new Dotenv\Dotenv(__DIR__.'/..');
     $dotenv->load();
 }
 
-$env = getenv('ENVIRONMENT');
-define('ENVIRONMENT_NAME', $env ? $env : 'dev');
-define('DEBUG', getenv('DEBUG') == 'true');
-define('ELASTICSEARCH_NAMESPACE', getenv('ELASTICSEARCH_NAMESPACE') ? getenv('ELASTICSEARCH_NAMESPACE') : 'ns');
-define('SITE_URL', getenv('SITE_URL') ? getenv('SITE_URL') : 'https://www.subtitulamos.tv');
+define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT', 'dev'));
+define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
+define('ELASTICSEARCH_NAMESPACE', getEnvOrDefault('ELASTICSEARCH_NAMESPACE', 'ns'));
+define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
+define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, __DIR__.'/../tmp/doctrine', null, false);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', null, false);
 $conn = [
     'driver' => 'pdo_mysql',
-    'dbname' => getenv('DATABASE_NAME'),
-    'user' => getenv('DATABASE_USER'),
-    'password' => getenv('DATABASE_PASSWORD'),
-    'host' => getenv('DATABASE_HOST')
+    'dbname' => getenv('MARIADB_DATABASE'),
+    'user' => getenv('MARIADB_USER'),
+    'password' => getenv('MARIADB_PASSWORD'),
+    'host' => getenv('MARIADB_HOST')
 ];
 
 // $entityManager is a global isntance and is used as such

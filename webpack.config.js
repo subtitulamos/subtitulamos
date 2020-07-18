@@ -101,5 +101,8 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js' // TODO: Fully migrate to Vue files
         }
+    },
+    watchOptions: {
+        ignored: /node_modules/,
     }
 };

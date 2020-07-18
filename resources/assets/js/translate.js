@@ -1059,10 +1059,11 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
 // Set up websocket (which will itself load the sub)
 const wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
+const route = window.location.port ? window.location.hostname + ":" + window.location.port : window.location.hostname;
 const ws = new ReconnectingWebsocket(
   wsProtocol +
   "://" +
-  window.location.hostname +
+  route +
   "/translation-rt?subID=" +
   subID +
   "&token=" +
