@@ -5,7 +5,7 @@
   "dependencies": {
     "dateformat": "^2.2.0",
     "jquery": "^3.5.1",
-    "robust-websocket": "^1.0.0",
+    "reconnecting-websocket": "^3.2.2",
     "sprintf-js": "^1.1.2",
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^17.0.0",

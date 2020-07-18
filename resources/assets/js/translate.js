@@ -7,7 +7,7 @@ import Vue from "vue";
 import $ from "jquery";
 import "./vue/comment.js";
 import Subtitle from "./subtitle.js";
-import RobustWebSocket from "robust-websocket";
+import ReconnectingWebsocket from "reconnecting-websocket";
 import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
@@ -1059,7 +1059,7 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
 // Set up websocket (which will itself load the sub)
 const wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
-const ws = new RobustWebSocket(
+const ws = new ReconnectingWebsocket(
   wsProtocol +
   "://" +
   window.location.hostname +
