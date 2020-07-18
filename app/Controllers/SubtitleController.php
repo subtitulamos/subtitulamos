@@ -11,6 +11,7 @@ use App\Entities\Pause;
 
 use App\Services\Auth;
 use App\Services\Langs;
+use App\Services\Sonic;
 use App\Services\Translation;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
@@ -18,7 +19,7 @@ use Slim\Views\Twig;
 
 class SubtitleController
 {
-    public function delete($subId, $request, $response, EntityManager $em, \Slim\Router $router, \Elasticsearch\Client $client)
+    public function delete($subId, $request, $response, EntityManager $em, \Slim\Router $router)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
@@ -35,16 +36,11 @@ class SubtitleController
             if (count($episode->getVersions()) == 1) { // If this sub was the last of the version
                 if (count($show->getEpisodes()) == 1) { // If this episode was the last of the show
                     // Remove show from search completely
-                    try {
-                        $client->delete([
-                            'index' => ELASTICSEARCH_NAMESPACE.'_shows',
-                            'type' => 'show',
-                            'id' => $show->getId()
-                        ]);
-                    } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
-                        // There was nothing to remove
-                    }
+                    $ingest = Sonic::getIngestClient();
+                    $ingest->pop(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
+                    $ingest->disconnect();
 
+                    // Remove from database
                     $em->remove($show);
                 }
 

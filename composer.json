@@ -10,8 +10,8 @@
     "neitanod/forceutf8": "~2.0",
     "dflydev/fig-cookies": "^1.0",
     "cocur/slugify": "^2.5",
-    "elasticsearch/elasticsearch": "^5.2",
-    "symfony/console": "^3.3"
+    "symfony/console": "^3.3",
+    "ppshobi/psonic": "^1.2"
   },
   "autoload": {
     "psr-4": {

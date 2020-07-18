@@ -8,8 +8,8 @@
 namespace App\Controllers;
 
 use App\Services\Auth;
-
 use App\Services\Langs;
+use App\Services\Sonic;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -154,7 +154,7 @@ class SearchController
         return $response->withJson($epList);
     }
 
-    public function query($request, $response, EntityManager $em, \Elasticsearch\Client $client)
+    public function query($request, $response, EntityManager $em)
     {
         $q = $request->getQueryParam('q');
         if (empty($q)) {
@@ -162,66 +162,47 @@ class SearchController
         }
 
         $shows = [];
+        if (mb_strlen($q) > 2) {
+            $words = explode(' ', $q);
 
-        if (mb_strlen($q) > 3) {
-            $episode = $season = -1;
+            $search = Sonic::getSearchClient();
+            $newQuery = [];
+            foreach ($words as $word) {
+                if (!$word) {
+                    continue;
+                }
 
-            if (\preg_match('/(\d+)x(\d+)?|S(\d+)E?(\d+)?/i', $q, $matches)) {
-                // We may have episode & season
-                $season = isset($matches[1]) ? (int)$matches[1] : (isset($matches[3]) ? (int)$matches[3] : -1);
-                $episode = isset($matches[2]) ? (int)$matches[2] : (isset($matches[4]) ? (int)$matches[4] : -1);
-                $showName = trim(str_replace($matches[0], '', $q));
-            } else {
-                // No episode in search
-                $showName = $q;
+                $sugg = $search->suggest(Sonic::SHOW_NAME_COLLECTION, 'default', $word, /* limit */ 1);
+                if (!isset($sugg[0]) || !$sugg[0]) {
+                    continue;
+                }
+
+                $newQuery[] = $sugg[0];
             }
 
-            $r = $client->search([
-                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
-                'type' => 'show',
-                'body' => [
-                    'query' => [
-                        'match' => [
-                            'name' => [
-                                'query' => $showName,
-                                'fuzziness' => 'AUTO',
-                                'cutoff_frequency' => 0.01
-                            ]
-                        ]
-                    ]
-                ]
-            ]);
+            $newQ = implode(' ', $newQuery);
+            $resultList = [];
+            if ($newQ) {
+                $showIds = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $newQ, 10);
+                if (count($showIds) > 0) {
+                    $shows = $em->createQuery('SELECT s.id, s.name FROM App:Show s WHERE s.id IN (:shows)')
+                        ->setParameter('shows', $showIds)
+                        ->getResult();
 
-            if (!empty($r['hits'])) {
-                foreach ($r['hits']['hits'] as $hit) {
-                    $eps = [];
-                    if ($season >= 0 || $episode >= 0) {
-                        $ep = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :show AND e.number = :epnum AND e.season = :season')
-                            ->setParameter('show', $hit['_id'])
-                            ->setParameter('epnum', $episode)
-                            ->setParameter('season', $season)
-                            ->getOneOrNullResult();
-
-                        if ($ep) {
-                            $eps[] = [
-                                'id' => $ep->getId(),
-                                'name' => $ep->getName(),
-                                'season' => $ep->getSeason(),
-                                'number' => $ep->getNumber()
-                            ];
-                        }
+                    foreach ($shows as $show) {
+                        $resultList[] = [
+                            'id' => $show['id'],
+                            'name' => $show['name'],
+                        ];
                     }
-
-                    $shows[] = [
-                        'id' => $hit['_id'],
-                        'name' => $hit['_source']['name'],
-                        'episodes' => $eps
-                    ];
                 }
             }
+
+            $search->disconnect();
+            return $response->withJson($resultList);
         }
 
-        return $response->withJson($shows);
+        return $response->withStatus(400);
     }
 
     public function listPaused($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)

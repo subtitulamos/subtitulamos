@@ -3,8 +3,12 @@
 vendor/
 node_modules/
 tmp/
-data/*
-!data/.gitkeep
+data/mariadb/*
+data/redis/*
+data/sonic/*
+!data/mariadb/.gitkeep
+!data/redis/.gitkeep
+!data/sonic/.gitkeep
 /.vscode
 /logs/*.log
 *~

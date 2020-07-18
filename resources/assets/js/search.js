@@ -29,6 +29,16 @@ $(function () {
     lastSearchedText = q;
     linkResultList = [];
 
+    if (q.length < 3) {
+      $searchResults.html("").toggleClass("hidden", false);
+      $searchResults.append(
+        $("<li>")
+          .attr("class", "info")
+          .html("Sigue escribiendo...")
+      );
+      return;
+    }
+
     $.ajax({
       url: "/search/query",
       method: "GET",
@@ -61,18 +71,6 @@ $(function () {
             });
           }
         });
-      } else if (q.length <= 3) {
-        $searchResults.append(
-          $("<li>")
-            .attr("class", "info")
-            .html("Sigue escribiendo...")
-        );
-      } else if (q.length <= 15) {
-        $searchResults.append(
-          $("<li>")
-            .attr("class", "info")
-            .html("No hay resultados de momento. Sigue escribiendo...")
-        );
       } else {
         $searchResults.append(
           $("<li>")

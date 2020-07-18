@@ -28,9 +28,9 @@ if (!getenv('SKIP_ENV_FILE')) {
 
 define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT', 'dev'));
 define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
-define('ELASTICSEARCH_NAMESPACE', getEnvOrDefault('ELASTICSEARCH_NAMESPACE', 'ns'));
 define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
 define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));
+define('SONIC_PASSWORD', getEnvOrDefault('SONIC_PASSWORD', 'SecretPassword'));
 
 // Initialize Doctrine's ORM stuff
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', null, false);

@@ -16,7 +16,7 @@ use Respect\Validation\Validator as v;
 
 class AlertController
 {
-    public function subtitleAlert($subId, $request, $response, EntityManager $em, \Slim\Router $router, \Elasticsearch\Client $client, Auth $auth)
+    public function subtitleAlert($subId, $request, $response, EntityManager $em, Auth $auth)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {

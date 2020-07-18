@@ -14,6 +14,7 @@ use App\Entities\Subtitle;
 
 use App\Entities\Version;
 use App\Services\Auth;
+use App\Services\Sonic;
 use App\Services\Srt\SrtParser;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\RequestInterface;
@@ -33,7 +34,7 @@ class UploadController
         ]);
     }
 
-    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth, \Elasticsearch\Client $client)
+    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth)
     {
         $param = $request->getParsedBody();
 
@@ -158,7 +159,7 @@ class UploadController
         $em->persist($version);
         $em->persist($subtitle);
         $sequences = $srtParser->getSequences();
-        foreach ($sequences as $k => $sequence) {
+        foreach ($sequences as $sequence) {
             $sequence->setSubtitle($subtitle);
             $sequence->setAuthor($auth->getUser());
 
@@ -169,14 +170,16 @@ class UploadController
 
         // Index the new show if it was just created
         if (isset($newShowName)) {
-            $client->index([
-                'index' => ELASTICSEARCH_NAMESPACE.'_shows',
-                'type' => 'show',
-                'id' => $show->getId(),
-                'body' => [
-                    'name' => $show->getName()
-                ]
-            ]);
+            try {
+                // Add show to search!
+                $ingest = Sonic::getIngestClient();
+                $ingest->push(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
+                $ingest->disconnect();
+            } catch (\Exception $e) {
+                // Okay, we already added the show, so there's not much we can do
+                // We could remove the show and show the user a failure, but probably not the best idea
+                // Maybe we could log this failure (TODO: <)
+            }
         }
 
         $response->getBody()->write($router->pathFor('episode', ['id' => $episode->getId()]));

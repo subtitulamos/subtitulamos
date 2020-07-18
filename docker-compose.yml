@@ -10,7 +10,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./config/site.conf:/etc/nginx/conf.d/default.conf
+      - ./config/nginx-site.conf:/etc/nginx/conf.d/default.conf
       - ./app:/code/app:cached
       - ./public:/code/public:cached
       - ./resources:/code/resources
@@ -52,3 +52,10 @@ services:
     image: redis:6.0-alpine
     volumes:
       - ./data/redis:/data
+
+  sonic:
+    container_name: subs_sonic
+    image: valeriansaliou/sonic:v1.3.0
+    volumes:
+      - ./data/sonic:/var/lib/sonic/store/
+      - ./config/sonic.cfg:/etc/sonic.cfg

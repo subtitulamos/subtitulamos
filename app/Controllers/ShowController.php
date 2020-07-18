@@ -26,7 +26,7 @@ class ShowController
 
     public function viewAll(RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
     {
-        $shows = $em->getRepository('App:Show')->findAll(); // This hydrates shows on the following query
+        $em->getRepository('App:Show')->findAll(); // This hydrates shows on the following query
         $seasons = $em->createQuery('SELECT e, COUNT(DISTINCT e.season) FROM App:Episode e GROUP BY e.show')->getResult();
 
         $showListByInitial = [];
@@ -172,7 +172,7 @@ class ShowController
         ]);
     }
 
-    public function saveProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, \Elasticsearch\Client $client, Twig $twig, \Slim\Router $router)
+    public function saveProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router)
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {

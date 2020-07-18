@@ -6,7 +6,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__.'/bootstrap.php';
 
 use Symfony\Component\Console\Application;
 
@@ -14,4 +14,5 @@ $application = new Application();
 $application->add(new \App\Commands\ClearTwigCache());
 $application->add(new \App\Commands\CreateUserBots());
 $application->add(new \App\Commands\GenerateSitemaps());
+$application->add(new \App\Commands\RegenerateSearchIndex());
 $application->run();

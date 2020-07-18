@@ -53,8 +53,7 @@ _Note_: You will generally not need to modify the NodeJS server since all the re
 - MariaDB 10.4
 - nginx + php7.4-fpm
 - Redis
-- ElasticSearch 5.5+ [[Instructions]](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/_installation.html)
-  - ElasticSearch requires a recent JDK 8 version. You may need to [use a backport](https://linux-tips.com/t/how-to-install-java-8-on-debian-jessie/349/2) from a newer OS release
+- [Sonic](https://github.com/valeriansaliou/sonic)
 
 
 # Development

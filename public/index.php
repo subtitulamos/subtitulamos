@@ -50,9 +50,6 @@ $app = new class() extends \DI\Bridge\Slim\App {
             \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
                 return new Slugify();
             },
-            \Elasticsearch\Client::class => function (ContainerInterface $c) {
-                return \Elasticsearch\ClientBuilder::create()->setEndpoint(getenv('ELASTICSEARCH_HOST'))->build();
-            },
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
                 $twig = new \Slim\Views\Twig(__DIR__.'/../resources/templates', [
                     'cache' => SUBS_TMP_DIR.'/twig',
