@@ -8,7 +8,7 @@ services:
     container_name: subs_nginx
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "8080:8080"
     volumes:
       - ./config/nginx-site.conf:/etc/nginx/conf.d/default.conf
       - ./src/subtitulamos/app:/code/app:cached
@@ -46,8 +46,6 @@ services:
     restart: on-failure
     env_file:
       - ./.env
-    environment:
-      - MYSQL_TCP_PORT=3306
     volumes:
       - ./data/mariadb:/var/lib/mysql
 
