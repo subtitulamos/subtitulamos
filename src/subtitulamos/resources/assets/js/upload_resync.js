@@ -6,12 +6,6 @@
 import $ from "jquery";
 import "../css/upload.css";
 
-function pad(n, width, z) {
-  z = z || "0";
-  n = n + "";
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-}
-
 $(function () {
   $("#lang, #version, #comments, #sub").on("change", function () {
     $("#" + $(this).attr("id") + "-status").toggleClass("hidden", true);

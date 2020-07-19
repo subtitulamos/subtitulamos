@@ -3,7 +3,6 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import Vue from "vue";
 import $ from "jquery";
 
 $(function () {
