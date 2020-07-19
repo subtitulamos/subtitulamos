@@ -3,18 +3,18 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import $ from "jquery";
 import '../css/rules.css';
+import { onDomReady } from "./utils";
 
-$(function () {
-  $(".spoiler-wrapper").on("click", function () {
-    let $this = $(this);
-    let $spoiler = $this.find(".spoiler-content");
-    $this
-      .find("i")
-      .toggleClass("fa-caret-down")
-      .toggleClass("fa-caret-up");
+onDomReady(() => {
+  for (const $spoilerWrapper of document.querySelectorAll(".spoiler-wrapper")) {
+    $spoilerWrapper.addEventListener("click", function () {
+      const $spoiler = this.querySelector(".spoiler-content");
+      const $icon = this.querySelector("i");
+      $icon.classList.toggle("fa-caret-down");
+      $icon.classList.toggle("fa-caret-up");
 
-    $spoiler.css("display", $spoiler.css("display") == "none" ? "block" : "none");
-  });
+      $spoiler.style.display = !$spoiler.style.display || $spoiler.style.display == "none" ? "block" : "none";
+    });
+  }
 });
