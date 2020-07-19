@@ -4,14 +4,14 @@
  */
 
 import Vue from "vue";
-import $ from "jquery";
 import "../css/hammer.css";
+import { easyFetch } from "./utils";
 
 Vue.component("hammertarget", {
   template: `<div v-if='!deleted' class='hammer-user-block'>
         <a :href='\"/users/\"+id'>{{ username }}</a><br/>
-            {{ total }} entradas totales ({{ corrected }} corregidas) - <a href="javascript:void()" @click='completeHammer'>Borrar todas</a><br/>
-            {{ latest }} secuencias sin corregir <span v-show="latest > 0">- <a href="javascript:void()" @click='latestHammer'>Borrar</a></span>
+            {{ total }} entradas totales ({{ corrected }} corregidas) - <a href="javascript:void(0)" @click='completeHammer'>Borrar todas</a><br/>
+            {{ latest }} secuencias sin corregir <span v-show="latest > 0">- <a href="javascript:void(0)" @click='latestHammer'>Borrar</a></span>
     </div>`,
   props: ["id", "username", "countCorrected", "countLatest"],
   data: function () {
@@ -39,22 +39,27 @@ Vue.component("hammertarget", {
           "</b> en el subtítulo.<br/><br/>¿Estás seguro de querer continuar?",
       }).then(result => {
         if (result.value) {
-          $.ajax({
-            url: "/subtitles/" + subID + "/hammer",
+          easyFetch("/subtitles/" + subID + "/hammer", {
             method: "POST",
-            data: {
+            rawBody: {
               user: this.id,
               type: "complete",
             },
-          }).done(() => {
-            this.deleted = true;
-            this.corrected = 0;
-            this.latest = 0;
+          })
+            .then(() => {
+              this.deleted = true;
+              this.corrected = 0;
+              this.latest = 0;
 
-            Toasts.success.fire(
-              "Poof! Las contribuciones de <b>" + this.username + "</b> han sido eliminadas"
-            );
-          });
+              Toasts.success.fire(
+                "Poof! Las contribuciones de&nbsp;<b>" + this.username + "</b>&nbsp;han sido eliminadas"
+              );
+            })
+            .catch(() => {
+              Toasts.error.fire(
+                "Ha ocurrido un problema al intentar borrar las contribuciones. Por favor, inténtalo de nuevo"
+              );
+            });
         }
       });
     },
@@ -71,25 +76,30 @@ Vue.component("hammertarget", {
           "</b> en el subtítulo.<br/><br/>¿Estás seguro de querer continuar?",
       }).then(result => {
         if (result.value) {
-          $.ajax({
-            url: "/subtitles/" + subID + "/hammer",
+          easyFetch("/subtitles/" + subID + "/hammer", {
             method: "POST",
-            data: {
+            rawBody: {
               user: this.id,
               type: "latest",
             },
-          }).done(() => {
-            this.latest = 0;
-            Toasts.success.fire(
-              "Las contribuciones sin corregir de <b>" + this.username + "</b> han sido eliminadas"
-            );
-          });
+          })
+            .then(() => {
+              this.latest = 0;
+              Toasts.success.fire(
+                "Las contribuciones sin corregir de&nbsp;<b>" + this.username + "</b>&nbsp;han sido eliminadas"
+              );
+            })
+            .catch(() => {
+              Toasts.error.fire(
+                "Ha ocurrido un problema al intentar borrar las contribuciones. Por favor, inténtalo de nuevo"
+              );
+            });
         }
       });
     },
   },
 });
 
-let page = new Vue({
+const page = new Vue({
   el: "#hammer",
 });

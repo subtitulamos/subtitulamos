@@ -33,3 +33,26 @@ export function onDomReady(callback) {
         document.addEventListener("DOMContentLoaded", callback);
     }
 }
+
+export function raiseFetchErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
+
+export function easyFetch(url, baseOpts) {
+    const opts = JSON.parse(JSON.stringify(baseOpts)); // deep clone
+    if (opts.method === "POST" && opts.rawBody instanceof Object) {
+        opts.body = JSON.stringify(opts.rawBody);
+        if (!opts.headers) {
+            opts.headers = {};
+        }
+
+        if (!opts.headers['Content-Type']) {
+            opts.headers['Content-Type'] = 'application/json';
+        }
+    }
+
+    return fetch(url, opts).then(raiseFetchErrors);
+}
