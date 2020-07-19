@@ -17,11 +17,14 @@ services:
     restart: on-failure
     links:
       - phpsv
+      - translate
 
   phpsv:
     container_name: subs_phpsv
     image: subs_phpsv
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.PHP
     working_dir: /code
     links:
       - mariadb
@@ -60,3 +63,16 @@ services:
     volumes:
       - ./data/sonic:/var/lib/sonic/store/
       - ./config/sonic.cfg:/etc/sonic.cfg
+
+  translate:
+    container_name: subs_translate
+    image: subs_translate
+    build:
+      context: .
+      dockerfile: Dockerfile.Go
+      args:
+        TRANSLATE_SV_PORT: ${TRANSLATE_SV_PORT}
+        REDIS_PUBSUB_ENV: ${ENVIRONMENT}
+        REDIS_ADDR: ${REDIS_HOST}:${REDIS_PORT}
+    links:
+      - redis
