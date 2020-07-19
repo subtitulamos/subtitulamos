@@ -158,23 +158,17 @@ class SrtParser
         return true;
     }
 
-    /**
-     * @return string
-     */
-    public function getErrorDesc()
+    public function getErrorDesc(): string
     {
         return $this->errorDesc;
     }
 
-    /**
-     * @return string
-     */
-    public function getSequences()
+    public function getSequences(): array
     {
         return $this->sequences;
     }
 
-    public static function removeUtf8Bom($text)
+    public static function removeUtf8Bom($text): string
     {
         $bom = pack('H*', 'EFBBBF');
         $text = preg_replace("/^$bom/", '', $text);
