@@ -1,6 +1,6 @@
 FROM php:7.4-fpm-alpine
 WORKDIR /code
-COPY . .
+COPY ./src/subtitulamos .
 RUN apk add autoconf g++ libc-dev make gcc \
     && pecl install redis-5.3.1 \
     && docker-php-ext-install -j$(nproc) pdo_mysql \

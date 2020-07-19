@@ -11,9 +11,9 @@ services:
       - "8080:80"
     volumes:
       - ./config/nginx-site.conf:/etc/nginx/conf.d/default.conf
-      - ./app:/code/app:cached
-      - ./public:/code/public:cached
-      - ./resources:/code/resources
+      - ./src/subtitulamos/app:/code/app:cached
+      - ./src/subtitulamos/public:/code/public:cached
+      - ./src/subtitulamos/resources:/code/resources
     restart: on-failure
     links:
       - phpsv
@@ -27,12 +27,13 @@ services:
       - mariadb
       - redis
     volumes:
-      - ./app:/code/app
-      - ./public:/code/public
-      - ./resources:/code/resources
-      - ./composer.json:/code/composer.json
-      - ./composer.lock:/code/composer.lock
-      - ./cli-config.php:/code/cli-config.php
+      - ./.env:/code/.env
+      - ./src/subtitulamos/app:/code/app
+      - ./src/subtitulamos/public:/code/public
+      - ./src/subtitulamos/resources:/code/resources
+      - ./src/subtitulamos/composer.json:/code/composer.json
+      - ./src/subtitulamos/composer.lock:/code/composer.lock
+      - ./src/subtitulamos/cli-config.php:/code/cli-config.php
 
   mariadb:
     container_name: subs_mariadb
