@@ -18,6 +18,8 @@ services:
     links:
       - phpsv
       - translate
+    depends_on:
+      - phpsv
 
   phpsv:
     container_name: subs_phpsv

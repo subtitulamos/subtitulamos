@@ -3,84 +3,79 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import $ from "jquery";
+import { onDomReady, easyFetch } from './utils';
 
-$(function () {
-  let $searchBar = $("#search_bar");
-  let $searchResults = $("#search-results");
+function createResultRow(contents) {
+  const $row = document.createElement("li");
+  if (contents instanceof HTMLElement) {
+    $row.append(contents);
+  } else {
+    $row.classList.add("info");
+    $row.innerHTML = contents;
+  }
+  return $row;
+}
+
+onDomReady(function () {
+  let $searchBar = document.getElementById("search-bar");
+  let $searchResults = document.getElementById("search-results");
   let searchTimerHandle = null;
   let lastSearchedText = "";
   let linkResultList = [];
 
-  function zeropad(n, width) {
-    n = n + "";
-    return n.length >= width ? n : new Array(width - n.length + 1).join("0") + n;
-  }
-
   function search() {
     searchTimerHandle = null;
 
-    let q = $searchBar.val();
-    if (q == "" || q == lastSearchedText) {
+    let searchQuery = $searchBar.value;
+    if (searchQuery === "" || searchQuery === lastSearchedText) {
       return;
     }
 
-    lastSearchedText = q;
+    lastSearchedText = searchQuery;
     linkResultList = [];
 
-    if (q.length < 3) {
-      $searchResults.html("").toggleClass("hidden", false);
-      $searchResults.append(
-        $("<li>")
-          .attr("class", "info")
-          .html("Sigue escribiendo...")
-      );
+    if (searchQuery.length < 3) {
+      $searchResults.innerHTML = "";
+      $searchResults.classList.toggle("hidden", false);
+      $searchResults.append(createResultRow("Sigue escribiendo..."));
       return;
     }
 
-    $.ajax({
-      url: "/search/query",
-      method: "GET",
-      data: {
-        q: q,
+    easyFetch("/search/query", {
+      params: {
+        q: searchQuery,
       },
-    }).done(function (reply) {
-      $searchResults.html("").toggleClass("hidden", false);
+    })
+      .then(response => response.json())
+      .then(function (reply) {
+        $searchResults.innerHTML = "";
+        $searchResults.classList.toggle("hidden", false);
 
-      if (reply.length > 0) {
-        reply.forEach(function (show) {
-          let url = "/shows/" + show.id;
-          let $link = $("<a>")
-            .attr("href", url)
-            .html(show.name);
-          let $result = $("<li>").append($link);
-          $searchResults.append($result);
-          linkResultList.push(url);
+        if (reply.length > 0) {
+          reply.forEach(function (show) {
+            const showUrl = "/shows/" + show.id;
+            let $link = document.createElement("a");
+            $link.href = showUrl;
+            $link.innerHTML = show.name;
 
-          if (show.episodes) {
-            show.episodes.forEach(function (ep) {
-              let epURL = "/episodes/" + ep.id;
-              $link = $("<a>")
-                .attr("href", epURL)
-                .html(show.name + " - " + ep.season + "x" + zeropad(ep.number, 2) + " " + ep.name);
-              $result = $("<li>").append($link);
-              $searchResults.append($result);
-
-              linkResultList.push(epURL);
-            });
-          }
-        });
-      } else {
+            $searchResults.append(createResultRow($link));
+            linkResultList.push(showUrl);
+          });
+        } else {
+          $searchResults.append(
+            createResultRow("Parece que no tenemos resultados para esta búsqueda")
+          );
+        }
+      }).catch(() => {
+        $searchResults.innerHTML = "";
+        $searchResults.classList.toggle("hidden", false);
         $searchResults.append(
-          $("<li>")
-            .attr("class", "info")
-            .html("Parece que no tenemos resultados para esta búsqueda")
+          createResultRow("Ha ocurrido un error durante la búsqueda. Por favor, inténtalo de nuevo")
         );
-      }
-    });
+      });
   }
 
-  $searchBar.on("keyup", function (e) {
+  $searchBar.addEventListener("keyup", function (e) {
     if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
       window.location = linkResultList[0];
       e.preventDefault();
@@ -94,16 +89,16 @@ $(function () {
   });
 
   let hideTimeoutHandle = null;
-  $searchBar.on("focusin", function () {
+  $searchBar.addEventListener("focusin", function () {
     clearTimeout(hideTimeoutHandle);
-    $searchResults.toggleClass("hidden", $searchBar.val() == "");
+    $searchResults.classList.toggle("hidden", $searchBar.value == "");
   });
-  $searchBar.on("focusout", function () {
+  $searchBar.addEventListener("focusout", function () {
     hideTimeoutHandle = setTimeout(function () {
-      $searchResults.toggleClass("hidden", true);
+      $searchResults.classList.toggle("hidden", true);
     }, 500);
   });
-  $searchBar.parent().on("submit", function (e) {
-    e.preventDefault();
+  $searchBar.parentElement.addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent form submit
   });
 });

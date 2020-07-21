@@ -52,6 +52,8 @@ export function easyFetch(url, baseOpts) {
         if (!opts.headers['Content-Type']) {
             opts.headers['Content-Type'] = 'application/json';
         }
+    } else if ((opts.method === "GET" || !opts.method) && opts.params) {
+        url += "?" + new URLSearchParams(opts.params).toString();
     }
 
     return fetch(url, opts).then(raiseFetchErrors);
