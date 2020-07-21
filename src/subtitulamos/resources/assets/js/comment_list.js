@@ -20,18 +20,23 @@ let comments = new Vue({
     },
 
     remove: function (id) {
-      let c, cidx;
-      for (let i = 0; i < this.comments.length; ++i) {
-        if (this.comments[i].id == id) {
-          // Save comment and remove it from the list
-          c = this.comments[i];
-          cidx = i;
-          this.comments.splice(cidx, 1);
-          break;
-        }
+      const targetCommentIdx = this.comments.findIndex(comment => comment.id === id);
+      if (targetCommentIdx < 0) {
+        Toast.fire({
+          type: "error",
+          title: "Ha ocurrido un extraño error al borrar el comentario",
+        });
+        return;
       }
 
-      easyFetch(`/episodes/${epId}/comments/${id}`, {
+      const targetComment = this.comments[targetCommentIdx];
+      this.comments.splice(targetCommentIdx, 1);
+
+      const isEpisode = typeof targetComment.episode !== 'undefined';
+      const deleteUrl = isEpisode
+        ? `/episodes/${targetComment.episode.id}/comments/${id}`
+        : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}`;
+      easyFetch(deleteUrl, {
         method: "DELETE",
       })
         .then(() => {
@@ -42,9 +47,9 @@ let comments = new Vue({
             type: "error",
             title: "Ha ocurrido un error al borrar el comentario",
           });
-          if (typeof cidx !== "undefined") {
+          if (typeof targetCommentIdx !== "undefined") {
             // Insert the comment right back where it was
-            this.comments.splice(cidx, 0, c);
+            this.comments.splice(targetCommentIdx, 0, targetComment);
           } else {
             loadComments(this.page);
           }
@@ -52,7 +57,21 @@ let comments = new Vue({
     },
 
     pin: function (id) {
-      easyFetch(`/episodes/${epId}/comments/${id}`, {
+      const targetComment = this.comments.find(comment => comment.id === id);
+      if (!targetComment) {
+        Toast.fire({
+          type: "error",
+          title: "Ha ocurrido un extraño error al borrar el comentario",
+        });
+        return;
+      }
+
+      const isEpisode = typeof targetComment.episode !== 'undefined';
+      const pinUrl = isEpisode
+        ? `/episodes/${targetComment.episode.id}/comments/${id}/pin`
+        : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/pin`;
+
+      easyFetch(pinUrl, {
         method: "POST",
       })
         .then(() => {
