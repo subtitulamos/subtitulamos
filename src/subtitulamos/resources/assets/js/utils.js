@@ -42,7 +42,7 @@ export function raiseFetchErrors(response) {
 }
 
 export function easyFetch(url, baseOpts) {
-    const opts = JSON.parse(JSON.stringify(baseOpts)); // deep clone
+    const opts = baseOpts ? JSON.parse(JSON.stringify(baseOpts)) : {}; // deep clone
     if (opts.method === "POST" && opts.rawBody instanceof Object) {
         opts.body = JSON.stringify(opts.rawBody);
         if (!opts.headers) {

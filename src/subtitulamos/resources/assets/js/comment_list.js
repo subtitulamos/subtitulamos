@@ -4,9 +4,9 @@
  */
 
 import Vue from "vue";
-import $ from "jquery";
 import "./vue/comment.js";
 import "../css/comment_list.css";
+import { easyFetch } from "./utils.js";
 
 let comments = new Vue({
   el: "#comment_content",
@@ -31,14 +31,13 @@ let comments = new Vue({
         }
       }
 
-      $.ajax({
-        url: "/episodes/" + epId + "/comments/" + id,
+      easyFetch(`/episodes/${epId}/comments/${id}`, {
         method: "DELETE",
       })
-        .done(() => {
+        .then(() => {
           loadComments();
         })
-        .fail(() => {
+        .catch(() => {
           Toast.fire({
             type: "error",
             title: "Ha ocurrido un error al borrar el comentario",
@@ -53,14 +52,13 @@ let comments = new Vue({
     },
 
     pin: function (id) {
-      $.ajax({
-        url: "/episodes/" + epId + "/comments/" + id + "/pin",
+      easyFetch(`/episodes/${epId}/comments/${id}`, {
         method: "POST",
       })
-        .done(() => {
+        .then(() => {
           loadComments();
         })
-        .fail(() => {
+        .catch(() => {
           Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
           loadComments();
         });
@@ -83,14 +81,12 @@ let comments = new Vue({
 });
 
 function loadComments(page) {
-  $.ajax({
-    url: "/comments/" + commentType + "/load?page=" + page,
-    method: "GET",
-  })
-    .done(function (reply) {
+  easyFetch(`/comments/${commentType}/load?page=${page}`)
+    .then(reply => reply.json())
+    .then(reply => {
       comments.comments = reply;
     })
-    .fail(function () {
+    .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 }
