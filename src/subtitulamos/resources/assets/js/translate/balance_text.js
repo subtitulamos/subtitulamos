@@ -1,4 +1,6 @@
-import $ from "jquery";
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 module.exports = function (originalText, opinionated) {
   if (typeof opinionated == "undefined") {
@@ -87,8 +89,8 @@ module.exports = function (originalText, opinionated) {
         (curChar == "." || curChar == " ") &&
         nextChar &&
         prevChar &&
-        $.isNumeric(nextChar) &&
-        $.isNumeric(prevChar)
+        isNumeric(nextChar) &&
+        isNumeric(prevChar)
       ) {
         continue;
       }

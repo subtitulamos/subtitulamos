@@ -1,12 +1,12 @@
-import $ from "jquery";
 import '../../css/panel/panel_alerts.css';
+import { onDomReady } from "../utils";
 
-$(() => {
-  $(".unhide-alert").on("click", function () {
-    let $this = $(this);
-    let $cardBody = $this.parents(".card").find(".card-content");
-    let $icon = $this.children("i");
-    $cardBody.toggleClass("hidden");
-    $icon.toggleClass("fa-chevron-down fa-chevron-up");
+onDomReady(() => {
+  document.querySelector(".unhide-alert").addEventListener("click", function () {
+    let $cardBody = this.parentNode.parentNode.querySelector(".card-content");
+    let $icon = this.querySelector("i");
+    $cardBody.classList.toggle("hidden");
+    $icon.classList.toggle("fa-chevron-down");
+    $icon.classList.toggle("fa-chevron-up");
   });
 });
