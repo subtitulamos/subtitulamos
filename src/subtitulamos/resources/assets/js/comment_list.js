@@ -61,7 +61,7 @@ let comments = new Vue({
       if (!targetComment) {
         Toast.fire({
           type: "error",
-          title: "Ha ocurrido un extraño error al borrar el comentario",
+          title: "Ha ocurrido un extraño error al fijar el comentario",
         });
         return;
       }

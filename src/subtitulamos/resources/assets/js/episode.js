@@ -4,22 +4,22 @@
  */
 
 import Vue from "vue";
-import $ from "jquery";
 import "./vue/comment.js";
 import "../css/episode.css";
+import { onDomReady, easyFetch } from "./utils.js";
 
-let $newTranslationButton = $(".translate_subtitle");
-$newTranslationButton.on("click", function () {
-  $("#new-translation-opts").toggleClass("hidden");
+const $newTranslationButton = document.querySelector(".translate_subtitle");
+$newTranslationButton.addEventListener("click", function () {
+  document.getElementById("new-translation-opts").classList.toggle("hidden");
 });
 
-$("a[disabled]").on("click", function (e) {
+document.querySelectorAll("a[disabled]").forEach(($ele) => $ele.addEventListener("click", function (e) {
   e.preventDefault();
   return false;
-});
+}));
 
-$("a[data-action='delete']").on("click", function (e) {
-  let subId = $(this).data("id");
+document.querySelectorAll("a[data-action='delete']").forEach(($ele) => $ele.addEventListener("click", function (e) {
+  const subId = this.dataset.id;
 
   Swal.fire({
     type: "warning",
@@ -31,18 +31,18 @@ $("a[data-action='delete']").on("click", function (e) {
       window.location = "/subtitles/" + subId + "/delete";
     }
   });
-});
+}));
 
-$(function () {
+onDomReady(function () {
   let lastLangVal = localStorage.getItem("last-selected-translation-lang");
 
   if (lastLangVal !== null) {
-    $("#translate-to-lang").val(lastLangVal);
+    document.getElementById("translate-to-lang").value = lastLangVal;
   }
 });
 
-$("#translate-to-lang").on("change", function () {
-  localStorage.setItem("last-selected-translation-lang", $(this).val());
+document.getElementById("translate-to-lang").addEventListener("change", function () {
+  localStorage.setItem("last-selected-translation-lang", this.value);
 });
 
 let comments = new Vue({
@@ -69,26 +69,21 @@ let comments = new Vue({
       }
 
       this.submittingComment = true;
-      $.ajax({
-        url: "/episodes/" + epId + "/comments",
+      easyFetch("/episodes/" + epId + "/comments", {
         method: "POST",
-        data: {
+        rawBody: {
           text: this.newComment,
         },
       })
-        .done(() => {
+        .then(() => {
           // Cheap solution: reload the entire comment box
           this.newComment = "";
           this.submittingComment = false;
           loadComments();
         })
-        .fail(jqXHR => {
+        .catch(e => {
           this.submittingComment = false;
-          if (jqXHR.responseText) {
-            Toasts.error.fire(jqXHR.responseText);
-          } else {
-            Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
-          }
+          Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
         });
     },
     refresh: function () {
@@ -107,14 +102,13 @@ let comments = new Vue({
         }
       }
 
-      $.ajax({
-        url: "/episodes/" + epId + "/comments/" + id,
+      easyFetch("/episodes/" + epId + "/comments/" + id, {
         method: "DELETE",
       })
-        .done(function () {
+        .then(function () {
           loadComments();
         })
-        .fail(
+        .catch(
           function () {
             Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
             if (typeof cidx !== "undefined") {
@@ -128,14 +122,13 @@ let comments = new Vue({
     },
 
     pin: function (id) {
-      $.ajax({
-        url: "/episodes/" + epId + "/comments/" + id + "/pin",
+      easyFetch("/episodes/" + epId + "/comments/" + id + "/pin", {
         method: "POST",
       })
-        .done(function () {
+        .then(() => {
           loadComments();
         })
-        .fail(function () {
+        .catch(() => {
           Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
         });
     },
@@ -143,14 +136,12 @@ let comments = new Vue({
 });
 
 function loadComments() {
-  $.ajax({
-    url: "/episodes/" + epId + "/comments",
-    method: "GET",
-  })
-    .done(function (reply) {
+  easyFetch("/episodes/" + epId + "/comments")
+    .then(response => response.json())
+    .then(reply => {
       comments.comments = reply;
     })
-    .fail(function () {
+    .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 }
