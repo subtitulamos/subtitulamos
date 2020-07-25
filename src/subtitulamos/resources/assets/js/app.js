@@ -3,101 +3,100 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import $ from "jquery";
 import './search';
+import { onDomReady, easyFetch } from "./utils";
 
 function toggleAccessForm() {
-  let $this = $(this);
-  let formType = $this.attr("id");
-  let $loginForm = $("#login-form");
-  let $loginRegistry = $("#header-popup-wrapper");
-  let $regForm = $("#register-form");
-  let $fadingPan = $("#fade-pan");
+  const formType = this.id;
+  const $loginForm = document.getElementById("login-form");
+  const $loginRegistry = document.getElementById("header-popup-wrapper");
+  const $fadingPan = document.getElementById("fade-pan");
+  const $regForm = document.getElementById("register-form");
 
-  $fadingPan.toggleClass("hidden", false);
+  $fadingPan.classList.toggle("hidden", false);
 
   if (formType == "login") {
     //if Login Form is open and you click on Iniciar Sesion on navigation bar -- close it
-    if (!$loginForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")) {
-      $loginRegistry.toggleClass("bounce", false);
-      $loginRegistry.toggleClass("bounce_back", true);
-      setTimeout(function () {
-        $loginRegistry.toggleClass("hidden", true);
-        $loginRegistry.toggleClass("bounce", true);
-        $loginRegistry.toggleClass("bounce_back", false);
+    if (!$loginForm.classList.contains("hidden") && !$loginRegistry.classList.contains("hidden")) {
+      $loginRegistry.classList.toggle("bounce", false);
+      $loginRegistry.classList.toggle("bounce_back", true);
+      setTimeout(() => {
+        $loginRegistry.classList.toggle("hidden", true);
+        $loginRegistry.classList.toggle("bounce", true);
+        $loginRegistry.classList.toggle("bounce_back", false);
       }, 180);
     }
     //if Login Form is closed, just open it
-    else if ($loginRegistry.hasClass("hidden")) {
-      $loginRegistry.toggleClass("hidden", false);
-      $regForm.toggleClass("hidden", true);
-      $loginForm.toggleClass("hidden", false);
+    else if ($loginRegistry.classList.contains("hidden")) {
+      $loginRegistry.classList.toggle("hidden", false);
+      $regForm.classList.toggle("hidden", true);
+      $loginForm.classList.toggle("hidden", false);
     }
     //if Register Form is open and you click on Iniciar Sesion on navigation bar
     else {
-      $regForm.toggleClass("sendleft_remove", true);
+      $regForm.classList.toggle("sendleft_remove", true);
       setTimeout(function () {
-        $regForm.toggleClass("hidden", true);
-        $loginForm.toggleClass("hidden", false);
-        $loginForm.toggleClass("sendleft", true);
+        $regForm.classList.toggle("hidden", true);
+        $loginForm.classList.toggle("hidden", false);
+        $loginForm.classList.toggle("sendleft", true);
       }, 250);
       setTimeout(function () {
-        $regForm.toggleClass("sendleft_remove", false);
-        $loginForm.toggleClass("sendleft", false);
+        $regForm.classList.toggle("sendleft_remove", false);
+        $loginForm.classList.toggle("sendleft", false);
       }, 400);
     }
   } else if (formType == "register") {
     //if Register Form is open and you click on Registro on navigation bar -- close it
-    if (!$regForm.hasClass("hidden") && !$loginRegistry.hasClass("hidden")) {
-      $loginRegistry.toggleClass("bounce", false);
-      $loginRegistry.toggleClass("bounce_back", true);
+    if (!$regForm.classList.contains("hidden") && !$loginRegistry.classList.contains("hidden")) {
+      $loginRegistry.classList.toggle("bounce", false);
+      $loginRegistry.classList.toggle("bounce_back", true);
       setTimeout(function () {
-        $loginRegistry.toggleClass("hidden", true);
-        $loginRegistry.toggleClass("bounce", true);
-        $loginRegistry.toggleClass("bounce_back", false);
+        $loginRegistry.classList.toggle("hidden", true);
+        $loginRegistry.classList.toggle("bounce", true);
+        $loginRegistry.classList.toggle("bounce_back", false);
       }, 180);
     }
     //if Login Form is closed, just open it
-    else if ($loginRegistry.hasClass("hidden")) {
-      $loginForm.toggleClass("hidden", true);
-      $loginRegistry.toggleClass("hidden", false);
-      $regForm.toggleClass("hidden", false);
+    else if ($loginRegistry.classList.contains("hidden")) {
+      $loginForm.classList.toggle("hidden", true);
+      $loginRegistry.classList.toggle("hidden", false);
+      $regForm.classList.toggle("hidden", false);
     }
     //if Login Form is open and you click on Registro on navigation bar
     else {
-      $loginForm.toggleClass("sendleft_remove", true);
+      $loginForm.classList.toggle("sendleft_remove", true);
       setTimeout(function () {
-        $loginForm.toggleClass("hidden", true);
-        $regForm.toggleClass("hidden", false);
-        $regForm.toggleClass("sendleft", true);
+        $loginForm.classList.toggle("hidden", true);
+        $regForm.classList.toggle("hidden", false);
+        $regForm.classList.toggle("sendleft", true);
       }, 250);
       setTimeout(function () {
-        $loginForm.toggleClass("sendleft_remove", false);
-        $regForm.toggleClass("sendleft", false);
+        $loginForm.classList.toggle("sendleft_remove", false);
+        $regForm.classList.toggle("sendleft", false);
       }, 400);
     }
   }
 }
 
 function closeLogRegForm() {
-  let $loginRegistry = $("#header-popup-wrapper");
-  let $fadingPan = $("#fade-pan");
+  let $loginRegistry = document.getElementById("header-popup-wrapper");
+  let $fadingPan = document.getElementById("fade-pan");
 
-  $fadingPan.toggleClass("fade_out", true);
+  $fadingPan.classList.toggle("fade_out", true);
   setTimeout(function () {
-    $fadingPan.toggleClass("hidden", true);
-    $fadingPan.toggleClass("fade_out", false);
+    $fadingPan.classList.toggle("hidden", true);
+    $fadingPan.classList.toggle("fade_out", false);
   }, 580);
 
-  if ($loginRegistry.hasClass("hidden")) {
-    $loginRegistry.toggleClass("hidden", false);
+  if ($loginRegistry.classList.contains("hidden")) {
+    $loginRegistry.classList.toggle("hidden", false);
   } else {
-    $loginRegistry.toggleClass("bounce", false);
-    $loginRegistry.toggleClass("bounce_back", true);
+    $loginRegistry.classList.toggle("bounce", false);
+    $loginRegistry.classList.toggle("bounce_back", true);
     setTimeout(function () {
-      $loginRegistry.toggleClass("hidden", true);
-      $loginRegistry.toggleClass("bounce", true);
-      $loginRegistry.toggleClass("bounce_back", false);
+      $loginRegistry.classList.toggle("hidden", true);
+      $loginRegistry.classList.toggle("bounce", true);
+      $loginRegistry.classList.toggle("bounce_back", false);
     }, 380);
   }
 }
@@ -105,47 +104,46 @@ function closeLogRegForm() {
 function doLogin(e) {
   e.preventDefault();
 
-  const $loginError = $("#login-error");
-  const $pwdField = $("#login_password");
-  let username = $("#login_username")
-    .val()
-    .trim();
-  let pwd = $pwdField.val();
+  const $loginError = document.getElementById("login-error");
+  const $pwdField = document.getElementById("login_password");
+  const username = document.getElementById("login_username").value.trim();
+  const pwd = $pwdField.value;
 
   if (!username.length || !pwd.length) {
-    $loginError.toggleClass("hidden", false);
-    $pwdField.toggleClass("is-danger", true);
-    $loginError.html("Ni el usuario ni la contraseña pueden estar vacíos");
+    $loginError.classList.toggle("hidden", false);
+    $pwdField.classList.toggle("is-danger", true);
+    $loginError.innerHTML = "Ni el usuario ni la contraseña pueden estar vacíos";
     return;
   }
 
-  const $loginBtn = $("#login-button");
-  $loginBtn.toggleClass("is-loading", true);
-  $loginError.html(""); // Clear previous errors, just so it's clearer they're new
+  const $loginBtn = document.getElementById("login-button");
+  $loginBtn.classList.toggle("is-loading", true);
+  $loginError.innerHTML = ""; // Clear previous errors, just so it's clearer they're new
 
   // Login the user via ajax
-  $.ajax({
-    url: "/login",
+  easyFetch("/login", {
     method: "post",
-    data: {
+    rawBody: {
       username: username,
       password: pwd,
-      remember: $("#login_remember_me").is(":checked"),
+      remember: document.getElementById("login_remember_me").checked,
     },
   })
-    .done(function () {
+    .then(function () {
       window.location.reload(true);
     })
-    .fail(function (data) {
-      $loginBtn.toggleClass("is-loading", false);
-      $pwdField.toggleClass("is-danger", true);
-      $loginError.toggleClass("hidden", false);
-      try {
-        let d = JSON.parse(data.responseText);
-        $loginError.html(d[0]);
-      } catch (e) {
-        $loginError.html("Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.");
-      }
+    .catch(err => {
+      $loginBtn.classList.toggle("is-loading", false);
+      $pwdField.classList.toggle("is-danger", true);
+      $loginError.classList.toggle("hidden", false);
+
+      err.response.json()
+        .then(cleanErr => {
+          $loginError.innerHTML = cleanErr[0];
+        })
+        .catch(() => {
+          $loginError.innerHTML = "Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.";
+        })
     });
 }
 
@@ -153,68 +151,64 @@ function register(e) {
   e.preventDefault();
 
   // Mark button as loading
-  const $regButton = $("#register-button");
-  $regButton.toggleClass("is-loading", true);
+  const $regButton = document.getElementById("register-button");
+  $regButton.classList.toggle("is-loading", true);
 
   // Clean up old errors
-  $("#register-form")
-    .find(".is-danger")
-    .toggleClass("is-danger");
-
-  $("#register-form")
-    .find("[data-reg-error]")
-    .remove();
+  document.querySelectorAll("#register-form .is-danger").forEach($ele => $ele.classList.toggle("is-danger"));
+  document.querySelectorAll("#register-form [data-reg-error]").forEach($ele => $ele.remove());
 
   // Login the user via ajax
-  $.ajax({
-    url: "/register",
+  easyFetch("/register", {
     method: "post",
-    data: {
-      username: $("#reg_username").val(),
-      password: $("#reg_password").val(),
-      password_confirmation: $("#reg_password_confirmation").val(),
-      email: $("#reg_email").val(),
-      terms: $("#reg_terms").is(":checked"),
+    rawBody: {
+      username: document.getElementById("reg_username").value,
+      password: document.getElementById("reg_password").value,
+      password_confirmation: document.getElementById("reg_password_confirmation").value,
+      email: document.getElementById("reg_email").value,
+      terms: document.getElementById("reg_terms").checked,
     },
   })
-    .done(function () {
+    .then(function () {
       window.location.reload(true);
     })
-    .fail(function (data) {
-      $regButton.toggleClass("is-loading", false);
+    .catch(err => {
+      $regButton.classList.toggle("is-loading", false);
 
-      let d;
-      try {
-        d = JSON.parse(data.responseText);
-      } catch (e) {
-        alert(
-          "Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo."
-        );
-      }
+      err.response.json()
+        .then(cleanErrList => {
+          cleanErrList.forEach(curErr => {
+            const field = Object.keys(curErr)[0];
+            const $field = document.getElementById("reg_" + field);
+            $field.classList.toggle("is-danger", true);
 
-      for (let err of d) {
-        Object.keys(err).forEach(field => {
-          const $field = $("#reg_" + field);
-          console.log(field, $field);
-          $field.toggleClass("is-danger", true);
-          $field
-            .parent()
-            .parent()
-            .append("<p class='help is-danger' data-reg-error=''>" + err[field] + "</p>");
-        });
-      }
+            const $error = document.createElement("p");
+            $error.classList.add("help", "is-danger");
+            $error.dataset["regError"] = "";
+            $error.innerHTML = curErr[field];
+            $field.parentNode.parentNode.appendChild($error);
+          });
+        })
+        .catch(() => {
+          alert("Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo.");
+        })
     });
 }
 
-$(function () {
-  $("#close_logreg_form, #fade-pan").on("click", function () {
-    closeLogRegForm();
-  });
-  $("#login, #register").on("click", toggleAccessForm);
-  $("#login-form").on("submit", doLogin);
-  $("#register-form").on("submit", register);
+onDomReady(function () {
+  document.querySelectorAll("#close_logreg_form, #fade-pan").forEach($ele => $ele.addEventListener("click", closeLogRegForm));
+  document.querySelectorAll("#login, #register").forEach($ele => $ele.addEventListener("click", toggleAccessForm));
+  const $loginForm = document.getElementById("login-form");
+  const $registerForm = document.getElementById("register-form");
+  if ($loginForm) {
+    $loginForm.addEventListener("submit", doLogin);
+  }
+
+  if ($registerForm) {
+    $registerForm.addEventListener("submit", register);
+  }
 
   if (window.openLogin) {
-    setTimeout(toggleAccessForm.bind($("#login")), 1500);
+    setTimeout(toggleAccessForm.bind(document.getElementById("login")), 1500);
   }
 });

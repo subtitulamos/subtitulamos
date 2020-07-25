@@ -36,14 +36,18 @@ export function onDomReady(callback) {
 
 export function raiseFetchErrors(response) {
     if (!response.ok) {
-        throw Error(response.statusText);
+        throw {
+            error: true,
+            response: response
+        };
     }
     return response;
 }
 
 export function easyFetch(url, baseOpts) {
     const opts = baseOpts ? JSON.parse(JSON.stringify(baseOpts)) : {}; // deep clone
-    if (opts.method === "POST" && opts.rawBody instanceof Object) {
+    const method = opts.method ? opts.method.toUpperCase() : "";
+    if (method === "POST" && opts.rawBody instanceof Object) {
         opts.body = JSON.stringify(opts.rawBody);
         if (!opts.headers) {
             opts.headers = {};
@@ -52,7 +56,7 @@ export function easyFetch(url, baseOpts) {
         if (!opts.headers['Content-Type']) {
             opts.headers['Content-Type'] = 'application/json';
         }
-    } else if ((opts.method === "GET" || !opts.method) && opts.params) {
+    } else if ((method === "GET" || !method) && opts.params) {
         url += "?" + new URLSearchParams(opts.params).toString();
     }
 
