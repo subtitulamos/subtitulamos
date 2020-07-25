@@ -3,8 +3,8 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import $ from "jquery";
-import { sprintf, vsprintf } from "sprintf-js";
+import { sprintf } from "sprintf-js";
+import { easyFetch } from "./utils";
 
 function Subtitle(id, state, secondaryLang) {
   this.id = id;
@@ -106,63 +106,63 @@ Subtitle.prototype.loadSequences = function () {
     return s.replace(/[a-zA-Z]/g, function (c) { return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26); })
   }
 
-  $.ajax({
-    url: "/subtitles/" + subID + "/translate/load",
-    method: "GET",
-    data: {
+  easyFetch(`/subtitles/${subID}/translate/load`, {
+    params: {
       secondaryLang: this.secondaryLang,
     },
-  }).done(reply => {
-    let sequenceList = reply.sequences;
-    let userList = reply.users;
-    let isFirstLoad = !this.state.loadedOnce;
+  }).then(res => res.json())
+    .then(reply => {
+      const sequenceList = reply.sequences;
+      const userList = reply.users;
+      const isFirstLoad = !this.state.loadedOnce;
 
-    this.state.loaded = true;
-    this.state.loadedOnce = true;
-    Object.keys(sequenceList).forEach(k => {
-      let seq = sequenceList[k];
-      seq.text = decode(seq.text);
-      seq.secondary_text = decode(seq.secondary_text);
+      this.state.loaded = true;
+      this.state.loadedOnce = true;
+      Object.keys(sequenceList).forEach(k => {
+        let seq = sequenceList[k];
+        seq.text = decode(seq.text);
+        seq.secondary_text = decode(seq.secondary_text);
 
-      let idx = this.findSeqIdxByNum(seq.number);
-      if (idx == -1) {
-        this.state.sequences.push(seq);
-      } else {
-        let existingSeq = this.state.sequences[idx];
-        if (seq.id != existingSeq.id) {
-          existingSeq.id = seq.id;
-          existingSeq.text = seq.text;
-          existingSeq.author = seq.author;
-          existingSeq.openInfo = seq.openInfo;
+        let idx = this.findSeqIdxByNum(seq.number);
+        if (idx == -1) {
+          this.state.sequences.push(seq);
+        } else {
+          let existingSeq = this.state.sequences[idx];
+          if (seq.id != existingSeq.id) {
+            existingSeq.id = seq.id;
+            existingSeq.text = seq.text;
+            existingSeq.author = seq.author;
+            existingSeq.openInfo = seq.openInfo;
+          }
         }
+      });
+
+      Object.keys(userList).forEach(uid => {
+        if (!this.users[uid]) {
+          this.users[uid] = userList[uid];
+        }
+      });
+
+      if (isFirstLoad) {
+        this.state.curPage = 1;
       }
-    });
 
-    Object.keys(userList).forEach(uid => {
-      if (!this.users[uid]) {
-        this.users[uid] = userList[uid];
+      if (window.location.hash) {
+        this.state.jumpToUrlSequence();
       }
+    })
+    .catch(() => {
+      Toasts.error.fire("Ha ocurrido un error al cargar el subtítulo");
     });
-
-    if (isFirstLoad) {
-      this.state.curPage = 1;
-    }
-
-    if (window.location.hash) {
-      this.state.jumpToUrlSequence();
-    }
-  });
 };
 
 Subtitle.prototype.loadComments = function () {
-  $.ajax({
-    url: "/subtitles/" + subID + "/translate/comments",
-    method: "GET",
-  })
-    .done(reply => {
+  easyFetch("/subtitles/" + subID + "/translate/comments")
+    .then(res => res.json())
+    .then(reply => {
       this.state.comments = reply;
     })
-    .fail(function () {
+    .catch(function () {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     });
 };

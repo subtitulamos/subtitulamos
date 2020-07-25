@@ -25,7 +25,6 @@ window.onbeforeunload = function (e) {
   let ask = false;
   for (var i = 0; i < sessionStorage.length; i++) {
     if (sessionStorage.key(i).match("sub-" + subID + "-seqtext")) {
-      console.log(i, sessionStorage.key(i), "open");
       ask = true;
     }
   }

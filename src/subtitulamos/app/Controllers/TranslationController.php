@@ -149,13 +149,13 @@ class TranslationController
         }
 
         // Determine which secondary languages we can use
-        $langRes = $em->createQuery('SELECT DISTINCT(s.lang) FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100')
+        $langRes = $em->createQuery('SELECT DISTINCT(s.lang) as lang FROM App:Subtitle s WHERE s.version = :ver AND s.progress = 100')
             ->setParameter('ver', $sub->getVersion())
             ->getResult();
 
         $langs = [];
-        foreach ($langRes as $lang) {
-            $langs[] = $lang;
+        foreach ($langRes as $langEntry) {
+            $langs[] = $langEntry['lang'];
         }
 
         // Generate a token for the real time socket to use to authenticate, and broadcast ourselves
