@@ -39,8 +39,8 @@ function addRoutes(&$app, &$entityManager)
     $app->post('/subtitles/{id:[0-9]+}/translate/close', ['\App\Controllers\TranslationController', 'close'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{id:[0-9]+}/translate/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{id:[0-9]+}/translate/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRole('ROLE_USER'));
-    $app->post('/subtitles/{id:[0-9]+}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRole('ROLE_JUNIOR_TT'));
-    $app->delete('/subtitles/{id:[0-9]+}/translate/open-lock/{lockId:[0-9]+}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRole('ROLE_JUNIOR_TT'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRole('ROLE_TT'));
+    $app->delete('/subtitles/{id:[0-9]+}/translate/open-lock/{lockId:[0-9]+}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRole('ROLE_TT'));
 
     $app->get('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));

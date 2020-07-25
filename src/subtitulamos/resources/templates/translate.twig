@@ -177,12 +177,12 @@
     var wsAuthToken = "{{ wstok }}";
 
     // Permissions
-    var hasAdvancedTools = me.roles.includes('ROLE_JUNIOR_TT');
-    var canLock = me.roles.includes('ROLE_JUNIOR_TT');
-    var canReleaseOpenLock = me.roles.includes('ROLE_JUNIOR_TT');
+    var hasAdvancedTools = me.roles.includes('ROLE_TT');
+    var canLock = me.roles.includes('ROLE_TT');
+    var canReleaseOpenLock = me.roles.includes('ROLE_TT');
     var canDeleteComments = me.roles.includes('ROLE_MOD');
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-    var canEditTimes = me.roles.includes('ROLE_SENIOR_TT');
+    var canEditTimes = me.roles.includes('ROLE_MOD');
   </script>
   {{ assets.js('translate') }}
 {% endblock %}

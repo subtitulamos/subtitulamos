@@ -88,9 +88,7 @@ class User
     public function getRoles()
     {
         $impliedRoles = [
-            'ROLE_SENIOR_TT' => ['ROLE_JUNIOR_TT', 'ROLE_TT'],
-            'ROLE_TT' => ['ROLE_JUNIOR_TT'],
-            'ROLE_MOD' => ['ROLE_SENIOR_TT', 'ROLE_TT', 'ROLE_JUNIOR_TT']
+            'ROLE_MOD' => ['ROLE_TT']
         ];
 
         $roles = [];
