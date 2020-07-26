@@ -631,9 +631,9 @@ function isElementInViewport(el) {
     rect.top >= 0 &&
     rect.left >= 0 &&
     rect.bottom <=
-    (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */ &&
+    (window.innerHeight || document.documentElement.clientHeight) &&
     rect.right <=
-    (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    (window.innerWidth || document.documentElement.clientWidth)
   );
 }
 
@@ -1025,22 +1025,21 @@ window.translation = new Vue({
       this.highlightedSequence = seqn;
       window.location.hash = "#" + seqn;
 
-      let seqEle = $("#sequences").children("#seqn-" + seqn)[0];
-      if (!seqEle || !isElementInViewport(seqEle) || filtersReset) {
+      const isFirstSequence = Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
+      const findInViewport = isFirstSequence ? seqn : seqn - 1;
+      let $seqEle = document.querySelector(`#sequences #seqn-${seqn}`);
+      let $seqEle2 = document.querySelector(`#sequences #seqn-${findInViewport}`);
+      if (!$seqEle || !isElementInViewport($seqEle) || !$seqEle2 || !isElementInViewport($seqEle2) || filtersReset) {
         // Delay this a little bit so Vue can run the rerender
         setTimeout(() => {
-          let isFirstSequence =
-            Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
           if (isFirstSequence) {
-            $("#sequences")[0].scrollIntoView({ behavior: "instant" });
+            document.getElementById("sequences").scrollIntoView({ behavior: "instant" });
           } else {
-            $("#sequences")
-              .children("#seqn-" + seqn)[0]
-              .scrollIntoView({ behavior: "instant" });
+            document.querySelector(`#sequences #seqn-${seqn}`).scrollIntoView({ behavior: "instant" });
           }
 
-          let scrolledY = window.scrollY;
-          window.scroll(0, scrolledY - $("#translation-tools").height() * 2.5);
+          const scrolledY = window.scrollY;
+          window.scroll(0, scrolledY - document.getElementById("translation-tools").offsetHeight);
         }, 10);
       }
     },
