@@ -15,6 +15,9 @@ use Psr\Container\ContainerInterface;
 require '../app/bootstrap.php';
 
 // Start session & boot app
+session_set_cookie_params([
+    'httponly' => true
+]);
 session_start();
 
 function feature_on($name)
