@@ -31,6 +31,7 @@ module.exports = {
         restricted: './resources/assets/js/restricted.js',
         panel_banlist: './resources/assets/js/panel/banlist.js',
         panel_base: './resources/assets/js/panel/base.js',
+        edit_show: './resources/assets/js/edit_show.js',
 
     },
     output: {
