@@ -4,8 +4,7 @@
  */
 
 import Vue from "vue";
-import $ from "jquery";
-import { dateDiff } from "./utils.js";
+import { dateDiff, easyFetch } from "./utils.js";
 import '../css/index.css';
 
 let episodeList = new Vue({
@@ -66,86 +65,82 @@ let episodeList = new Vue({
 
 let categoryPage = {};
 let rowsPerPage = 0;
-function search(target, page) {
-  /*document.getElementById('category_navigation_list').scrollIntoView();*/
-
-  $.ajax({
-    url: "/search/" + target,
-    method: "get",
-    data: {
+function loadTab(target, page) {
+  easyFetch("/search/" + target, {
+    params: {
       page: page,
     },
-  }).done(function (data) {
-    data.forEach(function (_, idx, data) {
-      data[idx].time_ago = 0;
-      data[idx].time_unit = "sec";
+  }).then(res => res.json())
+    .then(data => {
+      data.forEach(function (_, idx, data) {
+        data[idx].time_ago = 0;
+        data[idx].time_unit = "sec";
+      });
+
+      episodeList.category = target;
+      episodeList.episodes = data;
+      categoryPage[target] = page;
+
+      if (rowsPerPage == 0 || rowsPerPage < episodeList.episodes.length) {
+        // First load? Let's guess the value
+        rowsPerPage = episodeList.episodes.length;
+      }
+
+      let nextPageHidden = episodeList.episodes.length < rowsPerPage;
+      let prevPageHidden = page <= 1;
+      document.getElementById("next-page").classList.toggle("hidden", nextPageHidden);
+      document.getElementById("prev-page").classList.toggle("hidden", prevPageHidden);
+      document.getElementById("pages").classList.toggle("hidden", nextPageHidden && prevPageHidden);
     });
-
-    episodeList.category = target;
-    episodeList.episodes = data;
-    categoryPage[target] = page;
-
-    if (rowsPerPage == 0 || rowsPerPage < episodeList.episodes.length) {
-      // First load? Let's guess the value
-      rowsPerPage = episodeList.episodes.length;
-    }
-
-    let nextPageHidden = episodeList.episodes.length < rowsPerPage;
-    let prevPageHidden = page <= 1;
-    $("#next-page").toggleClass("hidden", nextPageHidden);
-    $("#prev-page").toggleClass("hidden", prevPageHidden);
-    $("#pages").toggleClass("hidden", nextPageHidden && prevPageHidden);
-  });
 }
 
-$("#prev-page").on("click", function () {
+document.getElementById("prev-page").addEventListener("click", function () {
   let targetPage = Math.max(categoryPage[episodeList.category] - 1, 1);
   if (targetPage == 1) {
-    $(this).toggleClass("hidden", true);
+    this.classList.toggle("hidden", true);
   }
 
-  $("#next-page").toggleClass("hidden", false);
-  search(episodeList.category, targetPage);
+  document.getElementById("next-page").classList.toggle("hidden", false);
+  loadTab(episodeList.category, targetPage);
 });
 
-$("#next-page").on("click", function () {
+document.getElementById("next-page").addEventListener("click", function () {
   let targetPage = Math.min(categoryPage[episodeList.category] + 1, 10);
   if (targetPage >= 10) {
-    $(this).toggleClass("hidden", true);
+    this.classList.toggle("hidden", true);
   }
 
-  $("#prev-page").toggleClass("hidden", false);
-  search(episodeList.category, targetPage);
+  document.getElementById("prev-page").classList.toggle("hidden", false);
+  loadTab(episodeList.category, targetPage);
 });
 
-$(".category_navigation_item").on("click", function () {
-  let $categoryClicked = $(this);
-  let $largeSplash = $("#large_splash");
-  let $incategoryState = $("#incategory_state");
-  let $whiteLogoSearchBar = $("#white-logo-searchbar");
+document.querySelectorAll(".category_navigation_item").forEach($ele => $ele.addEventListener("click", function () {
+  const $largeSplash = document.getElementById("large_splash");
+  const $incategoryState = document.getElementById("incategory_state");
+  const $whiteLogoSearchBar = document.getElementById("white-logo-searchbar");
+  $incategoryState.classList.toggle("hidden", false);
 
-  $incategoryState.toggleClass("hidden", false);
+  document.querySelectorAll(".category_navigation_item").forEach($ele => {
+    $ele.classList.toggle("nvbi_active", false);
+  });
+  this.classList.toggle("nvbi_active", true);
 
-  if ($(".category_navigation_item").hasClass("nvbi_active")) {
-    $(".category_navigation_item").toggleClass("nvbi_active", false);
-  }
-
-  $categoryClicked.toggleClass("nvbi_active", true);
   var viewport_w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-  if (viewport_w >= 840 && $largeSplash.hasClass("fade_out") == false) {
-    // Only display the white logo for large viewports
+  if (viewport_w >= 840 && !$largeSplash.dataset.hidden) {
+    // We only display the white logo for large viewports
     window.scrollTo(0, 0);
-    $largeSplash.toggleClass("fade_out", true);
-    $whiteLogoSearchBar.toggleClass("hidden", false).attr("style", "display:none");
-    $whiteLogoSearchBar.fadeIn("slow");
-    $largeSplash.slideUp({
-      done: () => { },
-    });
+    $whiteLogoSearchBar.classList.toggle("hidden", false);
+    $largeSplash.style.maxHeight = 0;
+    $largeSplash.style.marginBottom = 0;
+    $largeSplash.style.opacity = 0;
+    $largeSplash.dataset.hidden = true;
+    setTimeout(() => {
+      $largeSplash.style.display = "none";
+    }, 1000);
   }
 
   let target;
-  let id = $categoryClicked.attr("id");
-  switch (id) {
+  switch (this.id) {
     case "most-downloaded":
       target = "popular";
       break;
@@ -175,5 +170,5 @@ $(".category_navigation_item").on("click", function () {
     // Nothing to do
     return;
 
-  search(target, 1);
-});
+  loadTab(target, 1);
+}));

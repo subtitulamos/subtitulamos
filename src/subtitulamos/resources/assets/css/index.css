@@ -393,3 +393,10 @@ navigation buttons */
     font-size: 1.1em;
   }
 }
+
+#large_splash {
+  transition: all 0.5s ease-out;
+  max-height: 300px;
+  opacity: 1;
+  overflow: hidden;
+}
