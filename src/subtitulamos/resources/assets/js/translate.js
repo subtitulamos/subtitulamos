@@ -4,7 +4,6 @@
  */
 
 import Vue from "vue";
-import $ from "jquery";
 import "./vue/comment.js";
 import Subtitle from "./subtitle.js";
 import ReconnectingWebsocket from "reconnecting-websocket";
@@ -12,6 +11,7 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 import "../css/translate.scss";
+import { easyFetch } from "./utils.js";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
@@ -57,11 +57,9 @@ Vue.component("seqlock", {
       let seqInfoCopy = JSON.parse(JSON.stringify(seq.openInfo));
       sub.closeSeq(this.seqnum);
 
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/open-lock/" + this.id,
+      easyFetch("/subtitles/" + subID + "/translate/open-lock/" + this.id, {
         method: "DELETE",
-        data: {},
-      }).fail(() => {
+      }).catch(_ => {
         sub.openSeq(this.seqnum, seqInfoCopy.by, seqInfoCopy.lockID);
       });
     },
@@ -320,7 +318,7 @@ Vue.component("sequence", {
 
     shouldFixLevel: function () {
       let tlines = [];
-      $.each(this.editingText.split("\n"), function (i, val) {
+      this.editingText.split("\n").forEach(val => {
         tlines.push(val.trim());
       });
 
@@ -361,20 +359,20 @@ Vue.component("sequence", {
       this.editingTimeEnd = this.$options.filters.timeFmt(this.tend);
 
       sub.openSeq(this.number, me.id, 0);
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/open",
+      easyFetch("/subtitles/" + subID + "/translate/open", {
         method: "POST",
-        data: {
+        rawBody: {
           seqNum: this.number,
         },
       })
-        .done(reply => {
+        .then(res => res.json())
+        .then(reply => {
           if (!reply.ok) {
             sub.closeSeq(this.number);
             Toasts.error.fire(reply.msg);
           }
         })
-        .fail(() => {
+        .catch(() => {
           sub.closeSeq(this.number);
           Toasts.error.fire("Ha ocurrido un error desconocido al intentar editar");
         });
@@ -451,12 +449,12 @@ Vue.component("sequence", {
 
       // Save ID to delete the text key afterwards
       let previousId = this.id;
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/" + action,
+      easyFetch("/subtitles/" + subID + "/translate/" + action, {
         method: "POST",
-        data: postData,
+        rawBody: postData,
       })
-        .done(newID => {
+        .then(res => res.text())
+        .then(newID => {
           // Update sequence
           // (though in normal behaviour we will have received this update via websocket faster)
           sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
@@ -471,15 +469,13 @@ Vue.component("sequence", {
             modifiedSeqList.splice(modIdx, 1);
           }
         })
-        .fail((_, status) => {
-          Toasts.error.fire(
-            "Ha ocurrido un error al intentar guardar la secuencia: (" + status + ")"
-          );
+        .catch(_ => {
+          Toasts.error.fire("Ha ocurrido un error interno al intentar guardar la secuencia");
           this.saving = false;
         });
     },
 
-    discard: function () {
+    discard() {
       if (!this.openInfo) {
         return;
       }
@@ -490,14 +486,13 @@ Vue.component("sequence", {
       let oLockID = this.openInfo.id;
       sub.closeSeq(this.number);
 
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/close",
+      easyFetch("/subtitles/" + subID + "/translate/close", {
         method: "POST",
-        data: {
+        rawBody: {
           seqNum: this.number,
         },
       })
-        .done(() => {
+        .then(() => {
           this.saving = false;
 
           // Discard text cache if saved
@@ -509,15 +504,13 @@ Vue.component("sequence", {
             modifiedSeqList.splice(modIdx, 1);
           }
         })
-        .fail((_, status) => {
+        .catch(_ => {
           sub.openSeq(this.number, me.id, oLockID);
-          Toasts.error.fire(
-            "Ha ocurrido un error al intentar cerrar la secuencia  (" + status + ")"
-          );
+          Toasts.error.fire("Ha ocurrido un error al intentar cerrar la secuencia");
         });
     },
 
-    toggleLock: function (newState) {
+    toggleLock(newState) {
       if (!canLock) {
         return false;
       }
@@ -527,20 +520,19 @@ Vue.component("sequence", {
       }
 
       sub.lockSeq(this.id, newState);
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/lock",
+      easyFetch("/subtitles/" + subID + "/translate/lock", {
         method: "POST",
-        data: {
+        rawBody: {
           seqID: this.id,
         },
-      }).fail(() => {
+      }).catch(() => {
         // Revert, the request failed
         sub.lockSeq(this.id, !newState);
         Toasts.error.fire("Error al intentar cambiar el estado de bloqueo de #" + this.number);
       });
     },
 
-    fix: function () {
+    fix() {
       if (this.shouldFixLevel <= 0) {
         return false;
       }
@@ -550,7 +542,7 @@ Vue.component("sequence", {
         this.editingText = ntext;
       } else {
         let tlines = [];
-        $.each(this.editingText.split("\n"), function (i, val) {
+        this.editingText.split("\n").forEach(val => {
           tlines.push(val.trim());
         });
 
@@ -566,7 +558,7 @@ Vue.component("sequence", {
       }
     },
 
-    parseTime: function (t) {
+    parseTime(t) {
       let matches = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{1,2})[\.,](\d{1,3})$/.exec(t);
       if (!matches || matches.length < 4) {
         return null;
@@ -576,7 +568,7 @@ Vue.component("sequence", {
       return (hs + Number(matches[2]) * 60 + Number(matches[3])) * 1000 + Number(matches[4]);
     },
 
-    seqNumClick: function () {
+    seqNumClick() {
       if (window.location.hash.includes(this.number)) {
         removeWindowHash();
         this.$emit("highlight-off");
@@ -823,25 +815,32 @@ window.translation = new Vue({
 
       this.submittingComment = true;
       let commentSent = this.newComment;
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/comments",
+      easyFetch("/subtitles/" + subID + "/translate/comments", {
         method: "POST",
-        data: {
+        rawBody: {
           text: commentSent,
         },
       })
-        .done(id => {
+        .then(res => res.text())
+        .then(id => {
           this.newComment = "";
           this.submittingComment = false;
           sub.addComment(id, sub.getUserObject(me.id), new Date().toISOString(), commentSent);
         })
-        .fail(jqXHR => {
+        .catch(err => {
           this.submittingComment = false;
-          if (jqXHR.responseText) {
-            Toasts.error.fire(jqXHR.responseText);
-          } else {
-            Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
-          }
+
+          err.response.text()
+            .then((response) => {
+              if (response) {
+                Toasts.error.fire(response);
+              } else {
+                throw new Exception;
+              }
+            })
+            .catch(() => {
+              Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
+            });
         });
     },
 
@@ -857,25 +856,21 @@ window.translation = new Vue({
         }
       }
 
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/comments/" + id,
+      easyFetch("/subtitles/" + subID + "/translate/comments/" + id, {
         method: "DELETE",
-      }).fail(
-        function () {
-          Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
-          if (typeof cidx !== "undefined") {
-            // Insert the comment right back where it was
-            this.comments.splice(cidx, 0, c);
-          }
-        }.bind(this)
-      );
+      }).catch(() => {
+        Toasts.error.fire("Ha ocurrido un error al borrar el comentario");
+        if (typeof cidx !== "undefined") {
+          // Insert the comment right back where it was
+          this.comments.splice(cidx, 0, c);
+        }
+      });
     },
 
     pin: function (id) {
-      $.ajax({
-        url: "/subtitles/" + subID + "/translate/comments/" + id + "/pin",
+      easyFetch("/subtitles/" + subID + "/translate/comments/" + id + "/pin", {
         method: "POST",
-      }).fail(function () {
+      }).catch(() => {
         Toasts.error.fire("Ha ocurrido un error al fijar el comentario");
       });
     },
@@ -917,7 +912,7 @@ window.translation = new Vue({
               "Algunas secuencias de esta página han sido modificadas, pero no guardadas: " +
               modTextList.join(", ") +
               ". ¿Estás seguro de querer descartar los cambios en estas?",
-          }).then(result => {
+          }).then(function (result) {
             if (result.value) {
               pthis.closePage(ev, true);
             }
@@ -967,28 +962,22 @@ window.translation = new Vue({
         text: "Añade un comentario explicando la situación",
         showLoaderOnConfirm: true,
         preConfirm: msg => {
-          return $.ajax({
-            url: "/subtitles/" + subID + "/alert",
+          return easyFetch("/subtitles/" + subID + "/alert", {
             method: "POST",
-            data: {
+            rawBody: {
               message: msg,
             },
-          })
-            .done(reply => {
+          }).then(res => res.json())
+            .then(reply => {
               if (!reply.ok) {
                 Swal.showValidationMessage(reply.msg);
+              } else {
+                Toasts.success.fire("Aviso enviado correctamente");
               }
-            })
-            .fail((_, status) => {
-              Swal.showValidationMessage(
-                "Ha ocurrido un error al intentar enviar la alerta: (" + status + ")"
-              );
+            }).catch(_ => {
+              Swal.showValidationMessage("Ha ocurrido un error interno al intentar enviar la alerta :(");
             });
         },
-      }).then(result => {
-        if (result.value && result.value.ok) {
-          Toasts.success.fire("Aviso enviado correctamente.");
-        }
       });
     },
 
@@ -1101,7 +1090,7 @@ ws.addEventListener("close", e => {
 });
 
 // Absorb and block default Ctrl+S / Ctrl+G behaviour
-$(document).on("keydown", function (e) {
+document.addEventListener("keydown", function (e) {
   if (e.ctrlKey && e.which == 83) {
     if (e.shiftKey) {
       translation.savePage();

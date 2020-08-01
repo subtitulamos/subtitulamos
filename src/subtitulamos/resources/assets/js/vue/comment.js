@@ -40,7 +40,7 @@ Vue.component("comment", {
     "pinned",
     "create-sequence-jumps",
   ],
-  data: function() {
+  data: function () {
     return {
       date: "",
       canDelete: canDeleteComments,
@@ -48,7 +48,7 @@ Vue.component("comment", {
     };
   },
   computed: {
-    bodyClasses: function() {
+    bodyClasses: function () {
       let isTT = this.user.roles.includes("ROLE_TT");
       let isMod = this.user.roles.includes("ROLE_MOD");
       return {
@@ -57,7 +57,7 @@ Vue.component("comment", {
       };
     },
 
-    text: function() {
+    text: function () {
       let text = this.baseText;
       if (this.createSequenceJumps) {
         text = text.replace(
@@ -69,16 +69,16 @@ Vue.component("comment", {
       return text;
     },
   },
-  created: function() {
+  created: function () {
     this.update = setInterval(this.updateDate, 10000);
     this.updateDate();
   },
   methods: {
-    updateDate: function() {
+    updateDate: function () {
       this.date = timeago().format(this.publishedAt, "es");
     },
 
-    remove: function() {
+    remove: function () {
       Swal.fire({
         type: "warning",
         confirmButtonText: "Borrar",
@@ -91,8 +91,7 @@ Vue.component("comment", {
           if (result.value) {
             this.$emit("remove", this.id);
           }
-        })
-        .bind(this);
+        });
     },
   },
 });
