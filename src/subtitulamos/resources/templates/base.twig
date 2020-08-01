@@ -332,7 +332,7 @@
   {{ assets.js('vendor') }}
   {{ assets.js('app') }}
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script>
     const Toast = Swal.mixin({
       toast: true,
@@ -341,9 +341,9 @@
       timer: 4000
     });
     const Toasts = {
-      error: Toast.mixin({type: 'error', timer: 8000}),
-      success: Toast.mixin({type: 'success', timer: 5000}),
-      info: Toast.mixin({type: 'info', timer: 5000})
+      error: Toast.mixin({icon: 'error', timer: 8000}),
+      success: Toast.mixin({icon: 'success', timer: 5000}),
+      info: Toast.mixin({icon: 'info', timer: 5000})
     };
   </script>
   {% block scripts %}{% endblock %}
