@@ -44,8 +44,13 @@ export function raiseFetchErrors(response) {
     return response;
 }
 
+export function naiveDeepClone(obj) {
+    // A naive deep clone. Doesn't work well with circular references or complex objects
+    return JSON.parse(JSON.stringify(obj));
+}
+
 export function easyFetch(url, baseOpts) {
-    const opts = baseOpts ? JSON.parse(JSON.stringify(baseOpts)) : {}; // deep clone
+    const opts = baseOpts ? naiveDeepClone(baseOpts) : {};
     const method = opts.method ? opts.method.toUpperCase() : "";
     if (method === "POST" && opts.rawBody instanceof Object) {
         opts.body = JSON.stringify(opts.rawBody);

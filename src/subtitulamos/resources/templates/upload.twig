@@ -16,10 +16,7 @@
     {% include "rules/rules_upload.twig" %}
   </div>
 
-  <form enctype="multipart/form-data">
-    {#{% for error in errors.all() %}
-      <li>{{ error }}</li>
-    {% endfor %}#}
+  <form id="upload" enctype="multipart/form-data">
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Serie</label>
