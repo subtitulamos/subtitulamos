@@ -3,62 +3,73 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import $ from "jquery";
 import "../css/upload.css";
+import { onDomReady } from "./utils";
 
-$(function () {
-  $("#lang, #version, #comments, #sub").on("change", function () {
-    $("#" + $(this).attr("id") + "-status").toggleClass("hidden", true);
-  });
+onDomReady(function () {
+  document.querySelectorAll("#lang, #version, #comments, #sub").forEach($ele => $ele.addEventListener("change", function () {
+    document.getElementById(`${this.id}-status`).classList.toggle("hidden", true);
+  }));
 
   // SRT FILE
   // Always clear the file input on load
-  let $sub = $("#sub").clone();
-  $("#sub").replaceWith($sub);
+  let $sub = document.getElementById("sub").cloneNode(true);
+  document.getElementById("sub").replaceWith($sub);
 
   // Update of SRT file selection
-  $sub.on("change", function (e) {
-    let files = $sub[0].files;
+  $sub.addEventListener("change", function (e) {
+    let files = $sub.files;
     if (files.length > 0) {
-      $("#sub-name").html(files[0].name);
+      document.getElementById("sub-name").innerHTML = files[0].name;
     }
   });
 
-  $("form").on("submit", function (e) {
+
+  document.getElementById("upload-form").addEventListener("submit", function (e) {
     e.preventDefault(); // Don't submit the form
   });
 
-  $("#upload-button").on("click", function (e) {
-    const $this = $(this);
-    let form = $this.closest("form")[0];
-    $this.toggleClass("is-loading", true);
+  document.getElementById("upload-button").addEventListener("click", function (e) {
+    const form = this.closest("form");
+    this.classList.toggle("is-loading", true);
 
-    let data = new FormData(form);
-    $.ajax({
-      url: window.location.pathname,
-      contentType: false,
-      processData: false,
+    const data = new FormData(form);
+    fetch(window.location.pathname, {
       method: "POST",
-      data: data,
+      body: data, // Already form-encoded
     })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        $this.toggleClass("is-loading", false);
-        $("[data-status]").toggleClass("hidden", true);
-
-        if (jqXHR.status == 400 && jqXHR.responseJSON) {
-          jqXHR.responseJSON.forEach(function (e, idx, arr) {
-            let $status = $("#" + e[0] + "-status");
-            if ($status) {
-              console.log("Enabling " + e[0]);
-              $status.toggleClass("hidden", false).html(e[1]);
-            }
-          });
-        } else {
-          Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
+      .then(res => {
+        if (res.ok === false) {
+          throw {
+            error: true,
+            response: res
+          }
         }
+
+        return res;
       })
-      .done(function (data) {
+      .then(res => res.text())
+      .then(data => {
         window.location.href = data;
+      })
+      .catch(err => {
+        this.classList.toggle("is-loading", false);
+        document.querySelectorAll("[data-status]").forEach($ele => $ele.classList.toggle("hidden", true));
+
+        const reportUnknownError = () => Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
+        if (err.response) {
+          err.response.json().then(data => {
+            data.forEach(function (e, idx, arr) {
+              let $status = document.getElementById(`${e[0]}-status`);
+              if ($status) {
+                $status.classList.toggle("hidden", false);
+                $status.innerHTML = e[1];
+              }
+            })
+          }).catch(reportUnknownError);
+        } else {
+          reportUnknownError();
+        }
       });
   });
 });

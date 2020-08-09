@@ -13,6 +13,11 @@
   <div id="mocha"></div>
 
   <script>
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+
     chai.config.truncateThreshold = 0;
     let balanceText = function (originalText, opinionated) {
       if (typeof opinionated == "undefined") {
@@ -101,8 +106,8 @@
             (curChar == "." || curChar == " ") &&
             nextChar &&
             prevChar &&
-            $.isNumeric(nextChar) &&
-            $.isNumeric(prevChar)
+            isNumeric(nextChar) &&
+            isNumeric(prevChar)
           ) {
             continue;
           }

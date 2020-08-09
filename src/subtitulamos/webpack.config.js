@@ -21,7 +21,7 @@ module.exports = {
         panel: './resources/assets/js/panel/adminlte.js',
         panel_alerts: './resources/assets/js/panel/alerts.js',
         // Vendor JS package
-        vendor: ['jquery', 'vue', 'timeago.js'],
+        vendor: ['vue', 'timeago.js'],
 
         // These pages don't have JS, but need to exist to create the corresponding CSS files
         banned_error: './resources/assets/js/banned_error.js',

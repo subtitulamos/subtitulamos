@@ -85,13 +85,11 @@ onDomReady(function () {
     }
   });
 
-  document.getElementById("upload").addEventListener("submit", function (e) {
+  document.getElementById("upload-form").addEventListener("submit", function (e) {
     e.preventDefault(); // Don't submit the form
   });
 
   document.getElementById("upload-button").addEventListener("click", function (e) {
-    e.preventDefault();
-
     const form = this.closest("form");
     this.classList.toggle("is-loading", true);
 
