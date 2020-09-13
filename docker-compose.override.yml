@@ -1,0 +1,29 @@
+version: '3'
+
+# NOTE: This is a development-only docker-compose configuration overrides
+#       It, for example, includes a mariadb instance, which is not the case in prod (separate mariadb instance)
+
+services:
+  phpsv:
+    restart: always
+    links:
+      - mariadb
+    volumes:
+      - ./.env:/code/.env
+      - ./src/subtitulamos/app:/code/app
+      - ./src/subtitulamos/public:/code/public
+      - ./src/subtitulamos/resources:/code/resources
+      - ./src/subtitulamos/composer.json:/code/composer.json
+      - ./src/subtitulamos/composer.lock:/code/composer.lock
+      - ./src/subtitulamos/cli-config.php:/code/cli-config.php
+
+  mariadb:
+    container_name: subs_mariadb
+    image: mariadb/server:10.4
+    ports:
+      - "127.0.0.1:33066:3306"
+    restart: on-failure
+    env_file:
+      - ./.env
+    volumes:
+      - ./data/mariadb:/var/lib/mysql

@@ -1,8 +1,5 @@
 version: '3'
 
-# NOTE: This is a development-only docker-compose file
-#       It is very similar to the production configuration, but less optimized
-
 services:
   nginx:
     container_name: subs_nginx
@@ -28,27 +25,7 @@ services:
     working_dir: /code
     restart: on-failure
     links:
-      - mariadb
       - redis
-    volumes:
-      - ./.env:/code/.env
-      - ./src/subtitulamos/app:/code/app
-      - ./src/subtitulamos/public:/code/public
-      - ./src/subtitulamos/resources:/code/resources
-      - ./src/subtitulamos/composer.json:/code/composer.json
-      - ./src/subtitulamos/composer.lock:/code/composer.lock
-      - ./src/subtitulamos/cli-config.php:/code/cli-config.php
-
-  mariadb:
-    container_name: subs_mariadb
-    image: mariadb/server:10.4
-    ports:
-      - "127.0.0.1:33066:3306"
-    restart: on-failure
-    env_file:
-      - ./.env
-    volumes:
-      - ./data/mariadb:/var/lib/mysql
 
   redis:
     container_name: subs_redis
