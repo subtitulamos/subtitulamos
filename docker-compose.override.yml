@@ -9,7 +9,6 @@ services:
     links:
       - mariadb
     volumes:
-      - ./.env:/code/.env
       - ./src/subtitulamos/app:/code/app
       - ./src/subtitulamos/public:/code/public
       - ./src/subtitulamos/resources:/code/resources

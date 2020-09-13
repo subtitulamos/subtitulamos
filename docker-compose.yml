@@ -26,6 +26,8 @@ services:
     restart: on-failure
     links:
       - redis
+    volumes:
+      - ./.env:/code/.env
 
   redis:
     container_name: subs_redis
