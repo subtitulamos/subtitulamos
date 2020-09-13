@@ -7,8 +7,7 @@
 
 namespace App\Commands;
 
-use App\Entities\Show;
-use App\Services\Psonic;
+use App\Services\Sonic;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,8 +26,8 @@ class RegenerateSearchIndex extends Command
         global $entityManager;
         $shows = $entityManager->getRepository('App:Show')->findAll();
         foreach ($shows as $show) {
-            $ingest = Psonic::getIngestClient();
-            $ingest->push(Psonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
+            $ingest = Sonic::getIngestClient();
+            $ingest->push(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
         }
         $ingest->disconnect();
     }
