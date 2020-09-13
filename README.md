@@ -38,13 +38,7 @@ The 2nd option might be easier:
 - Install [PHP](https://www.php.net/manual/en/install.php)
     - On Windows, an easy install can be achieved using [XAMPP](https://www.apachefriends.org/download.html). However, it'll install a bunch more things you might not want (like a local MySQL server). For a plain PHP install, just head over to the [PHP Windows Downloads](https://windows.php.net/download#php-7.4), download a compiled version (e.g VC15 x64 Thread Safe), extract it and add it to your PATH.
 - Install [Composer](https://getcomposer.org/doc/00-intro.md)
-- After that, run `composer install` within the repository's directory. Done!
-
-## Realtime translation - Setup
-
-The website uses realtime translation based on websockets. Since PHP is not really ideal for the long-running processes that websocket technology requires, a simple NodeJS server is used instead. Simply clone `github.com/subtitulamos/subtitulamos-new`.
-
-_Note_: You will generally not need to modify the NodeJS server since all the relevant logic is on PHP, and it is just broadcasted via basic HTTP requests to the NodeJS process, which simply relies it to the connected clients.
+- After that, run `composer install` on the `src/subtitulamos` directory. Done!
 
 # Architecture
 ## Software used
@@ -55,12 +49,8 @@ _Note_: You will generally not need to modify the NodeJS server since all the re
 - Redis
 - [Sonic](https://github.com/valeriansaliou/sonic)
 
-
 # Development
-
-Aditionally, it may be annoying to run the realtime translation service every time. For that, [supervisord](http://supervisord.org/) is actually a fairly simple and great way to automatically launch/restart the binary. Once again there're better tutorials out in the web than anything that could be written here, specially since the rt translation binary is so simple and doesn't really require much setup besides passing the args (for detail on those, see [the docs](https://github.com/subtitulamos/subtitulamos-translate).
-
-### Altering the database model
+## Altering the database model
 
 To add new columns to the database, simply edit the model files (or create a new one!) inside `app/Entities`, adding new private field(s) with the `@ORM` annotation (see the Doctrine docs for details on the annotations). Once that's done, run `./vendor/bin/doctrine orm:generate-ent ./` to generate getter/setters for the field(s) you just created. Afterwards, you'll probably want to update your database, there's two ways:
 
