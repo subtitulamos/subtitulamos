@@ -5,8 +5,8 @@ services:
     container_name: subs_nginx
     image: nginx:alpine
     ports:
-      - "127.0.0.1:8080:8080"
-    restart: on-failure
+      - "127.0.0.1:${INTERNAL_NGINX_PORT}:8080"
+    restart: always
     links:
       - phpsv
       - translate
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile.PHP
     working_dir: /code
-    restart: on-failure
+    restart: always
     links:
       - redis
     volumes:
@@ -39,6 +39,7 @@ services:
   sonic:
     container_name: subs_sonic
     image: valeriansaliou/sonic:v1.3.0
+    restart: always
     volumes:
       - ./data/sonic:/var/lib/sonic/store/
       - ./config/sonic.cfg:/etc/sonic.cfg
@@ -46,6 +47,7 @@ services:
   translate:
     container_name: subs_translate
     image: subs_translate
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.Go
