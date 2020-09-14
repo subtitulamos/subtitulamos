@@ -9,6 +9,6 @@ RUN apk add autoconf g++ libc-dev make gcc \
     && rm -rf /tmp/pear \
     && apk del autoconf g++ libc-dev make gcc
 
-COPY config/docker_phpsv_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ./config/docker_phpsv_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]

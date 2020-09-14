@@ -39,7 +39,8 @@ $conn = [
     'dbname' => getenv('MARIADB_DATABASE'),
     'user' => getenv('MARIADB_USER'),
     'password' => getenv('MARIADB_PASSWORD'),
-    'host' => getenv('MARIADB_HOST')
+    'host' => getenv('MARIADB_HOST'),
+    'unix_socket' => getEnvOrDefault('MARIADB_SOCKETNAME', null)
 ];
 
 // $entityManager is a global isntance and is used as such

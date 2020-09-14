@@ -20,7 +20,7 @@ You're free to contribute to any open issue that's not being tackled by anyone a
 2. Install Docker, if you don't have it (https://www.docker.com/get-started)
 3. Install NodeJS 12.x, if you don't have it (https://nodejs.org/download/release/latest-v12.x/)
     - Higher versions might work, too
-4. Run `npm install` on the repository root
+4. Run `npm install` from the directory `src/subtitulamos`
 5. Execute `./dev.sh` on the repository root from a Linux shell (if you're on Windows, **Git Bash** should be available if you [installed Git](https://git-scm.com/)). This command will
     - build & start all the necessary Docker containers
     - start a [webpack](https://webpack.js.org/) watcher that builds all the CSS/JS in the page any time it changes

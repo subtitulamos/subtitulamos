@@ -28,6 +28,7 @@ services:
       - redis
     volumes:
       - ./.env:/code/.env
+      - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock
 
   redis:
     container_name: subs_redis

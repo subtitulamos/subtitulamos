@@ -1051,7 +1051,7 @@ const ws = new ReconnectingWebsocket(
   wsProtocol +
   "://" +
   route +
-  "/translation-rt?subID=" +
+  "/translate-rt?subID=" +
   subID +
   "&token=" +
   wsAuthToken
