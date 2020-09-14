@@ -2,7 +2,6 @@ version: '3'
 
 services:
   nginx:
-    container_name: subs_nginx
     image: nginx:alpine
     ports:
       - "127.0.0.1:${INTERNAL_NGINX_PORT}:8080"
@@ -17,7 +16,6 @@ services:
       - ./src/subtitulamos/public:/code/public:cached
 
   phpsv:
-    container_name: subs_phpsv
     image: subs_phpsv
     build:
       context: .
@@ -31,13 +29,11 @@ services:
       - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock
 
   redis:
-    container_name: subs_redis
     image: redis:6.0-alpine
     volumes:
       - ./data/redis:/data
 
   sonic:
-    container_name: subs_sonic
     image: valeriansaliou/sonic:v1.3.0
     restart: always
     volumes:
@@ -45,7 +41,6 @@ services:
       - ./config/sonic.cfg:/etc/sonic.cfg
 
   translate:
-    container_name: subs_translate
     image: subs_translate
     restart: always
     build:

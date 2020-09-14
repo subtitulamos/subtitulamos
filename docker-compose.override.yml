@@ -25,3 +25,18 @@ services:
       - ./.env
     volumes:
       - ./data/mariadb:/var/lib/mysql
+
+  translate:
+    container_name: subs_translate
+
+  sonic:
+    container_name: subs_sonic
+
+  nginx:
+    container_name: subs_nginx
+
+  phpsv:
+    container_name: subs_phpsv
+
+  redis:
+    container_name: subs_redis
