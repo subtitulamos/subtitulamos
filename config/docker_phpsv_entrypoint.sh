@@ -9,7 +9,13 @@ chmod 777 -R /tmp/subs
 php composer.phar install # Install dependencies, if needed
 ./app/console app:twig:clear-cache # Clear the Twig cache
 
-while [ ! nc mariadb 3306 -e true ] || [ -s /var/run/mysqld/mysqld.sock ]; do sleep 1; done; # Wait until MariaDB is up
+if [ ! -f /var/run/mysqld/mysqld.sock ]; then
+    # Wait until MariaDB is up
+    while ! nc mariadb 3306 -e true; do
+        sleep 1;
+    done;
+fi
+
 ./vendor/bin/doctrine orm:generate-proxies # Regenerate all the ORM proxies
 
 if [ "$1" = "php-fpm" ]; then
