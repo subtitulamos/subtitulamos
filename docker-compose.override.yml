@@ -5,6 +5,7 @@ version: '3'
 
 services:
   phpsv:
+    container_name: subs_phpsv
     links:
       - mariadb
     volumes:
@@ -34,9 +35,6 @@ services:
 
   nginx:
     container_name: subs_nginx
-
-  phpsv:
-    container_name: subs_phpsv
 
   redis:
     container_name: subs_redis
