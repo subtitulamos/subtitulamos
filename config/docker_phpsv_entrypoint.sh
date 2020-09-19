@@ -9,7 +9,7 @@ chmod 777 -R /tmp/subs
 php composer.phar install # Install dependencies, if needed
 ./app/console app:twig:clear-cache # Clear the Twig cache
 
-if [ ! -f /var/run/mysqld/mysqld.sock ]; then
+if [ ! -S /var/run/mysqld/mysqld.sock ]; then
     # Wait until MariaDB is up
     while ! nc mariadb 3306 -e true; do
         sleep 1;
