@@ -31,7 +31,7 @@ func main() {
 	addr := env("TRANSLATE_HTTP_ADDR", ":8065") // http servicing address
 	redisHost := env("REDIS_HOST", "redis")     // redis service address & port
 	redisPort := env("REDIS_PORT", "6379")
-	redisEnvPrefix = env("ENVIRONMENT", "dev") // redis pub/sub environment prefix
+	redisEnvPrefix = env("REDIS_PUBSUB_ENV", "dev") // redis pub/sub environment prefix
 
 	redisClient = redis.NewClient(&redis.Options{
 		Addr: redisHost + ":" + redisPort,

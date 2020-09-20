@@ -26,7 +26,7 @@ if (!getenv('SKIP_ENV_FILE')) {
     $dotenv->load();
 }
 
-define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT', 'dev'));
+define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT_NAME', 'dev'));
 define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
 define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
 define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));

@@ -45,6 +45,6 @@ services:
       context: .
       dockerfile: Dockerfile.Go
       args:
-        REDIS_PUBSUB_ENV: ${ENVIRONMENT}
+        REDIS_PUBSUB_ENV: ${ENVIRONMENT_NAME}
     links:
       - redis
