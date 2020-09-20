@@ -47,7 +47,6 @@ services:
       context: .
       dockerfile: Dockerfile.Go
       args:
-        TRANSLATE_SV_PORT: ${TRANSLATE_SV_PORT}
         REDIS_PUBSUB_ENV: ${ENVIRONMENT}
         REDIS_ADDR: ${REDIS_HOST}:${REDIS_PORT}
     links:
