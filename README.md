@@ -24,8 +24,8 @@ You're free to contribute to any open issue that's not being tackled by anyone a
 5. Execute `./dev.sh` on the repository root from a Linux shell (if you're on Windows, **Git Bash** should be available if you [installed Git](https://git-scm.com/)). This command will
     - build & start all the necessary Docker containers
     - start a [webpack](https://webpack.js.org/) watcher that builds all the CSS/JS in the page any time it changes
-6. From inside the Docker, execute `./vendor/bin/doctrine orm:schema:update --force` to create the database schema required by the website.
-7. You're done!! You can access a subtitulamos instance at http://localhost:8080.
+6. You're done!! You can access a subtitulamos instance at http://localhost:8080.
+7. You can log in as user `root`, with password `root`
 
 After this first setup, any time you want to start subtitulamos, just run `./dev.sh`!
 
@@ -56,3 +56,5 @@ To add new columns to the database, simply edit the model files (or create a new
 
 - See a diff with your DB schema `./vendor/bin/doctrine orm:sch:update --dump-sql`, and run these queries manually (This is the safe option).
 - Update the DB schema (caution, this can destroy data if you removed a column/table): `./vendor/bin/doctrine orm:sch:update --force`.
+
+After updating the DB schema, update the `config/mariadb/init.sql` file for ease of development

@@ -26,6 +26,7 @@ services:
       - ./.env
     volumes:
       - ./data/mariadb:/var/lib/mysql
+      - ./config/mariadb:/docker-entrypoint-initdb.d/:ro
 
   translate:
     container_name: subs_translate
