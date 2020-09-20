@@ -109,15 +109,16 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	v, err := redisClient.Get(fmt.Sprintf("authtok-%s-%s", redisEnvPrefix, token)).Result()
+	auths := fmt.Sprintf("authtok-%s-%s", redisEnvPrefix, token)
+	v, err := redisClient.Get(auths).Result()
 	if err != nil {
-		log.Printf("(%s, %d) pair fail", token, subID)
+		log.Printf("(%s, %d) pair fail, not found <%s>. err: %v", token, subID, auths, err)
 		return
 	}
 
 	expectedSubID, err := strconv.Atoi(v)
 	if err != nil || expectedSubID != subID {
-		log.Printf("(%s, %d) pair fail", token, subID)
+		log.Printf("(%s, %d) pair fail, wrong sub ID", token, subID)
 		return
 	}
 
