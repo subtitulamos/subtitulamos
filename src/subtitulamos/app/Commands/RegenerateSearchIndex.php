@@ -25,8 +25,9 @@ class RegenerateSearchIndex extends Command
     {
         global $entityManager;
         $shows = $entityManager->getRepository('App:Show')->findAll();
+
+        $ingest = Sonic::getIngestClient();
         foreach ($shows as $show) {
-            $ingest = Sonic::getIngestClient();
             $ingest->push(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
         }
         $ingest->disconnect();
