@@ -16,7 +16,6 @@ services:
       - ./src/subtitulamos/public:/code/public:cached
 
   phpsv:
-    image: subs_phpsv
     build:
       context: .
       dockerfile: Dockerfile.PHP
@@ -41,7 +40,6 @@ services:
       - ./config/sonic.cfg:/etc/sonic.cfg
 
   translate:
-    image: subs_translate
     restart: always
     build:
       context: .
