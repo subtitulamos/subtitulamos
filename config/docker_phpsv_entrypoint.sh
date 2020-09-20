@@ -17,9 +17,7 @@ if [ ! -S /var/run/mysqld/mysqld.sock ]; then
 fi
 
 ./vendor/bin/doctrine orm:generate-proxies # Regenerate all the ORM proxies
-
-if [ "$1" = "php-fpm" ]; then
-    ./app/console app:bots:synchronize # Make sure bots are up-to-date
-fi
+./app/console app:bots:synchronize # Make sure bots are up-to-date
+./app/console app:search:regenerate-index # Make sure search index is generated
 
 exec "$@" # Executes CMD

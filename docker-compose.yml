@@ -23,6 +23,9 @@ services:
     restart: always
     links:
       - redis
+      - sonic
+    depends_on:
+      - sonic
     volumes:
       - ./.env:/code/.env
       - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock

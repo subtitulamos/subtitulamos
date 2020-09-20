@@ -30,5 +30,7 @@ class RegenerateSearchIndex extends Command
             $ingest->push(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
         }
         $ingest->disconnect();
+
+        $output->writeln(count($shows)." shows sync'd to search engine");
     }
 }

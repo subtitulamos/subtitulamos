@@ -9,6 +9,7 @@ services:
     links:
       - mariadb
     volumes:
+      - ./config/docker_phpsv_entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
       - ./src/subtitulamos/app:/code/app
       - ./src/subtitulamos/public:/code/public
       - ./src/subtitulamos/resources:/code/resources
