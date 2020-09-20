@@ -46,6 +46,5 @@ services:
       dockerfile: Dockerfile.Go
       args:
         REDIS_PUBSUB_ENV: ${ENVIRONMENT}
-        REDIS_ADDR: ${REDIS_HOST}:${REDIS_PORT}
     links:
       - redis

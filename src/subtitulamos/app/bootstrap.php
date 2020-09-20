@@ -31,6 +31,8 @@ define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
 define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
 define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));
 define('SONIC_PASSWORD', getEnvOrDefault('SONIC_PASSWORD', 'SecretPassword'));
+define('REDIS_HOST', getEnvOrDefault('REDIS_HOST', 'redis'));
+define('REDIS_PORT', getEnvOrDefault('REDIS_PORT', 6379));
 
 // Initialize Doctrine's ORM stuff
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', null, false);

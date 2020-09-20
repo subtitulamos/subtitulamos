@@ -28,12 +28,13 @@ func env(key string, defaultTo string) string {
 }
 
 func main() {
-	addr := env("TRANSLATE_HTTP_ADDR", ":8080")     // http servicing address
-	redisAddr := env("REDIS_ADDR", ":6379")         // redis service address
-	redisEnvPrefix = env("REDIS_PUBSUB_ENV", "dev") // redis pub/sub environment prefix
+	addr := env("TRANSLATE_HTTP_ADDR", ":8065") // http servicing address
+	redisHost := env("REDIS_HOST", "redis")     // redis service address & port
+	redisPort := env("REDIS_PORT", "6379")
+	redisEnvPrefix = env("ENVIRONMENT", "dev") // redis pub/sub environment prefix
 
 	redisClient = redis.NewClient(&redis.Options{
-		Addr: redisAddr,
+		Addr: redisHost + ":" + redisPort,
 		DB:   0,
 	})
 

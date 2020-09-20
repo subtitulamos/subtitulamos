@@ -34,7 +34,7 @@ class Translation
         $this->em = $em;
 
         $redis = new \Redis();
-        $redis->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'));
+        $redis->connect(REDIS_HOST, REDIS_PORT);
         $this->redis = $redis;
     }
 
@@ -234,7 +234,7 @@ class Translation
      */
     public function setWSAuthToken(string $token, Subtitle $sub)
     {
-        $this->redis->set('authtok-' . ENVIRONMENT_NAME . '-' . $token, $sub->getId(), 24 * 60 * 60);
+        $this->redis->set('authtok-'.ENVIRONMENT_NAME.'-'.$token, $sub->getId(), 24 * 60 * 60);
     }
 
     /**
