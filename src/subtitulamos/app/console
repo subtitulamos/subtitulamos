@@ -15,4 +15,5 @@ $application->add(new \App\Commands\ClearTwigCache());
 $application->add(new \App\Commands\CreateUserBots());
 $application->add(new \App\Commands\GenerateSitemaps());
 $application->add(new \App\Commands\RegenerateSearchIndex());
+$application->add(new \App\Commands\CreateRobotsFile());
 $application->run();

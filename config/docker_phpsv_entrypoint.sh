@@ -8,6 +8,7 @@ chmod 777 -R /tmp/subs
 
 php composer.phar install # Install dependencies, if needed
 ./app/console app:twig:clear-cache # Clear the Twig cache
+./app/console app:static:create-robots-file # Create Robots files
 
 if [ ! -S /var/run/mysqld/mysqld.sock ]; then
     # Wait until MariaDB is up
@@ -19,5 +20,6 @@ fi
 ./vendor/bin/doctrine orm:generate-proxies # Regenerate all the ORM proxies
 ./app/console app:bots:synchronize # Make sure bots are up-to-date
 ./app/console app:search:regenerate-index # Make sure search index is generated
+./app/console app:generate-sitemap # Gen sitemap
 
 exec "$@" # Executes CMD
