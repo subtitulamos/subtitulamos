@@ -5,7 +5,7 @@
 
 import Vue from "vue";
 import { dateDiff, easyFetch } from "./utils.js";
-import '../css/index.css';
+import '../css/index.scss';
 
 let episodeList = new Vue({
   el: "#incategory_board",

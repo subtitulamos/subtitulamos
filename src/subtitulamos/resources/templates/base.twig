@@ -16,9 +16,6 @@
 
   <script type="text/javascript" src="js/hotload.js?{{ 'now'|date('YmdHi') }}"></script>
 
-  {% block bulma %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
-  {% endblock %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
   {% block css %}{% endblock %}
@@ -83,13 +80,13 @@
             <a class="text light" href="/css/">Foro</a>
             <a class="text light" href="/python/">índice de séries</a>
           </nav>
-          <nav id="social-networks">
-            <a class="text light" href="/html/" title="Forum"><i class="fab fa-forumbee"></i></a>
-            <a class="text light" href="/css/" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a class="text light" href="/js/" title="Twitter"><i class="fab fa-twitter"></i></a>
-            <a class="text light" href="/python/" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-            <a class="text light" href="/js/" title="GitHub"><i class="fab fa-github"></i></a>
-            <a class="text light" href="/python/" title="RSS"><i class="fas fa-rss"></i></a>
+          <nav class="social-networks">
+            <a class="text light" href="https://foro.subtitulamos.tv/" title="Forum"><i class="fab fa-forumbee"></i></a>
+            <a class="text light" href="https://www.facebook.com/subtitulamos.tv" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a class="text light" href="https://twitter.com/subtitulamostv" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a class="text light" href="https://t.me/subtitulamostv" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+            <a class="text light" href="https://github.com/subtitulamos/subtitulamos" title="GitHub"><i class="fab fa-github"></i></a>
+            <a class="text light" href="/rss" title="RSS"><i class="fas fa-rss"></i></a>
           </nav>
         </div>
       </footer>
