@@ -2,87 +2,71 @@
 {% import 'macros/assets.twig' as assets %}
 
 {% block title %}Página principal{% endblock %}
-{% block search %}{# Do not display top search here #}{% endblock %}
 {% block css %}{{ assets.css('index') }}{% endblock %}
 
 {% block content %}
-  <div class='main_container'>
-    <div id="large_splash">
-      <div id="logo"></div>
-      <div id="website_name">subtitulamos.tv</div>
-      <div id="website_title">{{ catchphrase }}</div>
-    </div>
-    <div id="search">
-      <form>
-        <a href="/"><div id="white-logo-searchbar" class="white_logo hidden"></div></a>
-        <script>/* Intentionally empty. This is a workaround around a Firefox bug with autofocus that causes a FOUC to display. BECAUSE REASONS? */</script>
-        <input type="text" placeholder="Busca una serie... Ej.: Westworld" id="search-bar" autofocus autocomplete="off" />
-        <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
-        <ul id="search-results" class='hidden'></ul>
-      </form>
-    </div>
-    <div id="category_navigation_list">
-      <div id="category_navigation_title">...o explora las siguientes categorías</div>
-      {#<span class="hint--top hint--bounce hint--rounded" data-hint="Los subtítulos más buscados"><div class="category_navigation_item" id="most-downloaded">Lo más descargado</div></span>#}
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos"><div class="category_navigation_item" id="last-uploaded">Últimas subidas</div></span>
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas"><div class="category_navigation_item" id="last-completed">Últimas traducciones</div></span>
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones"><div class="category_navigation_item" id="last-edited">Últimas ediciones</div></span>
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos resincronizados"><div class="category_navigation_item" id="last-resynced">Últimas resincros</div></span>
-      {% if auth.has_role('ROLE_TT') %}
-        <span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos actualmente en pausa"><div class="category_navigation_item" id="paused">En pausa</div></span>
-      {% endif %}
-    </div>
-    {% verbatim %}
-    <div id="incategory_state" class="hidden">
-      <div id="incategory_board">
-        <div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': ep.hide_details }">
-          <div class="clip_downloads" v-if="ep.download_count">
-            <div class="clip_downloads_times">{{ ep.download_count }}</div>
-            <div class="clip_downloads_text">descargas</div>
-          </div>
-
-          <div class="clip_activity_since" v-if="ep.time">
-            <div class="clip_row_text_faded">hace</div>
-            <div class="clip_row_time">{{ ep.time_ago }}</div>
-            <div class="clip_row_text">{{ ep.time_unit }}</div>
-          </div>
-
-          <div class="visual_separator"></div>
-
-          <a :href='subURI(ep)'>
-            <div class="ep-title-row" :class="{ 'ep-detailed': ep.additional_info != undefined }">
-              <div class="ep-title">{{ ep.name }}</div>
-              <div class="ep-add-details">
-                <div class="ep-details">
-                  {{ ep.lang }}
-                  <span v-if="ep.progress">
-                    · <b>{{ ep.progress }}%</b>
-                  </span>
-                  <span v-if="ep.version">
-                    · <b>{{ ep.version }}</b>
-                  </span>
-                  <span v-if="ep.last_edited_by">
-                    · {{ ep.last_edited_by }}
-                  </span>
-                  <span v-if="ep.paused_by">
-                    · {{ ep.paused_by }}
-                  </span>
-                </div>
-                <div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>
-                <div class="ep-new-series" v-if="ep.ep_new_series">Nueva Serie</div>
-              </div>
-            </div>
-          </a>
+  <div class='content'>
+    <div id="large-splash">
+      <svg id="logo" height="190" viewBox="0 0 720 720">
+        <path d="M500,480C373.919,603.693,144.292,621.974,115.091,623.822A359,359,0,0,1,0,360C0,161.178,161.178,0,360,0A358.39,358.39,0,0,1,576.516,72.38C594.276,124.682,651.193,331.67,500,480ZM456,236H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,236Zm0,104H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,340ZM564,504c101.048-137.763,87.982-313.7,81.9-362.757a359.955,359.955,0,0,1-24.222,465.966L664,688l-94.3-35.364A358.341,358.341,0,0,1,360,720a362.772,362.772,0,0,1-54.959-4.17C340.3,698.95,471.256,630.442,564,504Z"/>
+      </svg>
+      <div id="main-action-container">
+        <div class="social-networks">
+          <a class="text" href="https://foro.subtitulamos.tv/" title="Foro"><i class="fab fa-forumbee"></i></a>
+          <a class="text" href="https://www.facebook.com/subtitulamos.tv" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a class="text" href="https://twitter.com/subtitulamostv" title="Twitter"><i class="fab fa-twitter"></i></a>
         </div>
-        <div id='pages'>
-          <div id='prev-page' class='hidden'>
-            <i class='fa fa-chevron-circle-left'></i> Página anterior
-          </div>
-          <div id='next-page'>
-            Siguiente página <i class='fa fa-chevron-circle-right'></i>
-          </div>
+        <div id="motto">
+          <h2>Tu página de <span class="text bold">subtítulos</span> favorita</h2>
+          <p class="text small"><span class="text bold">Descarga, mejora ó traduz</span> los subtítulos más actuales</p>
+        </div>
+        <div id="search" class="w-shadow-box">
+          <form>
+            <input type="text" placeholder="Busca una serie... Ej.: Westworld" autofocus autocomplete="off" />
+            <button id="search-subtitles" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
+            <ul id="search-results" class='hidden'></ul>
+          </form>
         </div>
       </div>
+    </div>
+    <div id="category-navigation-list" class="navigation-list">
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos destacados ahora">
+        <div class="navigation-item selected" id="highlighted">DESTACADOS AHORA</div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos">
+        <div class="navigation-item" id="last-uploaded">
+          <div id="the-latest" class="text mini">LAS ÚLTIMAS...</div>
+          SUBIDAS
+        </div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas">
+        <div class="navigation-item" id="last-completed">TRADUCCIONES</div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones">
+        <div class="navigation-item" id="last-edited">EDICIONES</div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos resincronizados">
+        <div class="navigation-item" id="last-resynced">RESINCROS</div>
+      </span>
+    </div>
+    {% verbatim %}
+    <div id="category-container">
+      <button id="previous-page" class="chevron">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div id="subtitle-cards-wrap">
+        <div class="subtitle-card w-shadow-box" v-for="ep in episodes">
+          <div class="metadata">
+            <p class="title text bold">{{ ep.series }}</p>
+            <p class="episode-number text mini">S{{ ep.season }} - E{{ ep.number }}</p>
+            <p class="episode-name">{{ ep.name }}</p>
+          </div>
+          <a :href='subURI(ep)'><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
+        </div>
+      </div>
+      <button id="next-page" class="chevron">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
     {% endverbatim %}
   </div>

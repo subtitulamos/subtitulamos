@@ -4,11 +4,11 @@
  */
 
 import Vue from "vue";
-import { dateDiff, easyFetch } from "./utils.js";
-import '../css/index.css';
+import { dateDiff, easyFetch, get, get_all } from "./utils.js";
+import "../css/index.scss";
 
 let episodeList = new Vue({
-  el: "#incategory_board",
+  el: "#subtitle-cards-wrap",
   data: {
     category: "",
     episodes: [],
@@ -64,14 +64,15 @@ let episodeList = new Vue({
 });
 
 let categoryPage = {};
-let rowsPerPage = 0;
+const subsPerPage = 5;
 function loadTab(target, page) {
   easyFetch("/search/" + target, {
     params: {
       page: page,
     },
-  }).then(res => res.json())
-    .then(data => {
+  })
+    .then((res) => res.json())
+    .then((data) => {
       data.forEach(function (_, idx, data) {
         data[idx].time_ago = 0;
         data[idx].time_unit = "sec";
@@ -81,94 +82,65 @@ function loadTab(target, page) {
       episodeList.episodes = data;
       categoryPage[target] = page;
 
-      if (rowsPerPage == 0 || rowsPerPage < episodeList.episodes.length) {
-        // First load? Let's guess the value
-        rowsPerPage = episodeList.episodes.length;
-      }
+      const isFirstPage = page <= 1;
+      const isLastPage = episodeList.episodes.length < subsPerPage;
 
-      let nextPageHidden = episodeList.episodes.length < rowsPerPage;
-      let prevPageHidden = page <= 1;
-      document.getElementById("next-page").classList.toggle("hidden", nextPageHidden);
-      document.getElementById("prev-page").classList.toggle("hidden", prevPageHidden);
-      document.getElementById("pages").classList.toggle("hidden", nextPageHidden && prevPageHidden);
+      get("#category-container").classList.toggle("first-page", isFirstPage);
+      get("#category-container").classList.toggle("last-page", isLastPage);
     });
 }
 
-document.getElementById("prev-page").addEventListener("click", function () {
+get("#previous-page").addEventListener("click", function () {
   let targetPage = Math.max(categoryPage[episodeList.category] - 1, 1);
-  if (targetPage == 1) {
-    this.classList.toggle("hidden", true);
-  }
 
-  document.getElementById("next-page").classList.toggle("hidden", false);
   loadTab(episodeList.category, targetPage);
 });
 
-document.getElementById("next-page").addEventListener("click", function () {
-  let targetPage = Math.min(categoryPage[episodeList.category] + 1, 10);
-  if (targetPage >= 10) {
-    this.classList.toggle("hidden", true);
-  }
+get("#next-page").addEventListener("click", function () {
+  let targetPage = Math.min(categoryPage[episodeList.category] + 1, subsPerPage);
 
-  document.getElementById("prev-page").classList.toggle("hidden", false);
   loadTab(episodeList.category, targetPage);
 });
 
-document.querySelectorAll(".category_navigation_item").forEach($ele => $ele.addEventListener("click", function () {
-  const $largeSplash = document.getElementById("large_splash");
-  const $incategoryState = document.getElementById("incategory_state");
-  const $whiteLogoSearchBar = document.getElementById("white-logo-searchbar");
-  $incategoryState.classList.toggle("hidden", false);
+get_all(".navigation-item").forEach(($ele) => {
+  $ele.addEventListener("click", function () {
+    get_all(".navigation-item").forEach(($otherEle) =>
+      $otherEle.classList.toggle("selected", false)
+    );
 
-  document.querySelectorAll(".category_navigation_item").forEach($ele => {
-    $ele.classList.toggle("nvbi_active", false);
+    this.classList.toggle("selected", true);
+
+    let target;
+    switch (this.id) {
+      case "highlighted":
+        target = "popular";
+        break;
+
+      case "last-uploaded":
+        target = "uploads";
+        break;
+
+      case "last-completed":
+        target = "completed";
+        break;
+
+      case "last-edited":
+        target = "modified";
+        break;
+
+      case "paused":
+        target = "paused";
+        break;
+
+      case "last-resynced":
+        target = "resyncs";
+        break;
+    }
+
+    if (!target)
+      // Nothing to do
+      return;
+
+    loadTab(target, 1);
   });
-  this.classList.toggle("nvbi_active", true);
-
-  var viewport_w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-  if (viewport_w >= 840 && !$largeSplash.dataset.hidden) {
-    // We only display the white logo for large viewports
-    window.scrollTo(0, 0);
-    $whiteLogoSearchBar.classList.toggle("hidden", false);
-    $largeSplash.style.maxHeight = 0;
-    $largeSplash.style.marginBottom = 0;
-    $largeSplash.style.opacity = 0;
-    $largeSplash.dataset.hidden = true;
-    setTimeout(() => {
-      $largeSplash.style.display = "none";
-    }, 1000);
-  }
-
-  let target;
-  switch (this.id) {
-    case "most-downloaded":
-      target = "popular";
-      break;
-
-    case "last-uploaded":
-      target = "uploads";
-      break;
-
-    case "last-completed":
-      target = "completed";
-      break;
-
-    case "last-edited":
-      target = "modified";
-      break;
-
-    case "paused":
-      target = "paused";
-      break;
-
-    case "last-resynced":
-      target = "resyncs";
-      break;
-  }
-
-  if (!target)
-    // Nothing to do
-    return;
-
-  loadTab(target, 1);
-}));
+});

@@ -9,19 +9,15 @@
   {% block meta %}{% endblock %}
   {% if ENVIRONMENT_NAME == 'production' %}
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
-    {% set min_suffix = "min." %}
   {% else %}
     <link rel="shortcut icon" type="image/png" href="favicon_nonprod.png"/>
-    {% set min_suffix = "" %}
+    {% set logged_in = true %}
   {% endif %}
 
   <script type="text/javascript" src="js/hotload.js?{{ 'now'|date('YmdHi') }}"></script>
 
-  {% block bulma %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.{{ min_suffix }}css">
-  {% endblock %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.{{ min_suffix }}css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
   {% block css %}{% endblock %}
 
   <title>
@@ -30,303 +26,74 @@
   </title>
 </head>
 <body>
-  <div id="top-site-banner">
-    <a href="/">
-      <div class="white_logo"></div>
-      <span class="site-name white_logo_text">subtitulamos.tv</span>
-    </a>
-  </div>
-  <header class="fade_slide_in">
-    {# Login/Register top-down sliders #}
-    {% if not auth.logged %}
-      <div id="header-popup-wrapper" class="hidden bounce">
-        <div id="close_logreg_form">CERRAR <i class="fa fa-times" aria-hidden="true"></i></div>
-
-        <form id="login-form" class="hidden">
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Usuario</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="login_username" class="input" type="text" placeholder="Escribe tu nombre de usuario o correo electrónico" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Contraseña</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="login_password" class="input" type="password" required>
-                </div>
-                <p id="login-error" class="help is-danger hidden"></p>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <label class="label"></label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <label class="checkbox">
-                    <input id="login_remember_me" type="checkbox">
-                    Recordarme en este equipo
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-grouped is-grouped-right">
-            <p class="control">
-              <button id="login-button" class="button button-fat is-primary" type="submit">Iniciar sesión</button>
-            </p>
-          </div>
-        </form>
-        <form id="register-form" class="hidden" action="/register" method="POST">
-          <div id='reg-errors'>
-            <ul></ul>
-          </div>
-
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Usuario</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="reg_username" class="input" type="text" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Email</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="reg_email" class="input" type="email" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Contraseña</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="reg_password" class="input" type="password" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Confirmar contraseña</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input id="reg_password_confirmation" class="input" type="password" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <label class="label"></label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <label class="checkbox">
-                    <input id="reg_terms" type="checkbox">
-                    Acepto las <b>reglas y las condiciones generales de uso</b> de este sitio web
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-grouped is-grouped-right">
-            <p class="control">
-              <button id="register-button" class="button button-fat is-primary" type="submit">Registrar</button>
-            </p>
-          </div>
-        </form>
-      </div>
-    {% endif %}
-    {# Top menu #}
-    <div id="social">
-      <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
-        <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="¡Visítanos en Facebook!">
-          <span class="fa-stack icon-facebook icon-social-header">
-            <i class="fa fa-square fa-stack-2x"></i>
-            <i class="fa fa-facebook fa-stack-1x"></i>
-          </span>
-        </span>
-      </a>
-
-      <a href="https://twitter.com/subtitulamostv" target="_blank">
-        <span class="hint--bottom-right hint--bounce hint--rounded" data-hint="Síguenos en Twitter">
-          <span class="fa-stack icon-twitter icon-social-header">
-            <i class="fa fa-square fa-stack-2x"></i>
-            <i class="fa fa-twitter fa-stack-1x"></i>
-          </span>
-        </span>
-      </a>
-
-      <a href="https://foro.subtitulamos.tv" target="_blank">
-        <span class="hint--bottom hint--bounce hint--rounded" data-hint="Visita nuestro foro">
-          <span class="fa-stack icon-board icon-social-header">
-            <i class="fa fa-square fa-stack-2x"></i>
-            <i class="fa fa-pencil fa-stack-1x"></i>
-          </span>
-        </span>
-      </a>
-    </div>
-
-    <nav class="top-links">
-      <ul>
-        {% if not auth.logged %}
-          <li><a href="/shows">ÍNDICE DE SERIES</a></li>
-          <li><a href="/rules">NORMAS</a></li>
-          <li id="register">REGISTRO</li>
-          <li id="login">INICIAR SESIÓN</li>
-        {% else %}
-          <li id="user_account_manage">
-            <i class="fa fa-cog" aria-hidden="true"></i>
-            <a href='/me'>{{ auth.user.username }}</a>
-          </li>
-          {% if auth.has_role('ROLE_MOD') %}
-            <li>
-              <span {% if auth.alert_count > 0 %}class='badge' data-badge='{{ auth.alert_count }}'{% endif %}>
-                <a href="/panel">PANEL DE MODERADOR</a>
-              </span>
-            </li>
-          {% endif %}
-          <li><a href="/shows">ÍNDICE DE SERIES</a></li>
-          <li><a href="/rules">NORMAS</a></li>
-          <li id="user_upload_subtitle"><a href="/upload">SUBIR SUBTITULO</a></li>
-          <li><a href="/logout">SALIR</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-  </header>
-
   {# Background fade pan that displays when the login/reg area is open #}
   <div id="fade-pan" class="hidden"></div>
 
-  <div id="container">
-    <div class="main_container">
-      {% block search %}
-        <div id="search">
-          <a href="/"><div id="white-logo-searchbar" class="white_logo"></div></a>
-          <input type="text" placeholder="Busca una serie... Ej.: Westworld" id="search-bar" autocomplete="off" />
-          <div id="search_subtitles_button" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></div>
 
-          <ul id="search-results" class='hidden'></ul>
-        </div>
-      {% endblock %}
-    </div>
+  {% if auth.user is null %}
+    <header>
+      <div id="header-logo-wrap">
+        <svg id="logo-miniature" height="40" viewBox="0 0 720 720">
+            <path d="M500,480C373.919,603.693,144.292,621.974,115.091,623.822A359,359,0,0,1,0,360C0,161.178,161.178,0,360,0A358.39,358.39,0,0,1,576.516,72.38C594.276,124.682,651.193,331.67,500,480ZM456,236H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,236Zm0,104H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,340ZM564,504c101.048-137.763,87.982-313.7,81.9-362.757a359.955,359.955,0,0,1-24.222,465.966L664,688l-94.3-35.364A358.341,358.341,0,0,1,360,720a362.772,362.772,0,0,1-54.959-4.17C340.3,698.95,471.256,630.442,564,504Z"/>
+        </svg>
+        <span id="logo-text" class="text bold">subtitulamos.tv</span>
+      </div>
+      <nav id="top-links">
+        <button class="text tiny spaced"><a href="/shows">ÍNDICE DE SERIES</a></button>
+        <button class="text tiny spaced top-link" id="register">REGISTRO</button>
+        <button class="text light tiny spaced" id="login">INICIAR SESIÓN</button>
+      </nav>
+    </header>
+  {% endif %}
 
-    {% if auth.user is not null and auth.user.ban %}
-      <div class="ban-banner">
-        <b>Aviso</b>: Tu cuenta se encuentra baneada {% if auth.user.ban.until|date('Y') > "+5 years"|date('Y') %}de forma permanente{% else %}temporalmente hasta el {{ auth.user.ban.until|date('d/M/Y H:i (e)') }}{% endif %}
-        por violación de las normas de la web.<br/>
-        Las cuentas baneadas no pueden realizar acciones en la página que requieran identificación (traducir, comentar, subir subtítulos...).
+  <div id="base">
+    {% if auth.user is not null %}
+      <div id="control-panel">
+        hello
       </div>
     {% endif %}
 
-    {# TODO: This should be inside main container! #}
-    {% block content %}{% endblock %}
+    <div id="page-container">
+      {% if auth.user is not null and auth.user.ban %}
+        <div class="ban-banner">
+          <b>Aviso</b>: Tu cuenta se encuentra baneada {% if auth.user.ban.until|date('Y') > "+5 years"|date('Y') %}de forma permanente{% else %}temporalmente hasta el {{ auth.user.ban.until|date('d/M/Y H:i (e)') }}{% endif %}
+          por violación de las normas de la web.<br/>
+          Las cuentas baneadas no pueden realizar acciones en la página que requieran identificación (traducir, comentar, subir subtítulos...).
+        </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+
+      <footer id="footer">
+        <div id="footer-content">
+          <div id="in-memory-of">
+            <div id="in-memory-of-content">
+              <p>en memoria de</p>
+              <p>SUBTITULOS.ES</p>
+              <p>(2008-2015)</p>
+            </div>
+          </div>
+          <div id="page-navigation">
+            <p class="text light bold small">&#169; subtitulamos.tv</p>
+            <nav id="page-links" class="text thin tiny">
+              <a class="text light" href="/html/">GitHub</a>
+              <a class="text light" href="/js/">Normas de traducción</a>
+              <a class="text light" href="/css/">Foro</a>
+              <a class="text light" href="/python/">índice de séries</a>
+            </nav>
+            <nav class="social-networks">
+              <a class="text light" href="https://foro.subtitulamos.tv/" title="Foro"><i class="fab fa-forumbee"></i></a>
+              <a class="text light" href="https://www.facebook.com/subtitulamos.tv" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a class="text light" href="https://twitter.com/subtitulamostv" title="Twitter"><i class="fab fa-twitter"></i></a>
+              <a class="text light" href="https://t.me/subtitulamostv" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+              <a class="text light" href="https://github.com/subtitulamos/subtitulamos" title="GitHub"><i class="fab fa-github"></i></a>
+              <a class="text light" href="/rss" title="RSS"><i class="fas fa-rss"></i></a>
+            </nav>
+          </div>
+        </div>
+      </footer>
+    </div>
   </div>
-
-  <footer id="footer">
-    <div id="footer_section_1">
-      <div id="tv">
-        <div id="tv_fade_out"></div>
-        <div class="tv" id="tv_box_outer"></div>
-        <div class="tv" id="tv_box_inner"></div>
-        <div class="tv" id="tv_sound_line_1"></div>
-        <div class="tv" id="tv_sound_line_2"></div>
-        <div class="tv" id="tv_sound_line_3"></div>
-        <div class="tv" id="tv_sound_line_4"></div>
-        <div class="tv" id="tv_sound_line_5"></div>
-        <div class="tv" id="tv_sound_line_6"></div>
-        <div class="tv" id="tv_sound_line_7"></div>
-        <div class="tv" id="tv_sound_line_8"></div>
-        <div class="tv" id="tv_sound_line_9"></div>
-        <div class="tv" id="tv_sound_line_1"></div>
-        <div class="tv" id="tv_button_1_outer"></div>
-        <div class="tv" id="tv_button_1"></div>
-        <div class="tv" id="tv_button_2_outer"></div>
-        <div class="tv" id="tv_button_2"></div>
-
-        <div id="footer_memoria">
-          En memoria de Subtitulos.es (2008-2015)
-        </div>
-        <div id="footer_palabra">
-            DIFUNDE LA PALABRA
-        </div>
-        <div id="footer_disclaimer">
-          <a href="/disclaimer">Disclaimer</a>
-        </div>
-      </div>
-    </div>
-    <div id="footer_section_2">
-      <div id="useful_links">
-        <div><div class="white_logo"></div> <div class="white_logo_text">© subtitulamos.tv</div></div>
-        <div class="social_footer">
-          <a href="https://www.facebook.com/subtitulamos.tv" target="_blank">
-            <i class="fa fa-facebook-square" aria-hidden="true"></i>
-          </a>
-          <a href="https://twitter.com/subtitulamostv" target="_blank">
-            <i class="fa fa-twitter-square" aria-hidden="true"></i>
-          </a>
-          <a href="https://foro.subtitulamos.tv" target="_blank">
-            <i class="fa fa-pencil-square" aria-hidden="true"></i>
-          </a>
-          <a href="https://github.com/subtitulamos/subtitulamos" target="_blank">
-            <i class="fa fa-github-square" aria-hidden="true"></i>
-          </a>
-          <a href="/rss" target="_blank">
-            <i class="fa fa-rss-square" aria-hidden="true"></i>
-          </a>
-          <a href="https://t.me/subtitulamostv" target="_blank">
-            <i class="fa fa-telegram" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-
-      <div id="website_navigator">
-        <table>
-          <tr>
-            <td><a href='https://github.com/subtitulamos/subtitulamos'>Github</a></td>
-            <td><a href='https://foro.subtitulamos.tv'>Foro</a></td>
-          </tr>
-          {% if auth.has_role('ROLE_TT') %}
-            <tr>
-              <td><a href='/comments/episodes'>Comentarios de episodio</a></td>
-              <td><a href='/comments/subtitles'>Comentarios de traducción</a></td>
-            </tr>
-          {% endif %}
-        </table>
-      </div>
-    </div>
-  </footer>
-
-  {# Load nonessential CSS #}
-  <link href="https://fonts.googleapis.com/css?family=Kreon:400,700" rel="stylesheet">
 
   {# Load js last #}
   {{ assets.js('vendor') }}
