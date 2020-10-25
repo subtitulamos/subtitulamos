@@ -29,7 +29,8 @@ class SearchController
 
             $epList[] = [
                 'id' => $ep->getId(),
-                'name' => $fullName,
+                'name' => $ep->getName(),
+                'show' => $ep->getShow()->getName(),
                 'download_count' => $ep->getDownloads(),
                 'slug' => $slugify->slugify($fullName),
                 'season' => $ep->getSeason(),
@@ -56,7 +57,8 @@ class SearchController
 
             $epList[] = [
                 'id' => $ep->getId(),
-                'name' => $fullName,
+                'name' => $ep->getName(),
+                'show' => $ep->getShow()->getName(),
                 'slug' => $slugify->slugify($fullName),
                 'season' => $ep->getSeason(),
                 'episode_num' => $ep->getNumber(),
@@ -85,8 +87,11 @@ class SearchController
 
             $epList[] = [
                 'id' => $ep->getId(),
-                'name' => $fullName,
+                'name' => $ep->getName(),
+                'show' => $ep->getShow()->getName(),
                 'slug' => $slugify->slugify($fullName),
+                'season' => $ep->getSeason(),
+                'episode_num' => $ep->getNumber(),
                 'time' => $sub->getEditTime()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 'last_edited_by' => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : '',
@@ -114,7 +119,10 @@ class SearchController
 
             $epList[] = [
                 'id' => $ep->getId(),
-                'name' => $fullName,
+                'name' => $ep->getName(),
+                'show' => $ep->getShow()->getName(),
+                'season' => $ep->getSeason(),
+                'episode_num' => $ep->getNumber(),
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getCompleteTime()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
@@ -141,7 +149,10 @@ class SearchController
 
             $epList[] = [
                 'id' => $ep->getId(),
-                'name' => $fullName,
+                'name' => $ep->getName(),
+                'show' => $ep->getShow()->getName(),
+                'season' => $ep->getSeason(),
+                'episode_num' => $ep->getNumber(),
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),

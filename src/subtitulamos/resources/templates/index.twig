@@ -50,15 +50,15 @@
       </span>
     </div>
     {% verbatim %}
-    <div id="category-container">
+    <div id="category-container" class="first-page">
       <button id="previous-page" class="chevron">
         <i class="fas fa-chevron-left"></i>
       </button>
       <div id="subtitle-cards-wrap">
         <div class="subtitle-card w-shadow-box" v-for="ep in episodes">
           <div class="metadata">
-            <p class="title text bold">{{ ep.series }}</p>
-            <p class="episode-number text mini">S{{ ep.season }} - E{{ ep.number }}</p>
+            <p class="title text bold">{{ ep.show }}</p>
+            <p class="episode-number text mini">S<span v-if="ep.season < 10">0</span>{{ ep.season }} - E<span v-if="ep.episode_num < 10">0</span>{{ ep.episode_num }}</p>
             <p class="episode-name">{{ ep.name }}</p>
           </div>
           <a :href='subURI(ep)'><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
