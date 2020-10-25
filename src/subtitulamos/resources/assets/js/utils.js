@@ -1,4 +1,3 @@
-
 export function dateDiff(a, b) {
     let utcA = Date.UTC(
         a.getFullYear(),
@@ -67,3 +66,6 @@ export function easyFetch(url, baseOpts) {
 
     return fetch(url, opts).then(raiseFetchErrors);
 }
+
+export const get = document.querySelector.bind(document);
+export const get_all = document.querySelectorAll.bind(document);
