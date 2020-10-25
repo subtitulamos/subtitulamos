@@ -55,7 +55,7 @@
         <i class="fas fa-chevron-left"></i>
       </button>
       <div id="subtitle-cards-wrap">
-        <div class="subtitle-card w-shadow-box" v-for="ep in episodes">
+        <div class="subtitle-card w-shadow-box" v-for="(ep, index) in episodes" v-bind:id="index">
           <div class="metadata">
             <p class="title text bold">{{ ep.show }}</p>
             <p class="episode-number text mini">S<span v-if="ep.season < 10">0</span>{{ ep.season }} - E<span v-if="ep.episode_num < 10">0</span>{{ ep.episode_num }}</p>

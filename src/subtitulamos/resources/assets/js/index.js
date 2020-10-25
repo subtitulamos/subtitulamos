@@ -18,6 +18,18 @@ let episodeList = new Vue({
       return "/episodes/" + ep.id + "/" + ep.slug;
     },
 
+    loadData: (self) => {
+      easyFetch("/search/popular", {
+        params: {
+          page: 1,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          self.episodes = data;
+        });
+    },
+
     update: function () {
       let self = this;
       let u = function () {
@@ -54,6 +66,9 @@ let episodeList = new Vue({
       u(); // Insta update times
       this.interval = setInterval(u, 2000);
     },
+  },
+  created() {
+    this.loadData(this);
   },
   watch: {
     episodes: function (newEpisodes) {
