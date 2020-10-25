@@ -23,6 +23,13 @@
         a {
           text-align: center;
 
+          &:hover,
+          &:active {
+            i {
+              color: var(--color-blue-b) !important;
+            }
+          }
+
           i {
             color: var(--color-blue-c);
           }
