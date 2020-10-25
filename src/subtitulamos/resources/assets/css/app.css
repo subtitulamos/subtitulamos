@@ -18,6 +18,7 @@
   --color-gray-b: #707070;
   --color-gray-c: #abacae;
   --color-gray-d: #e3e4ec;
+  --color-gray-blue: #f6f7fc;
   --color-blue-a: #6075cd;
   --color-blue-b: #7d91e9;
   --color-blue-c: #a6b4f4;
@@ -25,8 +26,8 @@
   --color-yellow: #f8cb5f;
   --color-yellow-darker: #eabf27;
   --color-red: #ef7868;
+  --round-button-input-padding: 12px 20px;
   --max-width: 1200px;
-  --round-button-input-padding: 10px 20px;
 }
 
 /* Prevent a white border by the bottom */
@@ -82,6 +83,10 @@ a:active {
   display: none;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 a.light:hover {
   color: var(--color-blue-b) !important;
 }
@@ -102,8 +107,12 @@ a.light:active {
   font-weight: 500 !important;
 }
 
+.text.mini {
+  font-size: 0.6rem !important;
+}
+
 .text.tiny {
-  font-size: 0.8rem !important;
+  font-size: 0.78rem !important;
 }
 
 .text.small {
@@ -128,12 +137,18 @@ h3 {
   box-shadow: 0px 15px 40px -15px rgba(0, 0, 0, 0.15);
 }
 
+.element-focused {
+  -webkit-box-shadow: 0px 0px 21px -1px var(--color-blue-c);
+  -moz-box-shadow: 0px 0px 21px -1px var(--color-blue-c);
+  box-shadow: 0px 0px 21px -1px var(--color-blue-c);
+}
+
 .text.spaced {
   letter-spacing: 0.5px;
 }
 
 .text.spaced-wide {
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 
 header {
@@ -179,7 +194,7 @@ header {
 
 #login {
   background-color: var(--color-blue-a);
-  border-radius: 20px;
+  border-radius: 25px;
   padding: var(--round-button-input-padding);
 }
 
@@ -209,13 +224,21 @@ header {
 
 .content {
   padding: 40px 25px 60px 25px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 footer {
   background-color: var(--color-gray-a);
-  padding: 120px 10%;
+  padding: 120px 0;
+}
+
+footer > #footer-content {
+  max-width: calc(var(--max-width) - 20%);
   display: flex;
   align-items: center;
+  margin: 0 auto;
+  padding: 0 10%;
 }
 
 #in-memory-of {
@@ -259,4 +282,24 @@ footer {
 
 .social-networks > a > i {
   font-size: 1.8rem;
+}
+
+.navigation-list {
+  border-bottom: 1px solid var(--color-gray-divisions);
+}
+
+.navigation-list .navigation-item {
+  padding: 10px 15px;
+  letter-spacing: 1.2px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: var(--color-gray-c);
+  position: relative;
+}
+
+.navigation-list .navigation-item.selected {
+  border-bottom: 3px solid var(--color-blue-b);
+  color: var(--color-blue-a);
+  font-weight: 500;
+  margin-bottom: -1px;
 }

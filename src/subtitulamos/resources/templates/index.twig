@@ -13,7 +13,7 @@
       </svg>
       <div id="main-action-container">
         <div class="social-networks">
-          <a class="text" href="https://foro.subtitulamos.tv/" title="Forum"><i class="fab fa-forumbee"></i></a>
+          <a class="text" href="https://foro.subtitulamos.tv/" title="Foro"><i class="fab fa-forumbee"></i></a>
           <a class="text" href="https://www.facebook.com/subtitulamos.tv" title="Facebook"><i class="fab fa-facebook-f"></i></a>
           <a class="text" href="https://twitter.com/subtitulamostv" title="Twitter"><i class="fab fa-twitter"></i></a>
         </div>
@@ -29,68 +29,85 @@
           </form>
         </div>
       </div>
-
     </div>
-    <div id="category_navigation_list">
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos"><div class="category_navigation_item" id="last-uploaded">Últimas subidas</div></span>
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas"><div class="category_navigation_item" id="last-completed">Últimas traducciones</div></span>
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones"><div class="category_navigation_item" id="last-edited">Últimas ediciones</div></span>
-      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos resincronizados"><div class="category_navigation_item" id="last-resynced">Últimas resincros</div></span>
-      {% if auth.has_role('ROLE_TT') %}
-        <span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos actualmente en pausa"><div class="category_navigation_item" id="paused">En pausa</div></span>
-      {% endif %}
+    <div id="category-navigation-list" class="navigation-list">
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos destacados ahora">
+        <div class="navigation-item selected" id="highlighted">DESTACADOS AHORA</div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos subidos">
+        <div class="navigation-item" id="last-uploaded">
+          <div id="the-latest" class="text mini">LAS ÚLTIMAS...</div>
+          SUBIDAS
+        </div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas traducciones completadas">
+        <div class="navigation-item" id="last-completed">TRADUCCIONES</div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimas modificaciones">
+        <div class="navigation-item" id="last-edited">EDICIONES</div>
+      </span>
+      <span class="hint--top hint--bounce hint--rounded" data-hint="Últimos subtítulos resincronizados">
+        <div class="navigation-item" id="last-resynced">RESINCROS</div>
+      </span>
     </div>
     {% verbatim %}
-    <div id="incategory_state" class="hidden">
-      <div id="incategory_board">
-        <div class="clip_global_info" v-for="ep in episodes" :class="{ 'ep-show-hover': ep.hide_details }">
-          <div class="clip_downloads" v-if="ep.download_count">
-            <div class="clip_downloads_times">{{ ep.download_count }}</div>
-            <div class="clip_downloads_text">descargas</div>
+    <div id="category-container" class="first-page">
+      <button id="previous-page" class="category-navigation-button">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div id="subtitle-cards-wrap">
+        <div class="subtitle-card w-shadow-box">
+          <div class="metadata">
+            <p class="title text bold">Game of Thrones</p>
+            <p class="episode-number text mini">S08 - E02</p>
+            <p class="episode-name">Vulture</p>
           </div>
-
-          <div class="clip_activity_since" v-if="ep.time">
-            <div class="clip_row_text_faded">hace</div>
-            <div class="clip_row_time">{{ ep.time_ago }}</div>
-            <div class="clip_row_text">{{ ep.time_unit }}</div>
-          </div>
-
-          <div class="visual_separator"></div>
-
-          <a :href='subURI(ep)'>
-            <div class="ep-title-row" :class="{ 'ep-detailed': ep.additional_info != undefined }">
-              <div class="ep-title">{{ ep.name }}</div>
-              <div class="ep-add-details">
-                <div class="ep-details">
-                  {{ ep.lang }}
-                  <span v-if="ep.progress">
-                    · <b>{{ ep.progress }}%</b>
-                  </span>
-                  <span v-if="ep.version">
-                    · <b>{{ ep.version }}</b>
-                  </span>
-                  <span v-if="ep.last_edited_by">
-                    · {{ ep.last_edited_by }}
-                  </span>
-                  <span v-if="ep.paused_by">
-                    · {{ ep.paused_by }}
-                  </span>
-                </div>
-                <div class="ep-new-season" v-if="ep.ep_new_season">Nueva Temporada</div>
-                <div class="ep-new-series" v-if="ep.ep_new_series">Nueva Serie</div>
-              </div>
-            </div>
-          </a>
+          <a href=""><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
         </div>
-        <div id='pages'>
-          <div id='prev-page' class='hidden'>
-            <i class='fa fa-chevron-circle-left'></i> Página anterior
+        <div class="subtitle-card w-shadow-box">
+          <div class="metadata">
+            <p class="title text bold">Game of Thrones</p>
+            <p class="episode-number text mini">S08 - E02</p>
+            <p class="episode-name">Vulture</p>
           </div>
-          <div id='next-page'>
-            Siguiente página <i class='fa fa-chevron-circle-right'></i>
+          <a href=""><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
+        </div>
+        <div class="subtitle-card w-shadow-box">
+          <div class="metadata">
+            <p class="title text bold">Game of Thrones</p>
+            <p class="episode-number text mini">S08 - E02</p>
+            <p class="episode-name">Vulture</p>
           </div>
+          <a href=""><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
+        </div>
+        <div class="subtitle-card w-shadow-box">
+          <div class="metadata">
+            <p class="title text bold">Game of Thrones</p>
+            <p class="episode-number text mini">S08 - E02</p>
+            <p class="episode-name">Vulture</p>
+          </div>
+          <a href=""><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
+        </div>
+        <div class="subtitle-card w-shadow-box">
+          <div class="metadata">
+            <p class="title text bold">Game of Thrones</p>
+            <p class="episode-number text mini">S08 - E02</p>
+            <p class="episode-name">Vulture</p>
+          </div>
+          <a href=""><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
+        </div>
+        <div class="subtitle-card w-shadow-box">
+          <div class="metadata">
+            <p class="title text bold">Game of Thrones</p>
+            <p class="episode-number text mini">S08 - E02</p>
+            <p class="episode-name">Vulture</p>
+          </div>
+          <a href=""><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
         </div>
       </div>
+      <button id="next-page" class="category-navigation-button">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
     {% endverbatim %}
   </div>
