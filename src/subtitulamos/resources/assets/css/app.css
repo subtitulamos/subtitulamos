@@ -209,6 +209,10 @@ header {
   width: 100%;
 }
 
+#base.w-header {
+  flex-direction: column;
+}
+
 #control-panel {
   background-color: var(--color-blue-a);
   color: var(--color-offwhite);
