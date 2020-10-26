@@ -30,7 +30,7 @@
   <div id="fade-pan" class="hidden"></div>
 
 
-  {% if auth.user is null %}
+  {% if logged_in is null %}
     <header>
       <div id="header-logo-wrap">
         <svg id="logo-miniature" height="40" viewBox="0 0 720 720">
@@ -47,8 +47,8 @@
   {% endif %}
 
   <div id="base">
-    {% if auth.user is not null %}
-      <div id="control-panel">
+    {% if logged_in is not null %}
+      <div id="control-panel" class="open">
         hello
       </div>
     {% endif %}

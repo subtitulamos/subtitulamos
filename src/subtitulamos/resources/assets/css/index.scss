@@ -91,10 +91,8 @@
 
   #category-container {
     padding: 20px 0;
-    display: flex;
-    align-items: center;
-    position: relative;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: var(--navigation-chevron-width) 1fr var(--navigation-chevron-width);
 
     &.first-page {
       #previous-page {
@@ -124,12 +122,10 @@
       flex-shrink: 0;
 
       &#previous-page {
-        left: 0px;
         text-align: left;
       }
 
       &#next-page {
-        right: 0px;
         text-align: right;
       }
     }
@@ -137,11 +133,11 @@
     #subtitle-cards-wrap {
       width: 100%;
       display: flex;
+      flex: 0 1 100%;
       align-items: center;
       border-left: 1px solid #e8e7e7;
       border-right: 1px solid #e8e7e7;
       overflow-x: scroll;
-      flex-wrap: nowrap;
       padding: 40px 0;
       -ms-overflow-style: none; /* IE and Edge */
       scrollbar-width: none; /* Firefox */
