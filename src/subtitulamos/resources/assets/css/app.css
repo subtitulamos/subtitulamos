@@ -26,7 +26,7 @@
   --color-yellow: #f8cb5f;
   --color-yellow-darker: #eabf27;
   --color-red: #ef7868;
-  --round-button-input-padding: 12px 20px;
+  --standard-select-button-input-padding: 12px 20px;
   --max-width: 1200px;
   --footer-padding-y: 120px;
 }
@@ -53,7 +53,8 @@ button {
 }
 
 button,
-input {
+input,
+select {
   border: none;
   appearance: none;
   outline: none;
@@ -61,6 +62,10 @@ input {
 
 input {
   background-color: var(--color-offwhite);
+}
+
+select {
+  background: transparent;
 }
 
 a {
@@ -153,8 +158,9 @@ h3 {
 }
 
 header {
-  width: calc(100% - 50px * 2);
-  padding: 25px 50px;
+  --padding-x: 50px;
+  width: calc(100% - var(--padding-x) * 2);
+  padding: 25px var(--padding-x);
   background-color: var(--color-bg);
   border-bottom: 1px solid var(--color-gray-divisions);
   display: flex;
@@ -193,10 +199,15 @@ header {
   color: var(--color-blue-a);
 }
 
+#homepage-menu-button {
+  display: none;
+}
+
 #login {
   background-color: var(--color-blue-a);
   border-radius: 25px;
-  padding: var(--round-button-input-padding);
+  padding: var(--standard-select-button-input-padding);
+  color: var(--color-offwhite) !important;
 }
 
 #login:hover {
@@ -240,6 +251,8 @@ header {
   width: calc(100% - var(--content-pading-x) * 2);
   padding: 40px var(--content-pading-x) var(--footer-padding-y) var(--content-pading-x);
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 footer {
@@ -285,7 +298,7 @@ footer > #footer-content {
 }
 
 .social-networks {
-  display: grid;
+  display: inline-grid;
   grid-template-columns: repeat(6, 30px);
   column-gap: 15px;
 }
@@ -315,4 +328,71 @@ footer > #footer-content {
   border-bottom: 3px solid var(--color-blue-b);
   color: var(--color-blue-a);
   margin-bottom: -1px;
+}
+
+.navigation-select {
+  padding: var(--standard-select-button-input-padding);
+  background-color: var(--color-offwhite);
+  border-radius: 5px;
+}
+
+.navigation-select .select-chevron {
+  margin-left: 10px;
+  color: var(--color-blue-a);
+}
+
+@media all and (max-width: 830px) {
+  header {
+    --padding-x: 25px;
+  }
+
+  #top-links {
+    grid-template-columns: 1fr 80px;
+  }
+
+  #homepage-menu-button {
+    display: block;
+    font-size: 1.7rem;
+    text-align: right;
+  }
+
+  #register {
+    background-color: var(--color-blue-a);
+    border-radius: 25px;
+    padding: var(--standard-select-button-input-padding);
+    color: var(--color-offwhite) !important;
+  }
+
+  #register:hover {
+    background-color: var(--color-blue-b);
+  }
+
+  #shows-index,
+  #login {
+    display: none;
+  }
+}
+
+@media all and (max-width: 700px) {
+  footer > #footer-content {
+    flex-direction: column;
+  }
+
+  #in-memory-of {
+    margin: 0 auto 60px auto;
+  }
+}
+
+@media all and (max-width: 567px) {
+  :root {
+    --footer-padding-y: 60px;
+  }
+
+  .content {
+    --content-pading-x: 15px;
+  }
+
+  header #logo-text {
+    display: none;
+  }
 }
