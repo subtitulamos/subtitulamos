@@ -98,6 +98,7 @@
   {# Load js last #}
   {{ assets.js('vendor') }}
   {{ assets.js('app') }}
+  {% include 'live_reload.twig' %} {# Include live reloading script (only if option set) #}
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script>

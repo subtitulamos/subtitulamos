@@ -73,6 +73,7 @@ $app = new class() extends \DI\Bridge\Slim\App {
                 $twigEnv = $twig->getEnvironment();
                 $twigEnv->addGlobal('SITE_URL', SITE_URL);
                 $twigEnv->addGlobal('ENVIRONMENT_NAME', ENVIRONMENT_NAME);
+                $twigEnv->addGlobal('LIVE_RELOAD', LIVE_RELOAD);
                 $twigEnv->addGlobal('LANG_LIST', Langs::LANG_LIST);
                 $twigEnv->addGlobal('LANG_NAMES', Langs::LANG_NAMES);
 
