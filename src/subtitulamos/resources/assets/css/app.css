@@ -205,22 +205,30 @@ header {
 
 #base {
   display: flex;
-  flex: 1;
+  height: 100%;
+  width: 100%;
 }
 
 #control-panel {
   background-color: var(--color-blue-a);
   color: var(--color-offwhite);
-  height: 100%;
+  height: calc(100% - 25px * 2);
   padding: 25px;
+  position: static;
+  top: 0px;
+}
+
+#control-panel.open {
   width: 270px;
 }
 
 #page-container {
   flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: scroll;
 }
 
 .content {
