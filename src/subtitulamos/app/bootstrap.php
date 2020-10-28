@@ -26,7 +26,6 @@ if (!getenv('SKIP_ENV_FILE')) {
     $dotenv->load();
 }
 
-define('LIVE_RELOAD', getEnvOrDefault('LIVE_RELOAD', false));
 define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT_NAME', 'dev'));
 define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
 define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
