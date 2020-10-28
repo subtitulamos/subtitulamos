@@ -226,6 +226,10 @@
         margin-right: 0;
         margin-bottom: 60px;
       }
+
+      #main-action-container {
+        margin-left: 15px;
+      }
     }
   }
 
@@ -249,14 +253,15 @@
       #main-action-container {
         text-align: center;
         width: 100%;
+        margin-left: 0;
 
         #motto {
           display: none;
         }
 
         #search {
+          margin: 0 auto;
           margin-top: 30px;
-          margin-left: 0;
         }
       }
     }
