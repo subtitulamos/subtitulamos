@@ -89,10 +89,10 @@
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
-    padding-top: 50px;
-    margin-top: -50px;
+    padding-top: 20px;
+    margin-top: -20px;
 
-    * {
+    .navigation-item {
       flex-shrink: 0;
     }
 
