@@ -44,8 +44,8 @@
         <i class="fas fa-chevron-left"></i>
       </button>
       <div id="subtitle-cards-wrap" class="no-scroll-bar">
+        <div class="text small" v-if="episodes.length == 0">No hay episódios listados en esta categoria</div>
         <div class="subtitle-card w-shadow-box" v-for="(ep, index) in episodes" v-bind:id="index">
-
           <a :href='subURI(ep)'>
             <div class="metadata">
               <p class="title text bold">{{ ep.show }}</p>
@@ -53,7 +53,6 @@
               <p class="episode-name">{{ ep.name }}</p>
             </div>
             <button class="text tiny spaced-wide">IR A EPISODIO</button>
-
           </a>
         </div>
       </div>
