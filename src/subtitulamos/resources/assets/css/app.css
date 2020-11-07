@@ -164,12 +164,9 @@ header {
   width: calc(100% - var(--padding-x) * 2);
   padding: var(--padding-y) var(--padding-x);
   background-color: var(--color-bg);
-  border-bottom: 1px solid var(--color-gray-divisions);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0px;
   z-index: 2;
 }
 
@@ -195,6 +192,7 @@ header {
 #top-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
 }
 
 #top-links button {
@@ -347,6 +345,7 @@ footer > #footer-content {
 
   #top-links {
     grid-template-columns: 1fr 30px;
+    justify-items: initial;
   }
 
   #homepage-menu-button {
@@ -361,10 +360,11 @@ footer > #footer-content {
     border: 1px solid var(--color-blue-a);
     border-radius: 25px;
     padding: var(--standard-select-button-input-padding);
+    margin-right: 20px;
   }
 
   #register:hover {
-    background-color: var(--color-blue-b);
+    background-color: var(--color-blue-a);
     color: var(--color-offwhite);
   }
 
