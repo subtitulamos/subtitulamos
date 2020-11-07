@@ -203,23 +203,12 @@
     #large-splash {
       padding-bottom: 80px;
     }
-
-    #category-navigation-list {
-      display: none;
-    }
-
-    #category-navigation-select {
-      display: inline-block;
-      margin: 0 auto;
-      position: sticky;
-      top: 30px;
-    }
   }
 
   @media all and (max-width: 770px) {
     #large-splash {
       flex-direction: column;
-      padding-top: 50px;
+      padding-top: 20px;
 
       #logo {
         height: 230px;
@@ -235,11 +224,11 @@
 
   @media all and (max-width: 567px) {
     #large-splash {
-      padding-top: 30px;
+      padding-top: 0;
 
       #logo {
         height: 200px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
       }
 
       #logo-name {
@@ -247,7 +236,7 @@
         font-size: 1.8rem;
         color: var(--color-blue-a);
         letter-spacing: -1px;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
       }
 
       #main-action-container {
@@ -261,7 +250,7 @@
 
         #search {
           margin: 0 auto;
-          margin-top: 30px;
+          margin-top: 20px;
         }
       }
     }
