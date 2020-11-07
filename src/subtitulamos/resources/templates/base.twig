@@ -26,11 +26,9 @@
   </title>
 </head>
 <body>
-
   <div id="base" class="{{ auth.user is null ? 'w-header' }}">
     {# Background fade pan that displays when the login/reg area is open #}
     <div id="fade-pan" class="hidden"></div>
-
     {% if auth.user is not null %}
       <div id="control-panel" class="open">
         hello
@@ -45,13 +43,15 @@
         </div>
         <nav id="top-links">
           <button class="text tiny spaced" id="shows-index"><a href="/shows">ÍNDICE DE SERIES</a></button>
-          <button class="text tiny spaced top-link" id="register">REGISTRO</button>
+          <button class="text tiny spaced" id="register">REGISTRO</button>
           <button class="text tiny spaced" id="login">INICIAR SESIÓN</button>
           <button id="homepage-menu-button"><i class="fas fa-bars"></i></button>
         </nav>
       </header>
     {% endif %}
+    <div id="overlay">
 
+    </div>
     <div id="page-container">
       {% if auth.user is not null and auth.user.ban %}
         <div class="ban-banner">
