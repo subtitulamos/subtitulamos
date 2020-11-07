@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div id="category-navigation-list" class="navigation-list">
+    <div id="category-navigation-list" class="navigation-list no-scroll-bar">
       <span class="hint--top hint--bounce hint--rounded" data-hint="Subtítulos destacados ahora">
         <div class="navigation-item selected" id="highlighted">DESTACADOS AHORA</div>
       </span>
@@ -49,14 +49,18 @@
       <button id="previous-page" class="chevron">
         <i class="fas fa-chevron-left"></i>
       </button>
-      <div id="subtitle-cards-wrap">
+      <div id="subtitle-cards-wrap" class="no-scroll-bar">
         <div class="subtitle-card w-shadow-box" v-for="(ep, index) in episodes" v-bind:id="index">
-          <div class="metadata">
-            <p class="title text bold">{{ ep.show }}</p>
-            <p class="episode-number text mini">S<span v-if="ep.season < 10">0</span>{{ ep.season }} - E<span v-if="ep.episode_num < 10">0</span>{{ ep.episode_num }}</p>
-            <p class="episode-name">{{ ep.name }}</p>
-          </div>
-          <a :href='subURI(ep)'><button class="text tiny spaced-wide">IR A EPISODIO</button></a>
+
+          <a :href='subURI(ep)'>
+            <div class="metadata">
+              <p class="title text bold">{{ ep.show }}</p>
+              <p class="episode-number text mini">S<span v-if="ep.season < 10">0</span>{{ ep.season }} - E<span v-if="ep.episode_num < 10">0</span>{{ ep.episode_num }}</p>
+              <p class="episode-name">{{ ep.name }}</p>
+            </div>
+            <button class="text tiny spaced-wide">IR A EPISODIO</button>
+
+          </a>
         </div>
       </div>
       <button id="next-page" class="chevron">

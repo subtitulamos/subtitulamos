@@ -47,6 +47,15 @@ body {
   height: 100%;
 }
 
+.no-scroll-bar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
 button {
   cursor: pointer;
   background: transparent;
@@ -324,7 +333,6 @@ footer > #footer-content {
 .navigation-list .navigation-item.selected {
   border-bottom: 3px solid var(--color-blue-b);
   color: var(--color-blue-a);
-  margin-bottom: -1px;
 }
 
 .navigation-select {
@@ -386,11 +394,11 @@ footer > #footer-content {
 
 @media all and (max-width: 567px) {
   :root {
-    --footer-padding-y: 60px;
+    --footer-padding-y: 50px;
   }
 
   .content {
-    --content-pading-x: 15px;
+    --content-pading-x: 20px;
   }
 
   #top-links {

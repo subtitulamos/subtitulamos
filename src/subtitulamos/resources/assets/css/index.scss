@@ -84,6 +84,17 @@
   #category-navigation-list {
     width: calc(100% - var(--navigation-chevron-width) * 2);
     margin: 0 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-top: 50px;
+    margin-top: -50px;
+
+    * {
+      flex-shrink: 0;
+    }
 
     #the-latest {
       position: absolute;
@@ -92,10 +103,6 @@
       width: 100%;
       color: var(--color-gray-c);
     }
-  }
-
-  #category-navigation-select {
-    display: none;
   }
 
   #category-container {
@@ -148,24 +155,22 @@
       border-right: 1px solid #e8e7e7;
       overflow-x: scroll;
       padding: 40px 0;
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
 
       .subtitle-card {
         background-color: var(--color-offwhite);
         width: 175px;
         height: 210px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
         border-radius: 5px;
         overflow: hidden;
         margin: 0 12px;
         flex-shrink: 0;
+
+        a {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
 
         &:first-of-type {
           margin-left: 0px;
@@ -218,6 +223,55 @@
 
       #main-action-container {
         margin-left: 15px;
+      }
+    }
+
+    --navigation-chevron-width: 0px;
+
+    #category-container {
+      grid-template-columns: 1fr;
+      .chevron {
+        display: none;
+      }
+
+      #subtitle-cards-wrap {
+        flex-direction: column;
+        padding: 10px 0;
+        border: none;
+
+        .subtitle-card {
+          width: 100%;
+          height: auto;
+          margin: 0;
+          margin-bottom: 16px;
+          flex-direction: row;
+
+          &:last-of-type {
+            margin-bottom: 26px;
+          }
+
+          .metadata {
+            padding: 12px 20px;
+
+            .title {
+              margin-right: 5px;
+            }
+
+            .title,
+            .episode-number {
+              display: inline-flex;
+              margin-bottom: 3px;
+            }
+
+            .episode-number {
+              margin-top: -5px;
+            }
+          }
+
+          button {
+            display: none;
+          }
+        }
       }
     }
   }
