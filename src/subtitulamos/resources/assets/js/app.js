@@ -2,7 +2,6 @@
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
  * @copyright 2020 subtitulamos.tv
  */
-
 import "./search";
 import { onDomReady, easyFetch } from "./utils";
 
@@ -229,9 +228,13 @@ import Vue from "vue";
 new Vue({
   el: "#control-panel",
   data: {
-    isOpen: false,
+    isOpen: true,
   },
   methods: {
+    updateControlPanelStatus: async function () {
+      this.isOpen = !this.isOpen;
+      this.updateElementsStatus();
+    },
     updateElementsStatus: function () {
       this.$el.classList.toggle("open", this.isOpen);
       document
@@ -241,9 +244,9 @@ new Vue({
         .getElementById("page-container")
         .classList.toggle("control-panel-is-closed", !this.isOpen);
     },
-    updateControlPanelStatus: function () {
-      this.isOpen = !this.isOpen;
-      this.updateElementsStatus();
+    focusSearchInput: function () {
+      await this.updateControlPanelStatus();
+      document.querySelector("#control-panel #control-panel-search input").focus();
     },
   },
   mounted() {
