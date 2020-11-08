@@ -41,7 +41,7 @@
   position: relative;
 }
 
-#control-panel .control-panel-button:last-of-type {
+#control-panel-bottom-section .control-panel-button:last-of-type {
   margin-bottom: 0px;
 }
 
