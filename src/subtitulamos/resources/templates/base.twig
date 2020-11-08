@@ -30,25 +30,29 @@
     {# Background fade pan that displays when the login/reg area is open #}
     <div id="fade-pan" class="hidden"></div>
     {% if logged_in is not null %}
-      <nav id="control-panel">
-        <div id="control-panel-logo-wrap">
-          <svg id="logo-miniature" height="30" viewBox="0 0 720 720">
-            <path d="M500,480C373.919,603.693,144.292,621.974,115.091,623.822A359,359,0,0,1,0,360C0,161.178,161.178,0,360,0A358.39,358.39,0,0,1,576.516,72.38C594.276,124.682,651.193,331.67,500,480ZM456,236H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,236Zm0,104H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,340ZM564,504c101.048-137.763,87.982-313.7,81.9-362.757a359.955,359.955,0,0,1-24.222,465.966L664,688l-94.3-35.364A358.341,358.341,0,0,1,360,720a362.772,362.772,0,0,1-54.959-4.17C340.3,698.95,471.256,630.442,564,504Z"/>
-          </svg>
-          <span id="logo-text" v-if="isOpen" class="text bold">subtitulamos.tv</span>
+      <nav id="control-panel" class="no-scroll-bar">
+        <div id="control-panel-top-section">
+          <div id="control-panel-logo-wrap">
+            <svg id="logo-miniature" height="30" viewBox="0 0 720 720">
+              <path d="M500,480C373.919,603.693,144.292,621.974,115.091,623.822A359,359,0,0,1,0,360C0,161.178,161.178,0,360,0A358.39,358.39,0,0,1,576.516,72.38C594.276,124.682,651.193,331.67,500,480ZM456,236H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,236Zm0,104H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,340ZM564,504c101.048-137.763,87.982-313.7,81.9-362.757a359.955,359.955,0,0,1-24.222,465.966L664,688l-94.3-35.364A358.341,358.341,0,0,1,360,720a362.772,362.772,0,0,1-54.959-4.17C340.3,698.95,471.256,630.442,564,504Z"/>
+            </svg>
+            <span id="logo-text" v-if="isOpen" class="text bold">subtitulamos.tv</span>
+          </div>
+          <div id="control-panel-search" v-if="isOpen">
+              <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
+              <input ref="cpSearchInput" type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
+          </div>
+          <button v-else class="control-panel-button search" v-on:click="clickedSearch = true">
+            <i class="fa fa-search"></i>
+          </button>
         </div>
-        <div id="control-panel-search" v-if="isOpen">
-            <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
-            <input type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autofocus autocomplete="off" />
+        <div id="control-panel-bottom-section">
+          <button class="control-panel-button"  v-on:click="updateControlPanelStatus">
+            <i v-if="isOpen" class="fas fa-chevron-circle-left"></i>
+            <i v-else class="fas fa-chevron-circle-right"></i>
+            <span v-if="isOpen" class="text small">Minimizar</span>
+          </button>
         </div>
-        <button v-else class="control-panel-button search" v-on:click="focusSearchInput">
-          <i class="fa fa-search"></i>
-        </button>
-        <button class="control-panel-button"  v-on:click="updateControlPanelStatus">
-          <i v-if="isOpen" class="fas fa-chevron-circle-left"></i>
-          <i v-else class="fas fa-chevron-circle-right"></i>
-          <span v-if="isOpen" class="text small">Minimizar</span>
-        </button>
       </nav>
     {% else %}
       <header>

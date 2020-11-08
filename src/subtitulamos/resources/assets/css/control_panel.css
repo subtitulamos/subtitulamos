@@ -16,6 +16,10 @@
   width: var(--control-panel-closed-width);
   transition: 0.3s ease width;
   overflow-x: hidden;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 #control-panel.open {
