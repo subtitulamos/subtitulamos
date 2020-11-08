@@ -231,11 +231,11 @@ new Vue({
     isOpen: false,
   },
   methods: {
-    updateControlPanelStatus: function () {
+    updateControlPanelStatus() {
       this.isOpen = !this.isOpen;
       this.updateElementsStatus();
     },
-    updateElementsStatus: function () {
+    updateElementsStatus() {
       this.$el.classList.toggle("open", this.isOpen);
       document
         .getElementById("page-container")
@@ -244,7 +244,7 @@ new Vue({
         .getElementById("page-container")
         .classList.toggle("control-panel-is-closed", !this.isOpen);
     },
-    focusSearchInput: function () {
+    focusSearchInput() {
       this.updateControlPanelStatus();
 
       setTimeout(() => {

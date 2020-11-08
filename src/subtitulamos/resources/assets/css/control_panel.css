@@ -8,7 +8,7 @@
   --control-panel-padding-y: 25px;
   background-color: var(--color-blue-a);
   color: var(--color-offwhite);
-  height: calc(100% - var(--control-panel-padding-y) * 2);
+  height: calc(100vh - var(--control-panel-padding-y) * 2);
   padding: var(--control-panel-padding-y) var(--control-panel-padding-x);
   position: fixed;
   top: 0px;
@@ -20,6 +20,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 #control-panel.open {
@@ -31,19 +32,42 @@
   color: var(--color-offwhite);
   display: flex;
   align-items: center;
-  overflow-x: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   opacity: 0.6;
+  margin-bottom: 15px;
+  padding: 0;
+  width: 100%;
+  height: 30px;
+  position: relative;
 }
 
-#control-panel .control-panel-button:hover {
+#control-panel .control-panel-button:hover,
+#control-panel .control-panel-button.selected {
   opacity: 1;
 }
 
+#control-panel .control-panel-button.selected::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 6px;
+  border-radius: 0 0.25rem 0.25rem 0;
+  background-color: var(--color-yellow-darker);
+  left: calc(0px - var(--control-panel-padding-x));
+}
+
 #control-panel .control-panel-button > i {
+  flex-shrink: 0;
   font-size: 1.1rem;
-  margin-right: 10px;
+  width: var(--control-panel-closed-width);
+}
+
+#control-panel .control-panel-button > span {
+  margin-left: 10px;
+  flex: 1;
+  text-align: left;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 #control-panel #control-panel-logo-wrap {
@@ -70,6 +94,7 @@
 }
 
 #control-panel #control-panel-search {
+  flex-shrink: 0;
   margin: 40px 0;
   padding: 0px 10px;
   height: 40px;
@@ -80,11 +105,13 @@
 }
 
 #control-panel #control-panel-search input {
+  flex-shrink: 0;
   background: transparent;
   color: var(--color-offwhite);
 }
 
 #control-panel #control-panel-search button {
+  flex-shrink: 0;
   color: var(--color-blue-d);
 }
 
