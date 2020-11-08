@@ -228,10 +228,11 @@ import Vue from "vue";
 new Vue({
   el: "#control-panel",
   data: {
-    isOpen: true,
+    isOpen: false,
+    clickedSearch: false,
   },
   methods: {
-    updateControlPanelStatus: async function () {
+    updateControlPanelStatus: function () {
       this.isOpen = !this.isOpen;
       this.updateElementsStatus();
     },
@@ -244,12 +245,22 @@ new Vue({
         .getElementById("page-container")
         .classList.toggle("control-panel-is-closed", !this.isOpen);
     },
-    focusSearchInput: function () {
-      await this.updateControlPanelStatus();
-      document.querySelector("#control-panel #control-panel-search input").focus();
-    },
   },
   mounted() {
     this.updateElementsStatus();
+  },
+  watch: {
+    clickedSearch: function () {
+      if (!this.clickedSearch) {
+        return;
+      }
+      this.updateControlPanelStatus();
+      this.$nextTick(() => {
+        if (this.isOpen) {
+          this.$refs.cpSearchInput.focus();
+          this.clickedSearch = false;
+        }
+      });
+    },
   },
 });
