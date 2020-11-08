@@ -28,7 +28,9 @@
 <body>
   <div id="base" class="{{ logged_in is null ? 'w-header' }}">
     {# Background fade pan that displays when the login/reg area is open #}
-    <div id="fade-pan" class="hidden"></div>
+    <div id="overlay" class="hidden">
+      <div id="fade-pan"></div>
+    </div>
     {% if logged_in is not null %}
       <nav id="control-panel" class="no-scroll-bar">
         <div id="control-panel-top-section">
@@ -94,9 +96,6 @@
         </nav>
       </header>
     {% endif %}
-    <div id="overlay" class="hidden">
-
-    </div>
     <div id="page-container">
       {% if auth.user is not null and auth.user.ban %}
         <div class="ban-banner">
