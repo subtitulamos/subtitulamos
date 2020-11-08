@@ -49,7 +49,6 @@
 #control-panel #control-panel-logo-wrap {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 #control-panel #control-panel-logo-wrap #logo-miniature {
@@ -61,7 +60,7 @@
 #control-panel #control-panel-logo-wrap #logo-text {
   font-size: 1.4rem;
   color: var(--color-offwhite);
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   margin-left: 10px;
 }
 

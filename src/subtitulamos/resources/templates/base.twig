@@ -42,12 +42,12 @@
               <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
               <input ref="cpSearchInput" type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
           </div>
-          <button v-else class="control-panel-button search" v-on:click="clickedSearch = true">
+          <button v-else class="control-panel-button search" v-on:click="focusSearchInput">
             <i class="fa fa-search"></i>
           </button>
         </div>
         <div id="control-panel-bottom-section">
-          <button class="control-panel-button"  v-on:click="updateControlPanelStatus">
+          <button class="control-panel-button" v-on:click="updateControlPanelStatus">
             <i v-if="isOpen" class="fas fa-chevron-circle-left"></i>
             <i v-else class="fas fa-chevron-circle-right"></i>
             <span v-if="isOpen" class="text small">Minimizar</span>
