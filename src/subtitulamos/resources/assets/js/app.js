@@ -229,7 +229,6 @@ new Vue({
   el: "#control-panel",
   data: {
     isOpen: false,
-    clickedSearch: false,
   },
   methods: {
     updateControlPanelStatus: function () {
@@ -245,22 +244,17 @@ new Vue({
         .getElementById("page-container")
         .classList.toggle("control-panel-is-closed", !this.isOpen);
     },
+    focusSearchInput: function () {
+      this.updateControlPanelStatus();
+
+      setTimeout(() => {
+        if (this.isOpen) {
+          this.$refs.cpSearchInput.focus();
+        }
+      }, 200);
+    },
   },
   mounted() {
     this.updateElementsStatus();
-  },
-  watch: {
-    clickedSearch: function () {
-      if (!this.clickedSearch) {
-        return;
-      }
-      this.updateControlPanelStatus();
-      this.$nextTick(() => {
-        if (this.isOpen) {
-          this.$refs.cpSearchInput.focus();
-          this.clickedSearch = false;
-        }
-      });
-    },
   },
 });
