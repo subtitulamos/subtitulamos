@@ -1,0 +1,90 @@
+#base {
+  --control-panel-closed-width: 30px;
+  --control-panel-open-width: 210px;
+  --control-panel-padding-x: 15px;
+}
+
+#control-panel {
+  --control-panel-padding-y: 25px;
+  background-color: var(--color-blue-a);
+  color: var(--color-offwhite);
+  height: calc(100% - var(--control-panel-padding-y) * 2);
+  padding: var(--control-panel-padding-y) var(--control-panel-padding-x);
+  position: fixed;
+  top: 0px;
+  z-index: 2;
+  width: var(--control-panel-closed-width);
+  transition: 0.3s ease width;
+  overflow-x: hidden;
+}
+
+#control-panel.open {
+  transition: 0.3s ease width;
+  width: var(--control-panel-open-width);
+}
+
+#control-panel .control-panel-button {
+  color: var(--color-offwhite);
+  display: flex;
+  align-items: center;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.6;
+}
+
+#control-panel .control-panel-button:hover {
+  opacity: 1;
+}
+
+#control-panel .control-panel-button > i {
+  font-size: 1.1rem;
+  margin-right: 10px;
+}
+
+#control-panel #control-panel-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#control-panel #control-panel-logo-wrap #logo-miniature {
+  fill-rule: evenodd;
+  fill: var(--color-offwhite);
+  flex-shrink: 0;
+}
+
+#control-panel #control-panel-logo-wrap #logo-text {
+  font-size: 1.4rem;
+  color: var(--color-offwhite);
+  letter-spacing: -1px;
+  margin-left: 10px;
+}
+
+#control-panel .control-panel-button.search {
+  margin: 40px 0;
+  height: 40px;
+}
+
+#control-panel #control-panel-search {
+  margin: 40px 0;
+  padding: 0px 10px;
+  height: 40px;
+  background-color: var(--color-blue-b);
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+}
+
+#control-panel #control-panel-search input {
+  background: transparent;
+  color: var(--color-offwhite);
+}
+
+#control-panel #control-panel-search button {
+  color: var(--color-blue-d);
+}
+
+#control-panel #control-panel-search > input::placeholder {
+  color: var(--color-blue-d);
+}
