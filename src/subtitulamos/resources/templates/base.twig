@@ -65,6 +65,11 @@
           </button>
         </div>
         <div id="control-panel-bottom-section">
+          <button class="control-panel-button" v-on:click="updateControlPanelStatus">
+            <i v-if="isOpen" class="fas fa-chevron-circle-left"></i>
+            <i v-else class="fas fa-chevron-circle-right"></i>
+            <span v-if="isOpen" class="text small">Minimizar</span>
+          </button>
           <button class="control-panel-button">
             <i class="fas fa-user-circle"></i>
             <span v-if="isOpen" class="text small">Mi perfil</span>
@@ -73,10 +78,9 @@
             <i class="fas fa-book"></i>
             <span v-if="isOpen" class="text small">Normas</span>
           </button>
-          <button class="control-panel-button" v-on:click="updateControlPanelStatus">
-            <i v-if="isOpen" class="fas fa-chevron-circle-left"></i>
-            <i v-else class="fas fa-chevron-circle-right"></i>
-            <span v-if="isOpen" class="text small">Minimizar</span>
+          <button class="control-panel-button">
+            <i class="fas fa-power-off"></i>
+            <span v-if="isOpen" class="text small">Cerrar sesión</span>
           </button>
         </div>
       </nav>
