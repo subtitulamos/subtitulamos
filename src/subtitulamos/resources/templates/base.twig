@@ -26,13 +26,17 @@
   </title>
 </head>
 <body>
-  <div id="base" class="{{ auth.user is null ? 'w-header' }}">
+  <div id="base" class="{{ logged_in is null ? 'w-header' }}">
     {# Background fade pan that displays when the login/reg area is open #}
     <div id="fade-pan" class="hidden"></div>
-    {% if auth.user is not null %}
-      <div id="control-panel" class="open">
-        hello
-      </div>
+    {% if logged_in is not null %}
+      <nav id="control-panel">
+        <button class="control-panel-button"  v-on:click="updateControlPanelStatus">
+          <i v-if="isOpen" class="fas fa-chevron-circle-left"></i>
+          <i v-else class="fas fa-chevron-circle-right"></i>
+          <span v-if="isOpen" class="text small">Minimizar</span>
+        </button>
+      </nav>
     {% else %}
       <header>
         <div id="header-logo-wrap">
@@ -49,7 +53,7 @@
         </nav>
       </header>
     {% endif %}
-    <div id="overlay">
+    <div id="overlay" class="hidden">
 
     </div>
     <div id="page-container">

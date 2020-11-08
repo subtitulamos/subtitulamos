@@ -225,6 +225,9 @@ header {
 
 #base {
   display: flex;
+  --control-panel-closed-width: 30px;
+  --control-panel-open-width: 240px;
+  --control-panel-padding: 15px;
 }
 
 #base.w-header {
@@ -234,14 +237,33 @@ header {
 #control-panel {
   background-color: var(--color-blue-a);
   color: var(--color-offwhite);
-  height: calc(100% - 25px * 2);
-  padding: 25px;
-  position: static;
+  height: calc(100% - var(--control-panel-padding) * 2);
+  padding: var(--control-panel-padding);
+  position: fixed;
   top: 0px;
+  z-index: 2;
+  width: var(--control-panel-closed-width);
+  transition: 0.3s ease width;
+  overflow-x: hidden;
 }
 
 #control-panel.open {
-  width: 270px;
+  transition: 0.3s ease width;
+  width: var(--control-panel-open-width);
+}
+
+#control-panel .control-panel-button {
+  color: var(--color-offwhite);
+  display: flex;
+  align-items: center;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#control-panel .control-panel-button > i {
+  font-size: 1.1rem;
+  margin-right: 10px;
 }
 
 #page-container {
@@ -250,6 +272,16 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+#page-container.control-panel-is-open {
+  padding-left: calc(var(--control-panel-open-width) + var(--control-panel-padding) * 2);
+  width: calc(100% - var(--control-panel-open-width) - var(--control-panel-padding) * 2);
+}
+
+#page-container.control-panel-is-closed {
+  padding-left: calc(var(--control-panel-closed-width) + var(--control-panel-padding) * 2);
+  width: calc(100% - var(--control-panel-closed-width) - var(--control-panel-padding) * 2);
 }
 
 .content {
