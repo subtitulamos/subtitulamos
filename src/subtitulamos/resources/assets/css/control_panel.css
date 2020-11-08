@@ -94,15 +94,15 @@
 }
 
 #control-panel .control-panel-button.search {
-  margin: 2.7rem 0;
-  height: 2.7rem;
+  margin: 2rem 0;
+  height: 3rem;
 }
 
 #control-panel #control-panel-search {
   flex-shrink: 0;
-  margin: 2.7rem 0;
+  margin: 2rem 0;
   padding: 0px 10px;
-  height: 2.7rem;
+  height: 3rem;
   background-color: var(--color-blue-b);
   border-radius: 25px;
   display: flex;
