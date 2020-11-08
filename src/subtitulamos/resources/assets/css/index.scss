@@ -314,9 +314,11 @@
     #large-splash {
       #main-action-container {
         #search {
-          width: calc(95% - 6px - 30px);
+          width: calc(100% - 6px - 10px);
           margin-left: auto;
           margin-right: auto;
+          padding: 6px 6px 6px 10px;
+          overflow: hidden;
         }
       }
     }
