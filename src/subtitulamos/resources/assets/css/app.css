@@ -277,11 +277,13 @@ header {
 #page-container.control-panel-is-open {
   padding-left: calc(var(--control-panel-open-width) + var(--control-panel-padding) * 2);
   width: calc(100% - var(--control-panel-open-width) - var(--control-panel-padding) * 2);
+  transition: 0.3s ease all;
 }
 
 #page-container.control-panel-is-closed {
   padding-left: calc(var(--control-panel-closed-width) + var(--control-panel-padding) * 2);
   width: calc(100% - var(--control-panel-closed-width) - var(--control-panel-padding) * 2);
+  transition: 0.3s ease all;
 }
 
 .content {
