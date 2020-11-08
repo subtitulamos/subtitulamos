@@ -41,6 +41,10 @@
   position: relative;
 }
 
+#control-panel .control-panel-button:last-of-type {
+  margin-bottom: 0px;
+}
+
 #control-panel .control-panel-button:hover,
 #control-panel .control-panel-button.selected {
   opacity: 1;
@@ -90,15 +94,15 @@
 }
 
 #control-panel .control-panel-button.search {
-  margin: 40px 0;
-  height: 40px;
+  margin: 2.7rem 0;
+  height: 2.7rem;
 }
 
 #control-panel #control-panel-search {
   flex-shrink: 0;
-  margin: 40px 0;
+  margin: 2.7rem 0;
   padding: 0px 10px;
-  height: 40px;
+  height: 2.7rem;
   background-color: var(--color-blue-b);
   border-radius: 25px;
   display: flex;
