@@ -227,6 +227,8 @@ header {
 
 #base {
   display: flex;
+  min-height: 100%;
+  flex-grow: 1;
 }
 
 #base.w-header {
