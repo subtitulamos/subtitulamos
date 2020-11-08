@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import './search';
+import "./search";
 import { onDomReady, easyFetch } from "./utils";
 
 function toggleAccessForm() {
@@ -132,18 +132,20 @@ function doLogin(e) {
     .then(function () {
       window.location.reload(true);
     })
-    .catch(err => {
+    .catch((err) => {
       $loginBtn.classList.toggle("is-loading", false);
       $pwdField.classList.toggle("is-danger", true);
       $loginError.classList.toggle("hidden", false);
 
-      err.response.json()
-        .then(cleanErr => {
+      err.response
+        .json()
+        .then((cleanErr) => {
           $loginError.innerHTML = cleanErr[0];
         })
         .catch(() => {
-          $loginError.innerHTML = "Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.";
-        })
+          $loginError.innerHTML =
+            "Error desconocido al intentar acceder. Por favor, inténtalo de nuevo.";
+        });
     });
 }
 
@@ -155,8 +157,10 @@ function register(e) {
   $regButton.classList.toggle("is-loading", true);
 
   // Clean up old errors
-  document.querySelectorAll("#register-form .is-danger").forEach($ele => $ele.classList.toggle("is-danger"));
-  document.querySelectorAll("#register-form [data-reg-error]").forEach($ele => $ele.remove());
+  document
+    .querySelectorAll("#register-form .is-danger")
+    .forEach(($ele) => $ele.classList.toggle("is-danger"));
+  document.querySelectorAll("#register-form [data-reg-error]").forEach(($ele) => $ele.remove());
 
   // Login the user via ajax
   easyFetch("/register", {
@@ -172,12 +176,13 @@ function register(e) {
     .then(function () {
       window.location.reload(true);
     })
-    .catch(err => {
+    .catch((err) => {
       $regButton.classList.toggle("is-loading", false);
 
-      err.response.json()
-        .then(cleanErrList => {
-          cleanErrList.forEach(curErr => {
+      err.response
+        .json()
+        .then((cleanErrList) => {
+          cleanErrList.forEach((curErr) => {
             const field = Object.keys(curErr)[0];
             const $field = document.getElementById("reg_" + field);
             $field.classList.toggle("is-danger", true);
@@ -190,14 +195,20 @@ function register(e) {
           });
         })
         .catch(() => {
-          alert("Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo.");
-        })
+          alert(
+            "Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo."
+          );
+        });
     });
 }
 
 onDomReady(function () {
-  document.querySelectorAll("#close_logreg_form, #fade-pan").forEach($ele => $ele.addEventListener("click", closeLogRegForm));
-  document.querySelectorAll("#login, #register").forEach($ele => $ele.addEventListener("click", toggleAccessForm));
+  document
+    .querySelectorAll("#close_logreg_form, #fade-pan")
+    .forEach(($ele) => $ele.addEventListener("click", closeLogRegForm));
+  document
+    .querySelectorAll("#login, #register")
+    .forEach(($ele) => $ele.addEventListener("click", toggleAccessForm));
   const $loginForm = document.getElementById("login-form");
   const $registerForm = document.getElementById("register-form");
   if ($loginForm) {
@@ -211,4 +222,31 @@ onDomReady(function () {
   if (window.openLogin) {
     setTimeout(toggleAccessForm.bind(document.getElementById("login")), 1500);
   }
+});
+
+import Vue from "vue";
+
+new Vue({
+  el: "#control-panel",
+  data: {
+    isOpen: false,
+  },
+  methods: {
+    updateElementsStatus: function () {
+      this.$el.classList.toggle("open", this.isOpen);
+      document
+        .getElementById("page-container")
+        .classList.toggle("control-panel-is-open", this.isOpen);
+      document
+        .getElementById("page-container")
+        .classList.toggle("control-panel-is-closed", !this.isOpen);
+    },
+    updateControlPanelStatus: function () {
+      this.isOpen = !this.isOpen;
+      this.updateElementsStatus();
+    },
+  },
+  mounted() {
+    this.updateElementsStatus();
+  },
 });
