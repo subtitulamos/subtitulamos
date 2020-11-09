@@ -396,6 +396,14 @@ footer > #footer-content {
   font-size: 1.1rem;
 }
 
+.close-button:hover i {
+  color: var(--color-gray-a);
+}
+
+.close-button:active i {
+  color: var(--color-black);
+}
+
 @media all and (max-width: 830px) {
   header {
     --padding-x: 25px;
