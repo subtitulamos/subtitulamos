@@ -225,36 +225,38 @@ onDomReady(function () {
 
 import Vue from "vue";
 
-new Vue({
-  el: "#control-panel",
-  data: {
-    isOpen: false,
-  },
-  methods: {
-    updateControlPanelStatus() {
-      this.isOpen = !this.isOpen;
+if (document.getElementById("control-panel")) {
+  new Vue({
+    el: "#control-panel",
+    data: {
+      isOpen: false,
+    },
+    methods: {
+      updateControlPanelStatus() {
+        this.isOpen = !this.isOpen;
+        this.updateElementsStatus();
+      },
+      updateElementsStatus() {
+        this.$el.classList.toggle("open", this.isOpen);
+        document
+          .getElementById("page-container")
+          .classList.toggle("control-panel-is-open", this.isOpen);
+        document
+          .getElementById("page-container")
+          .classList.toggle("control-panel-is-closed", !this.isOpen);
+      },
+      focusSearchInput() {
+        this.updateControlPanelStatus();
+
+        setTimeout(() => {
+          if (this.isOpen) {
+            this.$refs.cpSearchInput.focus();
+          }
+        }, 200);
+      },
+    },
+    mounted() {
       this.updateElementsStatus();
     },
-    updateElementsStatus() {
-      this.$el.classList.toggle("open", this.isOpen);
-      document
-        .getElementById("page-container")
-        .classList.toggle("control-panel-is-open", this.isOpen);
-      document
-        .getElementById("page-container")
-        .classList.toggle("control-panel-is-closed", !this.isOpen);
-    },
-    focusSearchInput() {
-      this.updateControlPanelStatus();
-
-      setTimeout(() => {
-        if (this.isOpen) {
-          this.$refs.cpSearchInput.focus();
-        }
-      }, 200);
-    },
-  },
-  mounted() {
-    this.updateElementsStatus();
-  },
-});
+  });
+}
