@@ -26,12 +26,30 @@
   </title>
 </head>
 <body>
-  <div id="base" class="{{ logged_in is null ? 'w-header' }}">
+  <div id="base" class="{{ auth.user is null ? 'w-header' }}">
     {# Background fade pan that displays when the login/reg area is open #}
-    <div id="overlay" class="hidden">
-      <div id="fade-pan"></div>
+    <div class="overlay-wrap">
+      <div class="overlay-content">
+        {% block overlay %}{% endblock %}
+        <div class="form-wrap" class="w-box-shadow">
+          <i class="fas fa-times close-button"></i>
+          <h2>Inicio de sesión</h2>
+          <form action="" id="login-form">
+            <div class="form-field text small">
+              <input type="text" id="username" placeholder="Usuário">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="form-field text small">
+              <input type="password" id="password" placeholder="Contraseña">
+              <i class="fas fa-key"></i>
+            </div>
+            <button type="submit" class="text light">Iniciar sesión</button>
+          </form>
+        </div>
+      </div>
+      <div class="fade-pan"></div>
     </div>
-    {% if logged_in is not null %}
+    {% if auth.user is not null %}
       <nav id="control-panel" class="no-scroll-bar">
         <div id="control-panel-top-section">
           <div id="control-panel-logo-wrap">
