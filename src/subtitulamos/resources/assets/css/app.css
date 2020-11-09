@@ -4,6 +4,7 @@
 @import "effects.css";
 @import "control_panel.css";
 @import "form.css";
+@import "animations.css";
 
 * {
   font-weight: 400;
@@ -384,6 +385,7 @@ footer > #footer-content {
   z-index: 1;
   background-color: var(--color-black);
   opacity: 0.5;
+  animation: 0.4s ease fade_in;
 }
 
 .overlay-content {
