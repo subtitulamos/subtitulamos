@@ -147,10 +147,12 @@
     }
 
     #subtitle-cards-wrap {
+      --card-height: 210px;
       width: 100%;
+      min-height: var(--card-height);
       display: flex;
       flex: 0 1 100%;
-      align-items: center;
+      align-items: flex-start;
       border-left: 1px solid #e8e7e7;
       border-right: 1px solid #e8e7e7;
       overflow-x: scroll;
@@ -159,11 +161,18 @@
       .subtitle-card {
         background-color: var(--color-offwhite);
         width: 175px;
-        height: 210px;
+        height: var(--card-height);
         border-radius: 5px;
         overflow: hidden;
         margin: 0 12px;
         flex-shrink: 0;
+        animation: 0.4s ease slide_down;
+
+        @keyframes slide_down {
+          from {
+            margin-top: -50px;
+          }
+        }
 
         a {
           height: 100%;

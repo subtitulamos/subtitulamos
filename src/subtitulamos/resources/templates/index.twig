@@ -38,11 +38,11 @@
       </div>
       <div class="navigation-item" id="last-completed">TRADUCCIONES</div>
     </div>
-    {% verbatim %}
     <div id="category-container" class="first-page">
       <button id="previous-page" class="chevron">
         <i class="fas fa-chevron-left"></i>
       </button>
+    {% verbatim %}
       <div id="subtitle-cards-wrap" class="no-scroll-bar">
         <div class="text small" v-if="episodes.length == 0">No hay episódios listados en esta categoria</div>
         <div class="subtitle-card w-shadow-box" v-for="(ep, index) in episodes" v-bind:id="index">
@@ -56,11 +56,11 @@
           </a>
         </div>
       </div>
+    {% endverbatim %}
       <button id="next-page" class="chevron">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
-    {% endverbatim %}
   </div>
 {% endblock %}
 
