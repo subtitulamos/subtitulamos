@@ -151,7 +151,7 @@
         background-color: var(--color-offwhite);
         width: 175px;
         height: var(--card-height);
-        border-radius: 5px;
+        border-radius: var(--standard-border-radius);
         overflow: hidden;
         margin: 0 12px;
         flex-shrink: 0;
