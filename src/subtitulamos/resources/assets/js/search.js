@@ -75,30 +75,31 @@ onDomReady(function () {
       });
   }
 
-  $searchBar.addEventListener("keyup", function (e) {
-    if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
-      window.location = linkResultList[0];
-      e.preventDefault();
-    }
+  // FIXME: Uncomment or delete
+  // $searchBar.addEventListener("keyup", function (e) {
+  //   if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
+  //     window.location = linkResultList[0];
+  //     e.preventDefault();
+  //   }
 
-    if (searchTimerHandle) {
-      clearTimeout(searchTimerHandle);
-    }
+  //   if (searchTimerHandle) {
+  //     clearTimeout(searchTimerHandle);
+  //   }
 
-    searchTimerHandle = setTimeout(search, 200);
-  });
+  //   searchTimerHandle = setTimeout(search, 200);
+  // });
 
-  let hideTimeoutHandle = null;
-  $searchBar.addEventListener("focusin", function () {
-    clearTimeout(hideTimeoutHandle);
-    $searchResults.classList.toggle("hidden", $searchBar.value == "");
-  });
-  $searchBar.addEventListener("focusout", function () {
-    hideTimeoutHandle = setTimeout(function () {
-      $searchResults.classList.toggle("hidden", true);
-    }, 500);
-  });
-  $searchBar.parentElement.addEventListener("submit", function (e) {
-    e.preventDefault(); // Prevent form submit
-  });
+  // let hideTimeoutHandle = null;
+  // $searchBar.addEventListener("focusin", function () {
+  //   clearTimeout(hideTimeoutHandle);
+  //   $searchResults.classList.toggle("hidden", $searchBar.value == "");
+  // });
+  // $searchBar.addEventListener("focusout", function () {
+  //   hideTimeoutHandle = setTimeout(function () {
+  //     $searchResults.classList.toggle("hidden", true);
+  //   }, 500);
+  // });
+  // $searchBar.parentElement.addEventListener("submit", function (e) {
+  //   e.preventDefault(); // Prevent form submit
+  // });
 });
