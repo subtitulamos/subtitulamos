@@ -28,28 +28,18 @@
 <body>
   <div id="base" class="{{ auth.user is null ? 'w-header' }}">
     {# Background fade pan that displays when the login/reg area is open #}
-    <div class="overlay-wrap">
+    <div id="overlay" class="overlay-wrap hidden">
       <div class="overlay-content bounce-in">
-        {% block overlay %}{% endblock %}
         <div class="form-wrap w-box-shadow">
-          <button type="button" class="close-button">
+          <button id="overlay-close" type="button" class="close-button">
             <i class="fas fa-times"></i>
           </button>
-          <h2>Inicio de sesión</h2>
-          <form action="" id="login-form">
-            <div class="form-field text small">
-              <input type="text" id="username" placeholder="Nombre de usuario">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="form-field text small">
-              <input type="password" id="password" placeholder="Contraseña">
-              <i class="fas fa-key"></i>
-            </div>
-            <button type="submit" class="text light">Iniciar sesión</button>
-          </form>
+          <div id="overlay-content">
+            {% block overlay %}{% endblock %}
+          </div>
         </div>
       </div>
-      <div class="fade-pan"></div>
+      <div id="overlay-fade" class="fade-pan"></div>
     </div>
     {% if auth.user is not null %}
       <nav id="control-panel" class="no-scroll-bar">
@@ -181,5 +171,19 @@
       info: Toast.mixin({icon: 'info', timer: 5000})
     };
   </script>
+  <template id='tpl-login'>
+    <h2>Inicio de sesión</h2>
+    <form action="" id="login-form">
+      <div class="form-field text small">
+        <input type="text" id="username" placeholder="Nombre de usuario">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="form-field text small">
+        <input type="password" id="password" placeholder="Contraseña">
+        <i class="fas fa-key"></i>
+      </div>
+      <button type="submit" class="text light">Iniciar sesión</button>
+    </form>
+  </template>
   {% block scripts %}{% endblock %}
 </body>

@@ -201,26 +201,57 @@ function register(e) {
     });
 }
 
+function showLoginForm() {
+  showOverlayFromTpl("tpl-login");
+}
+
+function getOverlayNode() {
+  return document.getElementById("overlay");
+}
+
+function showOverlayFromTpl(tplId) {
+  const $template = document.getElementById(tplId);
+  const $node = document.importNode($template.content, true);
+
+  const $overlay = getOverlayNode();
+  $overlay.classList.remove("hidden");
+  const $overlayContent = document.getElementById("overlay-content");
+  $overlayContent.innerHTML = "";
+  $overlayContent.appendChild($node);
+}
+
+function closeOverlay(e) {
+  const $overlay = getOverlayNode();
+  $overlay.classList.add("hidden");
+}
+
 onDomReady(function () {
-  document
-    .querySelectorAll("#close_logreg_form, #fade-pan")
-    .forEach(($ele) => $ele.addEventListener("click", closeLogRegForm));
-  document
-    .querySelectorAll("#login, #register")
-    .forEach(($ele) => $ele.addEventListener("click", toggleAccessForm));
-  const $loginForm = document.getElementById("login-form");
-  const $registerForm = document.getElementById("register-form");
-  if ($loginForm) {
-    $loginForm.addEventListener("submit", doLogin);
-  }
+  // document
+  //   .querySelectorAll("#close_logreg_form, #fade-pan")
+  //   .forEach(($ele) => $ele.addEventListener("click", closeLogRegForm));
+  document.getElementById("login").addEventListener("click", showLoginForm);
+  //   .querySelectorAll("#login, #register")
+  //   .forEach(($ele) => $ele.addEventListener("click", toggleAccessForm));
 
-  if ($registerForm) {
-    $registerForm.addEventListener("submit", register);
-  }
+  // Set up overlay logic
+  const $overlayClose = document.getElementById("overlay-close");
+  const $overlayFade = document.getElementById("overlay-fade");
+  $overlayClose.addEventListener("click", closeOverlay);
+  $overlayFade.addEventListener("click", closeOverlay);
 
-  if (window.openLogin) {
-    setTimeout(toggleAccessForm.bind(document.getElementById("login")), 1500);
-  }
+  // const $loginForm = document.getElementById("login-form");
+  // const $registerForm = document.getElementById("register-form");
+  // if ($loginForm) {
+  //   $loginForm.addEventListener("submit", doLogin);
+  // }
+
+  // if ($registerForm) {
+  //   $registerForm.addEventListener("submit", register);
+  // }
+
+  // if (window.openLogin) {
+  //   setTimeout(toggleAccessForm.bind(document.getElementById("login")), 1500);
+  // }
 });
 
 import Vue from "vue";
