@@ -31,9 +31,9 @@
     "url": "git+https://github.com/subtitulamos/subtitulamos.git"
   },
   "scripts": {
-    "build": "webpack",
-    "prod": "webpack -p",
-    "dev": "webpack --watch"
+    "build": "webpack --mode=development",
+    "prod": "webpack -p --mode=production",
+    "dev": "webpack --watch --mode=development"
   },
   "author": "subtitulamos",
   "license": "AGPL-3.0",
