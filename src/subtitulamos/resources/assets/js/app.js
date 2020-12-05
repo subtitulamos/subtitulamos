@@ -229,12 +229,10 @@ function closeOverlay(e) {
 }
 
 onDomReady(function () {
-  // document
-  //   .querySelectorAll("#close_logreg_form, #fade-pan")
-  //   .forEach(($ele) => $ele.addEventListener("click", closeLogRegForm));
-  document.getElementById("login").addEventListener("click", showLoginForm);
-  //   .querySelectorAll("#login, #register")
-  //   .forEach(($ele) => $ele.addEventListener("click", toggleAccessForm));
+  const $loginBtn = document.getElementById("login");
+  if ($loginBtn) {
+    $loginBtn.addEventListener("click", showLoginForm);
+  }
 
   // Set up overlay logic
   const $overlayClose = document.getElementById("overlay-close");
@@ -244,10 +242,6 @@ onDomReady(function () {
 
   // if ($registerForm) {
   //   $registerForm.addEventListener("submit", register);
-  // }
-
-  // if (window.openLogin) {
-  //   setTimeout(toggleAccessForm.bind(document.getElementById("login")), 1500);
   // }
 });
 
