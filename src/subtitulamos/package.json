@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Código de la plataforma de subtítulos subtitulamos.tv",
   "dependencies": {
+    "copy-webpack-plugin": "^6.3.2",
     "dateformat": "^2.2.0",
     "reconnecting-websocket": "^3.2.2",
     "sprintf-js": "^1.1.2",
