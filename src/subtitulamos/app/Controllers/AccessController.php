@@ -19,7 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
-class LoginController
+class AccessController
 {
     const MINIMUM_PASSWORD_LENGTH = 8;
     const MINIMUM_USER_LENGTH = 4;
