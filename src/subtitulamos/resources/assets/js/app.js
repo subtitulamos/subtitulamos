@@ -129,7 +129,7 @@ function doLogin(e) {
     },
   })
     .then(function () {
-      window.location.reload(true);
+      window.location.reload();
     })
     .catch((err) => {
       $loginBtn.classList.toggle("is-loading", false);
