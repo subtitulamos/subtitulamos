@@ -175,6 +175,7 @@
   </script>
   <template id='tpl-login'>
     <h2>Inicio de sesión</h2>
+    <div id='login-error'></div>
     <form action="" id="login-form">
       <div class="form-field text small">
         <input type="text" id="username" placeholder="Nombre de usuario">
@@ -184,7 +185,7 @@
         <input type="password" id="password" placeholder="Contraseña">
         <i class="fas fa-key"></i>
       </div>
-      <button type="submit" class="text light">Iniciar sesión</button>
+      <button id='login-button' type="submit" class="text light">Iniciar sesión</button>
     </form>
   </template>
   {% block scripts %}{% endblock %}

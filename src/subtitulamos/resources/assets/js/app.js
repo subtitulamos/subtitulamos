@@ -104,8 +104,8 @@ function doLogin(e) {
   e.preventDefault();
 
   const $loginError = document.getElementById("login-error");
-  const $pwdField = document.getElementById("login_password");
-  const username = document.getElementById("login_username").value.trim();
+  const $pwdField = document.getElementById("password");
+  const username = document.getElementById("username").value.trim();
   const pwd = $pwdField.value;
 
   if (!username.length || !pwd.length) {
@@ -125,7 +125,7 @@ function doLogin(e) {
     rawBody: {
       username: username,
       password: pwd,
-      remember: document.getElementById("login_remember_me").checked,
+      // remember: document.getElementById("login_remember_me").checked, // FIXME: This should exist?
     },
   })
     .then(function () {
@@ -203,6 +203,9 @@ function register(e) {
 
 function showLoginForm() {
   showOverlayFromTpl("tpl-login");
+
+  const $loginForm = document.getElementById("login-form");
+  $loginForm.addEventListener("submit", doLogin);
 }
 
 function getOverlayNode() {
@@ -238,12 +241,6 @@ onDomReady(function () {
   const $overlayFade = document.getElementById("overlay-fade");
   $overlayClose.addEventListener("click", closeOverlay);
   $overlayFade.addEventListener("click", closeOverlay);
-
-  // const $loginForm = document.getElementById("login-form");
-  // const $registerForm = document.getElementById("register-form");
-  // if ($loginForm) {
-  //   $loginForm.addEventListener("submit", doLogin);
-  // }
 
   // if ($registerForm) {
   //   $registerForm.addEventListener("submit", register);
