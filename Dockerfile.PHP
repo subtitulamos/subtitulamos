@@ -1,11 +1,11 @@
 FROM php:7.4-fpm-alpine
 WORKDIR /code
 COPY ./src/subtitulamos .
-RUN apk add autoconf g++ libc-dev make gcc \
+RUN apk add autoconf g++ libc-dev make gcc git \
     && pecl install redis-5.3.1 \
     && docker-php-ext-install -j$(nproc) pdo_mysql \
     && docker-php-ext-enable redis \
-    && curl -s https://getcomposer.org/installer | php \
+    && curl -s https://raw.githubusercontent.com/composer/getcomposer.org/e3e43bde99447de1c13da5d1027545be81736b27/web/installer | php \
     && rm -rf /tmp/pear \
     && apk del autoconf g++ libc-dev make gcc
 
