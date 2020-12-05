@@ -61,18 +61,18 @@
             <i class="fas fa-bookmark"></i>
             <span v-if="isOpen" class="text small">Guardados</span>
           </button>
-          <button class="control-panel-button">
+          <a class="control-panel-button" href='/panel'>
             <i class="fas fa-users-cog"></i>
             <span v-if="isOpen" class="text small">Panel de moderador</span>
-          </button>
-          <button class="control-panel-button">
+          </a>
+          <a class="control-panel-button" href='/shows'>
             <i class="fas fa-list-ul"></i>
-            <span v-if="isOpen" class="text small">índice de séries</span>
-          </button>
-          <button class="control-panel-button">
+            <span v-if="isOpen" class="text small">índice de series</span>
+          </a>
+          <a class="control-panel-button" href='/upload'>
             <i class="fas fa-file-import"></i>
             <span v-if="isOpen" class="text small">Subir subtítulo</span>
-          </button>
+          </a>
         </div>
         <div id="control-panel-bottom-section">
           <button class="control-panel-button" v-on:click="updateControlPanelStatus">
@@ -80,18 +80,18 @@
             <i v-else class="fas fa-chevron-circle-right"></i>
             <span v-if="isOpen" class="text small">Minimizar</span>
           </button>
-          <button class="control-panel-button">
+          <a class="control-panel-button" href='/me'>
             <i class="fas fa-user-circle"></i>
             <span v-if="isOpen" class="text small">Mi perfil</span>
-          </button>
-          <button class="control-panel-button">
+          </a>
+          <a class="control-panel-button" href='/rules'>
             <i class="fas fa-book"></i>
             <span v-if="isOpen" class="text small">Normas</span>
-          </button>
-          <button class="control-panel-button">
+          </a>
+          <a class="control-panel-button" href='/logout'>
             <i class="fas fa-power-off"></i>
             <span v-if="isOpen" class="text small">Cerrar sesión</span>
-          </button>
+          </a>
         </div>
       </nav>
     {% else %}
@@ -138,7 +138,7 @@
               <a class="text light" href="/html/" target="_blank">GitHub</a>
               <a class="text light" href="/js/">Normas de traducción</a>
               <a class="text light" href="/css/" target="_blank">Foro</a>
-              <a class="text light" href="/python/">índice de séries</a>
+              <a class="text light" href="/python/">índice de series</a>
             </nav>
             <nav class="social-networks">
               <a class="text light" href="https://foro.subtitulamos.tv/" title="Foro" target="_blank"><i class="fab fa-forumbee"></i></a>
