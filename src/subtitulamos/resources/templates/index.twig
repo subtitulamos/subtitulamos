@@ -19,11 +19,11 @@
         </div>
         <div id="motto">
           <h2>Tu página de <span class="text bold">subtítulos</span> favorita</h2>
-          <p class="text small"><span class="text bold">Descarga, mejora ó traduz</span> los subtítulos más actuales</p>
+          <p class="text small"><span class="text bold">Descarga, mejora o traduce</span> los subtítulos más actuales</p>
         </div>
         <div id="search" class="w-box-shadow">
           <form>
-            <input type="text" placeholder="Busca una serie... Ej.: Westworld" autofocus autocomplete="off" />
+            <input type="text" placeholder="¡Busca una serie! Por ejemplo: Westworld" autofocus autocomplete="off" />
             <button id="search-subtitles" title="Buscar"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
             <ul id="search-results" class='hidden'></ul>
           </form>
@@ -44,7 +44,7 @@
       </button>
     {% verbatim %}
       <div id="subtitle-cards-wrap" class="no-scroll-bar">
-        <div class="text small" v-if="episodes.length == 0">No hay episódios listados en esta categoria</div>
+        <div class="text small" v-if="episodes.length == 0">No hay episodios listados en esta categoria</div>
         <div class="subtitle-card w-box-shadow" v-for="(ep, index) in episodes" v-bind:id="index">
           <a :href='subURI(ep)'>
             <div class="metadata">
@@ -52,7 +52,7 @@
               <p class="episode-number text mini">S<span v-if="ep.season < 10">0</span>{{ ep.season }} - E<span v-if="ep.episode_num < 10">0</span>{{ ep.episode_num }}</p>
               <p class="episode-name">{{ ep.name }}</p>
             </div>
-            <button class="text tiny spaced-wide">IR A EPISODIO</button>
+            <button class="text tiny spaced-wide">IR AL EPISODIO</button>
           </a>
         </div>
       </div>
