@@ -27,5 +27,6 @@ class CreateRobotsFile extends Command
         file_put_contents(__DIR__.'/../../public/robots.txt', $robotsContent);
 
         $output->writeln('Robots file created');
+        return 0;
     }
 }

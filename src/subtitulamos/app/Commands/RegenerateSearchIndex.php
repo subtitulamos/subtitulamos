@@ -33,5 +33,6 @@ class RegenerateSearchIndex extends Command
         $ingest->disconnect();
 
         $output->writeln(count($shows)." shows sync'd to search engine");
+        return 0;
     }
 }

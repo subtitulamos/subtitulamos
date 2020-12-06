@@ -22,7 +22,7 @@ session_start();
 
 function feature_on($name)
 {
-    $v = getenv($name.'_ENABLED');
+    $v = $_ENV[$name.'_ENABLED'] ?? 'false';
     return $v == 'true' || $v == '1' || $v == 'yes';
 }
 
@@ -56,7 +56,7 @@ $app = new class() extends \DI\Bridge\Slim\App {
             \Slim\Views\Twig::class => function (ContainerInterface $c) {
                 $twig = new \Slim\Views\Twig(__DIR__.'/../resources/templates', [
                     'cache' => SUBS_TMP_DIR.'/twig',
-                    'strict_variables' => getenv('TWIG_STRICT') || true,
+                    'strict_variables' => $_ENV['TWIG_STRICT'] ?? true,
                     'debug' => DEBUG
                 ]);
 
