@@ -25,7 +25,7 @@ class ClearTwigCache extends Command
         $cacheDir = SUBS_TMP_DIR.'/twig';
         if (!\is_dir($cacheDir)) {
             $output->writeln('Twig template cache folder does not exist, nothing to clear');
-            return;
+            return 1;
         }
 
         $files = new \RecursiveIteratorIterator(
@@ -39,5 +39,6 @@ class ClearTwigCache extends Command
         }
 
         $output->writeln('Cleared Twig template cache');
+        return 0;
     }
 }

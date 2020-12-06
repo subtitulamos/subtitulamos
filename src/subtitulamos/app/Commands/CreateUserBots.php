@@ -51,6 +51,8 @@ class CreateUserBots extends Command
         }
 
         $entityManager->flush();
+
         $output->writeln(count($bots)." bots sync'd");
+        return 0;
     }
 }

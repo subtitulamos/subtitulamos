@@ -133,5 +133,7 @@ class GenerateSitemaps extends Command
 
         \file_put_contents(self::SITEMAP_DIR.'/sitemap.xml', $sitemapList->asXML());
         $output->writeln('Sitemaps generated');
+
+        return 0;
     }
 }

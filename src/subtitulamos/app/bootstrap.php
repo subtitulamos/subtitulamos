@@ -12,7 +12,7 @@ use Doctrine\ORM\Tools\Setup;
 
 function getEnvOrDefault($varname, $default)
 {
-    $envValue = getenv($varname);
+    $envValue = $_ENV[$varname] ?? null;
     if (!$envValue) {
         $envValue = $default;
     }
@@ -21,10 +21,11 @@ function getEnvOrDefault($varname, $default)
 }
 
 // Load env variables from file
-if (!getenv('SKIP_ENV_FILE')) {
-    $dotenv = new Dotenv\Dotenv(__DIR__.'/..');
+if (!$_ENV['SKIP_ENV_FILE']) {
+    $dotenv = Dotenv\Dotenv::createMutable(__DIR__.'/..');
     $dotenv->load();
 }
+
 
 define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT_NAME', 'dev'));
 define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
@@ -38,10 +39,10 @@ define('REDIS_PORT', getEnvOrDefault('REDIS_PORT', 6379));
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', null, false);
 $conn = [
     'driver' => 'pdo_mysql',
-    'dbname' => getenv('MARIADB_DATABASE'),
-    'user' => getenv('MARIADB_USER'),
-    'password' => getenv('MARIADB_PASSWORD'),
-    'host' => getenv('MARIADB_HOST'),
+    'dbname' => $_ENV['MARIADB_DATABASE'],
+    'user' => $_ENV['MARIADB_USER'],
+    'password' => $_ENV['MARIADB_PASSWORD'],
+    'host' => $_ENV['MARIADB_HOST'],
     'unix_socket' => getEnvOrDefault('MARIADB_SOCKETNAME', null)
 ];
 
