@@ -301,7 +301,7 @@ class Translation
     public static function getBlankSequenceConfidence($sequence)
     {
         // Mmm, Hmm*, Mhm, Uhm, Mm, Eh, Uh, Oh, Ah, Gah, Mnh, Agh, Argh, Ow, Ouch, Ugh, Uhh... & combinations of those
-        if (preg_match("/^(?:\b(?:[uhm]h*m+|[euoa]+h|ga+h+|mnh+|s+h+|h+[eua]+h+|u+g*h+|a+r*g+h+|ow+|ouch)[.!?\s-,]*)*$/i", $sequence->getText()) == 1) {
+        if (preg_match("/^(?:\b(?:[uhm]h*m+|[euoa]+h|ga+h+|mnh+|s+h+|h+[eua]+h+|u+g*h+|a+r*g+h+|ow+|ouch)[\-\.!,\?\s]*)*$/i", $sequence->getText()) == 1) {
             return 100;
         }
 
