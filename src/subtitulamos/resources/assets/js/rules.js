@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import '../css/rules.css';
+import "../css/rules.css";
 import { onDomReady } from "./utils";
 
 onDomReady(() => {
@@ -14,7 +14,8 @@ onDomReady(() => {
       $icon.classList.toggle("fa-caret-down");
       $icon.classList.toggle("fa-caret-up");
 
-      $spoiler.style.display = !$spoiler.style.display || $spoiler.style.display == "none" ? "block" : "none";
+      $spoiler.style.display =
+        !$spoiler.style.display || $spoiler.style.display == "none" ? "block" : "none";
     });
   }
 });

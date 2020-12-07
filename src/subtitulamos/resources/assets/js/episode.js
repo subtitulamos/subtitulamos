@@ -13,25 +13,29 @@ $newTranslationButton.addEventListener("click", function () {
   document.getElementById("new-translation-opts").classList.toggle("hidden");
 });
 
-document.querySelectorAll("a[disabled]").forEach(($ele) => $ele.addEventListener("click", function (e) {
-  e.preventDefault();
-  return false;
-}));
+document.querySelectorAll("a[disabled]").forEach(($ele) =>
+  $ele.addEventListener("click", function (e) {
+    e.preventDefault();
+    return false;
+  })
+);
 
-document.querySelectorAll("a[data-action='delete']").forEach(($ele) => $ele.addEventListener("click", function (e) {
-  const subId = this.dataset.id;
+document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
+  $ele.addEventListener("click", function (e) {
+    const subId = this.dataset.id;
 
-  Swal.fire({
-    type: "warning",
-    cancelButtonText: "Cancelar",
-    showCancelButton: true,
-    text: "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
-  }).then(result => {
-    if (result.value) {
-      window.location = "/subtitles/" + subId + "/delete";
-    }
-  });
-}));
+    Swal.fire({
+      type: "warning",
+      cancelButtonText: "Cancelar",
+      showCancelButton: true,
+      text: "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
+    }).then((result) => {
+      if (result.value) {
+        window.location = "/subtitles/" + subId + "/delete";
+      }
+    });
+  })
+);
 
 onDomReady(function () {
   let lastLangVal = localStorage.getItem("last-selected-translation-lang");
@@ -62,8 +66,8 @@ let comments = new Vue({
       if (this.newComment.length > this.maxCommentLength) {
         Toasts.error.fire(
           "Por favor, escribe un comentario más corto (de hasta " +
-          this.maxCommentLength +
-          " caracteres)"
+            this.maxCommentLength +
+            " caracteres)"
         );
         return false;
       }
@@ -81,7 +85,7 @@ let comments = new Vue({
           this.submittingComment = false;
           loadComments();
         })
-        .catch(e => {
+        .catch((e) => {
           this.submittingComment = false;
           Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
         });
@@ -137,8 +141,8 @@ let comments = new Vue({
 
 function loadComments() {
   easyFetch("/episodes/" + epId + "/comments")
-    .then(response => response.json())
-    .then(reply => {
+    .then((response) => response.json())
+    .then((reply) => {
       comments.comments = reply;
     })
     .catch(() => {

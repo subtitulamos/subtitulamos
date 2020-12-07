@@ -103,22 +103,25 @@ Subtitle.prototype.getUsername = function (uid) {
 
 Subtitle.prototype.loadSequences = function () {
   function decode(s) {
-    return s.replace(/[a-zA-Z]/g, function (c) { return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26); })
+    return s.replace(/[a-zA-Z]/g, function (c) {
+      return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+    });
   }
 
   easyFetch(`/subtitles/${subID}/translate/load`, {
     params: {
       secondaryLang: this.secondaryLang,
     },
-  }).then(res => res.json())
-    .then(reply => {
+  })
+    .then((res) => res.json())
+    .then((reply) => {
       const sequenceList = reply.sequences;
       const userList = reply.users;
       const isFirstLoad = !this.state.loadedOnce;
 
       this.state.loaded = true;
       this.state.loadedOnce = true;
-      Object.keys(sequenceList).forEach(k => {
+      Object.keys(sequenceList).forEach((k) => {
         let seq = sequenceList[k];
         seq.text = decode(seq.text);
         seq.secondary_text = decode(seq.secondary_text);
@@ -137,7 +140,7 @@ Subtitle.prototype.loadSequences = function () {
         }
       });
 
-      Object.keys(userList).forEach(uid => {
+      Object.keys(userList).forEach((uid) => {
         if (!this.users[uid]) {
           this.users[uid] = userList[uid];
         }
@@ -158,8 +161,8 @@ Subtitle.prototype.loadSequences = function () {
 
 Subtitle.prototype.loadComments = function () {
   easyFetch("/subtitles/" + subID + "/translate/comments")
-    .then(res => res.json())
-    .then(reply => {
+    .then((res) => res.json())
+    .then((reply) => {
       this.state.comments = reply;
     })
     .catch(function () {
@@ -169,7 +172,7 @@ Subtitle.prototype.loadComments = function () {
 
 Subtitle.prototype.findSeqIdxByID = function (seqID) {
   let key = -1;
-  Object.keys(this.state.sequences).forEach(k => {
+  Object.keys(this.state.sequences).forEach((k) => {
     if (this.state.sequences[k].id == seqID) {
       key = k;
       return;
@@ -181,7 +184,7 @@ Subtitle.prototype.findSeqIdxByID = function (seqID) {
 
 Subtitle.prototype.findSeqIdxByNum = function (seqNum) {
   let key = -1;
-  Object.keys(this.state.sequences).forEach(k => {
+  Object.keys(this.state.sequences).forEach((k) => {
     if (this.state.sequences[k].number == seqNum) {
       key = k;
       return;
@@ -248,7 +251,7 @@ Subtitle.prototype.deleteSeq = function (seqID, status) {
     }
   };
 
-  Object.keys(this.state.sequences).forEach(k => {
+  Object.keys(this.state.sequences).forEach((k) => {
     let s = this.state.sequences[k];
     if (s.id == seqID) {
       removeFn(s, s.history ? s.history.length - 1 : -1, true);
@@ -318,7 +321,7 @@ Subtitle.prototype.getDataByNum = function (seqNum) {
 };
 
 Subtitle.prototype.addComment = function (id, user, published_at, text) {
-  let exists = this.state.comments.some(c => {
+  let exists = this.state.comments.some((c) => {
     return c.id == id;
   });
 
@@ -358,7 +361,7 @@ Subtitle.prototype.sortComments = function () {
 };
 
 Subtitle.prototype.deleteComment = function (id) {
-  let idx = this.state.comments.findIndex(c => {
+  let idx = this.state.comments.findIndex((c) => {
     return c.id == id;
   });
 
@@ -368,7 +371,7 @@ Subtitle.prototype.deleteComment = function (id) {
 };
 
 Subtitle.prototype.setCommentPin = function (id, pinned) {
-  let idx = this.state.comments.findIndex(c => {
+  let idx = this.state.comments.findIndex((c) => {
     return c.id == id;
   });
 

@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { onDomReady, easyFetch } from './utils';
+import { onDomReady, easyFetch } from "./utils";
 
 function createResultRow(contents) {
   const $row = document.createElement("li");
@@ -46,7 +46,7 @@ onDomReady(function () {
         q: searchQuery,
       },
     })
-      .then(response => response.json())
+      .then((response) => response.json())
       .then(function (reply) {
         $searchResults.innerHTML = "";
         $searchResults.classList.toggle("hidden", false);
@@ -66,7 +66,8 @@ onDomReady(function () {
             createResultRow("Parece que no tenemos resultados para esta búsqueda")
           );
         }
-      }).catch(() => {
+      })
+      .catch(() => {
         $searchResults.innerHTML = "";
         $searchResults.classList.toggle("hidden", false);
         $searchResults.append(

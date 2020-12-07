@@ -68,9 +68,13 @@ onDomReady(function () {
   document.getElementById("name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
   document.getElementById("name").addEventListener("change", splitSeasonAndEpisodeCallback);
 
-  document.querySelectorAll("#show-id, #lang, #version, #comments, #new-show, #sub").forEach($ele => $ele.addEventListener("change", function () {
-    document.getElementById(`${this.id}-status`).classList.toggle("hidden", true);
-  }));
+  document
+    .querySelectorAll("#show-id, #lang, #version, #comments, #new-show, #sub")
+    .forEach(($ele) =>
+      $ele.addEventListener("change", function () {
+        document.getElementById(`${this.id}-status`).classList.toggle("hidden", true);
+      })
+    );
 
   // SRT FILE
   // Always clear the file input on load
@@ -102,39 +106,44 @@ onDomReady(function () {
       method: "POST",
       body: data, // Already form-encoded
     })
-      .then(res => {
+      .then((res) => {
         if (res.ok === false) {
           throw {
             error: true,
-            response: res
-          }
+            response: res,
+          };
         }
 
         return res;
       })
-      .then(res => res.text())
-      .then(data => {
+      .then((res) => res.text())
+      .then((data) => {
         window.location.href = data;
       })
-      .catch(err => {
+      .catch((err) => {
         this.classList.toggle("is-loading", false);
-        document.querySelectorAll("[data-status]").forEach($ele => $ele.classList.toggle("hidden", true));
+        document
+          .querySelectorAll("[data-status]")
+          .forEach(($ele) => $ele.classList.toggle("hidden", true));
 
-        const reportUnknownError = () => Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
+        const reportUnknownError = () =>
+          Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         if (err.response) {
-          err.response.json().then(data => {
-            data.forEach(function (e, idx, arr) {
-              let $status = document.getElementById(`${e[0]}-status`);
-              if ($status) {
-                $status.classList.toggle("hidden", false);
-                $status.innerHTML = e[1];
-              }
+          err.response
+            .json()
+            .then((data) => {
+              data.forEach(function (e, idx, arr) {
+                let $status = document.getElementById(`${e[0]}-status`);
+                if ($status) {
+                  $status.classList.toggle("hidden", false);
+                  $status.innerHTML = e[1];
+                }
+              });
             })
-          }).catch(reportUnknownError);
+            .catch(reportUnknownError);
         } else {
           reportUnknownError();
         }
       });
-
   });
 });
