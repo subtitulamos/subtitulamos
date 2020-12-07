@@ -1,12 +1,7 @@
 .env
 .php_cs
 tmp/
-data/mariadb/*
-data/redis/*
-data/sonic/*
-!data/mariadb/.gitkeep
-!data/redis/.gitkeep
-!data/sonic/.gitkeep
+data/*
 /.vscode
 /logs/*.log
 *~

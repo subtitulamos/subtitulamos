@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   nginx:
@@ -28,6 +28,7 @@ services:
       - sonic
     volumes:
       - ./.env:/code/.env
+      - ./data/phpsess:/tmp/phpsess
       - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock
 
   redis:
