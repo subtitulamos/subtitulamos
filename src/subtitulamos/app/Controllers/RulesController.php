@@ -7,14 +7,19 @@
 
 namespace App\Controllers;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
 class RulesController
 {
-    public function view($request, $response, Twig $twig)
+    public function view(ServerRequestInterface $request, $response, Twig $twig)
     {
-        $type = $request->getAttribute('route')->getArgument('type');
-        if (!$type || !\in_array($type, ['main', 'community', 'upload'])) {
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
+
+        $type = $route->getArgument('type', 'main');
+        if (!in_array($type, ['main', 'community', 'upload'])) {
             $type = 'main';
         }
 

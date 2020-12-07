@@ -10,7 +10,9 @@ namespace App\Middleware;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use Doctrine\ORM\EntityManager;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class SessionMiddleware
 {
@@ -20,25 +22,18 @@ class SessionMiddleware
      */
     private $container;
 
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    public function __construct(\DI\Container $container, EntityManager $em)
+    public function __construct(\DI\Container $container)
     {
         $this->container = $container;
-        $this->em = $em;
     }
 
     /**
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function __invoke($request, $response, $next)
+    * @param  ServerRequestInterface        $request PSR-7 request
+    * @param  RequestHandler $handler PSR-15 request handler
+    *
+    * @return Response
+    */
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $auth = $this->container->get('App\Services\Auth');
         $rememberCookie = FigRequestCookies::get($request, 'remember', '');
@@ -47,13 +42,18 @@ class SessionMiddleware
             // Try to load up a remembered session given that there's none
             $newToken = $auth->logByToken($rememberCookie->getValue());
             if ($newToken) {
+                $response = $handler->handle($request);
                 $response = FigResponseCookies::set($response, SetCookie::create('remember')->withPath('/')->withValue($newToken)->rememberForever());
             }
-        } elseif (!empty($_SESSION['uid'])) {
-            // Load up existing session
-            $auth->loadUser($_SESSION['uid']);
+        } else {
+            if (!empty($_SESSION['uid'])) {
+                // Load up existing session
+                $auth->loadUser($_SESSION['uid']);
+            }
+
+            $response = $handler->handle($request);
         }
 
-        return $next($request, $response);
+        return $response;
     }
 }

@@ -13,9 +13,11 @@ use App\Entities\Version;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Srt\SrtParser;
+use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
 use Slim\Views\Twig;
@@ -26,7 +28,7 @@ class UploadResyncController
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $show = $ep->getShow();
@@ -36,16 +38,17 @@ class UploadResyncController
         ]);
     }
 
-    public function do($epId, RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    public function do($epId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth)
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $langCode = $request->getParam('lang', '');
-        $versionName = trim(strip_tags($request->getParam('version', '')));
-        $comments = trim(strip_tags($request->getParam('comments', '')));
+        $body = $request->getParsedBody();
+        $langCode = $body['lang'] ?? '';
+        $versionName = trim(strip_tags($body['version']?? ''));
+        $comments = trim(strip_tags($body['comments'] ?? ''));
 
         $errors = [];
         if (!Langs::existsCode($langCode)) {
@@ -93,7 +96,7 @@ class UploadResyncController
         }
 
         if (!empty($errors)) {
-            return $response->withJson($errors, 400);
+            return Utils::jsonResponse($response, $errors)->withStatus(400);
         }
 
         if (!$version) {

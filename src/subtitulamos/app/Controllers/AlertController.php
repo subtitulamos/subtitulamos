@@ -11,6 +11,7 @@ use App\Entities\Alert;
 use App\Entities\AlertComment;
 
 use App\Services\Auth;
+use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
 
@@ -20,11 +21,11 @@ class AlertController
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if (!$auth->getUser()) {
-            return $response->withJSON([
+            return Utils::jsonResponse($response, [
                 'ok' => false,
                 'msg' => 'Por favor, recarga la página e intentálo de nuevo'
             ]);
@@ -54,6 +55,6 @@ class AlertController
             $res['msg'] = 'Por favor, detalla la situación';
         }
 
-        return $response->withJSON($res);
+        return Utils::jsonResponse($response, $res);
     }
 }

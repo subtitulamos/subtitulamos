@@ -10,11 +10,13 @@ namespace App\Controllers;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Sonic;
+use App\Services\Utils;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class SearchController
 {
@@ -38,12 +40,15 @@ class SearchController
             ];
         }
 
-        return $response->withJson($epList);
+        return Utils::jsonResponse($response, $epList);
     }
 
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
-        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $params = $request->getQueryParams();
+        $pageParam = $params['page'] ?? 1;
+
+        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
@@ -68,12 +73,15 @@ class SearchController
             ];
         }
 
-        return $response->withJson($epList);
+        return Utils::jsonResponse($response, $epList);
     }
 
-    public function listRecentChanged(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
+    public function listRecentChanged(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
-        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $params = $request->getQueryParams();
+        $pageParam = $params['page'] ?? 1;
+
+        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
@@ -100,12 +108,15 @@ class SearchController
             ];
         }
 
-        return $response->withJson($epList);
+        return Utils::jsonResponse($response, $epList);
     }
 
-    public function listRecentCompleted(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
+    public function listRecentCompleted(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
-        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $params = $request->getQueryParams();
+        $pageParam = $params['page'] ?? 1;
+
+        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
@@ -130,12 +141,15 @@ class SearchController
             ];
         }
 
-        return $response->withJson($epList);
+        return Utils::jsonResponse($response, $epList);
     }
 
-    public function listRecentResyncs(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
+    public function listRecentResyncs(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
-        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $params = $request->getQueryParams();
+        $pageParam = $params['page'] ?? 1;
+
+        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 1 ORDER BY s.uploadTime DESC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
@@ -162,7 +176,7 @@ class SearchController
             ];
         }
 
-        return $response->withJson($epList);
+        return Utils::jsonResponse($response, $epList);
     }
 
     public function query($request, $response, EntityManager $em)
@@ -210,15 +224,18 @@ class SearchController
             }
 
             $search->disconnect();
-            return $response->withJson($resultList);
+            return Utils::jsonResponse($response, $resultList);
         }
 
         return $response->withStatus(400);
     }
 
-    public function listPaused($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
+    public function listPaused(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
-        $page = max(1, min(10, (int)$request->getQueryParam('page', 1))) - 1;
+        $params = $request->getQueryParams();
+        $pageParam = $params['page'] ?? 1;
+
+        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC')
             ->setMaxResults(10)
             ->setFirstResult($page * 10)
@@ -243,6 +260,6 @@ class SearchController
             ];
         }
 
-        return $response->withJson($epList);
+        return Utils::jsonResponse($response, $epList);
     }
 }

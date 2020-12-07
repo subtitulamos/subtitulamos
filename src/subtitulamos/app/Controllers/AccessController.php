@@ -9,6 +9,7 @@ namespace App\Controllers;
 
 use App\Entities\User;
 use App\Services\Auth;
+use App\Services\Utils;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
@@ -41,9 +42,10 @@ class AccessController
      */
     public function login(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Auth $auth)
     {
-        $username = $request->getParam('username', '');
-        $password = $request->getParam('password', '');
-        $remember = $request->getParam('remember', '') == 'true';
+        $body = $request->getParsedBody();
+        $username = $body['username'] ?? '';
+        $password = $body['password'] ?? '';
+        $remember = ($body['remember'] ?? '') == 'true';
 
         if (!$username || !$password) {
             return $response->withStatus(400);
@@ -59,7 +61,7 @@ class AccessController
         }
 
         if (!$user || !\password_verify($password, $user->getPassword())) {
-            return $response->withJson([$loginName.' o contraseña incorrectos'], 403);
+            return Utils::jsonResponse($response, [$loginName.' o contraseña incorrectos'])->withStatus(403);
         }
 
         $token = $auth->log($user, $remember);
@@ -72,11 +74,12 @@ class AccessController
 
     public function register(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Auth $auth)
     {
-        $username = $request->getParam('username', '');
-        $password = $request->getParam('password', '');
-        $password_confirmation = $request->getParam('password_confirmation', '');
-        $email = $request->getParam('email', '');
-        $terms = $request->getParam('terms', false) == 'true';
+        $body = $request->getParsedBody();
+        $username = $body['username'] ?? '';
+        $password = $body['password'] ?? '';
+        $password_confirmation = $body['password_confirmation'] ?? '';
+        $email = $body['email'] ?? '';
+        $terms = ($body['terms'] ?? false) == 'true';
 
         $errors = [];
         if (!$terms) {
@@ -102,7 +105,7 @@ class AccessController
         }
 
         if (!empty($errors)) {
-            return $response->withJson($errors, 400);
+            return Utils::jsonResponse($response, $errors)->withStatus(400);
         }
 
         // Onwards with registration!

@@ -7,12 +7,11 @@
 
 namespace App\Controllers\Panel;
 
-use App\Entities\Alert;
 use App\Entities\AlertComment;
 use App\Services\Auth;
+use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
-use Slim\Router;
 use Slim\Views\Twig;
 
 class PanelAlertsController
@@ -43,7 +42,7 @@ class PanelAlertsController
         ]);
     }
 
-    public function saveComment($request, $response, Twig $twig, EntityManager $em, Auth $auth, Router $router)
+    public function saveComment($request, $response, Twig $twig, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
     {
         $alertId = (int)$request->getParam('alert-id');
         $text = trim(strip_tags($request->getParam('comment')));
@@ -86,6 +85,6 @@ class PanelAlertsController
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor('alerts'));
+        return $response->withHeader('Location', $urlHelper->pathFor('alerts'));
     }
 }

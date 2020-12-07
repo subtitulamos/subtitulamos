@@ -9,13 +9,11 @@
 * Declare all routes in this file, inside the function.
 * Called from index.php to load them
 */
-function addRoutes(&$app, &$entityManager)
+function addRoutes(&$app)
 {
     $needsRole = function ($role) use ($app) {
         return new App\Middleware\RestrictedMiddleware($app->getContainer(), $role);
     };
-
-    $app->add(new \App\Middleware\SessionMiddleware($app->getContainer(), $entityManager));
 
     // People
     $app->get('/', ['\App\Controllers\HomeController', 'view']);
@@ -73,7 +71,6 @@ function addRoutes(&$app, &$entityManager)
     */
     $app->get('/episodes/{id:[0-9]+}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
     $app->get('/shows', ['\App\Controllers\ShowController', 'viewAll'])->setName('showlist');
-    $app->get('/shows/{showId:[0-9]+}/{season:[0-9]+}', ['\App\Controllers\ShowController', 'redirectToView']);
     $app->get('/shows/{showId:[0-9]+}[/season/{season:[0-9]+}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
     $app->get('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('show-edit');
     $app->post('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRole('ROLE_MOD'));

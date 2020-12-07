@@ -9,16 +9,19 @@ namespace App\Controllers;
 
 use App\Entities\EpisodeComment;
 use App\Services\Auth;
+use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
+use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig;
 
 class EpisodeCommentsController
 {
-    public function create($epId, $request, $response, EntityManager $em, Auth $auth)
+    public function create($epId, ServerRequestInterface $request, $response, EntityManager $em, Auth $auth)
     {
+        $body = $request->getParsedBody();
         // Validate input first
-        $text = $request->getParsedBodyParam('text', '');
+        $text = $body['text'] ?? '';
         if (!v::stringType()->length(1, 600)->validate($text)) {
             return $response->withStatus(400);
         }
@@ -27,7 +30,7 @@ class EpisodeCommentsController
         $ep = $em->getRepository('App:Episode')->find($epId);
 
         if (!$ep) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $comment = new EpisodeComment();
@@ -52,7 +55,7 @@ class EpisodeCommentsController
         $comments = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.episode = :id AND ec.softDeleted = 0 ORDER BY ec.pinned DESC, ec.id ASC')
                    ->setParameter('id', $epId)
                    ->getResult();
-        return $response->withJson($comments);
+        return Utils::jsonResponse($response, $comments);
     }
 
     public function listAll($request, $response, EntityManager $em)
@@ -75,7 +78,7 @@ class EpisodeCommentsController
             $comments[] = $comment;
         }
 
-        return $response->withJson($comments);
+        return Utils::jsonResponse($response, $comments);
     }
 
     public function viewAll($response, EntityManager $em, Twig $twig)
@@ -90,7 +93,7 @@ class EpisodeCommentsController
     {
         $comment = $em->getRepository('App:EpisodeComment')->find($cId);
         if (!$comment) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($comment->getEpisode()->getId() != $epId) {
@@ -107,7 +110,7 @@ class EpisodeCommentsController
     {
         $comment = $em->getRepository('App:EpisodeComment')->find($cId);
         if (!$comment) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($comment->getEpisode()->getId() != $epId) {

@@ -16,6 +16,8 @@ use App\Entities\Version;
 use App\Services\Auth;
 use App\Services\Sonic;
 use App\Services\Srt\SrtParser;
+use App\Services\UrlHelper;
+use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +36,7 @@ class UploadController
         ]);
     }
 
-    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $param = $request->getParsedBody();
 
@@ -128,7 +130,7 @@ class UploadController
         }
 
         if (!empty($errors)) {
-            return $response->withJson($errors, 400);
+            return Utils::jsonResponse($response, $errors)->withStatus(400);
         }
 
         $episode = new Episode();
@@ -182,7 +184,7 @@ class UploadController
             }
         }
 
-        $response->getBody()->write($router->pathFor('episode', ['id' => $episode->getId()]));
+        $response->getBody()->write($urlHelper->pathFor('episode', ['id' => $episode->getId()]));
         return $response->withStatus(200);
     }
 }

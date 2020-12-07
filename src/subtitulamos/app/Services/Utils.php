@@ -7,6 +7,9 @@
 
 namespace App\Services;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 class Utils
 {
     public static function generateRandomString(int $length, $charPool = 'abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-')
@@ -19,5 +22,12 @@ class Utils
         }
 
         return $tok;
+    }
+
+    public static function jsonResponse(ResponseInterface $response, $data): ResponseInterface
+    {
+        $body = $response->getBody();
+        $body->write(json_encode($data));
+        return $response->withStatus(200);
     }
 }

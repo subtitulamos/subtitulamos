@@ -10,31 +10,33 @@ namespace App\Controllers;
 use App\Services\Auth;
 
 use App\Services\Langs;
-
+use App\Services\UrlHelper;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
 class EpisodeController
 {
-    public function view($id, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router, SlugifyInterface $slugify)
+    public function view($id, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, UrlHelper $urlHelper, SlugifyInterface $slugify)
     {
         $ep = $em->createQuery('SELECT e, sb, v, sw, p FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN e.show sw LEFT JOIN sb.pause p WHERE e.id = :id')
             ->setParameter('id', $id)
             ->getOneOrNullResult();
 
         if (!$ep) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        // The only correct URL is with a slug (and a right one at that), redirect to the right URI
-        $route = $request->getAttribute('route');
+        // The only correct URL is with a slug (and a right one at that), redirect to the right URI otherwise
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
         $slug = $route->getArgument('slug');
         $properSlug = $slugify->slugify($ep->getFullName());
         if (empty($slug) || $slug != $properSlug) {
-            return $response->withRedirect($router->pathFor('episode', ['id' => $ep->getId(), 'slug' => $properSlug]), 301);
+            return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $ep->getId(), 'slug' => $properSlug])->withStatus(301);
         }
 
         // Determine which languages this sub is using
@@ -71,8 +73,8 @@ class EpisodeController
             'episode' => $ep,
             'langs' => $langs,
             'slug' => $properSlug,
-            'prev_url' => $prevEp ? $router->pathFor('episode', ['id' => $prevEp->getId(), 'slug' => $slugify->slugify($prevEp->getFullName())]) : '',
-            'next_url' => $nextEp ? $router->pathFor('episode', ['id' => $nextEp->getId(), 'slug' => $slugify->slugify($nextEp->getFullName())]) : ''
+            'prev_url' => $prevEp ? $urlHelper->pathFor('episode', ['id' => $prevEp->getId(), 'slug' => $slugify->slugify($prevEp->getFullName())]) : '',
+            'next_url' => $nextEp ? $urlHelper->pathFor('episode', ['id' => $nextEp->getId(), 'slug' => $slugify->slugify($nextEp->getFullName())]) : ''
         ]);
     }
 
@@ -80,7 +82,7 @@ class EpisodeController
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         return $twig->render($response, 'edit_episode.twig', [
@@ -88,11 +90,11 @@ class EpisodeController
         ]);
     }
 
-    public function saveEdit($epId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, \Slim\Router $router)
+    public function saveEdit($epId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, UrlHelper $urlHelper)
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $season = (int)$request->getParam('season', '');
@@ -128,6 +130,6 @@ class EpisodeController
             $em->flush();
         }
 
-        return $response->withHeader('Location', $router->pathFor('ep-edit', ['epId' => $epId]));
+        return $response->withHeader('Location', $urlHelper->pathFor('ep-edit', ['epId' => $epId]));
     }
 }

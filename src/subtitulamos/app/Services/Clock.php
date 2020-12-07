@@ -15,17 +15,14 @@ class Clock
     private $min;
     private $sec;
     private $milli;
-    private $logger;
 
-    public function __construct($time/*, LoggerInterface $logger*/)
+    public function __construct($time)
     {
         $totalSecs = floor($time / 1000);
         $this->milli = $time - $totalSecs * 1000;
         $this->hour = floor($totalSecs / 3600);
         $this->min = floor(($totalSecs - $this->hour * 3600) / 60);
         $this->sec = $totalSecs - $this->hour * 3600 - $this->min * 60;
-
-        //$this->logger = $logger;
     }
 
     public function addHour($c)

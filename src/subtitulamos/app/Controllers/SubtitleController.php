@@ -13,17 +13,18 @@ use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Sonic;
 use App\Services\Translation;
+use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig;
 
 class SubtitleController
 {
-    public function delete($subId, $request, $response, EntityManager $em, \Slim\Router $router)
+    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $version = $sub->getVersion();
@@ -53,19 +54,19 @@ class SubtitleController
 
         $em->remove($sub);
         $em->flush();
-        return $response->withStatus(200)->withHeader('Location', $episodeDeleted ? '/' : $router->pathFor('episode', ['id' => $epId]));
+        return $response->withStatus(200)->withHeader('Location', $episodeDeleted ? '/' : $urlHelper->pathFor('episode', ['id' => $epId]));
     }
 
-    public function pause($subId, $request, $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    public function pause($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($sub->getPause()) {
             // Already paused!
-            return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]));
+            return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
         }
 
         $pause = new Pause();
@@ -77,19 +78,19 @@ class SubtitleController
         $sub->setPause($pause);
         $em->flush();
 
-        return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]));
+        return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
     }
 
-    public function unpause($subId, $request, $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    public function unpause($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if (!$sub->getPause()) {
             // Not paused!
-            return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]));
+            return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
         }
 
         $pause = $em->getRepository('App:Pause')->find($sub->getPause()->getId());
@@ -101,14 +102,14 @@ class SubtitleController
         }
 
         $em->flush();
-        return $response->withStatus(200)->withHeader('Location', $router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]));
+        return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
     }
 
     public function viewHammer($subId, $request, $response, EntityManager $em, Twig $twig, Translation $translation)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $sequences = $em->createQuery('SELECT sq FROM App:User u JOIN App:Sequence sq WHERE sq.author = u AND sq.subtitle = :sub')
@@ -157,17 +158,18 @@ class SubtitleController
 
     public function doHammer($subId, $request, $response, EntityManager $em, Twig $twig, Translation $translation)
     {
+        $body = $request->getParsedBody();
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $target = (int)$request->getParsedBodyParam('user', 0);
+        $target = (int)($body['user'] ?? 0);
         if (!$target) {
             return $response->withStatus(400);
         }
 
-        $type = $request->getParsedBodyParam('type', 0);
+        $type = $body['type'] ?? '';
         if (!$type || !in_array($type, ['complete', 'latest'])) {
             return $response->withStatus(400);
         }
@@ -225,7 +227,7 @@ class SubtitleController
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $v = $sub->getVersion();
@@ -239,11 +241,11 @@ class SubtitleController
         ]);
     }
 
-    public function saveProperties($subId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, \Slim\Router $router)
+    public function saveProperties($subId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, UrlHelper $urlHelper)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $v = $sub->getVersion();
@@ -300,6 +302,6 @@ class SubtitleController
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor('subtitle-edit', ['subId' => $subId]));
+        return $urlHelper->responseWithRedirectToRoute('subtitle-edit', ['subId' => $subId]);
     }
 }

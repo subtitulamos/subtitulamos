@@ -9,6 +9,7 @@ namespace App\Controllers;
 
 use App\Entities\Ban;
 use App\Services\Auth;
+use App\Services\UrlHelper;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
@@ -17,11 +18,11 @@ use Slim\Views\Twig;
 
 class UserController
 {
-    public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em, \Slim\Router $router, SlugifyInterface $slugify)
+    public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
     {
         $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $upEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v WHERE v.user = :uid GROUP BY e.id')
@@ -33,7 +34,7 @@ class UserController
 
             $uploadedEpisodes[] = [
                 'full_name' => $fullName,
-                'url' => $router->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
+                'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
 
@@ -46,7 +47,7 @@ class UserController
 
             $colaboratedEpisodes[] = [
                 'full_name' => $fullName,
-                'url' => $router->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
+                'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
 
@@ -65,7 +66,7 @@ class UserController
         ]);
     }
 
-    public function saveSettings($request, $response, Twig $twig, Auth $auth, \Slim\Router $router, EntityManager $em)
+    public function saveSettings($request, $response, Twig $twig, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
     {
         $user = $auth->getUser();
         $password = $request->getParam('newpwd', '');
@@ -86,14 +87,14 @@ class UserController
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor('settings'));
+        return $response->withHeader('Location', $urlHelper->pathFor('settings'));
     }
 
-    public function ban($userId, $request, $response, EntityManager $em, Auth $auth, \Slim\Router $router)
+    public function ban($userId, $request, $response, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
     {
         $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $errors = [];
@@ -130,21 +131,21 @@ class UserController
             $em->persist($ban);
             $em->flush();
 
-            $auth->addFlash('success', 'Usuario baneado hasta el ' . $until->format('d/M/Y H:i'));
+            $auth->addFlash('success', 'Usuario baneado hasta el '.$until->format('d/M/Y H:i'));
         } else {
             foreach ($errors as $error) {
                 $auth->addFlash('error', $error);
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor('user', ['userId' => $userId]));
+        return $response->withHeader('Location', $urlHelper->pathFor('user', ['userId' => $userId]));
     }
 
-    public function unban($userId, $request, $response, EntityManager $em, Auth $auth, \Slim\Router $router)
+    public function unban($userId, $request, $response, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
     {
         $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $errors = [];
@@ -165,6 +166,6 @@ class UserController
             }
         }
 
-        return $response->withHeader('Location', $router->pathFor('user', ['userId' => $userId]));
+        return $response->withHeader('Location', $urlHelper->pathFor('user', ['userId' => $userId]));
     }
 }

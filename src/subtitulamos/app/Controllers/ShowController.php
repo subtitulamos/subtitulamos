@@ -7,24 +7,19 @@
 
 namespace App\Controllers;
 
-use App\Entities\Episode;
 use App\Services\Langs;
-
+use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
 class ShowController
 {
-    public function redirectToView($showId, $season, RequestInterface $request, ResponseInterface $response, \Slim\Router $router)
-    {
-        # It'll be safe to remove this by late 2019
-        return $response->withRedirect($router->pathFor('show', ['showId' => $showId, 'season' => $season]), 301);
-    }
-
-    public function viewAll(RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
+    public function viewAll(ResponseInterface $response, EntityManager $em, Twig $twig)
     {
         $em->getRepository('App:Show')->findAll(); // This hydrates shows on the following query
         $seasons = $em->createQuery('SELECT e, COUNT(DISTINCT e.season) FROM App:Episode e GROUP BY e.show')->getResult();
@@ -58,11 +53,11 @@ class ShowController
         ]);
     }
 
-    public function view($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, \Slim\Router $router)
+    public function view($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, UrlHelper $urlHelper)
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $seasonsRes = $em->createQuery('SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
@@ -80,14 +75,15 @@ class ShowController
         }
 
         // Let's see if the URI contains the season, otherwise, fill it
-        $route = $request->getAttribute('route');
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
         $seasonArg = $route->getArgument('season');
         if ($seasonArg !== null) {
             $season = (int)$seasonArg;
 
             if (!in_array($season, $seasons)) {
                 // If the season passed is not a valid season, redirect to default
-                return $response->withRedirect($router->pathFor('show', ['showId' => $showId]));
+                return $urlHelper->responseWithRedirectToRoute('show', ['showId' => $showId]);
             }
         } else {
             // Default season: latest
@@ -151,7 +147,7 @@ class ShowController
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $seasonsRes = $em->createQuery('SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
@@ -172,11 +168,11 @@ class ShowController
         ]);
     }
 
-    public function saveProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router)
+    public function saveProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper)
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $newName = trim(strip_tags($request->getParam('name', '')));
@@ -185,6 +181,6 @@ class ShowController
             $em->flush();
         }
 
-        return $response->withRedirect($router->pathFor('show-edit', ['showId' => $showId]));
+        return $urlHelper->responseWithRedirectToRoute('show-edit', ['showId' => $showId]);
     }
 }
