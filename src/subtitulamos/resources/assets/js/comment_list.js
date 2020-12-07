@@ -20,7 +20,7 @@ let comments = new Vue({
     },
 
     remove: function (id) {
-      const targetCommentIdx = this.comments.findIndex(comment => comment.id === id);
+      const targetCommentIdx = this.comments.findIndex((comment) => comment.id === id);
       if (targetCommentIdx < 0) {
         Toast.fire({
           type: "error",
@@ -32,7 +32,7 @@ let comments = new Vue({
       const targetComment = this.comments[targetCommentIdx];
       this.comments.splice(targetCommentIdx, 1);
 
-      const isEpisode = typeof targetComment.episode !== 'undefined';
+      const isEpisode = typeof targetComment.episode !== "undefined";
       const deleteUrl = isEpisode
         ? `/episodes/${targetComment.episode.id}/comments/${id}`
         : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}`;
@@ -57,7 +57,7 @@ let comments = new Vue({
     },
 
     pin: function (id) {
-      const targetComment = this.comments.find(comment => comment.id === id);
+      const targetComment = this.comments.find((comment) => comment.id === id);
       if (!targetComment) {
         Toast.fire({
           type: "error",
@@ -66,7 +66,7 @@ let comments = new Vue({
         return;
       }
 
-      const isEpisode = typeof targetComment.episode !== 'undefined';
+      const isEpisode = typeof targetComment.episode !== "undefined";
       const pinUrl = isEpisode
         ? `/episodes/${targetComment.episode.id}/comments/${id}/pin`
         : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/pin`;
@@ -101,8 +101,8 @@ let comments = new Vue({
 
 function loadComments(page) {
   easyFetch(`/comments/${commentType}/load?page=${page}`)
-    .then(reply => reply.json())
-    .then(reply => {
+    .then((reply) => reply.json())
+    .then((reply) => {
       comments.comments = reply;
     })
     .catch(() => {

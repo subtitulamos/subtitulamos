@@ -330,8 +330,8 @@ class Translation
             if ($sequence->getNumber() < 100) {
                 // Get the show name
                 $showName = $sequence->getSubtitle()->getVersion()->getEpisode()->getShow()->getName();
-                if (preg_match("/^Previously,?\s*on\s*['\"]?\s*" . preg_quote($showName) . "(?:\s*\.+)?\s*['\"]?(?:\s*\.+)?\s*:?$/i", $singleLineText, $matches) === 1) {
-                    $translatedStr = 'Anteriormente en ' . $showName . '...';
+                if (preg_match("/^Previously,?\s*on\s*['\"]?\s*".preg_quote($showName)."(?:\s*\.+)?\s*['\"]?(?:\s*\.+)?\s*:?$/i", $singleLineText, $matches) === 1) {
+                    $translatedStr = 'Anteriormente en '.$showName.'...';
 
                     // Make sure our translated sequence is not too long
                     // This is a veeery simplified version of the algorithm
@@ -351,7 +351,7 @@ class Translation
                             }
                         }
 
-                        $translatedStr = implode(' ', array_slice($fragments, 0, $bestSplitPos)) . "\n" . implode(' ', array_slice($fragments, $bestSplitPos));
+                        $translatedStr = implode(' ', array_slice($fragments, 0, $bestSplitPos))."\n".implode(' ', array_slice($fragments, $bestSplitPos));
                     }
 
                     return [100, $translatedStr];
@@ -390,10 +390,10 @@ class Translation
                 if ($matches[2] || $matches[3]) {
                     // We can only do this properly with a set of characters
                     if ($matches[3] == '!') {
-                        $translatedStr = '¡' . $translatedStr . '!';
+                        $translatedStr = '¡'.$translatedStr.'!';
                         $confidence = $confidence ?? 100;
                     } elseif ($matches[3] == '?') {
-                        $translatedStr = '¿' . $translatedStr . '?';
+                        $translatedStr = '¿'.$translatedStr.'?';
                         $confidence = $confidence ?? 100;
                     } elseif ($matches[2] == '...' || $matches[2] == ',' || $matches[2] == '.') {
                         $translatedStr .= $matches[2];
@@ -439,7 +439,7 @@ class Translation
             $text = strip_tags($text, '<font>');
 
             $dom = new \DOMDocument();
-            $dom->loadHTML(mb_convert_encoding('<div>' . $text . '</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
+            $dom->loadHTML(mb_convert_encoding('<div>'.$text.'</div>', 'HTML-ENTITIES', 'UTF-8'), \LIBXML_HTML_NOIMPLIED | \LIBXML_HTML_NODEFDTD);
 
             $xpath = new \DOMXPath($dom);
             $nodes = $xpath->query('//font');

@@ -59,7 +59,7 @@ Vue.component("seqlock", {
 
       easyFetch("/subtitles/" + subID + "/translate/open-lock/" + this.id, {
         method: "DELETE",
-      }).catch(_ => {
+      }).catch((_) => {
         sub.openSeq(this.seqnum, seqInfoCopy.by, seqInfoCopy.lockID);
       });
     },
@@ -119,8 +119,8 @@ Vue.component("sequence", {
             <td class="actions">
                 <template v-if="!saving">
                     <template v-if="!history && editing">
-                        <i class="fa fa-floppy-o" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
-                        <i class="fa fa-times-circle-o" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+                        <i class="fas fa-save" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
+                        <i class="fas fa-times-circle" @click="discard" tabindex="0" @keyup.enter="discard"></i>
                     </template>
 
                     <template v-if="translated && !history && !editing">
@@ -300,7 +300,9 @@ Vue.component("sequence", {
         this.lineCounters[0] > 0 &&
         this.lineCounters[0] <= 40 &&
         (!this.lineCounters[1] || this.lineCounters[1] <= 40) &&
-        (this.parsedStartTime && this.parsedEndTime && this.parsedStartTime < this.parsedEndTime)
+        this.parsedStartTime &&
+        this.parsedEndTime &&
+        this.parsedStartTime < this.parsedEndTime
       );
     },
 
@@ -318,7 +320,7 @@ Vue.component("sequence", {
 
     shouldFixLevel: function () {
       let tlines = [];
-      this.editingText.split("\n").forEach(val => {
+      this.editingText.split("\n").forEach((val) => {
         tlines.push(val.trim());
       });
 
@@ -365,8 +367,8 @@ Vue.component("sequence", {
           seqNum: this.number,
         },
       })
-        .then(res => res.json())
-        .then(reply => {
+        .then((res) => res.json())
+        .then((reply) => {
           if (!reply.ok) {
             sub.closeSeq(this.number);
             Toasts.error.fire(reply.msg);
@@ -453,8 +455,8 @@ Vue.component("sequence", {
         method: "POST",
         rawBody: postData,
       })
-        .then(res => res.text())
-        .then(newID => {
+        .then((res) => res.text())
+        .then((newID) => {
           // Update sequence
           // (though in normal behaviour we will have received this update via websocket faster)
           sub.changeSeq(this.number, Number(newID), me.id, ntext, nStartTime, nEndTime);
@@ -469,7 +471,7 @@ Vue.component("sequence", {
             modifiedSeqList.splice(modIdx, 1);
           }
         })
-        .catch(_ => {
+        .catch((_) => {
           Toasts.error.fire("Ha ocurrido un error interno al intentar guardar la secuencia");
           this.saving = false;
         });
@@ -504,7 +506,7 @@ Vue.component("sequence", {
             modifiedSeqList.splice(modIdx, 1);
           }
         })
-        .catch(_ => {
+        .catch((_) => {
           sub.openSeq(this.number, me.id, oLockID);
           Toasts.error.fire("Ha ocurrido un error al intentar cerrar la secuencia");
         });
@@ -542,7 +544,7 @@ Vue.component("sequence", {
         this.editingText = ntext;
       } else {
         let tlines = [];
-        this.editingText.split("\n").forEach(val => {
+        this.editingText.split("\n").forEach((val) => {
           tlines.push(val.trim());
         });
 
@@ -622,10 +624,8 @@ function isElementInViewport(el) {
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
-    rect.bottom <=
-    (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <=
-    (window.innerWidth || document.documentElement.clientWidth)
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
 
@@ -637,7 +637,7 @@ window.translation = new Vue({
       onlyUntranslated: false,
       author: 0,
       text: "",
-      preciseTextMatching: false
+      preciseTextMatching: false,
     };
 
     let data = {
@@ -677,14 +677,14 @@ window.translation = new Vue({
     },
 
     visibleSequences: function () {
-      return this.sequences.filter(seq => {
+      return this.sequences.filter((seq) => {
         if (this.filters.onlyUntranslated && seq.id) {
           return false;
         }
 
         const author_filter = Number(this.filters.author);
         if (author_filter != 0) {
-          let authorFilterFn = seq => {
+          let authorFilterFn = (seq) => {
             return seq.author && author_filter == seq.author;
           };
 
@@ -694,7 +694,7 @@ window.translation = new Vue({
         }
 
         if (this.filters.text != "") {
-          let textFilterFn = seq => {
+          let textFilterFn = (seq) => {
             let textToMatch = this.filters.text;
 
             if (this.filters.preciseTextMatching) {
@@ -738,7 +738,7 @@ window.translation = new Vue({
 
     openLocks: function () {
       let locks = [];
-      this.sequences.forEach(seq => {
+      this.sequences.forEach((seq) => {
         if (seq.openInfo && seq.openInfo.lockID) {
           locks.push({
             id: seq.openInfo.lockID,
@@ -754,13 +754,13 @@ window.translation = new Vue({
 
     authors: function () {
       let authors = {};
-      this.sequences.forEach(seq => {
+      this.sequences.forEach((seq) => {
         if (seq.author && !authors[seq.author]) {
           authors[seq.author] = sub.getUsername(seq.author);
         }
 
         if (seq.history) {
-          seq.history.forEach(hseq => {
+          seq.history.forEach((hseq) => {
             if (!authors[hseq.author]) {
               authors[hseq.author] = sub.getUsername(hseq.author);
             }
@@ -807,8 +807,8 @@ window.translation = new Vue({
       if (this.newComment.length > this.maxCommentLength) {
         Toasts.error.fire(
           "Por favor, escribe un comentario más corto (de hasta " +
-          this.maxCommentLength +
-          " caracteres)"
+            this.maxCommentLength +
+            " caracteres)"
         );
         return false;
       }
@@ -821,21 +821,22 @@ window.translation = new Vue({
           text: commentSent,
         },
       })
-        .then(res => res.text())
-        .then(id => {
+        .then((res) => res.text())
+        .then((id) => {
           this.newComment = "";
           this.submittingComment = false;
           sub.addComment(id, sub.getUserObject(me.id), new Date().toISOString(), commentSent);
         })
-        .catch(err => {
+        .catch((err) => {
           this.submittingComment = false;
 
-          err.response.text()
+          err.response
+            .text()
             .then((response) => {
               if (response) {
                 Toasts.error.fire(response);
               } else {
-                throw new Exception;
+                throw new Exception();
               }
             })
             .catch(() => {
@@ -961,21 +962,25 @@ window.translation = new Vue({
         title: "Avisar a un moderador",
         text: "Añade un comentario explicando la situación",
         showLoaderOnConfirm: true,
-        preConfirm: msg => {
+        preConfirm: (msg) => {
           return easyFetch("/subtitles/" + subID + "/alert", {
             method: "POST",
             rawBody: {
               message: msg,
             },
-          }).then(res => res.json())
-            .then(reply => {
+          })
+            .then((res) => res.json())
+            .then((reply) => {
               if (!reply.ok) {
                 Swal.showValidationMessage(reply.msg);
               } else {
                 Toasts.success.fire("Aviso enviado correctamente");
               }
-            }).catch(_ => {
-              Swal.showValidationMessage("Ha ocurrido un error interno al intentar enviar la alerta :(");
+            })
+            .catch((_) => {
+              Swal.showValidationMessage(
+                "Ha ocurrido un error interno al intentar enviar la alerta :("
+              );
             });
         },
       });
@@ -988,12 +993,12 @@ window.translation = new Vue({
         showCancelButton: true,
         input: "text",
         text: "Escribe el número de secuencia al que navegar",
-        inputValidator: val => {
+        inputValidator: (val) => {
           if (Number(val) <= 0) {
             return "Por favor, introduce un número positivo";
           }
         },
-      }).then(result => {
+      }).then((result) => {
         if (result.value) {
           this.jumpToSequence(Number(result.value));
         }
@@ -1014,17 +1019,26 @@ window.translation = new Vue({
       this.highlightedSequence = seqn;
       window.location.hash = "#" + seqn;
 
-      const isFirstSequence = Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
+      const isFirstSequence =
+        Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
       const findInViewport = isFirstSequence ? seqn : seqn - 1;
       let $seqEle = document.querySelector(`#sequences #seqn-${seqn}`);
       let $seqEle2 = document.querySelector(`#sequences #seqn-${findInViewport}`);
-      if (!$seqEle || !isElementInViewport($seqEle) || !$seqEle2 || !isElementInViewport($seqEle2) || filtersReset) {
+      if (
+        !$seqEle ||
+        !isElementInViewport($seqEle) ||
+        !$seqEle2 ||
+        !isElementInViewport($seqEle2) ||
+        filtersReset
+      ) {
         // Delay this a little bit so Vue can run the rerender
         setTimeout(() => {
           if (isFirstSequence) {
             document.getElementById("sequences").scrollIntoView({ behavior: "instant" });
           } else {
-            document.querySelector(`#sequences #seqn-${seqn}`).scrollIntoView({ behavior: "instant" });
+            document
+              .querySelector(`#sequences #seqn-${seqn}`)
+              .scrollIntoView({ behavior: "instant" });
           }
 
           const scrolledY = window.scrollY;
@@ -1046,15 +1060,11 @@ let sub = new Subtitle(subID, translation, availSecondaryLangs[0]);
 
 // Set up websocket (which will itself load the sub)
 const wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
-const route = window.location.port ? window.location.hostname + ":" + window.location.port : window.location.hostname;
+const route = window.location.port
+  ? window.location.hostname + ":" + window.location.port
+  : window.location.hostname;
 const ws = new ReconnectingWebsocket(
-  wsProtocol +
-  "://" +
-  route +
-  "/translate-rt?subID=" +
-  subID +
-  "&token=" +
-  wsAuthToken
+  wsProtocol + "://" + route + "/translate-rt?subID=" + subID + "&token=" + wsAuthToken
 );
 
 let pingInterval = null;
@@ -1070,7 +1080,7 @@ ws.addEventListener("open", () => {
   }, 47500);
 });
 
-ws.addEventListener("message", e => {
+ws.addEventListener("message", (e) => {
   if (e.data === "pong") {
     return;
   }
@@ -1078,10 +1088,10 @@ ws.addEventListener("message", e => {
   sub.wsMessage(e);
 });
 
-ws.addEventListener("error", e => {
+ws.addEventListener("error", (e) => {
   sub.wsError(e);
 });
-ws.addEventListener("close", e => {
+ws.addEventListener("close", (e) => {
   sub.wsError(e);
 
   if (pingInterval) {

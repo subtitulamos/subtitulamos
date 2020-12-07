@@ -37,7 +37,7 @@ Vue.component("hammertarget", {
           "Estás a punto de eliminar TODAS las contribuciones de <b>" +
           this.username +
           "</b> en el subtítulo.<br/><br/>¿Estás seguro de querer continuar?",
-      }).then(result => {
+      }).then((result) => {
         if (result.value) {
           easyFetch("/subtitles/" + subID + "/hammer", {
             method: "POST",
@@ -52,7 +52,9 @@ Vue.component("hammertarget", {
               this.latest = 0;
 
               Toasts.success.fire(
-                "Poof! Las contribuciones de&nbsp;<b>" + this.username + "</b>&nbsp;han sido eliminadas"
+                "Poof! Las contribuciones de&nbsp;<b>" +
+                  this.username +
+                  "</b>&nbsp;han sido eliminadas"
               );
             })
             .catch(() => {
@@ -74,7 +76,7 @@ Vue.component("hammertarget", {
           "Estás a punto de eliminar las contribuciones sin corregir de <b>" +
           this.username +
           "</b> en el subtítulo.<br/><br/>¿Estás seguro de querer continuar?",
-      }).then(result => {
+      }).then((result) => {
         if (result.value) {
           easyFetch("/subtitles/" + subID + "/hammer", {
             method: "POST",
@@ -86,7 +88,9 @@ Vue.component("hammertarget", {
             .then(() => {
               this.latest = 0;
               Toasts.success.fire(
-                "Las contribuciones sin corregir de&nbsp;<b>" + this.username + "</b>&nbsp;han sido eliminadas"
+                "Las contribuciones sin corregir de&nbsp;<b>" +
+                  this.username +
+                  "</b>&nbsp;han sido eliminadas"
               );
             })
             .catch(() => {
