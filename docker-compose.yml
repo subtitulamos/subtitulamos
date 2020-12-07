@@ -32,6 +32,7 @@ services:
       - sonic
     volumes:
       - ./.env:/code/.env
+      - ./data/phpsess:/tmp/phpsess
       - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock
     logging:
       options:
