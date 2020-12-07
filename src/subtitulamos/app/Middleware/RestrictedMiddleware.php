@@ -7,6 +7,11 @@
 
 namespace App\Middleware;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
 class RestrictedMiddleware
 {
     /**
@@ -35,16 +40,14 @@ class RestrictedMiddleware
     }
 
     /**
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function __invoke($request, $response, $next)
+    * @param  ServerRequestInterface        $request PSR-7 request
+    * @param  RequestHandler $handler PSR-15 request handler
+    *
+    * @return Response
+    */
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $auth = $this->container->get('App\Services\Auth');
-        $u = $auth->getUser();
 
         $allowed = false;
         foreach ($this->allowedRoles as $role) {
@@ -52,11 +55,13 @@ class RestrictedMiddleware
         }
 
         if ($allowed) { // If allowed, continue with the chain
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
+        $factory = new Psr17Factory();
+        $u = $auth->getUser();
         $twig = $this->container->get("Slim\Views\Twig");
-        return $twig->render($response->withStatus(401), 'restricted.twig', [
+        return $twig->render($factory->createResponse(401), 'restricted.twig', [
             'is_logged_in' => $u
         ]);
     }

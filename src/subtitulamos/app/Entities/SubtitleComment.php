@@ -61,7 +61,7 @@ class SubtitleComment implements \JsonSerializable
 
     /**
      * Function called when wanting to serialize this objet into JSON
-     * Called implicitly by Slim on $request->withJSON
+     * Called implicitly when serializing
      *
      * @return array
      */

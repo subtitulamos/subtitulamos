@@ -13,8 +13,10 @@ use App\Entities\Subtitle;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
+use App\Services\UrlHelper;
 use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
+use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
 use Slim\Views\Twig;
@@ -27,10 +29,11 @@ class TranslationController
      */
     const SEQUENCES_PER_PAGE = 20;
 
-    public function newTranslation($request, $response, EntityManager $em, \Slim\Router $router)
+    public function newTranslation($request, $response, EntityManager $em, UrlHelper $urlHelper)
     {
-        $episodeID = $request->getParsedBodyParam('episode', 0);
-        $langCode = $request->getParsedBodyParam('lang', 0);
+        $body = $request->getParsedBody();
+        $episodeID = $body['episode'] ?? 0;
+        $langCode = $body['lang'] ?? 0;
         if (!Langs::existsCode($langCode)) {
             $response->getBody()->write('El idioma no es correcto');
             return $response->withStatus(400);
@@ -60,7 +63,7 @@ class TranslationController
 
             if ($sub->getLang() == $lang) {
                 // Lang already started! -- TODO: Cheap redirect, should not ever get to this page in the first place // could do this via ajax // add a link to body instead
-                $response->getBody()->write('<meta http-equiv="refresh" content="3;url='.$router->pathFor('translation', ['id' => $sub->getId()]).'" />');
+                $response->getBody()->write('<meta http-equiv="refresh" content="3;url='.$urlHelper->pathFor('translation', ['id' => $sub->getId()]).'" />');
                 $response->getBody()->write('Esta versión ya tiene este idioma abierto. Redirigiendo...');
                 $response->withHeader('Refresh', 5);
                 return $response->withStatus(412);
@@ -135,7 +138,7 @@ class TranslationController
 
         return $response
             ->withStatus(200)
-            ->withHeader('Location', $router->pathFor('translation', ['id' => $sub->getId()]));
+            ->withHeader('Location', $urlHelper->pathFor('translation', ['id' => $sub->getId()]));
     }
 
     public function view($id, $request, $response, EntityManager $em, Twig $twig, Auth $auth, Translation $translation)
@@ -145,7 +148,7 @@ class TranslationController
             ->getOneOrNullResult();
 
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         // Determine which secondary languages we can use
@@ -176,7 +179,7 @@ class TranslationController
     {
         $oLock = $em->getRepository('App:OpenLock')->find($lockId);
         if (!$oLock) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($oLock->getSubtitle()->getId() != $id) {
@@ -190,16 +193,17 @@ class TranslationController
         return $response->withStatus(200);
     }
 
-    public function loadData($id, $request, $response, EntityManager $em)
+    public function loadData($id, ServerRequestInterface $request, $response, EntityManager $em)
     {
-        $secondaryLang = $request->getQueryParam('secondaryLang', 0);
+        $params = $request->getQueryParams();
+        $secondaryLang = $params['secondaryLang'] ?? 0;
 
         $usersInvolved = [];
         $sequences = [];
 
         $sub = $em->getRepository('App:Subtitle')->find($id);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $openList = $em->createQuery('SELECT ol FROM App:OpenLock ol WHERE ol.subtitle = :id ORDER BY ol.sequenceNumber ASC')
@@ -311,19 +315,20 @@ class TranslationController
             }
         }
 
-        return $response->withJSON(['sequences' => $sequences, 'users' => $usersInvolved]);
+        return Utils::jsonResponse($response, ['sequences' => $sequences, 'users' => $usersInvolved]);
     }
 
     public function open($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
-        $seqNum = (int)$request->getParsedBodyParam('seqNum', 0);
+        $body = $request->getParsedBody();
+        $seqNum = (int)($body['seqNum'] ?? 0);
         if (!$seqNum) {
             return $response->withStatus(400);
         }
 
         $sub = $em->getRepository('App:Subtitle')->find($id);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $sequence = $translation->getLatestSequenceRev($id, $seqNum);
@@ -353,12 +358,13 @@ class TranslationController
             $res['msg'] = sprintf('El usuario %s está editando esta secuencia (#%d)', $oLock->getUser()->getUsername(), $seqNum);
         }
 
-        return $response->withJSON($res);
+        return Utils::jsonResponse($response, $res);
     }
 
     public function close($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
-        $seqNum = (int)$request->getParsedBodyParam('seqNum', 0);
+        $body = $request->getParsedBody();
+        $seqNum = (int)($body['seqNum'] ?? 0);
         if (!$seqNum) {
             return $response->withStatus(400);
         }
@@ -380,12 +386,13 @@ class TranslationController
 
     public function save($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
+        $body = $request->getParsedBody();
         $canChangeTimes = $auth->hasRole('ROLE_MOD');
 
-        $seqID = $request->getParsedBodyParam('seqID', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ''));
-        $nStartTime = $request->getParsedBodyParam('tstart', 0);
-        $nEndTime = $request->getParsedBodyParam('tend', 0);
+        $seqID = $body['seqID'] ?? 0;
+        $text = Translation::cleanText($body['text'] ?? '');
+        $nStartTime = $body['tstart'] ?? 0;
+        $nEndTime = $body['tend'] ?? 0;
 
         if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
             return $response->withStatus(400);
@@ -397,7 +404,7 @@ class TranslationController
 
         $seq = $em->getRepository('App:Sequence')->find($seqID);
         if (!$seq) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($seq->getSubtitle()->getId() != $id) {
@@ -453,7 +460,7 @@ class TranslationController
         $em->flush();
 
         $translation->broadcastSeqChange($nseq);
-        $response->getBody()->write($nseq->getId());
+        $response->getBody()->write((string)$nseq->getId());
         return $response->withStatus(200);
     }
 
@@ -462,12 +469,13 @@ class TranslationController
      */
     public function create($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
+        $body = $request->getParsedBody();
         $canChangeTimes = $auth->hasRole('ROLE_MOD');
 
-        $seqNum = $request->getParsedBodyParam('number', 0);
-        $text = Translation::cleanText($request->getParsedBodyParam('text', ''));
-        $nStartTime = $request->getParsedBodyParam('tstart', 0);
-        $nEndTime = $request->getParsedBodyParam('tend', 0);
+        $seqNum = $body['number'] ?? 0;
+        $text = Translation::cleanText($body['text'] ?? '');
+        $nStartTime = $body['tstart'] ?? 0;
+        $nEndTime = $body['tend'] ?? 0;
 
         if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
             return $response->withStatus(400);
@@ -490,7 +498,7 @@ class TranslationController
         // Find the original sequence, and create one lookalike
         $curSub = $em->getRepository('App:Subtitle')->find($id);
         if (!$curSub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $baseSubId = $translation->getBaseSubId($curSub);
@@ -537,7 +545,7 @@ class TranslationController
         $translation->recalculateSubtitleProgress($baseSubId, $curSub);
 
         $translation->broadcastSeqChange($seq);
-        $response->getBody()->write($seq->getId());
+        $response->getBody()->write((string)$seq->getId());
         return $response->withStatus(200);
     }
 
@@ -546,10 +554,11 @@ class TranslationController
      */
     public function lockToggle($id, $request, $response, EntityManager $em, Translation $translation)
     {
-        $seqID = $request->getParsedBodyParam('seqID', 0);
+        $body = $request->getParsedBody();
+        $seqID = $body['seqID'] ?? 0;
         $seq = $em->getRepository('App:Sequence')->find($seqID);
         if (!$seq) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $seq->setLocked(!$seq->getLocked());

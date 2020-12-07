@@ -12,6 +12,7 @@ use App\Entities\SubtitleComment;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
+use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig;
@@ -20,8 +21,9 @@ class SubtitleCommentsController
 {
     public function create($subId, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
     {
+        $body = $request->getParsedBody();
         // Validate input first
-        $text = $request->getParsedBodyParam('text', '');
+        $text = $body['text'] ?? '';
         if (!v::stringType()->length(1, 600)->validate($text)) {
             $response->getBody()->write('El comentario debe tener entre 1 y 600 caracteres');
             return $response->withStatus(400);
@@ -31,7 +33,7 @@ class SubtitleCommentsController
         $sub = $em->getRepository('App:Subtitle')->find($subId);
 
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $comment = new SubtitleComment();
@@ -57,7 +59,7 @@ class SubtitleCommentsController
             ->setParameter('id', $subId)
             ->getResult();
 
-        return $response->withJson($comments);
+        return Utils::jsonResponse($response, $comments);
     }
 
     public function listAll($request, $response, EntityManager $em)
@@ -82,7 +84,7 @@ class SubtitleCommentsController
             $comments[] = $comment;
         }
 
-        return $response->withJson($comments);
+        return Utils::jsonResponse($response, $comments);
     }
 
     public function viewAll($response, EntityManager $em, Twig $twig)
@@ -97,7 +99,7 @@ class SubtitleCommentsController
     {
         $comment = $em->getRepository('App:SubtitleComment')->find($cId);
         if (!$comment) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($comment->getSubtitle()->getId() != $subId) {
@@ -115,7 +117,7 @@ class SubtitleCommentsController
     {
         $comment = $em->getRepository('App:SubtitleComment')->find($cId);
         if (!$comment) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($comment->getSubtitle()->getId() != $subId) {

@@ -8,12 +8,13 @@
 namespace App\Controllers;
 
 use App\Services\Langs;
+use App\Services\UrlHelper;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 
 class RSSController
 {
-    public function viewFeed($request, $response, \Slim\Router $router, EntityManager $em, SlugifyInterface $slugify)
+    public function viewFeed($request, $response, UrlHelper $urlHelper, EntityManager $em, SlugifyInterface $slugify)
     {
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
             ->setMaxResults(10)
@@ -31,7 +32,7 @@ class RSSController
 
             $item = $channel->addChild('item');
             $item->addChild('title', $fullName);
-            $item->addChild('link', SITE_URL.$router->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId(), 'slug' => $slugify->slugify($fullName)]));
+            $item->addChild('link', SITE_URL.$urlHelper->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId(), 'slug' => $slugify->slugify($fullName)]));
             $item->addChild('description', Langs::getLocalizedName(Langs::getLangCode($sub->getLang())));
             $item->addChild('pubDate', $sub->getCompleteTime()->format(\DateTime::ATOM));
             $item->addChild('guid', 'sub-done-'.$sub->getId());

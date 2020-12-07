@@ -26,74 +26,73 @@ function feature_on($name)
     return $v == 'true' || $v == '1' || $v == 'yes';
 }
 
-// $app is an instance of \Slim\App, wrapped by PHP-DI to insert its own container
-$app = new class() extends \DI\Bridge\Slim\App {
-    protected function configureContainer(\DI\ContainerBuilder $builder)
-    {
-        global $entityManager;
+$builder = new \DI\ContainerBuilder();
+if (!DEBUG) {
+    $builder->enableCompilation(__DIR__.'/tmp');
+    $builder->writeProxiesToFile(true, __DIR__.'/tmp/proxies');
+}
 
-        // Slim configuration
-        $builder->addDefinitions([
-            'settings.displayErrorDetails' => DEBUG
+$builder->addDefinitions([
+    \Doctrine\ORM\EntityManager::class => function (ContainerInterface $c) use ($entityManager) {
+        return $entityManager;
+    },
+    \App\Services\Auth::class => function (ContainerInterface $c) use ($entityManager) {
+        return new Auth($entityManager);
+    },
+    \App\Services\AssetManager::class => function (ContainerInterface $c) {
+        return new AssetManager();
+    },
+    \App\Services\Translation::class => function (ContainerInterface $c) use ($entityManager) {
+        return new Translation($entityManager);
+    },
+    \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
+        return new Slugify();
+    },
+    \Slim\Views\Twig::class => function (ContainerInterface $c) {
+        $twig = \Slim\Views\Twig::create(__DIR__.'/../resources/templates', [
+            'cache' => SUBS_TMP_DIR.'/twig',
+            'strict_variables' => $_ENV['TWIG_STRICT'] ?? true,
+            'debug' => DEBUG
         ]);
 
-        $builder->addDefinitions([
-            \Doctrine\ORM\EntityManager::class => function (ContainerInterface $c) use ($entityManager) {
-                return $entityManager;
-            },
-            \App\Services\Auth::class => function (ContainerInterface $c) use ($entityManager) {
-                return new Auth($entityManager);
-            },
-            \App\Services\AssetManager::class => function (ContainerInterface $c) {
-                return new AssetManager();
-            },
-            \App\Services\Translation::class => function (ContainerInterface $c) use ($entityManager) {
-                return new Translation($entityManager);
-            },
-            \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
-                return new Slugify();
-            },
-            \Slim\Views\Twig::class => function (ContainerInterface $c) {
-                $twig = new \Slim\Views\Twig(__DIR__.'/../resources/templates', [
-                    'cache' => SUBS_TMP_DIR.'/twig',
-                    'strict_variables' => $_ENV['TWIG_STRICT'] ?? true,
-                    'debug' => DEBUG
-                ]);
+        if (DEBUG === true) {
+            $twig->addExtension(new \Twig\Extension\DebugExtension());
+        }
 
-                $basePath = rtrim(str_ireplace('index.php', '', $c->get('request')->getUri()->getBasePath()), '/');
-                $twig->addExtension(new \Slim\Views\TwigExtension(
-                    $c->get('router'),
-                    $basePath
-                ));
+        $twigEnv = $twig->getEnvironment();
+        $twigEnv->addGlobal('SITE_URL', SITE_URL);
+        $twigEnv->addGlobal('ENVIRONMENT_NAME', ENVIRONMENT_NAME);
+        $twigEnv->addGlobal('LANG_LIST', Langs::LANG_LIST);
+        $twigEnv->addGlobal('LANG_NAMES', Langs::LANG_NAMES);
 
-                if (DEBUG === true) {
-                    $twig->addExtension(new Twig\Extension\DebugExtension());
-                }
+        $auth = $c->get('App\Services\Auth');
+        $twigEnv->addGlobal('auth', $auth->getTwigInterface());
+        $twigEnv->addFunction(new \Twig\TwigFunction('feature_on', 'feature_on'));
 
-                $twigEnv = $twig->getEnvironment();
-                $twigEnv->addGlobal('SITE_URL', SITE_URL);
-                $twigEnv->addGlobal('ENVIRONMENT_NAME', ENVIRONMENT_NAME);
-                $twigEnv->addGlobal('LANG_LIST', Langs::LANG_LIST);
-                $twigEnv->addGlobal('LANG_NAMES', Langs::LANG_NAMES);
+        $assetMgr = $c->get('App\Services\AssetManager');
+        $twigEnv->addFunction(new \Twig\TwigFunction('webpack_versioned_name', function ($name) use (&$assetMgr) {
+            return $assetMgr->getWebpackVersionedName($name);
+        }));
 
-                $auth = $c->get('App\Services\Auth');
-                $twigEnv->addGlobal('auth', $auth->getTwigInterface());
-                $twigEnv->addFunction(new Twig\TwigFunction('feature_on', 'feature_on'));
-
-                $assetMgr = $c->get('App\Services\AssetManager');
-                $twigEnv->addFunction(new Twig\TwigFunction('webpack_versioned_name', function ($name) use (&$assetMgr) {
-                    return $assetMgr->getWebpackVersionedName($name);
-                }));
-
-                return $twig;
-            },
-
-        ]);
+        return $twig;
+    },
+    \App\Services\UrlHelper::class => function (ContainerInterface $c) {
+        global $app;
+        return new \App\Services\UrlHelper($app->getRouteCollector()->getRouteParser(), $app->getResponseFactory());
     }
-};
+]);
+
+$container = $builder->build();
+
+// $app is an instance of \Slim\App, wrapped by PHP-DI
+$app = \DI\Bridge\Slim\Bridge::create($container);
+
+require '../app/middlewares.php';
+addMiddlewares($app);
 
 require '../app/routes.php';
-addRoutes($app, $entityManager);
+addRoutes($app);
 
-// Run app
+// Error middleware must always be the LAST middleware to be added
+$app->addErrorMiddleware(DEBUG, true, true);
 $app->run();

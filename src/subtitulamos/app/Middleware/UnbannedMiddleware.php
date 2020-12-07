@@ -7,6 +7,11 @@
 
 namespace App\Middleware;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
 class UnbannedMiddleware
 {
     /**
@@ -21,17 +26,20 @@ class UnbannedMiddleware
     }
 
     /**
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function __invoke($request, $response, $next)
+    * @param  ServerRequestInterface        $request PSR-7 request
+    * @param  RequestHandler $handler PSR-15 request handler
+    *
+    * @return Response
+    */
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $auth = $this->container->get('App\Services\Auth');
         $u = $auth->getUser();
+        if ($u && !$u->getBan()) {
+            return $handler->handle($request);
+        }
 
-        return $u && !$u->getBan() ? $next($request, $response) : $response->withStatus(302)->withHeader('Location', '/banned');
+        $factory = new Psr17Factory();
+        return $factory->createResponse(302)->withHeader('Location', '/banned');
     }
 }

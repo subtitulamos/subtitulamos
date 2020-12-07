@@ -21,7 +21,7 @@ class DownloadController
     {
         $sub = $em->getRepository('App:Subtitle')->find($id);
         if (!$sub) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         if ($sub->getProgress() < 100 && !$auth->hasRole('ROLE_TT')) {
