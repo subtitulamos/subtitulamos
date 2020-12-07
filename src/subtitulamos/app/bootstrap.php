@@ -21,19 +21,22 @@ function getEnvOrDefault($varname, $default)
 }
 
 // Load env variables from file
-if (!$_ENV['SKIP_ENV_FILE']) {
-    $dotenv = Dotenv\Dotenv::createMutable(__DIR__.'/..');
-    $dotenv->load();
-}
-
+$dotenv = Dotenv\Dotenv::createMutable(__DIR__.'/..');
+$dotenv->load();
+$dotenv->required(['MARIADB_DATABASE', 'MARIADB_USER', 'MARIADB_PASSWORD', 'MARIADB_HOST']);
 
 define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT_NAME', 'dev'));
-define('DEBUG', getEnvOrDefault('DEBUG', 'true'));
+define('DEBUG', in_array(getEnvOrDefault('DEBUG', 'false'), ['true', 'y', 'yes', 'on']));
 define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
 define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));
 define('SONIC_PASSWORD', getEnvOrDefault('SONIC_PASSWORD', 'SecretPassword'));
 define('REDIS_HOST', getEnvOrDefault('REDIS_HOST', 'redis'));
 define('REDIS_PORT', getEnvOrDefault('REDIS_PORT', 6379));
+
+if (DEBUG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', true);
+}
 
 // Initialize Doctrine's ORM stuff
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', null, false);
