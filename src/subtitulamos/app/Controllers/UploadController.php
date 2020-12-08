@@ -21,6 +21,7 @@ use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
 
 use Slim\Views\Twig;
@@ -36,7 +37,7 @@ class UploadController
         ]);
     }
 
-    public function do(RequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
+    public function do(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $param = $request->getParsedBody();
 
@@ -112,7 +113,7 @@ class UploadController
             }
         } else {
             // Create a new show!
-            $newShowName = trim($request->getParam('new-show'));
+            $newShowName = trim($param['new-show'] ?? '');
             if (v::notEmpty()->length(1, 100)->validate($newShowName)) {
                 if ($em->getRepository('App:Show')->findByName($newShowName)) {
                     $errors[] = ['new-show', 'Esta serie ya existe.'];

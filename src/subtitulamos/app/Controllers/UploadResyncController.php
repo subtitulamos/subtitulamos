@@ -13,9 +13,9 @@ use App\Entities\Version;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Srt\SrtParser;
+use App\Services\UrlHelper;
 use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
@@ -24,7 +24,7 @@ use Slim\Views\Twig;
 
 class UploadResyncController
 {
-    public function view($epId, ResponseInterface $response, Twig $twig, EntityManager $em)
+    public function view($epId, ServerRequestInterface $request, ResponseInterface $response, Twig $twig, EntityManager $em)
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
@@ -38,7 +38,7 @@ class UploadResyncController
         ]);
     }
 
-    public function do($epId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, \Slim\Router $router, Auth $auth)
+    public function do($epId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
@@ -129,7 +129,7 @@ class UploadResyncController
 
         $em->flush();
 
-        $response->getBody()->write($router->pathFor('episode', ['id' => $ep->getId()]));
+        $response->getBody()->write($urlHelper->pathFor('episode', ['id' => $ep->getId()]));
         return $response->withStatus(200);
     }
 }
