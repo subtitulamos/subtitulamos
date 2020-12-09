@@ -83,6 +83,31 @@ let comments = new Vue({
         });
     },
 
+    save: function (id, text) {
+      const targetComment = this.comments.find((comment) => comment.id === id);
+      if (!targetComment) {
+        Toast.fire({
+          type: "error",
+          title: "Ha ocurrido un extraño error al editar el comentario",
+        });
+        return;
+      }
+
+      const isEpisode = typeof targetComment.episode !== "undefined";
+      const editUrl = isEpisode
+        ? `/episodes/${targetComment.episode.id}/comments/${id}/edit`
+        : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/edit`;
+
+      easyFetch(editUrl, {
+        method: "POST",
+        rawBody: {
+          text,
+        },
+      }).catch(() => {
+        Toasts.error.fire("Ha ocurrido un error al intentar editar el comentario");
+      });
+    },
+
     nextPage: function () {
       this.page++;
       loadComments(this.page);

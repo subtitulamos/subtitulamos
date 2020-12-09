@@ -21,11 +21,18 @@ Vue.component("comment", {
               </li>
               <li class='comment-actions'>
                 <i class="fa fa-times" aria-hidden="true" @click="remove" v-if="canDelete"></i>
-                <i class="fa fa-thumb-tack" aria-hidden="true" @click="$emit('pin', id)" v-if="canPin"></i>
+                <i class="fas fa-pencil-alt" aria-hidden="true" @click="edit" v-if="canEdit"></i>
+                <i class="fas fa-thumbtack" aria-hidden="true" @click="$emit('pin', id)" v-if="canPin"></i>
               </li>
             </ul>
           </header>
-          <section class='comment-body' :class='bodyClasses' v-html="text"></section>
+          <section class='comment-body' :class='bodyClasses'>
+            <p v-if="!editing" v-html="formattedText"></p>
+            <div v-else>
+              <textarea v-if="editing" v-model="text"></textarea>
+              <button @click="save">Save</button>
+            </div>
+          </section>
         </article>
         `,
 
@@ -43,11 +50,24 @@ Vue.component("comment", {
   data: function () {
     return {
       date: "",
-      canDelete: canDeleteComments,
-      canPin: canPinComments,
+      isRecentMessage: false,
+      editing: false,
+      text: this.baseText,
     };
   },
   computed: {
+    isMyMessage() {
+      return this.user.id === userId || (typeof me !== "undefined" && this.user.id === me.id);
+    },
+    canDelete() {
+      return !!(canDeleteComments || (this.isMyMessage && this.isRecentMessage));
+    },
+    canEdit() {
+      return !!(canEditComments || (this.isMyMessage && this.isRecentMessage));
+    },
+    canPin() {
+      return canPinComments;
+    },
     bodyClasses: function () {
       let isTT = this.user.roles.includes("ROLE_TT");
       let isMod = this.user.roles.includes("ROLE_MOD");
@@ -56,9 +76,8 @@ Vue.component("comment", {
         "role-mod": isMod,
       };
     },
-
-    text: function () {
-      let text = this.baseText;
+    formattedText: function () {
+      let text = this.text;
       if (this.createSequenceJumps) {
         text = text.replace(
           /#(\d+)/g,
@@ -76,6 +95,10 @@ Vue.component("comment", {
   methods: {
     updateDate: function () {
       this.date = timeago().format(this.publishedAt, "es");
+
+      // And update this (to force recalculation of computed props)
+      const secsSincePublish = (new Date().getTime() - new Date(this.publishedAt).getTime()) / 1000;
+      this.isRecentMessage = secsSincePublish < MAX_USER_EDIT_SECONDS;
     },
 
     remove: function () {
@@ -86,12 +109,20 @@ Vue.component("comment", {
         showCancelButton: true,
         title: "Borrar comentario",
         html: "Esta acción es irreversible. <br/> ¿Seguro que deseas borrar este comentario?",
-      })
-        .then(result => {
-          if (result.value) {
-            this.$emit("remove", this.id);
-          }
-        });
+      }).then((result) => {
+        if (result.value) {
+          this.$emit("remove", this.id);
+        }
+      });
+    },
+
+    edit: function () {
+      this.editing = true;
+    },
+
+    save: function () {
+      this.editing = false;
+      this.$emit("save", this.id, this.text);
     },
   },
 });

@@ -876,6 +876,17 @@ window.translation = new Vue({
       });
     },
 
+    save: function (id, text) {
+      easyFetch("/episodes/" + epId + "/comments/" + id + "/edit", {
+        method: "POST",
+        rawBody: {
+          text,
+        },
+      }).catch(() => {
+        Toasts.error.fire("Ha ocurrido un error al intentar editar el comentario");
+      });
+    },
+
     openPage: function () {
       this.pageSequences.forEach(function (s) {
         if (!s.openInfo) {

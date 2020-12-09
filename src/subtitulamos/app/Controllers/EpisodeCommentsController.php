@@ -10,6 +10,7 @@ namespace App\Controllers;
 use App\Entities\EpisodeComment;
 use App\Services\Auth;
 use App\Services\Utils;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
@@ -81,7 +82,7 @@ class EpisodeCommentsController
         return Utils::jsonResponse($response, $comments);
     }
 
-    public function viewAll($response, EntityManager $em, Twig $twig)
+    public function viewAll($response, Twig $twig)
     {
         return $twig->render($response, 'comment_list.twig', [
             'comment_type_name' => 'episodios',
@@ -89,7 +90,36 @@ class EpisodeCommentsController
         ]);
     }
 
-    public function delete($epId, $cId, $request, $response, EntityManager $em)
+    public function edit($cId, $request, $response, EntityManager $em, Auth $auth)
+    {
+        $comment = $em->getRepository('App:EpisodeComment')->find($cId);
+        if (!$comment) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $isMod = $auth->hasRole('ROLE_MOD');
+        if (!$isMod) {
+            // Regular users can only edit the comment if it's recent enough (do MAX_USER_EDIT_SECONDS + gracetime)
+            $now = new DateTime();
+            if ($now->getTimestamp() - $comment->getPublishTime()->getTimestamp() > MAX_USER_EDIT_SECONDS * 3/2) {
+                return $response->withStatus(403);
+            }
+        }
+
+        $body = $request->getParsedBody();
+        // Validate input first
+        $text = $body['text'] ?? '';
+        if (!v::stringType()->length(1, 600)->validate($text)) {
+            return $response->withStatus(400);
+        }
+
+        $comment->setText($text);
+        $em->flush();
+
+        return $response->withStatus(200);
+    }
+
+    public function delete($epId, $cId, $request, $response, EntityManager $em, Auth $auth)
     {
         $comment = $em->getRepository('App:EpisodeComment')->find($cId);
         if (!$comment) {
@@ -99,6 +129,16 @@ class EpisodeCommentsController
         if ($comment->getEpisode()->getId() != $epId) {
             $response->withStatus(400);
         }
+
+        $isMod = $auth->hasRole('ROLE_MOD');
+        if (!$isMod) {
+            // Regular users can only edit the comment if it's recent enough (do MAX_USER_EDIT_SECONDS + gracetime)
+            $now = new DateTime();
+            if ($now->getTimestamp() - $comment->getPublishTime()->getTimestamp() > MAX_USER_EDIT_SECONDS * 3/2) {
+                return $response->withStatus(403);
+            }
+        }
+
 
         $comment->setSoftDeleted(true);
         $em->flush();
