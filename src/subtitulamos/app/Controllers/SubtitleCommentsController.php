@@ -49,7 +49,7 @@ class SubtitleCommentsController
         $em->flush();
 
         $translation->broadcastNewComment($comment);
-        $response->getBody()->write($comment->getId());
+        $response->getBody()->write((string)$comment->getId());
         return $response->withStatus(200);
     }
 
