@@ -46,7 +46,7 @@ class EpisodeCommentsController
         $em->persist($comment);
         $em->flush();
 
-        $response->getBody()->write($comment->getId());
+        $response->getBody()->write((string)$comment->getId());
         return $response->withStatus(200);
     }
 
