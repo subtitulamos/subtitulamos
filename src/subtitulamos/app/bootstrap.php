@@ -32,6 +32,8 @@ define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));
 define('SONIC_PASSWORD', getEnvOrDefault('SONIC_PASSWORD', 'SecretPassword'));
 define('REDIS_HOST', getEnvOrDefault('REDIS_HOST', 'redis'));
 define('REDIS_PORT', getEnvOrDefault('REDIS_PORT', 6379));
+// Max amount of time a user has to edit/delete their comment after writing it
+define('MAX_USER_EDIT_SECONDS', (int)getEnvOrDefault('MAX_USER_EDIT_SECONDS', 60));
 
 if (DEBUG) {
     error_reporting(E_ALL);

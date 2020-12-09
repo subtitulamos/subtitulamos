@@ -188,6 +188,7 @@
         :pinned="comment.pinned"
         @remove="remove"
         @pin="pin"
+        @save="save"
       >
       </comment>
 
@@ -218,8 +219,11 @@
 
 {% block scripts %}
   <script type="text/javascript">
+    var userId = {{ auth.user ? auth.user.id : 0 }};
     var epId = {{ episode.id }};
+    var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};
     var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
   </script>
   {{ assets.js('episode') }}

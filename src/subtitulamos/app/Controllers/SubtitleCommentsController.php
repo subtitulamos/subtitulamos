@@ -13,6 +13,7 @@ use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
 use App\Services\Utils;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig;
@@ -95,7 +96,37 @@ class SubtitleCommentsController
         ]);
     }
 
-    public function delete($subId, $cId, $request, $response, EntityManager $em, Translation $translation)
+    public function edit($cId, $request, $response, EntityManager $em, Auth $auth)
+    {
+        $comment = $em->getRepository('App:EpisodeComment')->find($cId);
+        if (!$comment) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $isMod = $auth->hasRole('ROLE_MOD');
+        if (!$isMod) {
+            // Regular users can only edit the comment if it's recent enough (do MAX_USER_EDIT_SECONDS + gracetime)
+            $now = new DateTime();
+            if ($now->getTimestamp() - $comment->getPublishTime()->getTimestamp() > MAX_USER_EDIT_SECONDS * 3/2) {
+                return $response->withStatus(403);
+            }
+        }
+
+        $body = $request->getParsedBody();
+        // Validate input first
+        $text = $body['text'] ?? '';
+        if (!v::stringType()->length(1, 600)->validate($text)) {
+            $response->getBody()->write('El comentario debe tener entre 1 y 600 caracteres');
+            return $response->withStatus(400);
+        }
+
+        $comment->setText($text);
+        $em->flush();
+
+        return $response->withStatus(200);
+    }
+
+    public function delete($subId, $cId, $request, $response, EntityManager $em, Translation $translation, Auth $auth)
     {
         $comment = $em->getRepository('App:SubtitleComment')->find($cId);
         if (!$comment) {
@@ -104,6 +135,15 @@ class SubtitleCommentsController
 
         if ($comment->getSubtitle()->getId() != $subId) {
             $response->withStatus(400);
+        }
+
+        $isMod = $auth->hasRole('ROLE_MOD');
+        if (!$isMod) {
+            // Regular users can only edit the comment if it's recent enough (do MAX_USER_EDIT_SECONDS + gracetime)
+            $now = new DateTime();
+            if ($now->getTimestamp() - $comment->getPublishTime()->getTimestamp() > MAX_USER_EDIT_SECONDS * 3/2) {
+                return $response->withStatus(403);
+            }
         }
 
         $comment->setSoftDeleted(true);

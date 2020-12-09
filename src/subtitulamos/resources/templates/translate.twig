@@ -159,6 +159,7 @@
       :create-sequence-jumps="true"
       @remove="remove"
       @pin="pin"
+      @save="save"
     >
     </comment>
   </div>
@@ -175,12 +176,14 @@
       roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
     };
     var wsAuthToken = "{{ wstok }}";
+    var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};
 
     // Permissions
     var hasAdvancedTools = me.roles.includes('ROLE_TT');
     var canLock = me.roles.includes('ROLE_TT');
     var canReleaseOpenLock = me.roles.includes('ROLE_TT');
     var canDeleteComments = me.roles.includes('ROLE_MOD');
+    var canEditComments = me.roles.includes('ROLE_MOD');
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditTimes = me.roles.includes('ROLE_MOD');
   </script>
