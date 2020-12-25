@@ -1,0 +1,71 @@
+@import "app.css";
+
+.content {
+  #letter-container {
+    --letter-size: 55px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, var(--letter-size));
+    grid-gap: 15px;
+
+    .letter {
+      font-size: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: var(--letter-size);
+      border-radius: var(--standard-border-radius);
+      cursor: pointer;
+      border: 1px solid var(--color-gray-divisions);
+      color: var(--color-blue-a);
+      font-weight: 500;
+      width: 100%;
+
+      &:hover {
+        border-color: var(--color-blue-b);
+      }
+
+      &.active-letter {
+        color: var(--color-offwhite);
+        background-color: var(--color-blue-a);
+        border: 1px solid var(--color-blue-a);
+
+        &:hover {
+          color: var(--color-offwhite) !important;
+        }
+      }
+    }
+  }
+
+  .shows-in-letter {
+    margin-top: var(--spacing-l);
+    background-color: var(--color-offwhite);
+    padding: var(--spacing-s) var(--spacing-m);
+    border-radius: var(--standard-border-radius);
+
+    .season-info {
+      color: var(--color-gray-c);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        &:not(:last-child) {
+          border-bottom: 1px solid var(--color-gray-divisions-lighter);
+        }
+
+        a {
+          padding: var(--spacing-s) var(--spacing-xs);
+          display: block;
+          transition: padding-left 0.2s ease;
+
+          &:hover {
+            padding-left: var(--spacing-s);
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,53 +7,37 @@
 {% endblock %}
 
 {% block content %}
-<div id="shows_list">
-  <div class='container'>
-    <!-- Breadcrumbs -->
-    <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-      <ul>
-        <li><a href="/">Subtitulamos.tv</a></li>
-        <li class="is-active">
-          <a href="#">Índice de series</a>
-        </li>
-      </ul>
-    </nav>
+  <div class='content limited-width'>
+    <h1>Índice de series</h1>
 
-    <!-- The content -->
-    {% for letter, shows in shows_by_letter  %}
-      <h1 class='is-size-4'>{{ letter|upper }}</h1>
-      {% set columns = 2 %}
-      {% set rows = (shows|length / columns)|round(0, 'ceil') %}
-
-      {# {% for i in range(0, rows - 1) %}
-        {% set shows_left = shows|length - i*columns %}
-        {% set cols_row = min(shows_left, columns) %}
-
-        <div class="columns">
-          {% for j in range(0, cols_row - 1) %}
-            {% set show = shows[i*columns + j] %}
-            <div class="column">
-              <a href='shows/{{ show.id }}'>{{ show.name }}</a>
-            </div>
-          {% endfor %}
-        </div>
-      {% endfor %} #}
-      {% for i in range(0, shows|length - 1) %}
-        <div class='row'>
-          {% set show = shows[i].show %}
-          {% set seasons = shows[i].season_count %}
-
-          <a href='shows/{{ show.id }}'>{{ show.name }}</a>
-          {% if seasons != 1 %}
-            <span class="season-info">({{ seasons }} temporadas)</span>
-          {% else %}
-            <span class="season-info">(1 temporada)</span>
-          {% endif %}
-        </div>
+    <div id="letter-container">
+      {% for letter, shows in shows_by_letter  %}
+      <a class="letter" data-letter="{{letter}}" href="/shows#{{letter}}">{{ letter|upper }}</a>
       {% endfor %}
+    </div>
 
-      <br/>
+    {% for letter, shows in shows_by_letter  %}
+    <div class="shows-in-letter hidden" id="{{ letter }}">
+      <ul>
+        {% for i in range(0, shows|length - 1) %}
+        {% set show = shows[i].show %}
+        {% set seasons = shows[i].season_count %}
+        <li>
+          <a href='shows/{{ show.id }}'>
+            <span>{{ show.name }}</span>
+            {% if seasons != 1 %}
+            <span class="season-info text small">({{ seasons }} temporadas)</span>
+            {% else %}
+            <span class="season-info text small">(1 temporada)</span>
+            {% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
     {% endfor %}
   </div>
-</div>
+{% endblock %}
+{% block scripts %}
+  {{ assets.js('shows_list') }}
 {% endblock %}
