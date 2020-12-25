@@ -108,13 +108,6 @@ function doLogin(e) {
   const username = document.getElementById("username").value.trim();
   const pwd = $pwdField.value;
 
-  if (!username.length || !pwd.length) {
-    $loginError.classList.toggle("hidden", false);
-    $pwdField.classList.toggle("is-danger", true);
-    $loginError.innerHTML = "Ni el usuario ni la contraseña pueden estar vacíos";
-    return;
-  }
-
   const $loginBtn = document.getElementById("login-button");
   $loginBtn.classList.toggle("is-loading", true);
   $loginError.innerHTML = ""; // Clear previous errors, just so it's clearer they're new
@@ -206,6 +199,7 @@ function showLoginForm() {
 
   const $loginForm = document.getElementById("login-form");
   $loginForm.addEventListener("submit", doLogin);
+  document.getElementById("username").focus();
 }
 
 function getOverlayNode() {

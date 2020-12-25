@@ -176,13 +176,13 @@
   <template id='tpl-login'>
     <h2>Inicio de sesión</h2>
     <div id='login-error'></div>
-    <form action="" id="login-form">
+    <form id="login-form">
       <div class="form-field text small">
-        <input type="text" id="username" placeholder="Nombre de usuario">
+        <input type="text" id="username" placeholder="Nombre de usuario" required autocomplete="username">
         <i class="fas fa-user"></i>
       </div>
       <div class="form-field text small">
-        <input type="password" id="password" placeholder="Contraseña">
+        <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password">
         <i class="fas fa-key"></i>
       </div>
       <button id='login-button' type="submit" class="text light">Iniciar sesión</button>
