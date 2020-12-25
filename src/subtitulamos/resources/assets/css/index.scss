@@ -1,7 +1,6 @@
 @import "app.css";
 
 .content {
-  max-width: calc(var(--max-width) - var(--content-pading-x) * 2);
   --navigation-chevron-width: 45px;
 
   #large-splash {

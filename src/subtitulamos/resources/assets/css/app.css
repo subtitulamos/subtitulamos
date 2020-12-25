@@ -34,6 +34,11 @@
   --standard-border-radius: 0.5rem;
   --max-width: 1200px;
   --footer-padding-y: 120px;
+  --spacing-l: 30px;
+  --spacing-m: 22px;
+  --spacing-s: 15px;
+  --spacing-xs: 10px;
+  --spacing-xxs: 5px;
 }
 
 /* Prevent a white border by the bottom */
@@ -91,6 +96,10 @@ h1,
 h2,
 h3 {
   margin: 0;
+}
+
+h1 {
+  margin-bottom: var(--spacing-l);
 }
 
 a:hover,
@@ -263,6 +272,10 @@ header {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+}
+
+.content.limited-width {
+  max-width: calc(var(--max-width) - var(--content-pading-x) * 2);
 }
 
 footer {

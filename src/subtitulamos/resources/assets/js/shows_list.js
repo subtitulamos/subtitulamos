@@ -3,7 +3,25 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-/**
- * This file exists because the CSS processed by webpack needs to exist in a file first
- */
-import "../css/shows_list.css";
+import "../css/shows_list.scss";
+import { get, get_all } from "./utils.js";
+
+function showListInLetter(letterButton) {
+  const $showsInLetterList = get("#" + letterButton.dataset.letter);
+  $showsInLetterList.classList.toggle("hidden", false);
+
+  get_all(".letter").forEach((letter) => {
+    letter.classList.toggle("active-letter", false);
+  });
+  letterButton.classList.toggle("active-letter", true);
+}
+
+get_all(".letter").forEach((letter) => {
+  letter.addEventListener("click", (e) => {
+    get_all(".shows-in-letter").forEach((list) => {
+      list.classList.toggle("hidden", true);
+    });
+
+    showListInLetter(e.currentTarget);
+  });
+});
