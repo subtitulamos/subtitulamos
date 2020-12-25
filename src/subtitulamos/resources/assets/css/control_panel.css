@@ -41,17 +41,18 @@
   position: relative;
 }
 
-#control-panel-bottom-section .control-panel-button:last-of-type {
+#control-panel-bottom-section .control-panel-button:last-child {
   margin-bottom: 0px;
 }
 
 #control-panel .control-panel-button:hover,
 #control-panel .control-panel-button.selected {
+  color: var(--color-offwhite) !important;
   opacity: 1;
 }
 
 #control-panel .control-panel-button:active {
-  color: var(--color-blue-d);
+  color: var(--color-blue-d) !important;
 }
 
 #control-panel .control-panel-button.selected::before {
@@ -68,6 +69,7 @@
   flex-shrink: 0;
   font-size: 1.1rem;
   width: var(--control-panel-closed-width);
+  text-align: center;
 }
 
 #control-panel .control-panel-button > span {

@@ -6,11 +6,6 @@
 @import "form.css";
 @import "animations.css";
 
-* {
-  font-weight: 400;
-  color: var(--color-black);
-}
-
 :root {
   --color-bg: #eeeff8;
   --color-gray-divisions: #d7d7d7;
@@ -48,9 +43,11 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   background-color: var(--color-bg);
+  color: var(--color-black);
   font-family: "Rubik", sans-serif;
   min-height: 100%;
   height: 100%;
+  font-weight: 400;
 }
 
 .no-scroll-bar {
