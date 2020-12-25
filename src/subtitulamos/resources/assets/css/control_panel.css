@@ -1,3 +1,5 @@
+@import "./animations.css";
+
 #base {
   --control-panel-closed-width: 30px;
   --control-panel-open-width: 210px;
@@ -72,6 +74,20 @@
   text-align: center;
 }
 
+#control-panel .control-panel-button > .fa-chevron-circle-left {
+  display: none;
+}
+#control-panel.open .control-panel-button > .fa-chevron-circle-left {
+  display: unset;
+}
+
+#control-panel .control-panel-button > .fa-chevron-circle-right {
+  display: unset;
+}
+#control-panel.open .control-panel-button > .fa-chevron-circle-right {
+  display: none;
+}
+
 #control-panel .control-panel-button > span {
   margin-left: 10px;
   flex: 1;
@@ -79,6 +95,10 @@
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  display: none;
+}
+#control-panel.open .control-panel-button > span {
+  display: unset;
 }
 
 #control-panel #control-panel-logo-wrap {
@@ -97,11 +117,26 @@
   color: var(--color-offwhite);
   letter-spacing: -0.5px;
   margin-left: 10px;
+  display: none;
+}
+#control-panel.open #control-panel-logo-wrap #logo-text {
+  display: unset;
 }
 
 #control-panel .control-panel-button.search {
   margin: 2rem 0;
   height: 3rem;
+  display: unset;
+}
+#control-panel.open .control-panel-button.search {
+  display: none;
+}
+
+#control-panel #control-panel-search {
+  display: none;
+}
+#control-panel.open #control-panel-search {
+  display: flex;
 }
 
 #control-panel #control-panel-search {
@@ -111,7 +146,6 @@
   height: 3rem;
   background-color: var(--color-blue-b);
   border-radius: 25px;
-  display: flex;
   align-items: center;
 }
 
