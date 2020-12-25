@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 import "./search";
-import { onDomReady, easyFetch } from "./utils";
+import { onDomReady, easyFetch, get } from "./utils";
 
 function toggleAccessForm() {
   const formType = this.id;
@@ -273,6 +273,9 @@ if (document.getElementById("control-panel")) {
     },
     mounted() {
       this.updateElementsStatus();
+
+      const $currentURL = window.location.pathname;
+      get(`a[href="${$currentURL}"]`).classList.toggle("selected", true);
     },
   });
 }
