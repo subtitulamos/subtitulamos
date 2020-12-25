@@ -21,7 +21,7 @@ class AssetManager
      * Path of the manifest file
      * @var string
      */
-    public const WEBPACK_MANIFEST_PATH = __DIR__ . '/../../resources/assets/manifest.json';
+    public const WEBPACK_MANIFEST_PATH = __DIR__.'/../../resources/assets/manifest.json';
 
     public function __construct()
     {
@@ -42,6 +42,13 @@ class AssetManager
 
     public function getWebpackVersionedName($assetName)
     {
-        return isset($this->webpackManifest[$assetName]) ? $this->webpackManifest[$assetName] : "vunknown-$assetName";
+        $transformedName = isset($this->webpackManifest[$assetName]) ? $this->webpackManifest[$assetName] : "vunknown-$assetName";
+        if (DEBUG) {
+            if (str_ends_with($assetName, '.css')) {
+                $transformedName .= '?h='.md5(@\file_get_contents(__DIR__."/../../resources/assets/$assetName"));
+            }
+        }
+
+        return $transformedName;
     }
 }
