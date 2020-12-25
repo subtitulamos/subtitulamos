@@ -32,10 +32,10 @@
 }
 
 #control-panel .control-panel-button {
-  color: var(--color-offwhite);
+  color: var(--color-blue-c);
+  opacity: 0.6;
   display: flex;
   align-items: center;
-  opacity: 0.6;
   margin-bottom: 15px;
   padding: 0;
   width: 100%;
