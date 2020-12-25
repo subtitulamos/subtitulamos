@@ -1,30 +1,27 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
-{% block title %}Normas{% endblock %}
+{% block title %}Normas del sítio{% endblock %}
 {% block css %}
   {{ assets.css('rules') }}
 {% endblock %}
 
 {% block content %}
-  <div id="rules-content">
-    <div id='rules'>
-      <div class='tabs is-centered is-fullwidth'>
-        <ul>
-          <li class="{% if rules_type == 'main' %}is-active{% endif %}">
-            <a href="/rules">Normas de traducción</a>
-          </li>
-          <li class="{% if rules_type == 'community' %}is-active{% endif %}">
-            <a href="/rules/community">Normas de la comunidad</a>
-          </li>
-          <li class="{% if rules_type == 'upload' %}is-active{% endif %}">
-            <a href="/rules/upload">Normas de subida de subtítulos</a>
-          </li>
-        </ul>
-      </div>
-
-      {% include "rules/rules_" ~ rules_type ~ ".twig" %}
+  <div class="content limited-width">
+    <h1>Normas del sítio</h1>
+    <div id="category-navigation-list" class="navigation-list no-scroll-bar">
+      <a href="/rules">
+        <div class="navigation-item {% if rules_type == 'main' %}selected{% endif %}">TRADUCCIÓN</div>
+      </a>
+      <a href="/rules/community">
+        <div class="navigation-item {% if rules_type == 'community' %}selected{% endif %}">COMUNIDAD</div>
+      </a>
+      <a href="/rules/upload">
+        <div class="navigation-item  {% if rules_type == 'upload' %}selected{% endif %}">SUBTÍTULOS</div>
+      </a>
     </div>
+
+    {% include "rules/rules_" ~ rules_type ~ ".twig" %}
   </div>
 {% endblock %}
 

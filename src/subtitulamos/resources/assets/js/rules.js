@@ -3,19 +3,31 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import "../css/rules.css";
+import "../css/rules.scss";
 import { onDomReady } from "./utils";
 
 onDomReady(() => {
   for (const $spoilerWrapper of document.querySelectorAll(".spoiler-wrapper")) {
     $spoilerWrapper.addEventListener("click", function () {
       const $spoiler = this.querySelector(".spoiler-content");
-      const $icon = this.querySelector("i");
-      $icon.classList.toggle("fa-caret-down");
-      $icon.classList.toggle("fa-caret-up");
 
-      $spoiler.style.display =
-        !$spoiler.style.display || $spoiler.style.display == "none" ? "block" : "none";
+      const $spoilerName = this.querySelector(".spoiler-name");
+      if ($spoilerName.innerHTML.includes("VER")) {
+        $spoilerName.innerHTML = $spoilerName.innerHTML.replace("VER", "OCULTAR");
+      } else if ($spoilerName.innerHTML.includes("OCULTAR")) {
+        $spoilerName.innerHTML = $spoilerName.innerHTML.replace("OCULTAR", "VER");
+      }
+      if ($spoilerName.innerHTML.includes("MÁS")) {
+        $spoilerName.innerHTML = $spoilerName.innerHTML.replace("MÁS", "MENOS");
+      } else if ($spoilerName.innerHTML.includes("MENOS")) {
+        $spoilerName.innerHTML = $spoilerName.innerHTML.replace("MENOS", "MÁS");
+      }
+
+      const $icon = this.querySelector(".spoiler-name i");
+      $icon.classList.toggle("fa-chevron-down");
+      $icon.classList.toggle("fa-chevron-up");
+
+      $spoiler.classList.toggle("expanded");
     });
   }
 });
