@@ -1,14 +1,14 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
 
-{% block title %}Normas del sítio{% endblock %}
+{% block title %}Normas del sitio{% endblock %}
 {% block css %}
   {{ assets.css('rules') }}
 {% endblock %}
 
 {% block content %}
   <div class="content limited-width">
-    <h1>Normas del sítio</h1>
+    <h1>Normas del sitio</h1>
     <div id="category-navigation-list" class="navigation-list no-scroll-bar">
       <a href="/rules">
         <div class="navigation-item {% if rules_type == 'main' %}selected{% endif %}">TRADUCCIÓN</div>
