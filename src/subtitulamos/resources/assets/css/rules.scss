@@ -99,8 +99,25 @@ ol {
       font-size: 0.85rem;
     }
 
-    .line-number {
-      color: var(--color-gray-c);
+    .line {
+      display: flex;
+      flex-wrap: nowrap;
+
+      .line-number,
+      .detail {
+        color: var(--color-gray-c);
+      }
+
+      .line-number {
+        margin-right: 0.7rem;
+        flex-shrink: 0;
+      }
+
+      .detail {
+        flex: 1;
+        text-align: right;
+        margin-left: 0.7rem;
+      }
     }
   }
 }
