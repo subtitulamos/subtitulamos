@@ -8,6 +8,7 @@
 
 * {
   font-weight: 400;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root {
