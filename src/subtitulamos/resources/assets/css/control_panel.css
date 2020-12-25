@@ -53,10 +53,6 @@
   opacity: 1;
 }
 
-#control-panel .control-panel-button:active {
-  color: var(--color-blue-d) !important;
-}
-
 #control-panel .control-panel-button.selected::before {
   content: "";
   position: absolute;
