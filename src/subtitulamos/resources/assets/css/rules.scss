@@ -165,10 +165,6 @@ kbd {
     & > li {
       padding: var(--spacing-s) var(--spacing-xs);
       padding-left: calc(var(--badge-size) + var(--spacing-m));
-
-      &::before {
-        top: var(--spacing-m);
-      }
     }
   }
 }
