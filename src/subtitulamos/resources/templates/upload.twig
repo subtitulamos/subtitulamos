@@ -28,8 +28,8 @@
           <div id="file-name"></div>
           <input class="file-input " type="file" id="sub" name="sub" accept=".srt" required>
         </div>
-
-        <div class="form-field validated">
+        <div class="form-field validated dropdown-field">
+          <i class="fas fa-chevron-down dropdown"></i>
           <select id="show-id" name="show-id" required>
             <option value="" disabled selected>Selecciona una serie</option>
             {% for show in shows %}
@@ -53,7 +53,8 @@
           <i class="fas fa-file-video"></i>
         </div>
 
-      <div class="form-field validated">
+      <div class="form-field validated dropdown-field">
+          <i class="fas fa-chevron-down dropdown"></i>
           <select id="lang" name="lang" required>
             <option value="" disabled selected>Selecciona un idioma</option>
             {% for lid, lcode in LANG_LIST %}

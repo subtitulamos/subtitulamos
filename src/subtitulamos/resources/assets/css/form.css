@@ -40,6 +40,10 @@
   padding: var(--standard-select-button-input-padding);
 }
 
+.form-field > .dropdown {
+  position: absolute;
+}
+
 .form-field input::placeholder,
 .form-field select:required:invalid {
   color: var(--color-gray-b);

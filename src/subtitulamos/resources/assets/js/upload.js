@@ -124,6 +124,16 @@ onDomReady(function () {
         }
       });
   });
+
+  get_all(".dropdown-field").forEach((dropdown) => {
+    dropdown.addEventListener("click", invertDropdown);
+  });
 });
 
-document.getElementById("upload-button").addEventListener("click", function (e) {});
+function invertDropdown(e) {
+  const $dropdown = e.currentTarget.querySelector(".dropdown");
+  console.log($dropdown);
+  const $isArrowDown = $dropdown.classList.contains("fa-chevron-down");
+  $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
+  $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
+}
