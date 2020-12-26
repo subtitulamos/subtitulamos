@@ -67,5 +67,5 @@ export function easyFetch(url, baseOpts) {
   return fetch(url, opts).then(raiseFetchErrors);
 }
 
-export const get = document.querySelector.bind(document);
-export const get_all = document.querySelectorAll.bind(document);
+export const $getEle = document.querySelector.bind(document);
+export const $getAllEle = document.querySelectorAll.bind(document);

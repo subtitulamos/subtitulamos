@@ -4,21 +4,21 @@
  */
 
 import "../css/shows_list.scss";
-import { get, get_all } from "./utils.js";
+import { $getEle, $getAllEle } from "./utils.js";
 
 function showListInLetter(letterButton) {
-  const $showsInLetterList = get("#" + letterButton.dataset.letter);
+  const $showsInLetterList = $getEle("#" + letterButton.dataset.letter);
   $showsInLetterList.classList.toggle("hidden", false);
 
-  get_all(".letter").forEach((letter) => {
+  $getAllEle(".letter").forEach((letter) => {
     letter.classList.toggle("active-letter", false);
   });
   letterButton.classList.toggle("active-letter", true);
 }
 
-get_all(".letter").forEach((letter) => {
+$getAllEle(".letter").forEach((letter) => {
   letter.addEventListener("click", (e) => {
-    get_all(".shows-in-letter").forEach((list) => {
+    $getAllEle(".shows-in-letter").forEach((list) => {
       list.classList.toggle("hidden", true);
     });
 

@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { get, get_all, onDomReady } from "./utils";
+import { $getEle, onDomReady } from "./utils";
 import "../css/upload.scss";
 import "../css/rules.scss";
 
@@ -41,7 +41,7 @@ onDomReady(function () {
   document.getElementById("show-id").addEventListener("change", function () {
     if (this.value == "NEW") {
       if (!$newShow) {
-        $newShow = get("#new-show");
+        $newShow = $getEle("#new-show");
         $newShow.closest(".form-field").classList.toggle("hidden", false);
         $newShow.focus();
       }
@@ -52,13 +52,13 @@ onDomReady(function () {
   });
 
   // Logic for splitting season/episode and name
-  get("#name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
-  get("#name").addEventListener("change", splitSeasonAndEpisodeCallback);
+  $getEle("#name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
+  $getEle("#name").addEventListener("change", splitSeasonAndEpisodeCallback);
 
   // SRT FILE
   // Always clear the file input on load
-  let $sub = get("#sub").cloneNode(true);
-  get("#sub").replaceWith($sub);
+  let $sub = $getEle("#sub").cloneNode(true);
+  $getEle("#sub").replaceWith($sub);
 
   // Update of SRT file selection
   $sub.addEventListener("change", (e) => {
@@ -72,8 +72,8 @@ onDomReady(function () {
       $fileInput.setCustomValidity("");
     }
 
-    get("#file-name").innerHTML = $filename;
-    get("#file-upload-container").classList.toggle("has-file", $filename !== "");
+    $getEle("#file-name").innerHTML = $filename;
+    $getEle("#file-upload-container").classList.toggle("has-file", $filename !== "");
   });
 
   document.getElementById("upload-form").addEventListener("submit", function (e) {

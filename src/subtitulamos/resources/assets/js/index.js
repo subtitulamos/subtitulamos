@@ -4,7 +4,7 @@
  */
 
 import Vue from "vue";
-import { dateDiff, easyFetch, get, get_all } from "./utils.js";
+import { dateDiff, easyFetch, $getEle, $getAllEle } from "./utils.js";
 import "../css/index.scss";
 
 let episodeList = new Vue({
@@ -100,26 +100,26 @@ function loadTab(target, page) {
       const isFirstPage = page <= 1;
       const isLastPage = episodeList.episodes.length < subsPerPage;
 
-      get("#category-container").classList.toggle("first-page", isFirstPage);
-      get("#category-container").classList.toggle("last-page", isLastPage);
+      $getEle("#category-container").classList.toggle("first-page", isFirstPage);
+      $getEle("#category-container").classList.toggle("last-page", isLastPage);
     });
 }
 
-get("#previous-page").addEventListener("click", function () {
+$getEle("#previous-page").addEventListener("click", function () {
   let targetPage = Math.max(categoryPage[episodeList.category] - 1, 1);
 
   loadTab(episodeList.category, targetPage);
 });
 
-get("#next-page").addEventListener("click", function () {
+$getEle("#next-page").addEventListener("click", function () {
   let targetPage = Math.min(categoryPage[episodeList.category] + 1, subsPerPage);
 
   loadTab(episodeList.category, targetPage);
 });
 
-get_all(".navigation-item").forEach(($ele) => {
+$getAllEle(".navigation-item").forEach(($ele) => {
   $ele.addEventListener("click", function () {
-    get_all(".navigation-item").forEach(($otherEle) =>
+    $getAllEle(".navigation-item").forEach(($otherEle) =>
       $otherEle.classList.toggle("selected", false)
     );
 
