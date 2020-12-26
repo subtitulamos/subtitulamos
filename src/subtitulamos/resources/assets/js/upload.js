@@ -111,11 +111,7 @@ onDomReady(function () {
             .json()
             .then((data) => {
               data.forEach(function (e, idx, arr) {
-                let $status = document.getElementById(`${e[0]}-status`);
-                if ($status) {
-                  $status.classList.toggle("hidden", false);
-                  $status.innerHTML = e[1];
-                }
+                document.getElementsByName(e[0])[0].setCustomValidity(err[1]);
               });
             })
             .catch(reportUnknownError);
