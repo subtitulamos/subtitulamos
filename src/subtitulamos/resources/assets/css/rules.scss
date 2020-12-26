@@ -1,17 +1,21 @@
 @import "app.css";
 
+#rules-container {
+  margin-top: var(--spacing-m);
+}
+
 ol {
   margin: 0;
-  padding: var(--spacing-s);
+  padding: 0;
   list-style: none;
   counter-reset: my-awesome-counter;
   --badge-size: 2.6rem;
 
   & > li {
-    padding: var(--spacing-m) var(--spacing-s);
-    padding-left: calc(var(--badge-size) + var(--spacing-l));
+    padding: var(--spacing-l) var(--spacing-s);
+    padding-left: calc(var(--badge-size) + var(--spacing-xl));
     counter-increment: my-awesome-counter;
-    margin: 0.25rem;
+    margin: 0;
     position: relative;
     font-size: 0.9rem;
     line-height: 1.5rem;
@@ -26,7 +30,7 @@ ol {
       line-height: var(--badge-size);
       border-radius: 50%;
       text-align: center;
-      left: 0;
+      left: var(--spacing-xs);
       top: calc(
         50% - var(--badge-size) / 2 - 2px
       ); // half height - half size of the number - border
@@ -54,7 +58,6 @@ ol {
   color: var(--color-blue-a);
   text-align: right;
   cursor: pointer;
-  margin-top: var(--spacing-s);
 }
 
 .spoiler-content {
@@ -64,16 +67,20 @@ ol {
   grid-template-columns: repeat(2, 1fr);
   max-height: 0px;
   overflow: hidden;
-  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), margin 0.5s ease, padding 0.2s 0.2s ease;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), margin 0.45s ease, padding 0.2s 0.2s ease;
+
+  &.no-comparison {
+    grid-template-columns: repeat(1, 1fr);
+  }
 
   &.expanded {
     max-height: 9999px;
     margin-top: var(--spacing-s);
-    transition: max-height 0.3s cubic-bezier(1, 0, 1, 0), margin 0.5s ease;
+    margin-bottom: var(--spacing-s);
+    transition: max-height 0.3s cubic-bezier(1, 0, 1, 0), margin 0.45s ease;
 
     &.no-comparison {
       padding: var(--spacing-s) var(--spacing-m);
-      grid-template-columns: repeat(1, 1fr);
     }
   }
 
