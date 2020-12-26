@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import "../css/upload.css";
+import "../css/upload.scss";
 import { onDomReady } from "./utils";
 
 onDomReady(function () {

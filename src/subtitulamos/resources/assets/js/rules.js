@@ -4,10 +4,10 @@
  */
 
 import "../css/rules.scss";
-import { get_all, onDomReady } from "./utils";
+import { $getAllEle, onDomReady } from "./utils";
 
 onDomReady(() => {
-  for (const $spoilerName of get_all(".spoiler-name")) {
+  for (const $spoilerName of $getAllEle(".spoiler-name")) {
     $spoilerName.addEventListener("click", function () {
       const $spoilerWrapper = this.closest(".spoiler-wrapper");
       const $spoiler = $spoilerWrapper.querySelector(".spoiler-content");
