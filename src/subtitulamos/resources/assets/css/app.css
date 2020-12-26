@@ -338,7 +338,7 @@ footer > #footer-content {
 
 .navigation-list {
   width: calc(100% - var(--navigation-chevron-width) * 2);
-  margin: 0;
+  margin: 0 auto;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: scroll;
