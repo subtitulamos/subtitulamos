@@ -19,7 +19,6 @@ use App\Services\Srt\SrtParser;
 use App\Services\UrlHelper;
 use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
@@ -77,7 +76,7 @@ class UploadController
         $uploadList = $request->getUploadedFiles();
         if (isset($uploadList['sub'])) {
             $srtParser = new SrtParser();
-            $isOk = $srtParser->parseFile($uploadList['sub']->file, [
+            $isOk = $srtParser->parseFile($uploadList['sub'], [
                 'allow_long_lines' => true,
                 'allow_special_tags' => false
             ]);
