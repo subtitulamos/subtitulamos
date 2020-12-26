@@ -14,7 +14,7 @@
   flex-direction: row-reverse;
   border-bottom: 1px solid var(--color-gray-divisions);
   padding: 7px 15px;
-  margin-bottom: 10px;
+  margin-bottom: var(--spacing-xs);
   background-color: var(--color-offwhite);
   border-radius: 0.2rem;
 }
@@ -25,6 +25,7 @@
   margin-right: 10px;
   width: 20px;
   text-align: center;
+  position: relative;
 }
 
 .form-field input:focus + i,
@@ -37,6 +38,50 @@
   flex: 1;
   color: var(--color-gray-a);
   padding: var(--standard-select-button-input-padding);
+}
+
+.form-field input::placeholder,
+.form-field select:required:invalid {
+  color: var(--color-gray-b);
+  opacity: 0.5;
+}
+
+.validated.form-field input:valid + i::after,
+.validated.form-field select:valid + i::after {
+  content: "\f058";
+  font-family: "Font Awesome 5 Free";
+  color: var(--color-green);
+}
+
+.validated.form-field input:invalid + i::after,
+.validated.form-field select:invalid + i::after {
+  content: "\f057";
+  font-family: "Font Awesome 5 Free";
+  color: var(--color-red);
+}
+
+.validated.form-field input:valid + i::after,
+.validated.form-field select:valid + i::after,
+.validated.form-field input:invalid + i::after,
+.validated.form-field select:invalid + i::after {
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  z-index: 20;
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  --size: 0.6rem;
+  font-size: var(--size);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background-color: var(--color-offwhite);
+  border: 0.15rem solid var(--color-offwhite);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-wrap form button {
