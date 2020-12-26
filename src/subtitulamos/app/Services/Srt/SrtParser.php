@@ -11,6 +11,7 @@ use App\Entities\Sequence;
 use App\Services\Clock;
 use App\Services\Translation;
 use ForceUTF8\Encoding;
+use Nyholm\Psr7\UploadedFile;
 
 const PARSING_STATE_SEQUENCE = 0;
 const PARSING_STATE_TIME = 1;
@@ -38,14 +39,14 @@ class SrtParser
      * @param string $filename
      * @return array $seqOpts Options for the cleanText call on each sequence
      */
-    public function parseFile(string $filename, array $seqOpts)
+    public function parseFile(UploadedFile $file, array $seqOpts)
     {
-        if (!$filename) {
-            $this->errorDesc = 'El nombre de fichero no puede estar vacío.';
+        if (!$file) {
+            $this->errorDesc = 'El fichero no puede estar vacío.';
             return false;
         }
 
-        $flines = file($filename);
+        $flines = explode("\n", $file->getStream()->getContents());
 
         $this->lastTimeEnd = 0;
         $this->seqNum = 0;
