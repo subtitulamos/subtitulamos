@@ -6,13 +6,17 @@
 @import "app.css";
 @import "form.css";
 
-.form-wrap {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+#grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
 
+#upload-rules {
+  padding: var(--spacing-l);
+}
+
+.form-wrap {
   #file-upload-container {
-    width: 100%;
     height: 300px;
     border-radius: var(--standard-border-radius);
     display: flex;

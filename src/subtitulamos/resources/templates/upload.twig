@@ -10,75 +10,81 @@
 <div class="content limited-width">
   <h1>Subir subtítulo</h1>
 
-  <div class="form-wrap">
-    <form id="upload-form" enctype="multipart/form-data">
-      <div id="file-upload-container" class="w-box-shadow">
-        <i class="fas fa-arrow-circle-up"></i>
-        <div id="file-upload-instructions">
-          <p>Arrasta o haz clic</p>
-          <p class="text small">para subir un fichero .SRT</p>
-          <p>Vas a subir...</p>
+  <div id="grid">
+    <div class="form-wrap">
+      <form id="upload-form" enctype="multipart/form-data">
+        <div id="file-upload-container" class="w-box-shadow">
+          <i class="fas fa-arrow-circle-up"></i>
+          <div id="file-upload-instructions">
+            <p>Arrasta o haz clic</p>
+            <p class="text small">para subir un fichero .SRT</p>
+            <p>Vas a subir...</p>
+          </div>
+          <div id="file-name"></div>
+          <input class="file-input " type="file" id="sub" name="sub" accept=".srt" required>
         </div>
-        <div id="file-name"></div>
-        <input class="file-input " type="file" id="sub" name="sub" accept=".srt" required>
-      </div>
 
-      <div class="form-field">
-        <select id="show-id" name="show-id">
-          <option value="0" disabled selected>Selecciona una serie</option>
-          {% for show in shows %}
-            <option value="{{ show.id }}">{{ show.name }}</option>
-          {% endfor %}
-          <option value="NEW">[Nueva serie]</option>
-        </select>
-        <i class="fas fa-film"></i>
-      </div>
+        <div class="form-field">
+          <select id="show-id" name="show-id">
+            <option value="0" disabled selected>Selecciona una serie</option>
+            {% for show in shows %}
+              <option value="{{ show.id }}">{{ show.name }}</option>
+            {% endfor %}
+            <option value="NEW">[Nueva serie]</option>
+          </select>
+          <i class="fas fa-film"></i>
+        </div>
 
-      <div class="form-field">
-        <input type="text" id="show-id"
-          name="show-id" placeholder="Nombre de la nueva serie"
-          required>
-        <i class="fas fa-plus"></i>
-      </div>
-
-      <div class="form-field">
-        <input id="name" name="name" class="input" type="text"
-          placeholder="0x00 - Nombre del episodio"
-          autocomplete="off" required>
-        <i class="fas fa-file-video"></i>
-      </div>
-
-     <div class="form-field">
-        <select id="lang" name="lang" required>
-          <option value="0" disabled selected>Selecciona un idioma</option>
-          {% for lid, lcode in LANG_LIST %}
-            <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
-          {% endfor %}
-        </select>
-        <i class="fas fa-globe"></i>
-      </div>
-
-      <div class="form-field">
-        <input id="version" name="version" class="input"
-          type="text" placeholder="Versión del vídeo"
-          required>
-        <i class="fas fa-compact-disc"></i>
-      </div>
-
-
-      <div class="form-field">
-        <input id="comments" name="comments" class="input"
-            type="text"
-            placeholder="Créditos o notas varias sobre el subtítulo..."
+        <div class="form-field">
+          <input type="text" id="show-id"
+            name="show-id" placeholder="Nombre de la nueva serie"
             required>
-        <i class="fas fa-comment"></i>
-      </div>
+          <i class="fas fa-plus"></i>
+        </div>
+
+        <div class="form-field">
+          <input id="name" name="name" class="input" type="text"
+            placeholder="0x00 - Nombre del episodio"
+            autocomplete="off" required>
+          <i class="fas fa-file-video"></i>
+        </div>
+
+      <div class="form-field">
+          <select id="lang" name="lang" required>
+            <option value="0" disabled selected>Selecciona un idioma</option>
+            {% for lid, lcode in LANG_LIST %}
+              <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+            {% endfor %}
+          </select>
+          <i class="fas fa-globe"></i>
+        </div>
+
+        <div class="form-field">
+          <input id="version" name="version" class="input"
+            type="text" placeholder="Versión del vídeo"
+            required>
+          <i class="fas fa-compact-disc"></i>
+        </div>
+
+        <div class="form-field">
+          <input id="comments" name="comments" class="input"
+              type="text"
+              placeholder="Créditos o notas varias sobre el subtítulo..."
+              required>
+          <i class="fas fa-comment"></i>
+        </div>
+
+        <button type="submit" id="upload-button" class="text light">
+          Subir subtítulo
+        </button>
+      </form>
+    </div>
 
 
-      <button type="submit" id="upload-button" class="text light">
-        Subir subtítulo
-      </button>
-    </form>
+    <div id="upload-rules">
+      <h3>Normas de subida</h3>
+      {% include "rules/rules_upload.twig" %}
+    </div>
   </div>
 </div>
 

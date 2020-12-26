@@ -5,6 +5,7 @@
 
 import { get, onDomReady } from "./utils";
 import "../css/upload.scss";
+import "../css/rules.scss";
 
 let uploadInfo = {
   season: "",

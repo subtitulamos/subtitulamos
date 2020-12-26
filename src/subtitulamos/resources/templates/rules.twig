@@ -21,7 +21,9 @@
       </a>
     </div>
 
-    {% include "rules/rules_" ~ rules_type ~ ".twig" %}
+    <div id="rules-container">
+      {% include "rules/rules_" ~ rules_type ~ ".twig" %}
+    </div>
   </div>
 {% endblock %}
 

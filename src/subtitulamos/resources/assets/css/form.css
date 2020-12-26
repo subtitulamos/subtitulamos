@@ -1,5 +1,5 @@
 .form-wrap {
-  --form-padding: 40px;
+  --form-padding: var(--spacing-l);
   background-color: var(--color-bg);
   padding: var(--form-padding);
   border-radius: var(--standard-border-radius);
@@ -9,10 +9,6 @@
 .form-wrap .close-button {
   top: calc(var(--form-padding) / 3);
   right: calc(var(--form-padding) / 3);
-}
-
-.form-wrap form {
-  margin-top: var(--spacing-m);
 }
 
 .form-field {
