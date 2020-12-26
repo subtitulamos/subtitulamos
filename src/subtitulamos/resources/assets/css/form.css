@@ -12,7 +12,7 @@
 }
 
 .form-wrap form {
-  margin-top: 20px;
+  margin-top: var(--spacing-m);
 }
 
 .form-field {
@@ -22,21 +22,27 @@
   border-bottom: 1px solid var(--color-gray-divisions);
   padding: 7px 15px;
   margin-bottom: 10px;
+  background-color: var(--color-offwhite);
+  border-radius: 0.2rem;
 }
 
 .form-field i {
   color: var(--color-gray-c);
   flex-shrink: 0;
   margin-right: 10px;
+  width: 20px;
+  text-align: center;
 }
 
 .form-field input:focus + i,
-.form-field input {
-  color: var(--color-gray-a);
+.form-field select:focus + i {
+  color: var(--color-blue-a);
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   flex: 1;
+  color: var(--color-gray-a);
   padding: var(--standard-select-button-input-padding);
 }
 
