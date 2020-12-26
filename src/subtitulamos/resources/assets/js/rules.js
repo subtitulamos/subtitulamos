@@ -4,14 +4,14 @@
  */
 
 import "../css/rules.scss";
-import { onDomReady } from "./utils";
+import { get_all, onDomReady } from "./utils";
 
 onDomReady(() => {
-  for (const $spoilerWrapper of document.querySelectorAll(".spoiler-wrapper")) {
-    $spoilerWrapper.addEventListener("click", function () {
-      const $spoiler = this.querySelector(".spoiler-content");
+  for (const $spoilerName of get_all(".spoiler-name")) {
+    $spoilerName.addEventListener("click", function () {
+      const $spoilerWrapper = this.closest(".spoiler-wrapper");
+      const $spoiler = $spoilerWrapper.querySelector(".spoiler-content");
 
-      const $spoilerName = this.querySelector(".spoiler-name");
       if ($spoilerName.innerHTML.includes("VER")) {
         $spoilerName.innerHTML = $spoilerName.innerHTML.replace("VER", "OCULTAR");
       } else if ($spoilerName.innerHTML.includes("OCULTAR")) {
