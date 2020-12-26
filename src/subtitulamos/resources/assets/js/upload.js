@@ -62,7 +62,15 @@ onDomReady(function () {
 
   // Update of SRT file selection
   $sub.addEventListener("change", (e) => {
-    const $filename = e.target.value.split(/(\\|\/)/g).pop();
+    const $fileInput = e.target;
+    let $filename = $fileInput.value.split(/(\\|\/)/g).pop();
+
+    if ($filename.substring($filename.length - 3) !== "srt") {
+      $fileInput.setCustomValidity("Invalid file type");
+      $filename = "";
+    } else {
+      $fileInput.setCustomValidity("");
+    }
 
     get("#file-name").innerHTML = $filename;
     get("#file-upload-container").classList.toggle("has-file", $filename !== "");
