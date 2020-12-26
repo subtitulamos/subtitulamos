@@ -11,6 +11,11 @@
   <h1>Subir subtítulo</h1>
 
   <div id="grid">
+    <div id="upload-rules">
+      <h3>Normas de subida</h3>
+      {% include "rules/rules_upload.twig" %}
+    </div>
+
     <div class="form-wrap">
       <form id="upload-form" enctype="multipart/form-data">
         <div id="file-upload-container" class="w-box-shadow">
@@ -78,12 +83,6 @@
           Subir subtítulo
         </button>
       </form>
-    </div>
-
-
-    <div id="upload-rules">
-      <h3>Normas de subida</h3>
-      {% include "rules/rules_upload.twig" %}
     </div>
   </div>
 </div>

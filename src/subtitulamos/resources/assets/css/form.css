@@ -1,14 +1,11 @@
 .form-wrap {
-  --form-padding: var(--spacing-l);
   background-color: var(--color-bg);
-  padding: var(--form-padding);
   border-radius: var(--standard-border-radius);
   position: relative;
 }
 
-.form-wrap .close-button {
-  top: calc(var(--form-padding) / 3);
-  right: calc(var(--form-padding) / 3);
+.form-wrap form {
+  width: 100%;
 }
 
 .form-field {

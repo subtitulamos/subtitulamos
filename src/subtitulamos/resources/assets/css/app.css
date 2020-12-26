@@ -399,6 +399,15 @@ footer > #footer-content {
   z-index: 2;
 }
 
+#overlay-content {
+  padding: var(--spacing-xl);
+}
+
+.overlay-content .close-button {
+  right: 15px;
+  top: 12px;
+}
+
 .close-button {
   position: absolute;
   padding: 10px;
