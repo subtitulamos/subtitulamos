@@ -1,0 +1,96 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
+@import "app.css";
+@import "form.css";
+
+.form-wrap {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+
+  #file-upload-container {
+    width: 100%;
+    height: 300px;
+    border-radius: var(--standard-border-radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: var(--color-offwhite);
+    margin-bottom: var(--spacing-xl);
+
+    &:hover {
+      i {
+        font-size: 5.5rem;
+      }
+    }
+
+    &:active {
+      i {
+        font-size: 4.5rem;
+      }
+    }
+
+    i {
+      font-size: 4.5rem;
+      margin-bottom: var(--spacing-m);
+      height: 5rem;
+      width: 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: font-size 0.1s ease;
+      color: var(--color-gray-d);
+    }
+
+    &.has-file {
+      i {
+        color: var(--color-green);
+      }
+
+      #file-upload-instructions {
+        p {
+          display: none;
+
+          &:last-of-type {
+            display: block;
+          }
+        }
+      }
+    }
+
+    input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+
+    #file-upload-instructions {
+      margin-bottom: var(--spacing-xs);
+
+      p {
+        margin-bottom: var(--spacing-xxs);
+        text-align: center;
+
+        &:last-of-type {
+          display: none;
+        }
+      }
+    }
+
+    #file-name {
+      width: 100%;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+    }
+  }
+}

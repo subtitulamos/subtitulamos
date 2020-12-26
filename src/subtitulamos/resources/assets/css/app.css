@@ -27,19 +27,21 @@
   --color-blue-b: #7d91e9;
   --color-blue-c: #a6b4f4;
   --color-blue-d: #dce3ff;
-  --color-green: #47b66e;
+  --color-green: #60b37d;
   --color-yellow: #f8cb5f;
   --color-yellow-darker: #eabf27;
   --color-red: #ef7868;
-  --standard-select-button-input-padding: 12px 15px;
-  --standard-border-radius: 0.5rem;
+  --standard-select-button-input-padding: 0.75rem 0.9375rem;
+  --standard-border-radius: 0.4rem;
   --max-width: 1200px;
   --footer-padding-y: 120px;
-  --spacing-l: 30px;
-  --spacing-m: 22px;
-  --spacing-s: 15px;
-  --spacing-xs: 10px;
-  --spacing-xxs: 5px;
+  --spacing-xxl: 2.7rem;
+  --spacing-xl: 2.3rem;
+  --spacing-l: 1.875rem;
+  --spacing-m: 1.375rem;
+  --spacing-s: 0.9375rem;
+  --spacing-xs: 0.625rem;
+  --spacing-xxs: 0.312rem;
 }
 
 /* Prevent a white border by the bottom */
@@ -99,10 +101,6 @@ h3 {
   margin: 0;
 }
 
-h1 {
-  margin-bottom: var(--spacing-l);
-}
-
 a:hover,
 a:active {
   color: var(--color-blue-a) !important;
@@ -150,6 +148,7 @@ a.light:active {
 
 h1 {
   font-size: 1.7rem !important;
+  margin-bottom: var(--spacing-l);
 }
 
 h2 {

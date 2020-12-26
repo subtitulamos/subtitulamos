@@ -3,8 +3,8 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { onDomReady } from "./utils";
-import "../css/upload.css";
+import { get, onDomReady } from "./utils";
+import "../css/upload.scss";
 
 let uploadInfo = {
   season: "",
@@ -145,5 +145,12 @@ onDomReady(function () {
           reportUnknownError();
         }
       });
+  });
+
+  get(".file-input").addEventListener("change", (e) => {
+    const $filename = e.target.value.split(/(\\|\/)/g).pop();
+
+    get("#file-name").innerHTML = $filename;
+    get("#file-upload-container").classList.toggle("has-file", $filename !== "");
   });
 });
