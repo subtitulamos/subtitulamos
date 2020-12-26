@@ -24,7 +24,7 @@ function splitSeasonAndEpisodeCallback() {
   } else if (typeof match[1] !== "undefined" && typeof match[2] === "undefined") {
     error = "Faltan número de episodio y nombre del episodio (Formato: 0x00 - Nombre)";
   } else if (typeof match[1] !== "undefined" && typeof match[2] !== "undefined" && !match[3]) {
-    error = "Falta el nombre del episodio";
+    error = "Falta el nombre del episodio (Formato: 0x00 - Nombre)";
   }
 
   uploadInfo = {
