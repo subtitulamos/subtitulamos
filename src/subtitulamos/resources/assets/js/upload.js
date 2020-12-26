@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { get, onDomReady } from "./utils";
+import { get, get_all, onDomReady } from "./utils";
 import "../css/upload.scss";
 import "../css/rules.scss";
 
@@ -27,77 +27,51 @@ function splitSeasonAndEpisodeCallback() {
     error = "Falta el nombre del episodio";
   }
 
-  if (error) {
-    uploadInfo = {
-      season: "",
-      episode: "",
-      name: "",
-    };
-  } else {
-    uploadInfo = {
-      season: match[1],
-      episode: match[2],
-      name: match[3].trim(),
-    };
-  }
+  uploadInfo = {
+    season: error ? "" : match[1],
+    episode: error ? "" : match[2],
+    name: error ? "" : match[3].trim(),
+  };
 
-  const isError = error !== "";
-  document.getElementById("upload-button").disabled = isError;
-
-  const $nameStatus = document.getElementById("name-status");
-  $nameStatus.classList.toggle("hidden", !isError);
-  $nameStatus.innerHTML = error;
+  this.setCustomValidity(error);
 }
 
 onDomReady(function () {
-  let $newShowTemplate = document.getElementById("new-show-tpl");
   let $newShow;
   document.getElementById("show-id").addEventListener("change", function () {
     if (this.value == "NEW") {
       if (!$newShow) {
-        this.closest(".field-body").appendChild($newShowTemplate.content.cloneNode(true));
-        $newShow = document.getElementById("new-show");
+        $newShow = get("#new-show");
+        $newShow.closest(".form-field").classList.toggle("hidden", false);
         $newShow.focus();
       }
     } else if ($newShow) {
-      this.closest(".field-body").children[1].remove();
+      $newShow.closest(".form-field").classList.toggle("hidden", true);
       $newShow = null;
     }
   });
 
   // Logic for splitting season/episode and name
-  document.getElementById("name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
-  document.getElementById("name").addEventListener("change", splitSeasonAndEpisodeCallback);
-
-  document
-    .querySelectorAll("#show-id, #lang, #version, #comments, #new-show, #sub")
-    .forEach(($ele) =>
-      $ele.addEventListener("change", function () {
-        document.getElementById(`${this.id}-status`).classList.toggle("hidden", true);
-      })
-    );
+  get("#name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
+  get("#name").addEventListener("change", splitSeasonAndEpisodeCallback);
 
   // SRT FILE
   // Always clear the file input on load
-  let $sub = document.getElementById("sub").cloneNode(true);
-  document.getElementById("sub").replaceWith($sub);
+  let $sub = get("#sub").cloneNode(true);
+  get("#sub").replaceWith($sub);
 
   // Update of SRT file selection
-  $sub.addEventListener("change", function (e) {
-    let files = $sub.files;
-    if (files.length > 0) {
-      document.getElementById("sub-name").innerHTML = files[0].name;
-    }
+  $sub.addEventListener("change", (e) => {
+    const $filename = e.target.value.split(/(\\|\/)/g).pop();
+
+    get("#file-name").innerHTML = $filename;
+    get("#file-upload-container").classList.toggle("has-file", $filename !== "");
   });
 
   document.getElementById("upload-form").addEventListener("submit", function (e) {
     e.preventDefault(); // Don't submit the form
-  });
 
-  document.getElementById("upload-button").addEventListener("click", function (e) {
-    const form = this.closest("form");
-    this.classList.toggle("is-loading", true);
-
+    const form = e.target;
     let data = new FormData(form);
     data.delete("name");
     data.append("title", uploadInfo.name);
@@ -122,11 +96,6 @@ onDomReady(function () {
         window.location.href = data;
       })
       .catch((err) => {
-        this.classList.toggle("is-loading", false);
-        document
-          .querySelectorAll("[data-status]")
-          .forEach(($ele) => $ele.classList.toggle("hidden", true));
-
         const reportUnknownError = () =>
           Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         if (err.response) {
@@ -147,11 +116,6 @@ onDomReady(function () {
         }
       });
   });
-
-  get(".file-input").addEventListener("change", (e) => {
-    const $filename = e.target.value.split(/(\\|\/)/g).pop();
-
-    get("#file-name").innerHTML = $filename;
-    get("#file-upload-container").classList.toggle("has-file", $filename !== "");
-  });
 });
+
+document.getElementById("upload-button").addEventListener("click", function (e) {});
