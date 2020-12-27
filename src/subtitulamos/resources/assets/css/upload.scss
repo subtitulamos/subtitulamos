@@ -29,7 +29,8 @@
     background-color: var(--color-offwhite);
     margin-bottom: var(--spacing-l);
 
-    &:hover {
+    &:hover,
+    &.dragging {
       i {
         font-size: 5.5rem;
       }
