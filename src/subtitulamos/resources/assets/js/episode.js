@@ -5,7 +5,7 @@
 
 import Vue from "vue";
 import "./vue/comment.js";
-import "../css/episode.css";
+import "../css/episode.scss";
 import { onDomReady, easyFetch } from "./utils.js";
 
 const $newTranslationButton = document.querySelector(".translate_subtitle");
