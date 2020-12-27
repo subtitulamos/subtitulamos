@@ -52,29 +52,34 @@ class EpisodeController
             }
         }
 
+        $showId = $ep->getShow()->getId();
         $epSeason = $ep->getSeason();
-        $epNumber = $ep->getNumber();
 
-        // Get ids for the jump arrows
-        $nextEp = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number > :epnumber) OR e.season > :epseason) ORDER BY e.season ASC, e.number ASC')
-            ->setParameter('epseason', $epSeason)
-            ->setParameter('epnumber', $epNumber)
-            ->setParameter('show', $ep->getShow()->getId())
-            ->setMaxResults(1)
-            ->getOneOrNullResult();
-        $prevEp = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :show AND ((e.season = :epseason AND e.number < :epnumber) OR e.season < :epseason) ORDER BY e.season DESC, e.number DESC')
-            ->setParameter('epseason', $epSeason)
-            ->setParameter('epnumber', $epNumber)
-            ->setParameter('show', $ep->getShow()->getId())
-            ->setMaxResults(1)
-            ->getOneOrNullResult();
+        // Get all episodes
+        $episodeListRes = $em->createQuery('SELECT DISTINCT e.season, e.number FROM App:Episode e WHERE e.show = :id')
+            ->setParameter('id', $showId)
+            ->getResult();
+
+        $seasons = [];
+        $episodesInSeason = [];
+        foreach ($episodeListRes as $res) {
+            if (!in_array((int)$res['season'], $seasons)) {
+                $seasons[] = (int)$res['season'];
+            }
+
+            if ((int)$res['season'] === $epSeason) {
+                $episodesInSeason[] = (int)$res['number'];
+            }
+        }
+        sort($seasons);
+        sort($episodesInSeason);
 
         return $twig->render($response, 'episode.twig', [
             'episode' => $ep,
             'langs' => $langs,
             'slug' => $properSlug,
-            'prev_url' => $prevEp ? $urlHelper->pathFor('episode', ['id' => $prevEp->getId(), 'slug' => $slugify->slugify($prevEp->getFullName())]) : '',
-            'next_url' => $nextEp ? $urlHelper->pathFor('episode', ['id' => $nextEp->getId(), 'slug' => $slugify->slugify($nextEp->getFullName())]) : ''
+            'season_list' => $seasons,
+            'episodes_list_in_season' => $episodesInSeason,
         ]);
     }
 
