@@ -12,7 +12,7 @@
 
     <div id="letter-container">
       {% for letter, shows in shows_by_letter  %}
-      <a class="letter" data-letter="{{letter}}" href="/shows#{{letter}}">{{ letter|upper }}</a>
+      <button class="letter" data-letter="{{letter}}">{{ letter|upper }}</button>
       {% endfor %}
     </div>
 
