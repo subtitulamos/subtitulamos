@@ -18,15 +18,10 @@ use Slim\Views\Twig;
 
 class UserController
 {
-    public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
+    private function renderProfile($user, $request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify, bool $isSelf)
     {
-        $user = $em->getRepository('App:User')->find($userId);
-        if (!$user) {
-            throw new \Slim\Exception\HttpNotFoundException($request);
-        }
-
         $upEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v WHERE v.user = :uid GROUP BY e.id')
-            ->setParameter('uid', $userId)->getResult();
+            ->setParameter('uid', $user->getId())->getResult();
 
         $uploadedEpisodes = [];
         foreach ($upEpisodesRes as $ep) {
@@ -39,7 +34,7 @@ class UserController
         }
 
         $collabEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN sb.sequences s WHERE s.author = :uid AND sb.directUpload = 0 GROUP BY e.id')
-            ->setParameter('uid', $userId)->getResult();
+            ->setParameter('uid', $user->getId())->getResult();
 
         $colaboratedEpisodes = [];
         foreach ($collabEpisodesRes as $ep) {
@@ -51,19 +46,27 @@ class UserController
             ];
         }
 
-        return $twig->render($response, 'user_profile.twig', [
+        return $twig->render($response, 'user.twig', [
             'user' => $user,
             'uploaded_episodes' => $uploadedEpisodes,
-            'collaborated_episodes' => $colaboratedEpisodes
+            'collaborated_episodes' => $colaboratedEpisodes,
+            'page_type' => $isSelf ? 'me' : 'public'
         ]);
     }
 
-    public function viewSettings($request, $response, Twig $twig, Auth $auth)
+    public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
     {
-        $user = $auth->getUser();
-        return $twig->render($response, 'user_settings.twig', [
-            'user' => $user
-        ]);
+        $user = $em->getRepository('App:User')->find($userId);
+        if (!$user) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        return $this->renderProfile($user, $request, $response, $twig, $em, $urlHelper, $slugify, false);
+    }
+
+    public function viewSettings($request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify, Auth $auth)
+    {
+        return $this->renderProfile($auth->getUser(), $request, $response, $twig, $em, $urlHelper, $slugify, true);
     }
 
     public function saveSettings($request, $response, Twig $twig, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
