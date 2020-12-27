@@ -1,0 +1,182 @@
+@import "app.css";
+
+#show-info-header {
+  margin-bottom: var(--spacing-l);
+
+  h1 {
+    margin-bottom: var(--spacing-xxs);
+  }
+
+  #episode-choices,
+  #season-choices,
+  #season-line,
+  #episode-line,
+  #episode-name {
+    display: flex;
+    align-items: center;
+  }
+
+  #season-line,
+  #episode-line {
+    padding: var(--spacing-xxs) 0;
+
+    span {
+      width: 85px;
+      font-size: 0.65rem;
+    }
+
+    .choice {
+      color: var(--color-gray-c);
+      border-radius: 50%;
+      height: 2rem;
+      width: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+
+      &:hover {
+        border: 1px solid var(--color-blue-b);
+      }
+
+      &.selected {
+        background-color: var(--color-blue-b);
+        color: var(--color-offwhite);
+      }
+    }
+  }
+
+  #season-line {
+    padding-top: 0;
+    border-bottom: 1px solid var(--color-gray-divisions);
+  }
+
+  #episode-line {
+    padding-bottom: 0;
+  }
+
+  #episode-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--spacing-s);
+
+    #episode-name {
+      h3 {
+        margin-bottom: 0;
+        margin-right: var(--spacing-xxs);
+      }
+
+      div {
+        margin-top: 3px;
+      }
+    }
+
+    #episode-buttons {
+      button {
+        border: 1px solid var(--color-blue-a);
+        padding: 0.5rem 1rem;
+        border-radius: 0.6rem;
+
+        &:not(:last-child) {
+          margin-right: var(--spacing-xs);
+        }
+
+        &:hover {
+          background-color: var(--color-blue-a);
+          color: var(--color-offwhite);
+        }
+      }
+    }
+  }
+}
+
+#languages {
+  .language-container {
+    background-color: var(--color-offwhite);
+    padding: var(--spacing-m);
+    border-radius: var(--standard-border-radius);
+    position: relative;
+
+    .collapser-button {
+      position: absolute;
+      top: var(--spacing-m);
+      right: var(--spacing-m);
+    }
+
+    .version-container {
+      border-bottom: 1px solid var(--color-gray-divisions-lighter);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      p:first-child {
+        color: var(--color-gray-d);
+      }
+
+      .version-info {
+        display: flex;
+        align-items: center;
+        margin-top: var(--spacing-s);
+        flex-shrink: 0;
+
+        .version-buttons {
+          display: flex;
+          align-items: center;
+
+          button:hover {
+            color: var(--color-blue-b);
+            transition: all 0.3s ease;
+          }
+
+          .download-button {
+            color: var(--color-gray-d);
+            font-size: 1.75rem;
+            height: 1.75rem;
+            width: 1.75rem;
+            padding: 0;
+            margin-right: var(--spacing-xs);
+          }
+
+          .edit-button {
+            margin-top: 2px;
+            color: var(--color-gray-d);
+            font-size: 1.1rem;
+            position: relative;
+            border: 3px solid var(--color-gray-d);
+            height: 1.6rem;
+            width: 1.6rem;
+            border-radius: 50%;
+
+            &:hover {
+              border-color: var(--color-blue-b);
+            }
+
+            i {
+              position: absolute;
+              top: -2px;
+              right: -2px;
+              text-shadow: 0px -3px var(--color-offwhite), 0px 3px var(--color-offwhite);
+            }
+          }
+        }
+
+        .progress-bar-container {
+          flex: 1;
+          margin: 0 var(--spacing-m);
+
+          .progress-bar {
+            background-color: var(--color-gray-divisions-lighter);
+            height: 5px;
+            border-radius: 5px;
+            width: 100%;
+
+            .progress {
+            }
+          }
+        }
+      }
+    }
+  }
+}

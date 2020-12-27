@@ -21,7 +21,7 @@
   --color-gray-a: #555555;
   --color-gray-b: #707070;
   --color-gray-c: #abacae;
-  --color-gray-d: #e3e4ec;
+  --color-gray-d: #d7d8df;
   --color-gray-blue: #f6f7fc;
   --color-blue-a: #6075cd;
   --color-blue-b: #7d91e9;
@@ -139,11 +139,19 @@ a.light:active {
 }
 
 .text.tiny {
-  font-size: 0.78rem !important;
+  font-size: 0.8rem !important;
 }
 
 .text.small {
   font-size: 0.9rem !important;
+}
+
+.blue-a {
+  color: var(--color-blue-a);
+}
+
+.blue-b {
+  color: var(--color-blue-b);
 }
 
 h1 {

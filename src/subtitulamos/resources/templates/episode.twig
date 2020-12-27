@@ -7,44 +7,73 @@
 {% endblock %}
 
 {% block content %}
-
-<div id="subtitle_content">
-  <div class="container">
-    <!-- Breadcrumbs -->
-    <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-      <ul>
-        <li><a href="/">Subtitulamos.tv</a></li>
-        <li><a href="/shows/{{ episode.show.id }}">{{ episode.show.name }}</a></li>
-        <li><a href="/shows/{{ episode.show.id }}/season/{{ episode.season }}">Temporada {{ episode.season }}</a></li>
-        <li class="is-active"><a href="#">Episodio {{ episode.number }}</a></li>
-      </ul>
-    </nav>
-
-    <!-- Sub list (languages, options, etc) -->
-    <div id="subtitle_details">
-      <a href='{{ prev_url }}' {% if not prev_url %}disabled='disabled' class='no-other-episode'{% endif %}>
-        <div id="previous_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Episodio Anterior">
-          <i class="fa fa-angle-left" aria-hidden="true"></i>
-        </div>
-      </a>
-
-      <div id="section-title">
-        <div class='show-name'>{{ episode.show.name }}</div>
-        <div class='episode-name'>
-          {{ episode.season }}x{{ "%02d"|format(episode.number) }} - {{ episode.name }}
-        </div>
+<div class="content">
+  <div id="show-info-header">
+    <h1 class="blue-a">{{ episode.show.name }}</h1>
+    <div id="season-line">
+      <span class="text bold spaced-wide">TEMPORADA</span>
+      <div id="season-choices">
+        <a href="" class="choice">{{ episode.season }}</a>
+      </div>
+    </div>
+    <div id="episode-line">
+      <span class="text bold spaced-wide">EPISODIO</span>
+      <div id="episode-choices">
+        <a href="" class="choice">{{ episode.number }}</a>
+      </div>
+    </div>
+    <div id="episode-header">
+      <div id="episode-name">
+        <h3 class="blue-a">{{ episode.name }}</h3>
+        <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
+      </div>
+      <div id="episode-buttons">
+        <button class="text tiny blue-a">Subir resincronización</button>
+        <button class="text tiny blue-a">+ Nuevo idioma</button>
+      </div>
+    </div>
+    <div id="download-count" class="text tiny">
+      <i class="fas fa-arrow-alt-circle-down"></i>
+      <span id="count" class="text bold">2 000 020</span>
+      <span >descargas</span>
+    </div>
+  </div>
+  <div id="languages">
+    {% for lang, subs in langs %}
+    <div class="language-container">
+      <div class="collapser-button blue-a">
+        <i class="fas fa-chevron-up"></i>
       </div>
 
-      <a href='{{ next_url }}' {% if not next_url %}disabled='disabled' class='no-other-episode'{% endif %}>
-        <div id="next_episode" class="clips_pages_button hint--top hint--bounce hint--rounded" data-hint="Siguiente Episodio">
-          <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </div>
-      </a>
+      <div class="text small bold blue-a">{{ lang }}</div>
 
-      <br/>
-      <br/>
-      {% for lang, subs in langs %}
-        <div class="subtitle_language">{{ lang }}</div>
+      {% for sub in subs %}
+      <div class="version-container">
+        <p class="text tiny">versión</p>
+        <p class="text tiny spaced bold">{{ sub.version.name }}</p>
+        <div class="version-info">
+          <div class="version-buttons">
+            <button class="download-button"><i class="far fa-arrow-alt-circle-down"></i></button>
+            <button class="edit-button"><i class="fas fa-pencil-alt"></i></button>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar">
+              <div class="progress"></div>
+            </div>
+            <div class="more-info"></div>
+          </div>
+          <div class="more-options">
+            <i class="fas fa-ellipsis-v"></i>
+            <div class="more-options-list">
+              <div class="option"></div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div>
         {% for sub in subs %}
           {% if sub.progress < 20 %}
             {% set progress_class = '019' %}
@@ -214,7 +243,6 @@
       </div>
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
