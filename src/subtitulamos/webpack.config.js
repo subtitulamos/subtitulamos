@@ -16,9 +16,8 @@ module.exports = (env, argv) => {
       upload: "./resources/assets/js/upload.js",
       upload_resync: "./resources/assets/js/upload_resync.js",
       translate: "./resources/assets/js/translate.js",
-      user_settings: "./resources/assets/js/user_settings.js",
       comment_list: "./resources/assets/js/comment_list.js",
-      user_profile: "./resources/assets/js/user_profile.js",
+      user: "./resources/assets/js/user.js",
       panel: "./resources/assets/js/panel/adminlte.js",
       panel_alerts: "./resources/assets/js/panel/alerts.js",
       // Vendor JS package

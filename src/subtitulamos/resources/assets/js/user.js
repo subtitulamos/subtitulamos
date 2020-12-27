@@ -4,11 +4,19 @@
  */
 
 import Vue from "vue";
-import "../css/user_settings.css";
+import "../css/user.scss";
 
 let page = new Vue({
   el: "#user-settings",
   data: {
     newpwd: "",
+  },
+});
+
+let page_2 = new Vue({
+  el: "#user-profile",
+  data: {
+    mode: "normal",
+    duration: "",
   },
 });
