@@ -79,24 +79,30 @@ onDomReady(function () {
   document.getElementById("upload-form").addEventListener("submit", function (e) {
     e.preventDefault(); // Don't submit the form
 
+    $getEle("#uploading-overlay").classList.toggle("hidden", false);
+    $getEle("form").classList.toggle("uploading", true);
+
     const form = e.target;
     let data = new FormData(form);
     data.delete("name");
     data.append("title", uploadInfo.name);
     data.append("season", uploadInfo.season);
     data.append("episode", uploadInfo.episode);
+
     fetch("/upload", {
       method: "POST",
       body: data, // Already form-encoded
     })
       .then((res) => {
+        $getEle("#uploading-overlay").classList.toggle("hidden", true);
+        $getEle("form").classList.toggle("uploading", false);
+
         if (res.ok === false) {
           throw {
             error: true,
             response: res,
           };
         }
-
         return res;
       })
       .then((res) => res.text())
