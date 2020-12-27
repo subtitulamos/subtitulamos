@@ -83,6 +83,8 @@
   #category-navigation-list {
     padding-top: 20px;
     margin-top: -20px;
+    width: calc(100% - var(--navigation-chevron-width) * 2);
+    margin: 0 auto;
 
     #the-latest {
       position: absolute;
