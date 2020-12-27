@@ -149,6 +149,7 @@
             width: 1.8rem;
             padding: 0;
             margin-right: var(--spacing-xs);
+            margin-top: -3px;
 
             &.unavailable {
               opacity: 0.4;
@@ -156,7 +157,6 @@
           }
 
           .edit-button {
-            margin-top: 2px;
             color: var(--color-gray-d);
             font-size: 1.1rem;
             position: relative;
@@ -192,8 +192,8 @@
 
           .progress-bar {
             background-color: var(--color-gray-divisions-lighter);
-            height: 5px;
-            border-radius: 5px;
+            height: 6px;
+            border-radius: 3px;
             width: 100%;
             margin-bottom: var(--spacing-xxs);
 
