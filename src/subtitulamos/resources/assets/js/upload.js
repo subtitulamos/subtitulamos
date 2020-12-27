@@ -124,6 +124,18 @@ onDomReady(function () {
   $getAllEle(".dropdown-field").forEach((dropdown) => {
     dropdown.addEventListener("click", invertDropdown);
   });
+
+  // Add style when dragging file over the file container
+  $getEle("#file-upload-container").addEventListener("dragenter", (e) => {
+    const $element = e.currentTarget;
+    $element.classList.toggle("dragging", true);
+
+    ["dragleave", "mouseleave", "mouseup"].forEach((event) =>
+      $element.addEventListener(event, () => {
+        $element.classList.toggle("dragging", false);
+      })
+    );
+  });
 });
 
 function invertDropdown(e) {
