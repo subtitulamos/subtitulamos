@@ -1,0 +1,35 @@
+{% extends "base.twig" %}
+{% import 'macros/assets.twig' as assets %}
+{% import 'macros/alerts.twig' as alerts %}
+
+{% block meta %}
+  <meta name="robots" content="noindex">
+{% endblock %}
+{% block title %}Perfil de {{ user.username }}{% endblock %}
+{% block css %}
+  {{ assets.css('user') }}
+{% endblock %}
+
+{% block content %}
+<div class="content limited-width">
+  <div id='user-profile' class='container'>
+    {% for error in auth.flash.errors() %}
+      {{ alerts.show('error', error) }}
+    {% endfor %}
+    {% for success in auth.flash.successes() %}
+      {{ alerts.show('success', success) }}
+    {% endfor %}
+
+    <div>
+      {% if page_type == "me" %}
+        {% include "user/user_private.twig" %}
+      {% endif %}
+      {% include "user/user_public.twig" %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ assets.js('user') }}
+{% endblock %}
