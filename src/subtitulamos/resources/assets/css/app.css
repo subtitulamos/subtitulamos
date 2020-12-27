@@ -278,7 +278,7 @@ header {
 }
 
 .content {
-  --content-pading-x: 25px;
+  --content-pading-x: 40px;
   width: calc(100% - var(--content-pading-x) * 2);
   padding: 40px var(--content-pading-x) var(--footer-padding-y) var(--content-pading-x);
   margin: 0 auto;
