@@ -30,6 +30,7 @@
   --color-green: #60b37d;
   --color-yellow: #f8cb5f;
   --color-yellow-darker: #eabf27;
+  --color-orange: #ec9752;
   --color-red: #ef7868;
   --standard-select-button-input-padding: 0.75rem 0.9375rem;
   --standard-border-radius: 0.4rem;
@@ -135,7 +136,7 @@ a.light:active {
 }
 
 .text.mini {
-  font-size: 0.6rem !important;
+  font-size: 0.7rem !important;
 }
 
 .text.tiny {
