@@ -39,7 +39,8 @@ class EpisodeController
             return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $ep->getId(), 'slug' => $properSlug])->withStatus(301);
         }
 
-        // Determine which languages this sub is using
+        // Collect info from versions - which languages this sub is using, and total downloads
+        $downloads = 0;
         $langs = [];
         foreach ($ep->getVersions() as $version) {
             foreach ($version->getSubtitles() as $sub) {
@@ -49,13 +50,13 @@ class EpisodeController
                 }
 
                 $langs[$lang][] = $sub;
+                $downloads += $sub->getDownloads();
             }
         }
 
         $showId = $ep->getShow()->getId();
-        $epSeason = $ep->getSeason();
 
-        // Get all episodes
+        // Get the data all episodes in all seasons to show top nav bar
         $episodesInShow = $em->createQuery('SELECT DISTINCT e FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
             ->setParameter('id', $showId)
             ->getResult();
@@ -91,11 +92,13 @@ class EpisodeController
             ]);
         }
 
+        // Render
         return $twig->render($response, 'episode.twig', [
             'episode' => $ep,
             'langs' => $langs,
             'slug' => $properSlug,
             'season_data' => $seasons,
+            'downloads' => $downloads
         ]);
     }
 
