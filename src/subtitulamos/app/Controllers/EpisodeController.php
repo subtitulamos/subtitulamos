@@ -56,30 +56,46 @@ class EpisodeController
         $epSeason = $ep->getSeason();
 
         // Get all episodes
-        $episodeListRes = $em->createQuery('SELECT DISTINCT e.season, e.number FROM App:Episode e WHERE e.show = :id')
+        $episodesInShow = $em->createQuery('SELECT DISTINCT e FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
             ->setParameter('id', $showId)
             ->getResult();
 
         $seasons = [];
-        $episodesInSeason = [];
-        foreach ($episodeListRes as $res) {
-            if (!in_array((int)$res['season'], $seasons)) {
-                $seasons[] = (int)$res['season'];
+        foreach ($episodesInShow as $curEp) {
+            $curSeasonNum = $curEp->getSeason();
+            $curEpisodeNum = $curEp->getNumber();
+            if (!isset($seasons[$curSeasonNum])) {
+                $seasons[$curSeasonNum] = [
+                    'number' => $curSeasonNum,
+                    'url' => '#',
+                    'episodes' => []
+                ];
             }
 
-            if ((int)$res['season'] === $epSeason) {
-                $episodesInSeason[] = (int)$res['number'];
-            }
+            $seasons[$curSeasonNum]['episodes'][] = [
+                'ep' => $curEp,
+                'number' => $curEpisodeNum,
+                'url' => $urlHelper->pathFor('episode', ['id' => $curEp->getId(), 'slug' => $slugify->slugify($curEp->getFullName())])
+            ];
         }
-        sort($seasons);
-        sort($episodesInSeason);
+
+        foreach (array_keys($seasons) as $curSeasonNum) {
+            usort($seasons[$curSeasonNum]['episodes'], function ($a, $b) {
+                return $a['number'] <=> $b['number'];
+            });
+
+            $topEpisode = $seasons[$curSeasonNum]['episodes'][0];
+            $seasons[$curSeasonNum]['url'] = $urlHelper->pathFor('episode', [
+                'id' => $topEpisode['ep']->getId(),
+                'slug' => $slugify->slugify($topEpisode['ep']->getFullName())
+            ]);
+        }
 
         return $twig->render($response, 'episode.twig', [
             'episode' => $ep,
             'langs' => $langs,
             'slug' => $properSlug,
-            'season_list' => $seasons,
-            'episodes_list_in_season' => $episodesInSeason,
+            'season_data' => $seasons,
         ]);
     }
 
