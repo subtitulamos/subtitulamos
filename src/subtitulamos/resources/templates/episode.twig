@@ -45,107 +45,111 @@
   <div id="languages">
     {% for lang, subs in langs %}
       <div class="language-container">
-        <div class="collapser-button blue-a">
+        <button class="collapser-button blue-a">
           <i class="fas fa-chevron-up"></i>
-        </div>
+        </button>
 
-        <div class="text small bold blue-a">{{ lang }}</div>
+        <div class="text small bold blue-a language-name">{{ lang }}</div>
 
-        {% for sub in subs %}
-          {% if sub.progress < 20 %}
-            {% set progress_class = '019' %}
-          {% elseif sub.progress < 50 %}
-            {% set progress_class = '2049' %}
-          {% elseif sub.progress < 70 %}
-            {% set progress_class = '5069' %}
-          {% elseif sub.progress < 80 %}
-            {% set progress_class = '7079' %}
-          {% elseif sub.progress < 90 %}
-            {% set progress_class = '8089' %}
-          {% elseif sub.progress < 100 %}
-            {% set progress_class = '9099' %}
-          {% elseif sub.progress >= 100 %}
-            {% set progress_class = '100' %}
-          {% endif %}
+        <div class="language-content">
+          {% for sub in subs %}
+            {% if sub.progress < 20 %}
+              {% set progress_class = '019' %}
+            {% elseif sub.progress < 50 %}
+              {% set progress_class = '2049' %}
+            {% elseif sub.progress < 70 %}
+              {% set progress_class = '5069' %}
+            {% elseif sub.progress < 80 %}
+              {% set progress_class = '7079' %}
+            {% elseif sub.progress < 90 %}
+              {% set progress_class = '8089' %}
+            {% elseif sub.progress < 100 %}
+              {% set progress_class = '9099' %}
+            {% elseif sub.progress >= 100 %}
+              {% set progress_class = '100' %}
+            {% endif %}
 
-          {% set pause_class = sub.pause ? 'paused' : '' %}
-          {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
+            {% set pause_class = sub.pause ? 'paused' : '' %}
+            {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
 
-          <div class="version-container">
-            <p class="text mini">versión</p>
-            <p class="text tiny spaced bold">{{ sub.version.name }}</p>
-            <div class="version-info">
-              <div class="version-buttons">
-                {% if can_download %}
-                <a href="/subtitles/{{ sub.id }}/download">
-                {% endif %}
-                  <div class="download-button
-                    {% if not can_download %}unavailable{% endif %}"
-                    data-hint="Descargar subtitulo">
-                    <i class="far fa-arrow-alt-circle-down"></i>
-                  </div>
-                {% if can_download %}
-                </a>
-                {% endif %}
-                <a href="/subtitles/{{ sub.id }}/translate">
-                  <div class="edit-button"
-                    data-hint="Colaborar en la traducción">
-                    <i class="fas fa-pencil-alt"></i>
-                  </div>
-                </a>
-              </div>
-              <div class="progress-bar-container">
-                {% if sub.directUpload %}
-                  <div class="subtitle-uploader">
-                    <span class="text mini">
-                      {% if not sub.resync %}
-                      ORIGINAL
-                      {% else %}
-                      RESINCRONIZADO
-                      {% endif %}
-                    </span>
-                    <a href="/users/{{ sub.version.user.id }}" class="uploader_name text tiny bold blue-a">
-                      <i class="fas fa-file-import"></i>
-                      {{ sub.version.user.username }}
-                    </a>
-                  </div>
-                {% else %}
-                  <div class="progress-bar {{ pause_class }}">
-                    <div class="progress progress_{{ progress_class }}"
-                      style="width: {{ max(sub.progress//1, 7) }}%">
+            <div class="version-container">
+              <p class="text mini">versión</p>
+              <p class="text tiny spaced bold">{{ sub.version.name }}</p>
+              <div class="version-info">
+                <div class="version-buttons">
+                  {% if can_download %}
+                  <a href="/subtitles/{{ sub.id }}/download">
+                  {% endif %}
+                    <div class="download-button
+                      {% if not can_download %}unavailable{% endif %}"
+                      data-hint="Descargar subtitulo">
+                      <i class="far fa-arrow-alt-circle-down"></i>
                     </div>
-                  </div>
-                {% endif %}
-                <div class="more-info">
+                  {% if can_download %}
+                  </a>
+                  {% endif %}
+                  <a href="/subtitles/{{ sub.id }}/translate">
+                    <div class="edit-button"
+                      data-hint="Colaborar en la traducción">
+                      <i class="fas fa-pencil-alt"></i>
+                    </div>
+                  </a>
+                </div>
+                <div class="progress-bar-container">
                   {% if sub.directUpload %}
-                  <span class="text tiny">
-                    <i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}
-                  </span>
+                    <div class="subtitle-uploader">
+                      <span class="text mini">
+                        {% if not sub.resync %}
+                        ORIGINAL
+                        {% else %}
+                        RESINCRONIZADO
+                        {% endif %}
+                      </span>
+                      <a href="/users/{{ sub.version.user.id }}" class="uploader_name text tiny bold blue-a">
+                        <i class="fas fa-file-import"></i>
+                        {{ sub.version.user.username }}
+                      </a>
+                    </div>
                   {% else %}
-                    <span class="text tiny bold percentage-value">{{ sub.progress // 1}}%</span>
-                    {% if sub.pause %}
-                      {% if sub.progress >= 100 %}
-                        <span data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
-                          (En revisión)
-                        </span>
-                      {% elseif sub.progress >= 90 %}
-                        <span data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
-                          (Pendiente de revisión)
-                        </span>
+                    <div class="progress-bar {{ pause_class }}">
+                      <div class="progress progress_{{ progress_class }}"
+                        style="width: {{ max(sub.progress//1, 7) }}%">
+                      </div>
+                    </div>
+                  {% endif %}
+                  <div class="more-info">
+                    {% if sub.directUpload %}
+                    <span class="text tiny">
+                      <i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}
+                    </span>
+                    {% else %}
+                      <span class="text tiny bold percentage-value">
+                        {{ sub.progress // 1}}%
+                      </span>
+                      {% if sub.pause %}
+                        {% if sub.progress >= 100 %}
+                          <span data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
+                            (En revisión)
+                          </span>
+                        {% elseif sub.progress >= 90 %}
+                          <span data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
+                            (Pendiente de revisión)
+                          </span>
+                        {% endif %}
                       {% endif %}
                     {% endif %}
-                  {% endif %}
+                  </div>
                 </div>
-              </div>
-              <div class="more-options">
-                <i class="fas fa-ellipsis-v"></i>
-                <div class="more-options-list">
-                  <div class="option"></div>
+                <div class="more-options">
+                  <i class="fas fa-ellipsis-v"></i>
+                  <div class="more-options-list">
+                    <div class="option"></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
       </div>
     {% endfor %}
   </div>
