@@ -23,6 +23,8 @@
     <div>
       {% if page_type == "me" %}
         {% include "user/user_private.twig" %}
+      {% else %}
+        <div id='user-settings'></div> {# just filler for Vue #}
       {% endif %}
       {% include "user/user_public.twig" %}
     </div>
