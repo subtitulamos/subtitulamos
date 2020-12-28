@@ -22,9 +22,12 @@ Vue.component("comment", {
 
     <section class="comment-content">
       <p v-if="!editing" v-html="formattedText"></p>
-      <div v-else>
-        <textarea v-if="editing" v-model="text"></textarea>
-        <button @click="save">Save</button>
+      <div class="open-comment" v-else>
+        <textarea rows="4" v-if="editing" v-model="text"></textarea>
+        <button class="save-comment" @click="save">
+          <i class="fab fa-telegram-plane"></i>
+          <span class="text mini spaced">SALVAR</span>
+        </button>
       </div>
     </section>
 

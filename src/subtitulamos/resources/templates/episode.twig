@@ -176,27 +176,45 @@
         {% endfor %}
       </div>
     </div>
-  </div>
 
-  <div class='newcomment-box'>
-    {% if auth.logged %}
-      {% verbatim %}
-        <textarea id="new-comment" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
-        <span
-          class='comment-char-counter'
-          :class='{
-            "normal-count": newComment.length <= maxCommentLength*0.9,
-            "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
-            "too-many": newComment.length > maxCommentLength
-          }'
-        >
-          <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
-          </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span></span>
-        <button :class="{'hidden': newComment == '', 'is-loading': submittingComment, 'is-primary': newComment.length <= maxCommentLength, 'is-danger': newComment.length > maxCommentLength}" class="button comment-publish" @click="publishComment">Enviar</button>
-      {% endverbatim %}
-    {% else %}
-      <textarea id="new-comment"  class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
-    {% endif %}
+    <div class='newcomment-box'>
+      {% if auth.logged %}
+        {% verbatim %}
+        <div class="open-comment">
+          <textarea id="new-comment"  rows="5" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+
+          <div
+            class='comment-char-counter text tiny'
+            :class='{
+              "normal-count": newComment.length <= maxCommentLength*0.9,
+              "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
+              "too-many": newComment.length > maxCommentLength
+            }'
+          >
+            <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
+            </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
+          </div>
+
+          <button class="save-comment" @click="save"
+            :class="
+              {'hidden': newComment == '',
+              'is-loading': submittingComment,
+              'is-primary': newComment.length <= maxCommentLength,
+              'is-danger': newComment.length > maxCommentLength}
+            "
+            :disabled="newComment.length > maxCommentLength"
+            @click="publishComment">
+            <i class="fab fa-telegram-plane"></i>
+            <span class="text mini spaced">SALVAR</span>
+          </button>
+        </div>
+        {% endverbatim %}
+      {% else %}
+        <div class="open-comment">
+          <textarea id="new-comment" class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
+        </div>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endblock %}
