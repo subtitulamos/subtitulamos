@@ -37,7 +37,7 @@
 .form-field select {
   flex: 1;
   color: var(--color-gray-a);
-  padding: var(--standard-select-button-input-padding);
+  padding: var(--standard-padding);
 }
 
 .form-field > .dropdown {
@@ -90,7 +90,7 @@
 
 .form-wrap form button {
   width: 100%;
-  padding: var(--standard-select-button-input-padding);
+  padding: var(--standard-padding);
   border-radius: var(--standard-border-radius);
   background-color: var(--color-blue-b);
   height: 3.2rem;

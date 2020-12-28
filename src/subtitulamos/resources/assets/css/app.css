@@ -33,7 +33,7 @@
   --color-yellow-darker: #eabf27;
   --color-orange: #ec9752;
   --color-red: #ef7868;
-  --standard-select-button-input-padding: 0.75rem 0.9375rem;
+  --standard-padding: 0.75rem 0.9375rem;
   --standard-border-radius: 0.4rem;
   --max-width: 1200px;
   --footer-padding-y: 120px;
@@ -79,7 +79,8 @@ button {
 
 button,
 input,
-select {
+select,
+textarea {
   background: transparent;
   border: none;
   appearance: none;
@@ -239,7 +240,7 @@ header {
 #login {
   background-color: var(--color-blue-a);
   border-radius: 25px;
-  padding: var(--standard-select-button-input-padding);
+  padding: var(--standard-padding);
   color: var(--color-offwhite) !important;
 }
 
@@ -373,7 +374,7 @@ footer > #footer-content {
 }
 
 .navigation-select {
-  padding: var(--standard-select-button-input-padding);
+  padding: var(--standard-padding);
   background-color: var(--color-offwhite);
   border-radius: var(--standard-border-radius);
 }
@@ -452,7 +453,7 @@ footer > #footer-content {
   #register {
     border: 1px solid var(--color-blue-a);
     border-radius: 25px;
-    padding: var(--standard-select-button-input-padding);
+    padding: var(--standard-padding);
     margin-right: 20px;
   }
 
