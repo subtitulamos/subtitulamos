@@ -380,9 +380,11 @@
 
   .comment {
     padding: var(--spacing-m) var(--spacing-s);
+    border-bottom: 1px solid var(--color-gray-divisions);
 
-    &:not(:last-of-type) {
-      border-bottom: 1px solid var(--color-gray-divisions);
+    &:last-of-type {
+      border-bottom: none;
+      margin-bottom: var(--spacing-m);
     }
 
     .comment-info {
@@ -417,42 +419,6 @@
         cursor: pointer;
         margin-right: var(--spacing-xs);
         color: var(--color-gray-b);
-      }
-    }
-  }
-
-  #comment-pages-line,
-  #comment-pages {
-    display: flex;
-    align-items: center;
-  }
-
-  #comment-pages-line {
-    padding: var(--spacing-xxl) 0;
-
-    span {
-      width: 60px;
-      font-size: 0.65rem;
-    }
-
-    .choice {
-      color: var(--color-gray-c);
-      border-radius: 50%;
-      height: 1.8rem;
-      width: 1.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid transparent;
-      font-size: 0.9rem;
-
-      &:hover {
-        border: 1px solid var(--color-blue-b);
-      }
-
-      &.selected {
-        background-color: var(--color-blue-b);
-        color: var(--color-offwhite);
       }
     }
   }

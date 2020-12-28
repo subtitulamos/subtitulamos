@@ -199,15 +199,6 @@
       >
     </comment>
     <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
-    <div id="comment-pages-line">
-      <span class="text bold spaced-wide">PAGINA</span>
-      <div id="comment-pages">
-        {% for season in season_data %}
-          <a href="{{season.url}}" class="choice {% if episode.season == season.number %}selected{% endif %}">{{season.number}}</a>
-        {% endfor %}
-      </div>
-    </div>
-
     <div class='newcomment-box'>
       {% if auth.logged %}
         {% verbatim %}
