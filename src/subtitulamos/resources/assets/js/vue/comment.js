@@ -4,41 +4,46 @@ import timeago from "timeago.js";
 
 Vue.component("comment", {
   template: `
-  <article class="comment" :class="{'comment-pinned': pinned}">
-    <section class="comment-info">
-      <a :href="'/users/' + user.id">
-        <span class="comment-creator text small bold" :class="userTypeClass">
-          {{ user.username }}
+  <article class="comment" >
+    <div class="pin" :class="{'visible': pinned}">
+      <i class="fas fa-map-pin"></i>
+    </div>
+    <div>
+      <section class="comment-info">
+        <a :href="'/users/' + user.id">
+          <span class="comment-creator text small bold" :class="userTypeClass">
+            {{ user.username }}
+          </span>
+        </a>
+        <span class="comment-date text tiny">{{ date }}</span>
+        <span class='comment-episode' v-if="episode">
+          <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
         </span>
-      </a>
-      <span class="comment-date text tiny">{{ date }}</span>
-      <span class='comment-episode' v-if="episode">
-        <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
-      </span>
-      <span class='comment-episode' v-if="subtitle">
-        <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
-      </span>
-    </section>
+        <span class='comment-episode' v-if="subtitle">
+          <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
+        </span>
+      </section>
 
-    <section class="comment-content">
-      <p v-if="!editing" v-html="formattedText"></p>
-      <div class="open-comment" v-else>
-        <textarea rows="4" v-if="editing" v-model="text"></textarea>
-        <button class="save-comment" @click="save">
-          <i class="fab fa-telegram-plane"></i>
-          <span class="text mini spaced">GUARDAR</span>
-        </button>
-      </div>
-    </section>
+      <section class="comment-content">
+        <p v-if="!editing" v-html="formattedText"></p>
+        <div class="open-comment" v-else>
+          <textarea rows="4" v-if="editing" v-model="text"></textarea>
+          <button class="save-comment" @click="save">
+            <i class="fab fa-telegram-plane"></i>
+            <span class="text mini spaced">GUARDAR</span>
+          </button>
+        </div>
+      </section>
 
-    <section class='comment-actions'>
-      <span class="text tiny" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
-      <span class="text tiny" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
-      <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
-        <span class="text tiny" v-if="pinned">Quitar fijado</span>
-        <span class="text tiny" v-else>Fijar</span>
-      </span>
-    </section>
+      <section class='comment-actions'>
+        <span class="text tiny" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
+        <span class="text tiny" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
+        <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
+          <span class="text tiny" v-if="pinned">Quitar fijado</span>
+          <span class="text tiny" v-else>Fijar</span>
+        </span>
+      </section>
+    </div>
   </article> `,
   props: [
     "id",
