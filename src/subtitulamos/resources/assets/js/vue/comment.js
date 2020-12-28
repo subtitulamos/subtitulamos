@@ -4,38 +4,23 @@ import timeago from "timeago.js";
 
 Vue.component("comment", {
   template: `
-        <article class='comment' :class="{'comment-pinned': pinned}">
-          <header>
-            <ul>
-              <li class='comment-user'>
-                <a :href="'/users/' + user.id">{{ user.username }}</a>
-              </li>
-              <li class='comment-time'>
-                {{ date }}
-              </li>
-              <li class='comment-episode' v-if="episode">
-                <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
-              </li>
-              <li class='comment-episode' v-if="subtitle">
-                <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
-              </li>
-              <li class='comment-actions'>
-                <i class="fa fa-times" aria-hidden="true" @click="remove" v-if="canDelete"></i>
-                <i class="fas fa-pencil-alt" aria-hidden="true" @click="edit" v-if="canEdit"></i>
-                <i class="fas fa-thumbtack" aria-hidden="true" @click="$emit('pin', id)" v-if="canPin"></i>
-              </li>
-            </ul>
-          </header>
-          <section class='comment-body' :class='bodyClasses'>
-            <p v-if="!editing" v-html="formattedText"></p>
-            <div v-else>
-              <textarea v-if="editing" v-model="text"></textarea>
-              <button @click="save">Save</button>
-            </div>
-          </section>
-        </article>
-        `,
-
+  <article class="comment" :class="{'comment-pinned': pinned}">
+    <section class="comment-info text tiny">
+      <a :href="'/users/' + user.id">
+        <span class="comment-creator text bold" :class="userTypeClass">
+          {{ user.username }}
+        </span>
+      </a>
+      <span class="comment-date">{{ date }}</span>
+    </section>
+    <section class="comment-content">
+      <p v-if="!editing" v-html="formattedText"></p>
+      <div v-else>
+        <textarea v-if="editing" v-model="text"></textarea>
+        <button @click="save">Save</button>
+      </div>
+    </section>
+  </article> `,
   props: [
     "id",
     "user",
@@ -68,7 +53,7 @@ Vue.component("comment", {
     canPin() {
       return canPinComments;
     },
-    bodyClasses: function () {
+    userTypeClass: function () {
       let isTT = this.user.roles.includes("ROLE_TT");
       let isMod = this.user.roles.includes("ROLE_MOD");
       return {
