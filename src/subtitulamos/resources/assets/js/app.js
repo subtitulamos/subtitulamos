@@ -274,8 +274,8 @@ if (document.getElementById("control-panel")) {
     mounted() {
       this.updateElementsStatus();
 
-      const $currentURL = window.location.pathname;
-      const $ele = $getEle(`a[href="${$currentURL}"]`);
+      const $currentPath = window.location.pathname;
+      const $ele = $getEle(`a[href="/${$currentPath.split("/")[1]}"]`);
       if ($ele) {
         $ele.classList.toggle("selected", true);
       }
