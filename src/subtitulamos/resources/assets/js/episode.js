@@ -53,7 +53,18 @@ onDomReady(function () {
         .querySelector(".collapser-button i")
         .classList.toggle("fa-chevron-up", isExpanded);
 
-      $languageContainer.querySelector(".language-content").classList.toggle("expanded");
+      const $languageContent = $languageContainer.querySelector(".language-content");
+      $languageContent.classList.toggle("expanded");
+
+      // prevents the language content showing too early
+      // the overflow class is needed otherwise the subtitle options
+      // menu wont be visible since it overflows
+      setTimeout(
+        () => {
+          $languageContent.classList.toggle("overflow");
+        },
+        isExpanded ? 0 : 100
+      );
     });
   });
 
