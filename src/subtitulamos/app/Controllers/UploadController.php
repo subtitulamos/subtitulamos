@@ -119,7 +119,6 @@ class UploadController
                 } else {
                     $show = new Show();
                     $show->setName($newShowName);
-                    $show->setZeroTolerance(false);
                     $em->persist($show);
 
                     /* TODO: Log */
