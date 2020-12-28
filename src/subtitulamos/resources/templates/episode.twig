@@ -31,9 +31,13 @@
         <h3 class="blue-a">{{ episode.name }}</h3>
         <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
       </div>
-      <div id="episode-buttons">
-        <button class="text tiny blue-a">Subir resincronización</button>
-        <button class="translate-subtitle text tiny blue-a">+ Nuevo idioma</button>
+      <div id="episode-buttons" class="text tiny">
+        <a class="episode-button" href='/episodes/{{ episode.id }}/resync' class="text tiny blue-a">
+          Subir resincronización
+        </a>
+        <button class="episode-button translate-subtitle">
+          + Nuevo idioma
+        </button>
       </div>
     </div>
     <div id="download-count" class="text tiny">
@@ -141,9 +145,33 @@
                   </div>
                 </div>
                 <div class="more-options">
-                  <i class="fas fa-ellipsis-v"></i>
-                  <div class="more-options-list">
-                    <div class="option"></div>
+                  <div class="fade-pan hidden"></div>
+                  <div class="ellipsis-wrapper">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </div>
+                  <div class="more-options-list w-box-shadow">
+                    {% if auth.has_role('ROLE_TT') %}
+                      {% if sub.pause %}
+                        <a href="/subtitles/{{ sub.id }}/unpause">
+                          <div class="option">Resumir</div>
+                        </a>
+                      {% else %}
+                        <a href="/subtitles/{{ sub.id }}/pause">
+                          <div class="option">Pausar</div>
+                        </a>
+                      {% endif %}
+                    {% endif %}
+                    {% if auth.has_role('ROLE_MOD') %}
+                      <a data-action="delete" data-id="{{ sub.id }}">
+                        <div class="option">Borrar</div>
+                      </a>
+                      <a href='/subtitles/{{ sub.id }}/hammer'>
+                        <div class="option">Banear</div>
+                      </a>
+                      <a href='/subtitles/{{ sub.id }}/properties'>
+                        <div class="option">Propriedades</div>
+                      </a>
+                    {% endif %}
                   </div>
                 </div>
               </div>
@@ -215,6 +243,27 @@
           <textarea id="new-comment" rows="1" class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
         </div>
       {% endif %}
+    </div>
+  </div>
+
+  <div id="new-translation">
+    <div class="translate_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Abrir una nueva traducción">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+    </div>
+
+    <div id="new-translation-opts" class="hidden">
+      <form action="/subtitles/translate" method="POST">
+        <input type="hidden" name="episode" value="{{ episode.id }}" />
+        <select name="lang" id="translate-to-lang">
+          {% for lid, lcode in LANG_LIST %}
+            {% if langs[LANG_NAMES[lcode]] is not defined %}
+              <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+
+        <button type="submit" id="open-translation">Abrir traducción</button>
+      </form>
     </div>
   </div>
 </div>

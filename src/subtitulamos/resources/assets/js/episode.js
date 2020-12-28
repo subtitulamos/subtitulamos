@@ -6,7 +6,7 @@
 import Vue from "vue";
 import "./vue/comment.js";
 import "../css/episode.scss";
-import { onDomReady, easyFetch, $getAllEle } from "./utils.js";
+import { onDomReady, easyFetch, $getAllEle, $getEle } from "./utils.js";
 
 const $newTranslationButton = document.querySelector(".translate-subtitle");
 // $newTranslationButton.addEventListener("click", function () {
@@ -54,6 +54,23 @@ onDomReady(function () {
         .classList.toggle("fa-chevron-up", isExpanded);
 
       $languageContainer.querySelector(".language-content").classList.toggle("expanded");
+    });
+  });
+
+  // Show subtitle options
+  $getAllEle(".ellipsis-wrapper").forEach((moreOptionsButton) => {
+    moreOptionsButton.addEventListener("click", (e) => {
+      const $moreOptionsContainer = e.currentTarget.closest(".more-options");
+      const $optionsList = $moreOptionsContainer.querySelector(".more-options-list");
+      const $fadePan = $moreOptionsContainer.querySelector(".fade-pan");
+
+      $fadePan.classList.toggle("hidden");
+      $optionsList.classList.toggle("open");
+
+      $fadePan.addEventListener("click", () => {
+        $fadePan.classList.toggle("hidden", true);
+        $optionsList.classList.toggle("open", false);
+      });
     });
   });
 });
