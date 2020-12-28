@@ -31,6 +31,16 @@
       </div>
     {% endif %}
     <div class='oneline'>
+      <b>Email</b>: <span>{{ user.email }}</span>
+    </div>
+    <div class='oneline'>
+      <form action="/users/{{user.id}}/changerole" method="POST">
+        <b>¿Traductor habitual?</b>:
+        <span>{% if "ROLE_TT" in user.roles %}Sí{% else %}No{% endif %}</span>
+        <button type='submit'>{% if "ROLE_TT" in user.roles %}Quitar TH{% else %}Hacer TH{% endif %}</a>
+      </form>
+    </div>
+    <div class='oneline'>
       <b>Última conexión:</b>
       <span>
         {% if user.lastSeen is not null %}
