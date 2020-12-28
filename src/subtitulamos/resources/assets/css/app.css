@@ -33,7 +33,9 @@
   --color-yellow-darker: #eabf27;
   --color-orange: #ec9752;
   --color-red: #ef7868;
-  --standard-padding: 0.75rem 0.9375rem;
+  --standard-padding-x: 0.9375rem;
+  --standard-padding-y: 0.75rem;
+  --standard-padding: var(--standard-padding-y) var(--standard-padding-x);
   --standard-border-radius: 0.4rem;
   --max-width: 1200px;
   --footer-padding-y: 120px;

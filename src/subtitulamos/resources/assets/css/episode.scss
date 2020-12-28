@@ -315,6 +315,7 @@
 
   .comment {
     padding: var(--spacing-m) var(--spacing-s);
+    border-bottom: 1px solid var(--color-gray-divisions);
 
     .comment-info {
       margin-bottom: var(--spacing-xxs);
@@ -339,10 +340,6 @@
       }
     }
 
-    .comment-content {
-      margin-bottom: var(--spacing-xs);
-    }
-
     .comment-actions {
       span {
         cursor: pointer;
@@ -358,7 +355,7 @@
   }
 
   #comment-pages-line {
-    padding: var(--spacing-m) 0;
+    padding: var(--spacing-xxl) 0;
 
     span {
       width: 60px;
@@ -385,5 +382,46 @@
         color: var(--color-offwhite);
       }
     }
+  }
+}
+
+.open-comment {
+  position: relative;
+
+  textarea {
+    width: calc(100% - var(--standard-padding-x) * 2);
+    padding: var(--standard-padding);
+    background-color: var(--color-offwhite);
+    border-radius: var(--standard-border-radius);
+    resize: none;
+  }
+
+  .save-comment {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: var(--spacing-xs);
+    bottom: var(--spacing-s);
+    color: var(--color-blue-a);
+    font-size: 1.1rem;
+
+    i {
+      margin-right: var(--spacing-xxs);
+    }
+
+    &:disabled {
+      color: var(--color-gray-d);
+    }
+  }
+}
+
+.newcomment-box {
+  position: relative;
+
+  .comment-char-counter {
+    position: absolute;
+    left: var(--spacing-s);
+    bottom: var(--spacing-s);
+    color: var(--color-gray-c);
   }
 }
