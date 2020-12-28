@@ -26,7 +26,7 @@ Vue.component("comment", {
         <textarea rows="4" v-if="editing" v-model="text"></textarea>
         <button class="save-comment" @click="save">
           <i class="fab fa-telegram-plane"></i>
-          <span class="text mini spaced">SALVAR</span>
+          <span class="text mini spaced">GUARDAR</span>
         </button>
       </div>
     </section>
@@ -35,8 +35,8 @@ Vue.component("comment", {
       <span class="text tiny" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
       <span class="text tiny" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
       <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
-        <span class="text tiny" v-if="pinned">Unpin</span>
-        <span class="text tiny" v-else>Pin</span>
+        <span class="text tiny" v-if="pinned">Quitar fijado</span>
+        <span class="text tiny" v-else>Fijar</span>
       </span>
     </section>
   </article> `,
