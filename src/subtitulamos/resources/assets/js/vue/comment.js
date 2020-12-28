@@ -32,11 +32,11 @@ Vue.component("comment", {
     </section>
 
     <section class='comment-actions'>
-      <span class="text tiny bold" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
-      <span class="text tiny bold" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
+      <span class="text tiny" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
+      <span class="text tiny" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
       <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
-        <span class="text tiny bold" v-if="pinned">Unpin</span>
-        <span class="text tiny bold" v-else>Pin</span>
+        <span class="text tiny" v-if="pinned">Unpin</span>
+        <span class="text tiny" v-else>Pin</span>
       </span>
     </section>
   </article> `,

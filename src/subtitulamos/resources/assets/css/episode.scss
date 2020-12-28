@@ -343,10 +343,15 @@
       }
     }
 
+    .comment-content {
+      margin-bottom: var(--spacing-xxs);
+    }
+
     .comment-actions {
       span {
         cursor: pointer;
         margin-right: var(--spacing-xs);
+        color: var(--color-gray-b);
       }
     }
   }
