@@ -19,6 +19,7 @@ if [ ! -S /var/run/mysqld/mysqld.sock ]; then
 fi
 
 ./vendor/bin/doctrine orm:generate-proxies # Regenerate all the ORM proxies
+./vendor/bin/doctrine-migrations migrate --no-interaction # Make sure we're up-to-date on DB migrations
 ./app/console app:bots:synchronize # Make sure bots are up-to-date
 ./app/console app:search:regenerate-index # Make sure search index is generated
 ./app/console app:generate-sitemap # Gen sitemap
