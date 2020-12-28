@@ -8,34 +8,27 @@ import "./vue/comment.js";
 import "../css/episode.scss";
 import { onDomReady, easyFetch, $getAllEle } from "./utils.js";
 
-// const $newTranslationButton = document.querySelector(".translate_subtitle");
+const $newTranslationButton = document.querySelector(".translate-subtitle");
 // $newTranslationButton.addEventListener("click", function () {
 //   document.getElementById("new-translation-opts").classList.toggle("hidden");
 // });
 
-// document.querySelectorAll("a[disabled]").forEach(($ele) =>
-//   $ele.addEventListener("click", function (e) {
-//     e.preventDefault();
-//     return false;
-//   })
-// );
+document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
+  $ele.addEventListener("click", function (e) {
+    const subId = this.dataset.id;
 
-// document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
-//   $ele.addEventListener("click", function (e) {
-//     const subId = this.dataset.id;
-
-//     Swal.fire({
-//       type: "warning",
-//       cancelButtonText: "Cancelar",
-//       showCancelButton: true,
-//       text: "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
-//     }).then((result) => {
-//       if (result.value) {
-//         window.location = "/subtitles/" + subId + "/delete";
-//       }
-//     });
-//   })
-// );
+    Swal.fire({
+      type: "warning",
+      cancelButtonText: "Cancelar",
+      showCancelButton: true,
+      text: "¿Estás seguro de querer borrar este subtítulo? Esta acción no es reversible.",
+    }).then((result) => {
+      if (result.value) {
+        window.location = "/subtitles/" + subId + "/delete";
+      }
+    });
+  })
+);
 
 onDomReady(function () {
   // let lastLangVal = localStorage.getItem("last-selected-translation-lang");
@@ -44,6 +37,7 @@ onDomReady(function () {
   //   document.getElementById("translate-to-lang").value = lastLangVal;
   // }
 
+  // Expanding / collapsing a language's container
   $getAllEle(".language-name").forEach((dropdown) => {
     dropdown.addEventListener("click", (e) => {
       const $element = e.currentTarget;

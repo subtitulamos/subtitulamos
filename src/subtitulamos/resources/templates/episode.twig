@@ -33,7 +33,7 @@
       </div>
       <div id="episode-buttons">
         <button class="text tiny blue-a">Subir resincronización</button>
-        <button class="text tiny blue-a">+ Nuevo idioma</button>
+        <button class="translate-subtitle text tiny blue-a">+ Nuevo idioma</button>
       </div>
     </div>
     <div id="download-count" class="text tiny">
@@ -170,6 +170,7 @@
         @save="save"
       >
     </comment>
+    <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
     <div id="comment-pages-line">
       <span class="text bold spaced-wide">PAGINA</span>
       <div id="comment-pages">
