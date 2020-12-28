@@ -70,10 +70,6 @@ class ShowController
         }
         sort($seasons);
 
-        if (empty($seasons)) {
-            /*TODO: Error out*/
-        }
-
         // Let's see if the URI contains the season, otherwise, fill it
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
@@ -168,14 +164,15 @@ class ShowController
         ]);
     }
 
-    public function saveProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper)
+    public function saveProperties($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper)
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $newName = trim(strip_tags($request->getParam('name', '')));
+        $body = $request->getParsedBody();
+        $newName = trim(strip_tags(($body['name'] ?? '')));
         if ($newName != $show->getName()) {
             $show->setName($newName);
             $em->flush();

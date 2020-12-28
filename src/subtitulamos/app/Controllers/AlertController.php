@@ -31,7 +31,8 @@ class AlertController
             ]);
         }
 
-        $msg = trim(strip_tags($request->getParam('message', '')));
+        $body = $request->getParsedBody();
+        $msg = trim(strip_tags(($body['message'] ?? '')));
         $res = ['ok' => true];
         if (v::notEmpty()->validate($msg)) {
             $alert = new Alert();

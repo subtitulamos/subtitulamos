@@ -121,9 +121,10 @@ class EpisodeController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $season = (int)$request->getParam('season', '');
-        $epNumber = (int)$request->getParam('episode', '');
-        $epName = trim(strip_tags($request->getParam('name', '')));
+        $body = $request->getParsedBody();
+        $season = (int)($body['season'] ?? 0);
+        $epNumber = (int)($body['episode'] ?? 0);
+        $epName = trim(strip_tags(($body['name'] ?? '')));
         $save = false;
 
         if ($season != $ep->getSeason() || $epNumber != $ep->getNumber()) {
