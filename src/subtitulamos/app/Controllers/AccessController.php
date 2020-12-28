@@ -111,7 +111,7 @@ class AccessController
         // Onwards with registration!
         $user = new User();
         $user->setUsername($username);
-        $user->setPasswordWithHash($password);
+        $user->setPassword($password);
         $user->setEmail($email);
         $user->setBanned(false);
         $user->setRoles(['ROLE_USER']);

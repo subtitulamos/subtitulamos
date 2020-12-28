@@ -84,7 +84,7 @@ class UserController
                 $auth->addFlash('error', 'Las contraseñas no coinciden');
             } else {
                 $auth->addFlash('success', 'Contraseña cambiada correctamente');
-                $user->setPasswordWithHash($password);
+                $user->setPassword($password);
 
                 $em->flush();
             }
@@ -108,7 +108,7 @@ class UserController
         }
 
         $pwd = Utils::generateRandomString(16);
-        $user->setPasswordWithHash($pwd);
+        $user->setPassword($pwd);
         $em->flush();
 
         $auth->addFlash('success', "Contraseña reiniciada. Nueva contraseña: $pwd");
