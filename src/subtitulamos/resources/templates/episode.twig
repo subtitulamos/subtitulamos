@@ -196,28 +196,30 @@
         <div class="open-comment">
           <textarea id="new-comment"  rows="5" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
 
-          <div
-            class='comment-char-counter text tiny'
-            :class='{
-              "normal-count": newComment.length <= maxCommentLength*0.9,
-              "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
-              "too-many": newComment.length > maxCommentLength
-            }'
-          >
-            <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
-            </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
-          </div>
+          <div class="comment-meta">
+            <div
+              class='comment-char-counter text tiny'
+              :class='{
+                "normal-count": newComment.length <= maxCommentLength*0.9,
+                "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
+                "too-many": newComment.length > maxCommentLength
+              }'
+            >
+              <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
+              </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
+            </div>
 
-          <button class="save-comment" @click="publishComment"
-            :class="{'hidden': newComment == '',
-              'is-loading': submittingComment,
-              'is-primary': newComment.length <= maxCommentLength,
-              'is-danger': newComment.length > maxCommentLength}"
-            :disabled="newComment.length > maxCommentLength"
-            @click="publishComment">
-            <i class="fab fa-telegram-plane"></i>
-            <span class="text mini spaced">ENVIAR</span>
-          </button>
+            <button class="save-comment" @click="publishComment"
+              :class="{'hidden': newComment == '',
+                'is-loading': submittingComment,
+                'is-primary': newComment.length <= maxCommentLength,
+                'is-danger': newComment.length > maxCommentLength}"
+              :disabled="newComment.length > maxCommentLength"
+              @click="publishComment">
+              <i class="fab fa-telegram-plane"></i>
+              <span class="text mini spaced">ENVIAR</span>
+            </button>
+          </div>
         </div>
         {% endverbatim %}
       {% else %}

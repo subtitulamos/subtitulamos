@@ -418,6 +418,11 @@
 
     .comment-content {
       margin-bottom: var(--spacing-xxs);
+
+      p {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
     }
 
     .comment-actions {
@@ -446,13 +451,12 @@
 }
 
 .open-comment {
-  position: relative;
+  background-color: var(--color-offwhite);
+  border-radius: var(--standard-border-radius);
+  padding: var(--standard-padding);
 
   textarea {
-    width: calc(100% - var(--standard-padding-x) * 2);
-    padding: var(--standard-padding);
-    background-color: var(--color-offwhite);
-    border-radius: var(--standard-border-radius);
+    width: 100%;
     resize: none;
 
     &:disabled {
@@ -461,13 +465,11 @@
   }
 
   .save-comment {
-    position: absolute;
     display: flex;
     align-items: center;
-    right: var(--spacing-xs);
-    bottom: var(--spacing-s);
     color: var(--color-blue-a);
     font-size: 1.1rem;
+    margin-left: auto;
 
     i {
       margin-right: var(--spacing-xxs);
@@ -480,12 +482,20 @@
 }
 
 .newcomment-box {
-  position: relative;
+  .comment-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--spacing-xs);
 
-  .comment-char-counter {
-    position: absolute;
-    left: var(--spacing-s);
-    bottom: var(--spacing-s);
-    color: var(--color-gray-c);
+    .comment-char-counter {
+      left: var(--spacing-s);
+      bottom: var(--spacing-s);
+      color: var(--color-gray-c);
+
+      &.too-many {
+        color: var(--color-red);
+      }
+    }
   }
 }
