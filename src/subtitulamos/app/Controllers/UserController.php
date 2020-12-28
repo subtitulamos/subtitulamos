@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Entities\Ban;
+use App\Entities\EventLog;
 use App\Services\Auth;
 use App\Services\UrlHelper;
 use App\Services\Utils;
@@ -109,6 +110,9 @@ class UserController
 
         $pwd = Utils::generateRandomString(16);
         $user->setPassword($pwd);
+
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Password usuario reiniciada ([[user:%d]])', $user->getId()));
+        $em->persist($event);
         $em->flush();
 
         $auth->addFlash('success', "Contraseña reiniciada. Nueva contraseña: $pwd");
@@ -132,13 +136,16 @@ class UserController
         // For now, this takes no input and just swaps TH/Not TH status
         $ttPos = array_search('ROLE_TT', $roles);
         if ($ttPos === false) {
+            $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('TH dado a usuario ([[user:%d]])', $user->getId()));
             $roles[] = 'ROLE_TT';
             $user->setRoles($roles);
         } else {
+            $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('TH quitado del usuario ([[user:%d]])', $user->getId()));
             array_splice($roles, $ttPos, 1);
             $user->setRoles($roles);
         }
 
+        $em->persist($event);
         $em->persist($user);
         $em->flush();
 
@@ -182,10 +189,11 @@ class UserController
             $ban->setTargetUser($user);
             $ban->setReason(\strip_tags($reason));
             $ban->setUntil($until);
-
-            $user->setBan($ban);
-
             $em->persist($ban);
+
+            $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Usuario baneado ([[user:%d]])', $user->getId()));
+            $em->persist($event);
+
             $em->flush();
 
             $auth->addFlash('success', 'Usuario baneado hasta el '.$until->format('d/M/Y H:i'));
@@ -214,6 +222,9 @@ class UserController
         if (empty($errors)) {
             $user->setBan(null);
             $ban->setUnbanUser($auth->getUser());
+
+            $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Usuario desbaneado ([[user:%d]])', $user->getId()));
+            $em->persist($event);
 
             $em->flush();
             $auth->addFlash('success', 'El usuario ha sido desbaneado');

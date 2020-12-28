@@ -7,6 +7,8 @@
 
 namespace App\Controllers;
 
+use App\Entities\EventLog;
+use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
@@ -164,7 +166,7 @@ class ShowController
         ]);
     }
 
-    public function saveProperties($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper)
+    public function saveProperties($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $show = $em->getRepository('App:Show')->find($showId);
         if (!$show) {
@@ -175,6 +177,13 @@ class ShowController
         $newName = trim(strip_tags(($body['name'] ?? '')));
         if ($newName != $show->getName()) {
             $show->setName($newName);
+
+            $event = new EventLog(
+                $auth->getUser(),
+                new \DateTime(),
+                sprintf('Propiedades de serie editadas ([[show:%d]])', $showId)
+            );
+            $em->persist($event);
             $em->flush();
         }
 

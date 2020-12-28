@@ -7,6 +7,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\EventLog;
 use App\Entities\Pause;
 
 use App\Services\Auth;
@@ -20,7 +21,7 @@ use Slim\Views\Twig;
 
 class SubtitleController
 {
-    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper)
+    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
@@ -29,6 +30,7 @@ class SubtitleController
 
         $version = $sub->getVersion();
         $episode = $version->getEpisode();
+        $epFullName = $episode->getFullName();
         $epId = $episode->getId();
         $show = $episode->getShow();
 
@@ -52,8 +54,16 @@ class SubtitleController
             $em->remove($version);
         }
 
+        $event = new EventLog(
+            $auth->getUser(),
+            new \DateTime(),
+            sprintf('Subtítulo #%d borrado (%s)', $sub->getId(), $epFullName)
+        );
+        $em->persist($event);
+
         $em->remove($sub);
         $em->flush();
+
         return $response->withStatus(200)->withHeader('Location', $episodeDeleted ? '/' : $urlHelper->pathFor('episode', ['id' => $epId]));
     }
 
@@ -69,13 +79,12 @@ class SubtitleController
             return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
         }
 
-        $pause = new Pause();
-        $pause->setStart(new \DateTime());
-        $pause->setSubtitle($sub);
-        $pause->setUser($auth->getUser());
+        $pause = new Pause($sub, $auth->getUser());
+        $sub->setPause($pause);
         $em->persist($pause);
 
-        $sub->setPause($pause);
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Subtítulo pausado, [[subtitle:%d]]', $sub->getId()));
+        $em->persist($event);
         $em->flush();
 
         return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
@@ -100,6 +109,9 @@ class SubtitleController
         if ($sub->getProgress() == 100 && !$sub->getCompleteTime()) {
             $sub->setCompleteTime(new \DateTime());
         }
+
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Subtítulo despausado, [[subtitle:%d]]', $sub->getId()));
+        $em->persist($event);
 
         $em->flush();
         return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $sub->getVersion()->getEpisode()->getId()]);
@@ -156,7 +168,7 @@ class SubtitleController
         ]);
     }
 
-    public function doHammer($subId, $request, $response, EntityManager $em, Twig $twig, Translation $translation)
+    public function doHammer($subId, $request, $response, EntityManager $em, Translation $translation, Auth $auth)
     {
         $body = $request->getParsedBody();
         $sub = $em->getRepository('App:Subtitle')->find($subId);
@@ -214,6 +226,9 @@ class SubtitleController
                 --$revisions[$num]; // Reduce revision count by one on this sequence
             }
         }
+
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Pala pasada a [[user:%d]] en [[subtitle:%d]]', $target, $sub->getId()));
+        $em->persist($event);
 
         // Apply these changes so we can recalculate the proper percentage right after
         $em->flush();
@@ -291,6 +306,9 @@ class SubtitleController
             $v->setName($vname);
             $v->setComments($vcomment);
             $sub->setLang(Langs::getLangId($langCode));
+
+            $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Propiedades de subtítulo actualizadas, [[subtitle:%d]]', $sub->getId()));
+            $em->persist($event);
 
             $em->flush();
 

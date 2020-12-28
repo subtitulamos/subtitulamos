@@ -9,7 +9,7 @@ namespace App\Controllers;
 
 use App\Entities\Alert;
 use App\Entities\AlertComment;
-
+use App\Entities\EventLog;
 use App\Services\Auth;
 use App\Services\Utils;
 use Doctrine\ORM\EntityManager;
@@ -47,6 +47,9 @@ class AlertController
             $com->setCreationTime(new \DateTime());
             $com->setAlert($alert);
             $com->setText($msg);
+
+            $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Alerta creada para [[subtitle:%d]]', $sub->getId()));
+            $em->persist($event);
 
             $em->persist($alert);
             $em->persist($com);

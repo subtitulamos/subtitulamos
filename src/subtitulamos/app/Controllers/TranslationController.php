@@ -7,6 +7,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\EventLog;
 use App\Entities\OpenLock;
 use App\Entities\Sequence;
 use App\Entities\Subtitle;
@@ -29,7 +30,7 @@ class TranslationController
      */
     const SEQUENCES_PER_PAGE = 20;
 
-    public function newTranslation($request, $response, EntityManager $em, UrlHelper $urlHelper)
+    public function newTranslation($request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $body = $request->getParsedBody();
         $episodeID = $body['episode'] ?? 0;
@@ -134,6 +135,14 @@ class TranslationController
         }
 
         $em->persist($sub);
+        $em->flush();
+
+        $event = new EventLog(
+            $auth->getUser(),
+            new \DateTime(),
+            sprintf('Nuevo idioma abierto ([[subtitle:%d]])', $sub->getId())
+        );
+        $em->persist($event);
         $em->flush();
 
         return $response

@@ -7,6 +7,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\EventLog;
 use App\Entities\SubtitleComment;
 
 use App\Services\Auth;
@@ -122,6 +123,8 @@ class SubtitleCommentsController
         }
 
         $comment->setText($text);
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario editado en el subtítulo [[subtitle:%d]]', $comment->getSubtitle()->getId()));
+        $em->persist($event);
         $em->flush();
 
         return $response->withStatus(200);
@@ -148,6 +151,9 @@ class SubtitleCommentsController
         }
 
         $comment->setSoftDeleted(true);
+
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario borrado en el subtítulo [[subtitle:%d]]', $comment->getSubtitle()->getId()));
+        $em->persist($event);
         $em->flush();
 
         $translation->broadcastDeleteComment($comment);

@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Entities\EpisodeComment;
+use App\Entities\EventLog;
 use App\Services\Auth;
 use App\Services\Utils;
 use DateTime;
@@ -115,6 +116,10 @@ class EpisodeCommentsController
         }
 
         $comment->setText($text);
+
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario editado ([[episode:%d]])', $ep->getId()));
+        $em->persist($event);
+
         $em->flush();
 
         return $response->withStatus(200);
@@ -140,6 +145,8 @@ class EpisodeCommentsController
             }
         }
 
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario borrado ([[episode:%d]])', $comment->getEpisode()->getId()));
+        $em->persist($event);
 
         $comment->setSoftDeleted(true);
         $em->flush();

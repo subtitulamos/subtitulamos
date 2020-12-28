@@ -7,6 +7,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\EventLog;
 use App\Services\Auth;
 
 use App\Services\Langs;
@@ -150,6 +151,13 @@ class EpisodeController
         }
 
         if ($save) {
+            $event = new EventLog(
+                $auth->getUser(),
+                new \DateTime(),
+                sprintf('Propiedades de episodio actualizadas ([[episode:%d]])', $ep->getId())
+            );
+            $em->persist($event);
+
             $auth->addFlash('success', 'Parámetros de capítulo actualizados');
             $em->flush();
         }

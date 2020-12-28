@@ -39,6 +39,15 @@ class Pause
      */
     private $start;
 
+    public function __construct(Subtitle $sub, User $byUser)
+    {
+        $this->start = new \DateTime();
+        $this->subtitle = $sub;
+        $this->user = $byUser;
+
+        return $this;
+    }
+
     /**
      * Get id
      *

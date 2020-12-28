@@ -7,6 +7,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\EventLog;
 use App\Entities\Subtitle;
 
 use App\Entities\Version;
@@ -127,6 +128,10 @@ class UploadResyncController
             $em->persist($sequence);
         }
 
+        $em->flush();
+
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Nueva resincronización creada ([[subtitle:%d]])', $sub->getId()));
+        $em->persist($event);
         $em->flush();
 
         $response->getBody()->write($urlHelper->pathFor('episode', ['id' => $ep->getId()]));
