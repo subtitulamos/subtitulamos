@@ -259,10 +259,13 @@ class Translation
             ->setParameter('sub', $sub->getId())
             ->getSingleScalarResult();
 
+        $oldProgress = $sub->getProgress();
         $sub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
         if ($sub->getProgress() == 100 && !$sub->getPause()) {
-            // We're done! Mark as such
-            $sub->setCompleteTime(new \DateTime());
+            // We're done! But we'll only update completion time if we were not *already* done
+            if ($oldProgress != 100) {
+                $sub->setCompleteTime(new \DateTime());
+            }
         } elseif ($sub->getCompleteTime()) {
             $sub->setCompleteTime(null);
         }
