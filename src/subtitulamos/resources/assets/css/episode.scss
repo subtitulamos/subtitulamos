@@ -370,8 +370,6 @@
   .comment-header {
     padding-left: var(--spacing-xxs);
     padding-bottom: var(--spacing-s);
-    margin-bottom: var(--spacing-xxs);
-    border-bottom: 1px solid var(--color-gray-divisions);
   }
 
   .no-comments {
@@ -384,7 +382,6 @@
 
     &:last-of-type {
       border-bottom: none;
-      margin-bottom: var(--spacing-m);
     }
 
     .comment-info {
@@ -420,6 +417,21 @@
         margin-right: var(--spacing-xs);
         color: var(--color-gray-b);
       }
+    }
+  }
+
+  .newcomment-box {
+    position: sticky;
+    top: var(--spacing-s);
+
+    &::before {
+      content: "";
+      width: 100%;
+      height: var(--spacing-s);
+      position: absolute;
+      background-color: var(--color-bg);
+      top: calc(0px - var(--spacing-s));
+      left: 0;
     }
   }
 }
