@@ -124,7 +124,7 @@ class AccessController
         return $response->withStatus(200);
     }
 
-    public function logout($request, $response, Auth $auth)
+    public function logout(ServerRequestInterface $request, $response, Auth $auth)
     {
         if (ini_get('session.use_cookies')) {
             $response = FigResponseCookies::expire($response, session_name());
@@ -134,6 +134,9 @@ class AccessController
         $auth->logout($rememberCookie->getValue());
 
         $response = FigResponseCookies::expire($response, 'remember');
-        return $response->withHeader('Location', '/');
+
+        $params = $request->getQueryParams();
+        $returnUrl = $params['return-path'] ?? '/';
+        return $response->withHeader('Location', '/'.mb_substr($returnUrl, 1));
     }
 }
