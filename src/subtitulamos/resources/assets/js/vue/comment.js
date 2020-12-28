@@ -5,20 +5,36 @@ import timeago from "timeago.js";
 Vue.component("comment", {
   template: `
   <article class="comment" :class="{'comment-pinned': pinned}">
-    <section class="comment-info text tiny">
+    <section class="comment-info">
       <a :href="'/users/' + user.id">
-        <span class="comment-creator text bold" :class="userTypeClass">
+        <span class="comment-creator text small bold" :class="userTypeClass">
           {{ user.username }}
         </span>
       </a>
-      <span class="comment-date">{{ date }}</span>
+      <span class="comment-date text tiny">{{ date }}</span>
+      <span class='comment-episode' v-if="episode">
+        <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
+      </span>
+      <span class='comment-episode' v-if="subtitle">
+        <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
+      </span>
     </section>
+
     <section class="comment-content">
       <p v-if="!editing" v-html="formattedText"></p>
       <div v-else>
         <textarea v-if="editing" v-model="text"></textarea>
         <button @click="save">Save</button>
       </div>
+    </section>
+
+    <section class='comment-actions'>
+      <span class="text tiny bold" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
+      <span class="text tiny bold" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
+      <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
+        <span class="text tiny bold" v-if="pinned">Unpin</span>
+        <span class="text tiny bold" v-else>Pin</span>
+      </span>
     </section>
   </article> `,
   props: [

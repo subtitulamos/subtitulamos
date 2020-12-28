@@ -319,8 +319,13 @@
     .comment-info {
       margin-bottom: var(--spacing-xxs);
 
+      *:not(:last-child) {
+        margin-right: var(--spacing-xxs);
+      }
+
       .comment-date {
         color: var(--color-gray-c);
+        margin-right: var(--spacing-s);
       }
 
       .comment-creator {
@@ -331,6 +336,17 @@
         &.role-mod {
           color: var(--color-blue-b) !important;
         }
+      }
+    }
+
+    .comment-content {
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .comment-actions {
+      span {
+        cursor: pointer;
+        margin-right: var(--spacing-xs);
       }
     }
   }
