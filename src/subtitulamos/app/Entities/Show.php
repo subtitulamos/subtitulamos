@@ -33,11 +33,6 @@ class Show
     private $episodes;
 
     /**
-     * @ORM\Column(type="boolean", name="zero_tolerance")
-     */
-    private $zeroTolerance;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -79,30 +74,6 @@ class Show
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set zeroTolerance
-     *
-     * @param boolean $zeroTolerance
-     *
-     * @return Show
-     */
-    public function setZeroTolerance($zeroTolerance)
-    {
-        $this->zeroTolerance = $zeroTolerance;
-
-        return $this;
-    }
-
-    /**
-     * Get zeroTolerance
-     *
-     * @return boolean
-     */
-    public function getZeroTolerance()
-    {
-        return $this->zeroTolerance;
     }
 
     /**
