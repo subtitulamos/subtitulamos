@@ -39,7 +39,7 @@ class CreateUserBots extends Command
 
             $bot->setId($botInfo['id']);
             $bot->setUsername($botInfo['name']);
-            $bot->setPasswordWithHash(null);
+            $bot->setPassword(null);
             $bot->setEmail('bots@subtitulamos.tv');
             $bot->setBanned(true);
             $bot->setRoles([]);
