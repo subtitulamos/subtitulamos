@@ -155,7 +155,9 @@
   </div>
 
   <div id="comments-container">
-    <div class="text bold comment-header">Comentarios</div>
+    {% verbatim %}
+    <div class="text bold comment-header">Comentarios ({{comments.length}})</div>
+    {% endverbatim %}
     <comment v-for="comment in comments"
         :key="comment.id"
         :id="comment.id"
