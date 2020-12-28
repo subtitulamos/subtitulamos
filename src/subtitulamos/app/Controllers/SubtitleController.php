@@ -292,8 +292,6 @@ class SubtitleController
             $v->setComments($vcomment);
             $sub->setLang(Langs::getLangId($langCode));
 
-            $em->persist($v);
-            $em->persist($sub);
             $em->flush();
 
             $auth->addFlash('success', 'Parámetros de versión / subtítulo actualizados');
