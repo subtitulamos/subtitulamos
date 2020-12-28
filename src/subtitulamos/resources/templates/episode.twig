@@ -10,6 +10,20 @@
 <div class="content">
   <div id="show-info-header">
     <h1 class="blue-a">{{ episode.show.name }}</h1>
+    <div id="episode-header">
+      <div id="episode-name">
+        <h3 class="blue-a">{{ episode.name }}</h3>
+        <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
+      </div>
+      <div id="episode-buttons" class="text tiny">
+        <a class="episode-button" href='/episodes/{{ episode.id }}/resync' class="text tiny blue-a">
+          Subir resincronización
+        </a>
+        <button class="episode-button translate-subtitle">
+          + Nuevo idioma
+        </button>
+      </div>
+    </div>
     <div id="season-line">
       <span class="text bold spaced-wide">TEMPORADA</span>
       <div id="season-choices">
@@ -26,27 +40,17 @@
         {% endfor %}
       </div>
     </div>
-    <div id="episode-header">
-      <div id="episode-name">
-        <h3 class="blue-a">{{ episode.name }}</h3>
-        <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
-      </div>
-      <div id="episode-buttons" class="text tiny">
-        <a class="episode-button" href='/episodes/{{ episode.id }}/resync' class="text tiny blue-a">
-          Subir resincronización
-        </a>
-        <button class="episode-button translate-subtitle">
-          + Nuevo idioma
-        </button>
-      </div>
-    </div>
+  </div>
+
+  <div id="languages">
+    <div id="languages-header">
+    <h4>Traducciones</h4>
     <div id="download-count" class="text tiny">
       <i class="fas fa-arrow-alt-circle-down"></i>
       <span id="count" class="text bold">{{ downloads|number_format(0, '.', ' ') }}</span>
       <span >descargas</span>
     </div>
-  </div>
-  <div id="languages">
+    </div>
     {% for lang, subs in langs %}
       <div class="language-container w-box-shadow">
         <button class="collapser-button blue-a">
@@ -184,7 +188,7 @@
 
   <div id="comments-container">
     {% verbatim %}
-    <div class="text bold comment-header">Comentarios ({{comments.length}})</div>
+    <h4 class="comment-header">Comentarios ({{comments.length}})</h4>
     {% endverbatim %}
     <div class='newcomment-box'>
       {% if auth.logged %}
