@@ -397,7 +397,7 @@ footer > #footer-content {
   align-items: center;
 }
 
-.overlay-wrap .fade-pan {
+.fade-pan {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -405,6 +405,8 @@ footer > #footer-content {
   background-color: var(--color-black);
   opacity: 0.5;
   animation: 0.4s ease fade_in;
+  top: 0;
+  left: 0;
 }
 
 .overlay-content {
