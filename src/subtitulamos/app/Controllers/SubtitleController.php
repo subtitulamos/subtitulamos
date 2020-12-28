@@ -250,9 +250,10 @@ class SubtitleController
 
         $v = $sub->getVersion();
 
-        $vname = trim(strip_tags($request->getParam('vname', '')));
-        $vcomment = trim(strip_tags($request->getParam('vcomment', '')));
-        $langCode = $request->getParam('lang', -1);
+        $body = $request->getParsedBody();
+        $vname = trim(strip_tags(($body['vname'] ?? '')));
+        $vcomment = trim(strip_tags(($body['vcomment'] ?? '')));
+        $langCode = $body['lang'] ?? -1;
 
         if (!Langs::existsCode($langCode)) {
             $errors[] = 'Elige un idioma válido';

@@ -72,12 +72,12 @@ class UserController
     public function saveSettings($request, $response, Twig $twig, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
     {
         $user = $auth->getUser();
-        $password = $request->getParam('newpwd', '');
+        $password = $body['newpwd'] ?? '';
         if ($password != '') {
-            $password_confirmation = $request->getParam('pwdconfirm', '');
+            $password_confirmation = $body['pwdconfirm'] ?? '';
 
-            // TODO: Unify this into a single validation/encryption point
-            $errors = [];
+            // TODO: Unify this into a single validation/encryption point with reg
+            // At least could have a Service that hashes the pwds
             if (!v::length(8, 80)->validate($password)) {
                 $auth->addFlash('error', 'La contraseña debe tener 8 caracteres como mínimo');
             } elseif ($password != $password_confirmation) {
@@ -100,14 +100,17 @@ class UserController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
+        $body = $request->getParsedBody();
+        $durationType = $body['days'] ?? '';
+        $reason = $body['reason'] ?? '';
         $errors = [];
 
         $until = new \DateTime();
-        if ($request->getParam('duration-type', '') == 'permanent') {
+        if ($durationType == 'permanent') {
             $until->modify('+20 years');
         } else {
-            $d = (int) $request->getParam('days', 0);
-            $h = (int) $request->getParam('hours', 0);
+            $d = isset($body['days']) ? (int)$body['days'] : 0;
+            $h = isset($body['hours']) ? (int)$body['hours'] : 0;
 
             if ($d >= 0 && $h >= 0 && $d + $h > 0) {
                 $until->modify(sprintf('+%d days', $d));
@@ -117,7 +120,6 @@ class UserController
             }
         }
 
-        $reason = $request->getParam('reason');
         if (empty($reason)) {
             $errors[] = 'La razón no puede estar vacía';
         }
@@ -126,7 +128,7 @@ class UserController
             $ban = new Ban();
             $ban->setByUser($auth->getUser());
             $ban->setTargetUser($user);
-            $ban->setReason($request->getParam('reason'));
+            $ban->setReason(\strip_tags($reason));
             $ban->setUntil($until);
 
             $user->setBan($ban);

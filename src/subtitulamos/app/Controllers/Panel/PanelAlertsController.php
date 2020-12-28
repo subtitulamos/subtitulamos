@@ -44,9 +44,10 @@ class PanelAlertsController
 
     public function saveComment($request, $response, Twig $twig, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
     {
-        $alertId = (int)$request->getParam('alert-id');
-        $text = trim(strip_tags($request->getParam('comment')));
-        $isClose = $request->getParam('close', false) !== false;
+        $body = $request->getParsedBody();
+        $alertId = (int)($body['alert-id'] ?? 0);
+        $text = trim(strip_tags(($body['comment'] ?? '')));
+        $isClose = ($body['close'] ?? false) !== false;
 
         if (!v::notEmpty()->validate($text)) {
             $errors[] = 'El comentario no puede estar vacío';

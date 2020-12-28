@@ -65,8 +65,9 @@ class SubtitleCommentsController
 
     public function listAll($request, $response, EntityManager $em)
     {
+        $body = $request->getParsedBody();
         $resultsPerPage = 20;
-        $page = max(1, (int)$request->getParam('page', 1));
+        $page = max(1, (int)($body['page'] ?? 1));
         $commentQuery = $em->createQuery('SELECT sc, sb, v, e FROM App:SubtitleComment sc JOIN sc.subtitle as sb JOIN sb.version as v JOIN v.episode as e WHERE sc.softDeleted = 0 ORDER BY sc.id DESC')
             ->setMaxResults($resultsPerPage)
             ->setFirstResult(($page - 1) * $resultsPerPage)
