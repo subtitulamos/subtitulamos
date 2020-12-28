@@ -147,6 +147,9 @@
         margin-top: var(--spacing-s);
         margin-bottom: var(--spacing-s);
         transition: max-height 0.3s cubic-bezier(1, 0, 1, 0), margin 0.45s ease;
+      }
+
+      &.overflow {
         overflow: visible;
       }
 
