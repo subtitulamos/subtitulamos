@@ -562,7 +562,6 @@ class TranslationController
         }
 
         $seq->setLocked(!$seq->getLocked());
-        $em->persist($seq);
         $em->flush();
 
         $translation->broadcastLockChange($seq);

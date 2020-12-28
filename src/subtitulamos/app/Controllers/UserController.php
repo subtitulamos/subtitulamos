@@ -109,7 +109,6 @@ class UserController
 
         $pwd = Utils::generateRandomString(16);
         $user->setPasswordWithHash($pwd);
-        $em->persist($user);
         $em->flush();
 
         $auth->addFlash('success', "Contraseña reiniciada. Nueva contraseña: $pwd");

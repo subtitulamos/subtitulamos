@@ -151,7 +151,6 @@ class EpisodeController
 
         if ($save) {
             $auth->addFlash('success', 'Parámetros de capítulo actualizados');
-            $em->persist($ep);
             $em->flush();
         }
 
