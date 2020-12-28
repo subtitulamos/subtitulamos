@@ -10,6 +10,7 @@ namespace App\Controllers;
 use App\Entities\Ban;
 use App\Services\Auth;
 use App\Services\UrlHelper;
+use App\Services\Utils;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
@@ -77,20 +78,42 @@ class UserController
             $password_confirmation = $body['pwdconfirm'] ?? '';
 
             // TODO: Unify this into a single validation/encryption point with reg
-            // At least could have a Service that hashes the pwds
             if (!v::length(8, 80)->validate($password)) {
                 $auth->addFlash('error', 'La contraseña debe tener 8 caracteres como mínimo');
             } elseif ($password != $password_confirmation) {
                 $auth->addFlash('error', 'Las contraseñas no coinciden');
             } else {
                 $auth->addFlash('success', 'Contraseña cambiada correctamente');
-                $user->setPassword(\password_hash($password, \PASSWORD_BCRYPT, ['cost' => 13]));
+                $user->setPasswordWithHash($password);
 
                 $em->flush();
             }
         }
 
         return $response->withHeader('Location', $urlHelper->pathFor('settings'));
+    }
+
+    public function resetPassword($userId, $request, $response, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
+    {
+        $user = $em->getRepository('App:User')->find($userId);
+        if (!$user) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $roles = $user->getRoles();
+        $isTargetMod = in_array('ROLE_MOD', $roles);
+        $isTargetMe = $user->getId() === $auth->getUser()->getId();
+        if ($isTargetMod || $isTargetMe) {
+            return $response->withHeader('Location', $urlHelper->pathFor('user', ['userId' => $userId]));
+        }
+
+        $pwd = Utils::generateRandomString(16);
+        $user->setPasswordWithHash($pwd);
+        $em->persist($user);
+        $em->flush();
+
+        $auth->addFlash('success', "Contraseña reiniciada. Nueva contraseña: $pwd");
+        return $response->withHeader('Location', $urlHelper->pathFor('user', ['userId' => $userId]));
     }
 
     public function changeRole($userId, $request, $response, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
