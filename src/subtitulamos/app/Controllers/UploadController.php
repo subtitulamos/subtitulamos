@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Entities\Episode;
+use App\Entities\EventLog;
 use App\Entities\Show;
 
 use App\Entities\Subtitle;
@@ -169,6 +170,11 @@ class UploadController
 
         $em->flush();
 
+        // Do this after flush so  we have IDs
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Nuevo episodio creado [[episode:%d]]', $episode->getId()));
+        $em->persist($event);
+        $em->flush();
+
         // Index the new show if it was just created
         if (isset($newShowName)) {
             try {
@@ -178,8 +184,10 @@ class UploadController
                 $ingest->disconnect();
             } catch (\Exception $e) {
                 // Okay, we already added the show, so there's not much we can do
-                // We could remove the show and show the user a failure, but probably not the best idea
-                // Maybe we could log this failure (TODO: <)
+                // We could remove the show and show the user a failure, but probably not the best idea. Logging error instead
+                $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('ERROR: La nueva serie no se ha podido indexar en la búsqueda ([[show:%d]])', $show->getId()));
+                $em->persist($event);
+                $em->flush();
             }
         }
 
