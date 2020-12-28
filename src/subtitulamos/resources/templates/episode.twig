@@ -195,23 +195,21 @@
             </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
           </div>
 
-          <button class="save-comment" @click="save"
-            :class="
-              {'hidden': newComment == '',
+          <button class="save-comment" @click="publishComment"
+            :class="{'hidden': newComment == '',
               'is-loading': submittingComment,
               'is-primary': newComment.length <= maxCommentLength,
-              'is-danger': newComment.length > maxCommentLength}
-            "
+              'is-danger': newComment.length > maxCommentLength}"
             :disabled="newComment.length > maxCommentLength"
             @click="publishComment">
             <i class="fab fa-telegram-plane"></i>
-            <span class="text mini spaced">SALVAR</span>
+            <span class="text mini spaced">ENVIAR</span>
           </button>
         </div>
         {% endverbatim %}
       {% else %}
         <div class="open-comment">
-          <textarea id="new-comment" class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
+          <textarea id="new-comment" rows="1" class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
         </div>
       {% endif %}
     </div>
