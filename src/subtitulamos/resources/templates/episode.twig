@@ -285,8 +285,10 @@
   </div>
 </template>
 
-{% include "edit_episode.twig" %}
-{% include "edit_show.twig" %}
+{% if auth.has_role('ROLE_MOD') %}
+  {% include "edit_episode.twig" %}
+  {% include "edit_show.twig" %}
+{% endif %}
 
 {% endblock %}
 
