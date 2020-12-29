@@ -131,7 +131,7 @@ class UploadResyncController
 
         $em->flush();
 
-        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Nueva resincronización creada ([[subtitle:%d]])', $sub->getId()));
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Nueva resincronización creada ([[subtitle:%d]])', $subtitle->getId()));
         $em->persist($event);
         $em->flush();
 

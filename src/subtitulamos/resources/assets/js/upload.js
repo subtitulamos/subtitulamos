@@ -114,7 +114,7 @@ onDomReady(function () {
     data.append("season", uploadInfo.season);
     data.append("episode", uploadInfo.episode);
 
-    fetch("/upload", {
+    fetch(window.location.pathname, {
       method: "POST",
       body: data, // Already form-encoded
     })
