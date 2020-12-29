@@ -1,5 +1,6 @@
 {% extends "base.twig" %}
 {% import 'macros/assets.twig' as assets %}
+{% import 'macros/alerts.twig' as alerts %}
 
 {% block title %}{{ episode.fullname }}{% endblock %}
 {% block css %}
@@ -8,6 +9,13 @@
 
 {% block content %}
 <div class="content limited-width">
+  {% for error in auth.flash.errors %}
+    {{ alerts.show('error', error) }}
+  {% endfor %}
+  {% for success in auth.flash.successes %}
+    {{ alerts.show('success', success) }}
+  {% endfor %}
+
   <div id="show-info-header">
     <h1 class="blue-a">{{ episode.show.name }}</h1>
     <div id="episode-header">

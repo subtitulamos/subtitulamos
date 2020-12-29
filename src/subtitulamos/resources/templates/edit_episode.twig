@@ -1,13 +1,7 @@
 <template id="episode-properties">
   <div class="form-wrap">
     <h3>Propiedades del episodio</h3>
-    <form method="POST" action="">
-      {% for error in auth.flash.errors %}
-        {{ alerts.show('error', error) }}
-      {% endfor %}
-      {% for success in auth.flash.successes %}
-        {{ alerts.show('success', success) }}
-      {% endfor %}
+    <form method="POST" action="/episodes/{{episode.id}}/edit">
       <div class='form-field validated' fieldname="Temporada">
         <input id="season" type="number" class="form_input"
           name="season" value="{{ episode.season }}" required>

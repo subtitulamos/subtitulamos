@@ -103,7 +103,7 @@ class EpisodeController
         ]);
     }
 
-    public function saveEdit($epId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, UrlHelper $urlHelper)
+    public function saveEdit($epId, $request, $response, EntityManager $em, Auth $auth, UrlHelper $urlHelper)
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
         if (!$ep) {
@@ -150,6 +150,6 @@ class EpisodeController
             $em->flush();
         }
 
-        return $response->withHeader('Location', $urlHelper->pathFor('ep-edit', ['epId' => $epId]));
+        return $response->withHeader('Location', $urlHelper->pathFor('episode', ['id' => $epId]));
     }
 }
