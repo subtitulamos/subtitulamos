@@ -10,8 +10,7 @@ import { onDomReady, easyFetch, $getAllEle, $getEle } from "./utils.js";
 import { showOverlayFromTpl, invertDropdown } from "./app.js";
 
 const lastLangVal = localStorage.getItem("last-selected-translation-lang");
-const $newTranslationButton = document.querySelector(".translate-subtitle");
-$newTranslationButton.addEventListener("click", function () {
+$getEle(".translate-subtitle").addEventListener("click", function () {
   showOverlayFromTpl("new-translation");
 
   $getAllEle(".dropdown-field").forEach((dropdown) => {
@@ -30,6 +29,10 @@ $newTranslationButton.addEventListener("click", function () {
   $translateToLangField.addEventListener("change", function () {
     localStorage.setItem("last-selected-translation-lang", this.value);
   });
+});
+
+$getEle("#episode-name").addEventListener("click", () => {
+  showOverlayFromTpl("episode-properties");
 });
 
 document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>

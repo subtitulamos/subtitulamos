@@ -251,7 +251,7 @@
     <h3>Nuevo idioma</h3>
     <form action="/subtitles/translate" method="POST">
       <input type="hidden" name="episode" value="{{ episode.id }}" />
-      <div class="form-field validated dropdown-field">
+      <div class="form-field validated dropdown-field" fieldname="Idioma">
         <i class="fas fa-chevron-down dropdown"></i>
         <select name="lang" id="translate-to-lang" required>
           <option value="" disabled selected>Selecciona un idioma</option>
@@ -267,6 +267,8 @@
     </form>
   </div>
 </template>
+
+{% include "edit_episode.twig" %}
 {% endblock %}
 
 {% block scripts %}
