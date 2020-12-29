@@ -8,13 +8,11 @@
 namespace App\Controllers;
 
 use App\Entities\EventLog;
-use App\Entities\Show;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
