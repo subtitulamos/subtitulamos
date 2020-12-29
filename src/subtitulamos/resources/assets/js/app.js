@@ -113,7 +113,7 @@ function showLoginForm() {
 
   const $loginForm = document.getElementById("login-form");
   $loginForm.addEventListener("submit", doLogin);
-  document.getElementById("username").focus();
+  setTimeout(() => document.getElementById("username").focus(), 500);
 }
 
 onDomReady(function () {
