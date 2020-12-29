@@ -25,7 +25,6 @@ module.exports = (env, argv) => {
 
       // These pages don't have JS, but need to exist to create the corresponding CSS files
       banned_error: "./resources/assets/js/banned_error.js",
-      edit_episode: "./resources/assets/js/edit_episode.js",
       shows_list: "./resources/assets/js/shows_list.js",
       show_seasons: "./resources/assets/js/show_seasons.js",
       restricted: "./resources/assets/js/restricted.js",

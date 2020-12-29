@@ -103,18 +103,6 @@ class EpisodeController
         ]);
     }
 
-    public function edit($epId, $request, $response, EntityManager $em, Twig $twig)
-    {
-        $ep = $em->getRepository('App:Episode')->find($epId);
-        if (!$ep) {
-            throw new \Slim\Exception\HttpNotFoundException($request);
-        }
-
-        return $twig->render($response, 'edit_episode.twig', [
-            'episode' => $ep
-        ]);
-    }
-
     public function saveEdit($epId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, UrlHelper $urlHelper)
     {
         $ep = $em->getRepository('App:Episode')->find($epId);
