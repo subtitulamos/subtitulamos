@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { $getEle, $getAllEle, onDomReady } from "./utils";
+import { $getEle, onDomReady } from "./utils";
 import "../css/upload.scss";
 import "../css/rules.scss";
 
@@ -127,10 +127,6 @@ onDomReady(function () {
       });
   });
 
-  $getAllEle(".dropdown-field").forEach((dropdown) => {
-    dropdown.addEventListener("click", invertDropdown);
-  });
-
   // Add style when dragging file over the file container
   $getEle("#file-upload-container").addEventListener("dragenter", (e) => {
     const $element = e.currentTarget;
@@ -143,10 +139,3 @@ onDomReady(function () {
     );
   });
 });
-
-function invertDropdown(e) {
-  const $dropdown = e.currentTarget.querySelector(".dropdown");
-  const $isArrowDown = $dropdown.classList.contains("fa-chevron-down");
-  $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
-  $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
-}

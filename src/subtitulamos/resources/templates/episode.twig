@@ -244,29 +244,29 @@
     </comment>
     <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
   </div>
+</div>
 
-  {# TODO: Handle this #}
-  <div id="new-translation" class="hidden">
-    <div class="translate_subtitle subtitle-action hint--bottom hint--rounded" data-hint="Abrir una nueva traducción">
-      <i class="fa fa-plus-circle" aria-hidden="true"></i>
-    </div>
-
-    <div id="new-translation-opts" class="hidden">
-      <form action="/subtitles/translate" method="POST">
-        <input type="hidden" name="episode" value="{{ episode.id }}" />
-        <select name="lang" id="translate-to-lang">
+<template id="new-translation">
+  <div class="form-wrap">
+    <h3>Nuevo idioma</h3>
+    <form action="/subtitles/translate" method="POST">
+      <input type="hidden" name="episode" value="{{ episode.id }}" />
+      <div class="form-field validated dropdown-field">
+        <i class="fas fa-chevron-down dropdown"></i>
+        <select name="lang" id="translate-to-lang" required>
+          <option value="" disabled selected>Selecciona un idioma</option>
           {% for lid, lcode in LANG_LIST %}
             {% if langs[LANG_NAMES[lcode]] is not defined %}
               <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
             {% endif %}
           {% endfor %}
         </select>
-
-        <button type="submit" id="open-translation">Abrir traducción</button>
-      </form>
-    </div>
+        <i class="fas fa-globe"></i>
+      </div>
+      <button type="submit" id="open-translation">Abrir traducción</button>
+    </form>
   </div>
-</div>
+</template>
 {% endblock %}
 
 {% block scripts %}
