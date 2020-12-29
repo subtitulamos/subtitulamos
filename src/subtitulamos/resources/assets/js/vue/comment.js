@@ -4,14 +4,17 @@ import timeago from "timeago.js";
 
 Vue.component("comment", {
   template: `
-  <article class="comment" >
-    <div class="pin" :class="{'visible': pinned}">
-      <i class="fas fa-map-pin"></i>
+  <article class="comment" :class="{'comment-pinned': pinned}">
+    <div v-if="isMod || isTT"class="by-special-user-icon" :class="userTypeClass">
+      <i v-if="isMod" class="fas fa-gem"></i>
+      <i v-else-if="isTT" class="fas fa-hand-sparkles"></i>
     </div>
-    <div>
+
+    <div class="comment-body">
       <section class="comment-info">
         <a :href="'/users/' + user.id">
           <span class="comment-creator text small bold" :class="userTypeClass">
+
             {{ user.username }}
           </span>
         </a>
@@ -43,6 +46,10 @@ Vue.component("comment", {
           <span class="text tiny" v-else>Fijar</span>
         </span>
       </section>
+    </div>
+
+    <div class="pin" v-if="pinned">
+      <i class="fas fa-map-pin"></i>
     </div>
   </article> `,
   props: [
@@ -76,6 +83,12 @@ Vue.component("comment", {
     },
     canPin() {
       return canPinComments;
+    },
+    isMod() {
+      return this.user.roles.includes("ROLE_MOD");
+    },
+    isTT() {
+      return this.user.roles.includes("ROLE_TT");
     },
     userTypeClass: function () {
       let isTT = this.user.roles.includes("ROLE_TT");
