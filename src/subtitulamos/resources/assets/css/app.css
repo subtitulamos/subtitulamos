@@ -121,6 +121,12 @@ a:active {
   visibility: hidden;
 }
 
+.disabled,
+.disabled * {
+  background-color: var(--color-gray-e) !important;
+  color: var(--color-gray-c) !important;
+}
+
 a.light:hover {
   color: var(--color-blue-b) !important;
 }
