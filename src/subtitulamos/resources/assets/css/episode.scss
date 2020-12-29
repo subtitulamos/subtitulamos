@@ -518,3 +518,49 @@
     }
   }
 }
+
+.input-auto-sizer {
+  display: inline-grid;
+  vertical-align: top;
+  align-items: center;
+  position: relative;
+  margin: 5px;
+  width: 98%;
+
+  &.stacked {
+    padding: 0.5em;
+    align-items: stretch;
+
+    &::after,
+    input,
+    textarea {
+      grid-area: 2 / 1;
+    }
+  }
+
+  &::after,
+  textarea {
+    width: auto;
+    min-width: 1em;
+    grid-area: 1 / 2;
+    font: inherit;
+    margin: 0;
+    resize: none;
+    background: none;
+    appearance: none;
+    border: none;
+  }
+
+  &::after {
+    content: attr(data-value) " ";
+    visibility: hidden;
+    white-space: pre-wrap;
+  }
+
+  &:focus-within {
+    textarea:focus,
+    input:focus {
+      outline: none;
+    }
+  }
+}
