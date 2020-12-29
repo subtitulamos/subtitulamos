@@ -20,7 +20,8 @@ $newTranslationButton.addEventListener("click", function () {
 
   const $translateToLangField = $getEle("#translate-to-lang");
   if (lastLangVal !== null && $translateToLangField.options.length) {
-    if ($translateToLangField.options.indexOf(lastLangVal)) {
+    const optionsArray = Array.apply(null, $translateToLangField.options);
+    if (optionsArray.filter(({ value }) => value === lastLangVal).length) {
       $translateToLangField.value = lastLangVal;
     } else {
       $translateToLangField.value = "";
