@@ -2,6 +2,7 @@
   background-color: var(--color-bg);
   border-radius: var(--standard-border-radius);
   position: relative;
+  min-width: 250px;
 }
 
 .form-wrap form {
@@ -40,8 +41,13 @@
   padding: var(--standard-padding);
 }
 
+.form-field.dropdown-field {
+  padding-right: 0;
+}
+
 .form-field > .dropdown {
   position: absolute;
+  margin-right: 15px;
 }
 
 .form-field input::placeholder,
@@ -96,6 +102,7 @@
   height: 3.2rem;
   margin-top: 20px;
   transition: 0.3s ease all;
+  color: var(--color-offwhite);
 }
 
 .form-wrap form button:hover {
