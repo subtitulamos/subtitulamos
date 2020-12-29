@@ -7,131 +7,82 @@
 {% endblock %}
 
 {% block content %}
-<div id="upload">
-  <h2 class="title">Subir resincronización</h2>
-
-   <form id="upload-form" enctype="multipart/form-data">
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Serie</label>
-      </div>
-      <div class="field-body">
-        <div class="field">
-          <div class="control">
-            <div class="select is-fullwidth">
-            <select disabled>
-              <option value="">{{ show_name }}</option>
-            </select>
-            </div>
-
-            <p id="show-id-status" data-status class="help is-danger hidden"></p>
-          </div>
+<div class="content limited-width">
+  <h1>Subir resincronización</h1>
+  <div class="form-wrap">
+    <div id="uploading-overlay" class="hidden">
+      <i class="fas fa-spinner"></i>
+      <p>Subiendo subtitulo...</p>
+    </div>
+    <form id="upload-form" enctype="multipart/form-data">
+      <div id="file-upload-container" class="w-box-shadow">
+        <i class="fas fa-arrow-alt-circle-up"></i>
+        <div id="file-upload-instructions">
+          <p>Arrasta o haz clic</p>
+          <p class="text small">para subir un fichero .SRT</p>
+          <p>Vas a subir...</p>
         </div>
+        <div id="file-name"></div>
+        <input class="file-input " type="file" id="sub" name="sub" accept=".srt" required>
       </div>
-    </div>
+      <div class="form-field disabled" fieldname="Serie">
+        <input id="show-id" required name="show-id" class="input" type="text"
+          autocomplete="off" disabled value="{{ show_name }}">
+          <i class="fas fa-film"></i>
+      </div>
 
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Episodio</label>
+      <div class="form-field disabled" fieldname="Nombre del episodio">
+        <input id="name" name="name" class="input" type="text"
+          autocomplete="off" value="{{ ep_name }}" disabled required>
+        <i class="far fa-file-video"></i>
       </div>
-      <div class="field-body">
-        <div class="field is-normal">
-          <p class="control">
-            <input id="name" name="name" class="input" type="text"
-              value="{{ ep_name }}" disabled>
-          </p>
-          <p id="name-status" data-status class="help is-danger hidden"></p>
-        </div>
-      </div>
-    </div>
 
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Idioma</label>
+    <div class="form-field validated dropdown-field" fieldname="Idioma">
+        <i class="fas fa-chevron-down dropdown"></i>
+        <select id="lang" name="lang" required>
+          <option value="" disabled selected>Selecciona un idioma</option>
+          {% for lid, lcode in LANG_LIST %}
+            <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
+          {% endfor %}
+        </select>
+        <i class="fas fa-globe"></i>
       </div>
-      <div class="field-body">
-        <div class="field">
-          <div class="control">
-            <div class="select is-fullwidth">
-            <select id="lang" name="lang">
-              <option value="0" disabled selected>Selecciona un idioma</option>
-              {% for lid, lcode in LANG_LIST %}
-                <option value="{{ lcode }}">{{ LANG_NAMES[lcode] }}</option>
-              {% endfor %}
-            </select>
-            </div>
-          </div>
-          <p id="lang-status" data-status class="help is-danger hidden"></p>
-        </div>
-      </div>
-    </div>
 
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Versión del vídeo</label>
+      <div class="form-field validated" fieldname="Versión del vídeo">
+        <input id="version" name="version" class="input"
+          type="text" required>
+        <i class="fas fa-compact-disc"></i>
       </div>
-      <div class="field-body">
-        <div class="field">
-          <p class="control">
-            <input id="version" name="version" class="input" type="text" placeholder="">
-          </p>
-          <p id="version-status" data-status class="help is-danger hidden"></p>
-        </div>
-      </div>
-    </div>
 
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Archivo SRT</label>
+      <div class="form-field validated" fieldname="Créditos o notas">
+        <input id="comments" name="comments" class="input"
+            type="text" required>
+        <i class="fas fa-comment"></i>
       </div>
-      <div class="field-body">
-        <div class="file has-name">
-          <label class="file-label">
-            <input class="file-input " type="file" id="sub" name="sub" accept=".srt">
-            <span class="file-cta">
-            <span class="file-icon">
-              <i class="fa fa-upload"></i>
-            </span>
-            <span class="file-label">
-              Elige un fichero...
-            </span>
-            </span>
-            <span id="sub-name" class="file-name">
-              *.srt
-            </span>
-          </label>
-          <div id="sub-status" data-status class="help is-danger hidden"></div>
-        </div>
-      </div>
-    </div>
 
-
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Comentarios</label>
-      </div>
-      <div class="field-body">
-        <div class="field">
-          <p class="control">
-            <input id="comments" name="comments" class="input"
-                 type="text" placeholder="Créditos o notas varias sobre el subtítulo...">
-          </p>
-          <p id="comments-status" data-status class="help is-danger hidden"></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="field is-grouped is-grouped-right">
-      <div class="control">
-        <button id="upload-button" class="button button-fat is-primary">
-          Subir resincro
-        </button>
-      </div>
-    </div>
-  </form>
+      <button type="submit" id="upload-button" class="text light">
+        Subir subtítulo
+      </button>
+    </form>
+  </div>
 </div>
+
+<template id="new-show-tpl">
+  <div class="field">
+    <p class="control is-expanded has-icons-left has-icons-right">
+      <input class="input" id="new-show" name="new-show" placeholder="Nombre de la serie..." value="">
+      <span class="icon is-small is-left">
+        <i class="fa fa-tv"></i>
+      </span>
+      <span class="icon is-small is-right">
+        <i id="status-new-show" class="fa fa-check hidden"></i>
+      </span>
+    </p>
+    <p id="new-show-status" data-status class="help is-danger hidden"></p>
+  </div>
+</template>
 {% endblock %}
 
 {% block scripts %}
-  {{ assets.js('upload_resync') }}
+  {{ assets.js('upload') }}
 {% endblock %}
