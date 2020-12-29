@@ -77,6 +77,7 @@
 
         <div class="language-content">
           {% for sub in subs %}
+            {% include "edit_subtitle.twig" %}
             {% if sub.progress < 20 %}
               {% set progress_class = '019' %}
             {% elseif sub.progress < 50 %}
@@ -188,7 +189,7 @@
                       <a href='/subtitles/{{ sub.id }}/hammer'>
                         <div class="option">Pasar pala</div>
                       </a>
-                      <a href='/subtitles/{{ sub.id }}/properties'>
+                      <a class="subtitle-properties-button" data-subtitle-id="{{sub.id}}">
                         <div class="option">Propiedades</div>
                       </a>
                     {% endif %}
@@ -285,7 +286,6 @@
 </template>
 
 {% include "edit_episode.twig" %}
-
 {% include "edit_show.twig" %}
 
 {% endblock %}
