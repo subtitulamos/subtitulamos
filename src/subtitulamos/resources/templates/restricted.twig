@@ -11,31 +11,17 @@
 {% endblock %}
 
 {% block content %}
-  <div class="inner-content">
-    <div class='container'>
-      <!-- Breadcrumbs -->
-      <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-        <ul>
-          <li><a href="/">Subtitulamos.tv</a></li>
-          <li class="is-active">
-            <a href="#">Acceso restringido</a>
-          </li>
-        </ul>
-      </nav>
+  <div class="content">
+    <i class="fa fa-ban forbidden" aria-hidden="true"></i>
 
-      <div class='has-text-centered'>
-        <div class='forbidden-title'>Acceso restringido</div>
+    <div class='forbidden-title'>Acceso restringido</div>
 
-        <i class="fa fa-ban forbidden" aria-hidden="true"></i>
-
-        <div>
-          {% if not is_logged_in %}
-            Necesitas acceder a tu cuenta para poder ver esta sección.
-          {% else %}
-            No tienes permisos suficientes para ejecutar esta acción.
-          {% endif %}
-        </div>
-      </div>
+    <div>
+      {% if not is_logged_in %}
+        Necesitas acceder a tu cuenta para poder ver esta sección.
+      {% else %}
+        No tienes permisos suficientes para ejecutar esta acción.
+      {% endif %}
     </div>
   </div>
 {% endblock %}
