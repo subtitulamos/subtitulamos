@@ -47,6 +47,11 @@ class UserController
                 'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
+
+        usort($uploadedEpisodes, function ($a, $b) {
+            return strnatcmp($a['full_name'], $b['full_name']);
+        });
+
         return Utils::jsonResponse($response, $uploadedEpisodes)->withStatus(200);
     }
 
@@ -69,6 +74,11 @@ class UserController
                 'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
+
+        usort($colaboratedEpisodes, function ($a, $b) {
+            return strnatcmp($a['full_name'], $b['full_name']);
+        });
+
         return Utils::jsonResponse($response, $colaboratedEpisodes)->withStatus(200);
     }
 
