@@ -3,7 +3,15 @@
  * @copyright 2020 subtitulamos.tv
  */
 import "./search";
-import { onDomReady, easyFetch, $getEle, showOverlayWithContentId, $getAllEle } from "./utils";
+import {
+  onDomReady,
+  easyFetch,
+  $getEle,
+  showOverlayFromTpl,
+  closeOverlay,
+  $getAllEle,
+  invertDropdown,
+} from "./utils";
 
 function toggleAccessForm() {
   const formType = this.id;
@@ -202,26 +210,6 @@ function showLoginForm() {
   document.getElementById("username").focus();
 }
 
-function getOverlayNode() {
-  return document.getElementById("overlay");
-}
-
-export function showOverlayFromTpl(tplId) {
-  const $template = document.getElementById(tplId);
-  const $node = document.importNode($template.content, true);
-
-  const $overlay = getOverlayNode();
-  $overlay.classList.remove("hidden");
-  const $overlayContent = document.getElementById("overlay-content");
-  $overlayContent.innerHTML = "";
-  $overlayContent.appendChild($node);
-}
-
-function closeOverlay(e) {
-  const $overlay = getOverlayNode();
-  $overlay.classList.add("hidden");
-}
-
 onDomReady(function () {
   const $loginBtn = document.getElementById("login");
   if ($loginBtn) {
@@ -282,14 +270,6 @@ if (document.getElementById("control-panel")) {
       }
     },
   });
-}
-
-export function invertDropdown(e) {
-  e.stopPropagation();
-  const $dropdown = e.currentTarget.querySelector(".dropdown");
-  const $isArrowDown = $dropdown.classList.contains("fa-chevron-down");
-  $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
-  $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
 }
 
 $getAllEle(".dropdown-field").forEach((dropdown) => {

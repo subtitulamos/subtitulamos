@@ -75,3 +75,31 @@ export function showOverlayWithContentId(contendId) {
   const $parentOverlayWrap = $overlayContent.closest(".overlay-wrap");
   $parentOverlayWrap.classList.toggle("hidden");
 }
+
+function getOverlayNode() {
+  return document.getElementById("overlay");
+}
+
+export function showOverlayFromTpl(tplId) {
+  const $template = document.getElementById(tplId);
+  const $node = document.importNode($template.content, true);
+
+  const $overlay = getOverlayNode();
+  $overlay.classList.remove("hidden");
+  const $overlayContent = document.getElementById("overlay-content");
+  $overlayContent.innerHTML = "";
+  $overlayContent.appendChild($node);
+}
+
+export function closeOverlay(e) {
+  const $overlay = getOverlayNode();
+  $overlay.classList.add("hidden");
+}
+
+export function invertDropdown(e) {
+  e.stopPropagation();
+  const $dropdown = e.currentTarget.querySelector(".dropdown");
+  const $isArrowDown = $dropdown.classList.contains("fa-chevron-down");
+  $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
+  $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
+}
