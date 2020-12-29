@@ -194,7 +194,9 @@
       {% if auth.logged %}
         {% verbatim %}
         <div class="open-comment">
-          <textarea id="new-comment"  rows="5" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+          <label class="input-auto-sizer stacked" :data-value="newComment">
+            <textarea id="new-comment" rows="1" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+          </label>
 
           <div class="comment-meta">
             <div
