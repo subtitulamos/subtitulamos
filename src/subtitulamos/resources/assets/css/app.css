@@ -3,8 +3,8 @@
 @import "hint.css";
 @import "effects.css";
 @import "control_panel.css";
-@import "form.css";
 @import "animations.css";
+@import "form.css";
 
 * {
   font-weight: 400;
