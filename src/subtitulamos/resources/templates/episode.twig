@@ -17,7 +17,12 @@
   {% endfor %}
 
   <div id="show-info-header">
-    <h1 class="blue-a">{{ episode.show.name }}</h1>
+    <div id="show-name" class="{% if auth.has_role('ROLE_MOD') %}can-edit-properties{% endif %}">
+      {% if auth.has_role('ROLE_MOD') %}
+      <i class="fas fa-pencil-alt"></i>
+      {% endif %}
+      <h1 class="blue-a">{{ episode.show.name }}</h1>
+    </div>
     <div id="episode-header">
       <div id="episode-name" class="{% if auth.has_role('ROLE_MOD') %}can-edit-properties{% endif %}">
         {% if auth.has_role('ROLE_MOD') %}
@@ -280,6 +285,9 @@
 </template>
 
 {% include "edit_episode.twig" %}
+
+{% include "edit_show.twig" %}
+
 {% endblock %}
 
 {% block scripts %}

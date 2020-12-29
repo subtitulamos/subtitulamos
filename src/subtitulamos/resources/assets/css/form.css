@@ -78,19 +78,19 @@
   flex-shrink: 0;
 }
 
-.checkbox.checked {
+.checkbox.checked:not(.disabled) {
   background-color: var(--color-blue-a);
   border: 2px solid var(--color-blue-a);
 }
 
-.checkbox i {
+.checkbox:not(.disabled) i {
   position: absolute;
   top: 2px;
   left: -2px;
   font-size: 0.7rem;
 }
 
-.checkbox.checked i {
+.checkbox.checked:not(.disabled) i {
   color: var(--color-offwhite);
 }
 

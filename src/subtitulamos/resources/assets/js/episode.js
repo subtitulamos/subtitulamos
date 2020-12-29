@@ -13,6 +13,7 @@ import {
   $getEle,
   showOverlayFromTpl,
   invertDropdown,
+  invertCheckbox,
 } from "./utils.js";
 
 const lastLangVal = localStorage.getItem("last-selected-translation-lang");
@@ -39,6 +40,14 @@ $getEle(".translate-subtitle").addEventListener("click", function () {
 
 $getEle("#episode-name").addEventListener("click", () => {
   showOverlayFromTpl("episode-properties");
+});
+
+$getEle("#show-name").addEventListener("click", () => {
+  showOverlayFromTpl("show-properties");
+
+  $getAllEle(".checkbox").forEach((checkbox) => {
+    checkbox.addEventListener("click", invertCheckbox);
+  });
 });
 
 document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
