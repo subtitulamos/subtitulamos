@@ -83,7 +83,7 @@ class SubtitleController
         $sub->setPause($pause);
         $em->persist($pause);
 
-        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Subtítulo pausado, [[subtitle:%d]]', $sub->getId()));
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Subtítulo pausado ([[subtitle:%d]])', $sub->getId()));
         $em->persist($event);
         $em->flush();
 
@@ -110,7 +110,7 @@ class SubtitleController
             $sub->setCompleteTime(new \DateTime());
         }
 
-        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Subtítulo despausado, [[subtitle:%d]]', $sub->getId()));
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Subtítulo despausado ([[subtitle:%d]])', $sub->getId()));
         $em->persist($event);
 
         $em->flush();

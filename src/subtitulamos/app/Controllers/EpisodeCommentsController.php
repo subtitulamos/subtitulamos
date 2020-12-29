@@ -117,7 +117,7 @@ class EpisodeCommentsController
 
         $comment->setText($text);
 
-        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario editado ([[episode:%d]])', $comment->getEpisode()->getId()));
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario de episodio editado ([[episode:%d]])', $comment->getEpisode()->getId()));
         $em->persist($event);
 
         $em->flush();
@@ -145,7 +145,7 @@ class EpisodeCommentsController
             }
         }
 
-        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario borrado ([[episode:%d]])', $comment->getEpisode()->getId()));
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario de episodio borrado ([[episode:%d]])', $comment->getEpisode()->getId()));
         $em->persist($event);
 
         $comment->setSoftDeleted(true);

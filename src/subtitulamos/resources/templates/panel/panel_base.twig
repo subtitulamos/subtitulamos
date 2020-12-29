@@ -24,23 +24,13 @@
           </p>
           <ul class="menu-list">
             <li><a href="/panel/alerts">Alertas</a></li>
-            <li><a href="javascript:void(0);" disabled>Log de eventos</a></li>
+            <li><a href="/panel/logs">Log de eventos</a></li>
             <li><a href="/panel/banlist">Usuarios baneados</a></li>
           </ul>
         </aside>
       {% endblock %}
 
       <div class="column is-10">
-        <section>
-          {% block breadcrumb %}
-            <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-              <ul>
-                <li><a href="/">Subtitulamos.tv</a></li>
-                <li class="is-active"><a href="#" aria-current="page">Panel de moderación</a></li>
-              </ul>
-            </nav>
-          {% endblock %}
-        </section>
         <section class="section">
           {% block panel_content %}
           {% endblock %}

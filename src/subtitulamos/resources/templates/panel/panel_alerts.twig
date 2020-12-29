@@ -5,15 +5,6 @@
 {% endblock %}
 
 {% block title %}Alertas{% endblock %}
-{% block breadcrumb %}
-  <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-    <ul>
-      <li><a href="/">Subtitulamos.tv</a></li>
-      <li><a href="/panel">Panel de moderación</a></li>
-      <li class="is-active"><a href="#" aria-current="page">Alertas</a></li>
-    </ul>
-  </nav>
-{% endblock %}
 {% block panel_content %}
     <section class="content">
         {% for error in auth.flash.errors %}
