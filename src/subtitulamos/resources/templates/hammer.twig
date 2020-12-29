@@ -8,6 +8,13 @@
 
 {% block content %}
 <div class="content limited-width">
+  <h1>Pasar pala</h1>
+  <a href="{{ url_for('episode', { 'id': subtitle.version.episode.id }) }}">
+    <h3>{{ subtitle.version.episode.fullname }}</h3>
+  </a>
+  <h4>{{ LANG_NAMES[LANG_LIST[subtitle.lang]] }}</h4>
+  <div class="text mini version">versión</div>
+  <div class="text small version-name">{{subtitle.version.name}}</div>
   <div class='candidates grid'>
     <div class="grid-row">
       <div class="text bold">Usuario</div>

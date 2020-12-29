@@ -5,6 +5,18 @@
 
 @import "app.css";
 
+.version {
+  color: var(--color-gray-c);
+}
+
+h4 {
+  margin-bottom: var(--spacing-xxs);
+}
+
+.version-name {
+  margin-bottom: var(--spacing-xs);
+}
+
 .candidates {
   .grid-row {
     display: grid;
@@ -17,6 +29,21 @@
 
     & > div {
       padding: var(--spacing-s);
+
+      .username {
+        display: flex;
+        align-items: center;
+
+        i {
+          margin-right: var(--spacing-xxs);
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .delete-button {
+        color: var(--color-gray-b);
+      }
     }
   }
 }
