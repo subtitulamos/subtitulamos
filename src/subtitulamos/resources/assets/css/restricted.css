@@ -1,19 +1,21 @@
-@import 'app.css';
+@import "app.css";
 
-.inner-content {
-  box-sizing: content-box;
-  padding-top: 20px;
-  padding-bottom: 40px;
-  background-color: #e9e7e7 !important;
-  position: relative;
+.content {
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
 }
 
 .forbidden {
-  font-size: 100px;
-  margin: 20px;
+  color: var(--color-red);
+  font-size: 9rem;
+  margin-bottom: var(--spacing-l);
 }
 
 .forbidden-title {
-  font-size: 20px;
+  font-size: 1.2rem;
   text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: var(--spacing-s);
 }
