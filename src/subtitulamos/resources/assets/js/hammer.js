@@ -8,18 +8,21 @@ import "../css/hammer.scss";
 import { easyFetch } from "./utils";
 
 Vue.component("hammertarget", {
-  template: `<tr v-if='!deleted' class='hammer-user-block'>
-        <td><a :href='\"/users/\"+id'>{{ username }}</a></td>
-        <td>
-            <div>{{ total }} ({{ corrected }} corregidas)</div>
-            <a href="javascript:void(0)" @click='completeHammer'>Borrar todas</a>
-        </td>
-        <td>
-          <div>{{ latest }}</div>
-          <a v-show="latest > 0"href="javascript:void(0)" @click='latestHammer'>Borrar</a>
-        </td>
-    </tr>`,
-  props: ["id", "username", "countCorrected", "countLatest"],
+  template: `<div v-if='!deleted' class='grid-row'>
+        <div><a :class="userTypeClass" :href='\"/users/\"+id'>{{ username }}</a></div>
+        <div>
+            <div>
+              <span class="text bold">{{ total }}</span>
+              <span class="text small">({{ corrected }} corregidas)</span>
+            </div>
+            <a class="text tiny blue-a" href="javascript:void(0)" @click='completeHammer'>Borrar todas</a>
+        </div>
+        <div>
+          <div class="text bold">{{ latest }}</div>
+          <a class="text tiny blue-a" v-show="latest > 0"href="javascript:void(0)" @click='latestHammer'>Borrar</a>
+        </div>
+    </div>`,
+  props: ["id", "username", "userRoles", "countCorrected", "countLatest"],
   data: function () {
     return {
       corrected: this.countCorrected * 1,
@@ -30,6 +33,14 @@ Vue.component("hammertarget", {
   computed: {
     total: function () {
       return this.latest + this.corrected;
+    },
+    userTypeClass: function () {
+      let isTT = this.userRoles.includes("ROLE_TT");
+      let isMod = this.userRoles.includes("ROLE_MOD");
+      return {
+        "role-tt": isTT && !isMod,
+        "role-mod": isMod,
+      };
     },
   },
   methods: {
@@ -108,4 +119,8 @@ Vue.component("hammertarget", {
       });
     },
   },
+});
+
+const page = new Vue({
+  el: ".content",
 });
