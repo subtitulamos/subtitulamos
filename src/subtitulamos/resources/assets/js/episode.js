@@ -7,11 +7,29 @@ import Vue from "vue";
 import "./vue/comment.js";
 import "../css/episode.scss";
 import { onDomReady, easyFetch, $getAllEle, $getEle } from "./utils.js";
+import { showOverlayFromTpl, invertDropdown } from "./app.js";
 
+const lastLangVal = localStorage.getItem("last-selected-translation-lang");
 const $newTranslationButton = document.querySelector(".translate-subtitle");
-// $newTranslationButton.addEventListener("click", function () {
-//   document.getElementById("new-translation-opts").classList.toggle("hidden");
-// });
+$newTranslationButton.addEventListener("click", function () {
+  showOverlayFromTpl("new-translation");
+
+  $getAllEle(".dropdown-field").forEach((dropdown) => {
+    dropdown.addEventListener("click", invertDropdown);
+  });
+
+  const $translateToLangField = $getEle("#translate-to-lang");
+  if (lastLangVal !== null && $translateToLangField.options.length) {
+    if ($translateToLangField.options.indexOf(lastLangVal)) {
+      $translateToLangField.value = lastLangVal;
+    } else {
+      $translateToLangField.value = "";
+    }
+  }
+  $translateToLangField.addEventListener("change", function () {
+    localStorage.setItem("last-selected-translation-lang", this.value);
+  });
+});
 
 document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
   $ele.addEventListener("click", function (e) {
@@ -31,12 +49,6 @@ document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
 );
 
 onDomReady(function () {
-  // let lastLangVal = localStorage.getItem("last-selected-translation-lang");
-
-  // if (lastLangVal !== null) {
-  //   document.getElementById("translate-to-lang").value = lastLangVal;
-  // }
-
   // Expanding / collapsing a language's container
   $getAllEle(".language-name").forEach((dropdown) => {
     dropdown.addEventListener("click", (e) => {
@@ -85,10 +97,6 @@ onDomReady(function () {
     });
   });
 });
-
-// document.getElementById("translate-to-lang").addEventListener("change", function () {
-//   localStorage.setItem("last-selected-translation-lang", this.value);
-// });
 
 let comments = new Vue({
   el: "#comments-container",

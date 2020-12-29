@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 import "./search";
-import { onDomReady, easyFetch, $getEle } from "./utils";
+import { onDomReady, easyFetch, $getEle, showOverlayWithContentId, $getAllEle } from "./utils";
 
 function toggleAccessForm() {
   const formType = this.id;
@@ -206,7 +206,7 @@ function getOverlayNode() {
   return document.getElementById("overlay");
 }
 
-function showOverlayFromTpl(tplId) {
+export function showOverlayFromTpl(tplId) {
   const $template = document.getElementById(tplId);
   const $node = document.importNode($template.content, true);
 
@@ -282,3 +282,15 @@ if (document.getElementById("control-panel")) {
     },
   });
 }
+
+export function invertDropdown(e) {
+  e.stopPropagation();
+  const $dropdown = e.currentTarget.querySelector(".dropdown");
+  const $isArrowDown = $dropdown.classList.contains("fa-chevron-down");
+  $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
+  $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
+}
+
+$getAllEle(".dropdown-field").forEach((dropdown) => {
+  dropdown.addEventListener("click", invertDropdown);
+});

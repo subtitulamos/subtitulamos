@@ -69,3 +69,9 @@ export function easyFetch(url, baseOpts) {
 
 export const $getEle = document.querySelector.bind(document);
 export const $getAllEle = document.querySelectorAll.bind(document);
+
+export function showOverlayWithContentId(contendId) {
+  const $overlayContent = document.getElementById(contendId);
+  const $parentOverlayWrap = $overlayContent.closest(".overlay-wrap");
+  $parentOverlayWrap.classList.toggle("hidden");
+}
