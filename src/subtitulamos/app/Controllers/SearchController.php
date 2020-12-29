@@ -181,7 +181,8 @@ class SearchController
 
     public function query($request, $response, EntityManager $em)
     {
-        $q = $request->getQueryParam('q');
+        $params = $request->getQueryParams();
+        $q = $params['q'] ?? '';
         if (empty($q)) {
             return $response->withStatus(400);
         }

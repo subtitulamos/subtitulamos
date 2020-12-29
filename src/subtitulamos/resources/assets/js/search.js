@@ -17,7 +17,7 @@ function createResultRow(contents) {
 }
 
 onDomReady(function () {
-  let $searchBar = document.getElementById("search-bar");
+  let $searchBar = document.getElementById("search-field");
   let $searchResults = document.getElementById("search-results");
   let searchTimerHandle = null;
   let lastSearchedText = "";
@@ -76,19 +76,18 @@ onDomReady(function () {
       });
   }
 
-  // FIXME: Uncomment or delete
-  // $searchBar.addEventListener("keyup", function (e) {
-  //   if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
-  //     window.location = linkResultList[0];
-  //     e.preventDefault();
-  //   }
+  $searchBar.addEventListener("keyup", function (e) {
+    if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
+      window.location = linkResultList[0];
+      e.preventDefault();
+    }
 
-  //   if (searchTimerHandle) {
-  //     clearTimeout(searchTimerHandle);
-  //   }
+    if (searchTimerHandle) {
+      clearTimeout(searchTimerHandle);
+    }
 
-  //   searchTimerHandle = setTimeout(search, 200);
-  // });
+    searchTimerHandle = setTimeout(search, 200);
+  });
 
   // let hideTimeoutHandle = null;
   // $searchBar.addEventListener("focusin", function () {
