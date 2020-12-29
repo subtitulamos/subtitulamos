@@ -8,21 +8,6 @@
         <i class="fas fa-film"></i>
       </div>
 
-      <div class='form-field checkbox-field'>
-        {% if can_delete_show %}
-        <div class="checkbox">
-          <input type="checkbox" class="form_input" name="delete">
-          <i class="fas fa-check"></i>
-        </div>
-        <div>Borrar serie?</div>
-        {% else %}
-        <div class="checkbox disabled">
-          <input type="checkbox" class="form_input" name="delete" disabled>
-        </div>
-        <div>No se puede borrar una serie con capítulos.</div>
-        {% endif %}
-      </div>
-
       <button id="save-edit" type="submit" class='text'>Guardar</button>
     </form>
   </div>

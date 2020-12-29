@@ -22,15 +22,6 @@ use Slim\Views\Twig;
 
 class EpisodeController
 {
-    private function canDeleteShow(Show $show, EntityManager $em)
-    {
-        $episodeCount = $em->createQuery('SELECT COUNT(e.id) FROM App:Episode e WHERE e.show = :show')
-            ->setParameter('show', $show)
-            ->getSingleScalarResult();
-
-        return $episodeCount == 0;
-    }
-
     public function view($id, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, UrlHelper $urlHelper, SlugifyInterface $slugify)
     {
         $ep = $em->createQuery('SELECT e, sb, v, sw, p FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN e.show sw LEFT JOIN sb.pause p WHERE e.id = :id')
@@ -110,8 +101,7 @@ class EpisodeController
             'langs' => $langs,
             'slug' => $properSlug,
             'season_data' => $seasons,
-            'downloads' => $downloads,
-            'can_delete_show' => $this->canDeleteShow($show, $em)
+            'downloads' => $downloads
         ]);
     }
 
