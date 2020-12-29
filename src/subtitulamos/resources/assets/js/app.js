@@ -151,20 +151,22 @@ if ($ctrlPanel) {
     }
   };
 
-  const togglePanelStatus = (skipSave) => {
+  const togglePanelStatus = (save) => {
     openStatus = !openStatus;
-    if (!skipSave) {
+    if (save) {
       localStorage.setItem("menu-open", openStatus);
     }
     updateDomWithStatus();
   };
 
   updateDomWithStatus(); // Update on load, make sure local prefs are respected
-  $getEle("#control-panel-minimize-toggle").addEventListener("click", togglePanelStatus);
+  $getEle("#control-panel-minimize-toggle").addEventListener("click", () =>
+    togglePanelStatus(true /* save status */)
+  );
 
   $getEle("#search-icon").addEventListener("click", () => {
     if (!openStatus) {
-      togglePanelStatus(true /* dont save status */);
+      togglePanelStatus(false /* dont save status */);
     }
     setTimeout(() => $getEle("#search-input").focus(), 200);
   });
