@@ -1,0 +1,127 @@
+.form-wrap {
+  background-color: var(--color-bg);
+  border-radius: var(--standard-border-radius);
+  position: relative;
+  min-width: 300px;
+
+  form {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+    padding: var(--standard-padding);
+    border-radius: var(--standard-border-radius);
+    background-color: var(--color-blue-b);
+    height: 3.2rem;
+    margin-top: 20px;
+    transition: 0.3s ease all;
+    color: var(--color-offwhite);
+
+    &:hover {
+      background-color: var(--color-blue-a);
+    }
+
+    &:active {
+      background-color: var(--color-blue-b);
+    }
+  }
+
+  .form-field {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    border-bottom: 1px solid var(--color-gray-divisions);
+    padding: 7px 15px;
+    padding-top: 20px;
+    margin-bottom: var(--spacing-xs);
+    background-color: var(--color-offwhite);
+    border-radius: 0.2rem;
+    position: relative;
+
+    &::before {
+      content: attr(fieldname);
+      font-size: 0.8rem;
+      color: var(--color-gray-b);
+      position: absolute;
+      top: 10px;
+      left: 15px;
+    }
+
+    &.dropdown-field {
+      padding-right: 0;
+    }
+
+    i {
+      color: var(--color-gray-c);
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    input,
+    select {
+      flex: 1;
+      color: var(--color-gray-a);
+      padding: var(--standard-padding);
+
+      &:focus + i {
+        color: var(--color-blue-a);
+      }
+
+      &:invalid + i::after,
+      &:valid + i::after {
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        z-index: 20;
+        position: absolute;
+        right: -6px;
+        bottom: -6px;
+        --size: 0.6rem;
+        font-size: var(--size);
+        width: var(--size);
+        height: var(--size);
+        border-radius: 50%;
+        background-color: var(--color-offwhite);
+        border: 0.15rem solid var(--color-offwhite);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &:valid + i::after {
+        content: "\f058";
+        font-family: "Font Awesome 5 Free";
+        color: var(--color-green);
+      }
+
+      &:invalid + i::after {
+        content: "\f057";
+        font-family: "Font Awesome 5 Free";
+        color: var(--color-red);
+      }
+
+      &::placeholder {
+        color: var(--color-gray-b);
+        opacity: 0.5;
+      }
+    }
+
+    select {
+      padding-right: 50px;
+
+      &:required:invalid {
+        color: var(--color-gray-b);
+        opacity: 0.5;
+      }
+    }
+
+    .dropdown {
+      position: absolute;
+      margin-right: 15px;
+    }
+  }
+}
