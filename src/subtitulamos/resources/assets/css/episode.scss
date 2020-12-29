@@ -62,8 +62,39 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-s);
+    color: var(--color-blue-a);
 
     #episode-name {
+      flex: 1;
+      margin-right: var(--spacing-m);
+      padding: var(--spacing-xxs) 0;
+
+      &.can-edit-properties {
+        border: 1px solid transparent;
+        cursor: pointer;
+
+        i {
+          width: 0;
+          overflow: hidden;
+        }
+
+        &:hover {
+          padding: var(--spacing-xxs) var(--spacing-xs);
+          border: 1px solid var(--color-gray-d);
+          border-radius: var(--standard-border-radius);
+
+          i {
+            width: 20px;
+            margin-right: var(--spacing-xxs);
+          }
+        }
+
+        &:active {
+          border: 1px solid var(--color-gray-c);
+          border-radius: var(--standard-border-radius);
+        }
+      }
+
       h3 {
         margin-bottom: 0;
         margin-right: var(--spacing-xxs);

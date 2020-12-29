@@ -11,7 +11,10 @@
   <div id="show-info-header">
     <h1 class="blue-a">{{ episode.show.name }}</h1>
     <div id="episode-header">
-      <div id="episode-name">
+      <div id="episode-name" class="{% if auth.has_role('ROLE_MOD') %}can-edit-properties{% endif %}">
+        {% if auth.has_role('ROLE_MOD') %}
+        <i class="fas fa-pencil-alt"></i>
+        {% endif %}
         <h3 class="blue-a">{{ episode.name }}</h3>
         <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
       </div>
