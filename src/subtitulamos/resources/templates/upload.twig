@@ -32,7 +32,7 @@
           <div id="file-name"></div>
           <input class="file-input " type="file" id="sub" name="sub" accept=".srt" required>
         </div>
-        <div class="form-field validated dropdown-field">
+        <div class="form-field validated dropdown-field" fieldname="Serie">
           <i class="fas fa-chevron-down dropdown"></i>
           <select id="show-id" name="show-id" required>
             <option value="" disabled selected>Selecciona una serie</option>
@@ -44,20 +44,19 @@
           <i class="fas fa-film"></i>
         </div>
 
-        <div class="form-field validated hidden">
+        <div class="form-field validated hidden" fieldname="Nombre de la nueva serie">
           <input type="text" id="new-show"
-            name="new-show" placeholder="Nombre de la nueva serie">
+            name="new-show">
           <i class="fas fa-plus"></i>
         </div>
 
-        <div class="form-field validated">
+        <div class="form-field validated" fieldname="0x00 - Nombre del episodio">
           <input id="name" name="name" class="input" type="text"
-            placeholder="0x00 - Nombre del episodio"
             autocomplete="off" required>
           <i class="fas fa-file-video"></i>
         </div>
 
-      <div class="form-field validated dropdown-field">
+      <div class="form-field validated dropdown-field" fieldname="Idioma">
           <i class="fas fa-chevron-down dropdown"></i>
           <select id="lang" name="lang" required>
             <option value="" disabled selected>Selecciona un idioma</option>
@@ -68,18 +67,15 @@
           <i class="fas fa-globe"></i>
         </div>
 
-        <div class="form-field validated">
+        <div class="form-field validated" fieldname="Versión del vídeo">
           <input id="version" name="version" class="input"
-            type="text" placeholder="Versión del vídeo"
-            required>
+            type="text" required>
           <i class="fas fa-compact-disc"></i>
         </div>
 
-        <div class="form-field validated">
+        <div class="form-field validated" fieldname="Créditos o notas">
           <input id="comments" name="comments" class="input"
-              type="text"
-              placeholder="Créditos o notas varias sobre el subtítulo..."
-              required>
+              type="text" required>
           <i class="fas fa-comment"></i>
         </div>
 

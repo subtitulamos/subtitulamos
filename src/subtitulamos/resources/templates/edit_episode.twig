@@ -1,50 +1,32 @@
-{% extends "base.twig" %}
-{% import 'macros/assets.twig' as assets %}
-{% import 'macros/alerts.twig' as alerts %}
-
-{% block title %}Editando {{ episode.fullname }}{% endblock %}
-{% block css %}
-  {{ assets.css('edit_episode') }}
-{% endblock %}
-
-{% block content %}
-
-<div id="subtitle_content">
-  <div id="subtitle_content_title_container">
-    <div id="section-title">
-      <a href='/episodes/{{ episode.id }}'>{{ episode.fullname }}</a>
-    </div>
-  </div>
-
-  <div id='info'>
-    <form name="" action="" method="POST">
+<template id="episode-properties">
+  <div class="form-wrap">
+    <h3>Propiedades del episodio</h3>
+    <form method="POST">
       {% for error in auth.flash.errors %}
         {{ alerts.show('error', error) }}
       {% endfor %}
       {% for success in auth.flash.successes %}
         {{ alerts.show('success', success) }}
       {% endfor %}
-      <div class='form-group'>
-        <label for="season">Temporada</label>
-        <input id="season" type="number" class="form_input" name="season" value="{{ episode.season }}" required>
-      </div>
-      <div class='form-group'>
-        <label for="episode">Capítulo</label>
-        <input id="episode" type="number" class="form_input" name="episode" value="{{ episode.number }}" required>
+      <div class='form-field validated' fieldname="Temporada">
+        <input id="season" type="number" class="form_input"
+          name="season" value="{{ episode.season }}" required>
+        <i class="fas fa-video"></i>
       </div>
 
-      <div class='form-group'>
-        <label for="name">Nombre</label>
-        <input type="text" name="name" class="form_input" value="{{ episode.name }}" required>
+      <div class='form-field validated' fieldname="Capítulo">
+        <input id="episode" type="number" class="form_input"
+          name="episode" value="{{ episode.number }}" required>
+        <i class="fas fa-file-video"></i>
       </div>
 
-      <div class='form-group'>
-        <button id="save-edit" type="submit" class='button button-fat'>GUARDAR</button>
+      <div class='form-field validated' fieldname="Nombre">
+        <input type="text" name="name" class="form_input"
+          value="{{ episode.name }}" required>
+        <i class="fas fa-film"></i>
       </div>
+
+      <button id="save-edit" type="submit">GUARDAR</button>
     </form>
   </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-{% endblock %}
+</template>
