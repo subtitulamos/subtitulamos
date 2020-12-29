@@ -4,15 +4,21 @@
  */
 
 import Vue from "vue";
-import "../css/hammer.css";
+import "../css/hammer.scss";
 import { easyFetch } from "./utils";
 
 Vue.component("hammertarget", {
-  template: `<div v-if='!deleted' class='hammer-user-block'>
-        <a :href='\"/users/\"+id'>{{ username }}</a><br/>
-            {{ total }} entradas totales ({{ corrected }} corregidas) - <a href="javascript:void(0)" @click='completeHammer'>Borrar todas</a><br/>
-            {{ latest }} secuencias sin corregir <span v-show="latest > 0">- <a href="javascript:void(0)" @click='latestHammer'>Borrar</a></span>
-    </div>`,
+  template: `<tr v-if='!deleted' class='hammer-user-block'>
+        <td><a :href='\"/users/\"+id'>{{ username }}</a></td>
+        <td>
+            <div>{{ total }} ({{ corrected }} corregidas)</div>
+            <a href="javascript:void(0)" @click='completeHammer'>Borrar todas</a>
+        </td>
+        <td>
+          <div>{{ latest }}</div>
+          <a v-show="latest > 0"href="javascript:void(0)" @click='latestHammer'>Borrar</a>
+        </td>
+    </tr>`,
   props: ["id", "username", "countCorrected", "countLatest"],
   data: function () {
     return {
@@ -102,8 +108,4 @@ Vue.component("hammertarget", {
       });
     },
   },
-});
-
-const page = new Vue({
-  el: "#hammer",
 });
