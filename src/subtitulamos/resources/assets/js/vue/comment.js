@@ -30,7 +30,9 @@ Vue.component("comment", {
       <section class="comment-content">
         <p v-if="!editing" v-html="formattedText"></p>
         <div class="open-comment" v-else>
-          <textarea rows="4" v-if="editing" v-model="text"></textarea>
+          <label class="input-auto-sizer stacked" :data-value="text">
+            <textarea rows="1" v-if="editing" v-model="text"></textarea>
+          </label>
           <button class="save-comment" @click="save">
             <i class="fab fa-telegram-plane"></i>
             <span class="text mini spaced">GUARDAR</span>
