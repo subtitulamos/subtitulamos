@@ -451,6 +451,10 @@ footer > #footer-content {
   color: var(--color-black);
 }
 
+.grid {
+  display: grid;
+}
+
 @media all and (max-width: 830px) {
   header {
     --padding-x: 25px;
