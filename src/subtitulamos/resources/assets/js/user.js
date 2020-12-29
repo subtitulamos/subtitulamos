@@ -4,7 +4,7 @@
  */
 
 import "../css/user.scss";
-import { $getEle } from "./utils";
+import { $getEle, easyFetch, showOverlayFromTpl } from "./utils";
 
 const $roleChangeForm = $getEle("#reset-user-pwd");
 if ($roleChangeForm) {
@@ -32,3 +32,46 @@ if ($roleChangeForm) {
     });
   });
 }
+
+const $banButton = $getEle("#ban");
+if ($banButton) {
+  $banButton.addEventListener("click", () => {
+    showOverlayFromTpl("ban-dialog");
+  });
+}
+
+const loadList = (target, msgs) => {
+  easyFetch(`/users/${targetUserId}/${target}-list`, {
+    method: "get",
+  })
+    .then((reply) => reply.json())
+    .then((reply) => {
+      const count = reply.length;
+      const $list = document.createElement("ul");
+      for (const ep of reply) {
+        const $li = document.createElement("li");
+        $li.innerHTML = `<a href="${ep.url}">${ep.full_name}</a></li>`;
+        $list.appendChild($li);
+      }
+
+      $getEle(`#${target}-count`).innerHTML = count;
+      if (count > 0) {
+        $getEle(`#${target}-list`).innerHTML = $list.outerHTML;
+      } else {
+        $getEle(`#${target}-list`).innerHTML = msgs.noResults;
+      }
+    })
+    .catch((err) => {
+      console.log(err, target);
+      Toasts.error.fire(msgs.error);
+    });
+};
+
+loadList("upload", {
+  noResults: "El usuario no ha colaborado en ningún capítulo",
+  error: "Ha ocurrido un error al cargar los capítulos en los que ha colaborado",
+});
+loadList("collab", {
+  noResults: "El usuario no ha subido ningún capítulo",
+  error: "Ha ocurrido un error al cargar los capítulos subidos",
+});

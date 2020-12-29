@@ -20,8 +20,21 @@ use Slim\Views\Twig;
 
 class UserController
 {
-    private function renderProfile($user, $request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify, bool $isSelf)
+    private function renderProfile($user, $request, $response, Twig $twig, bool $isSelf)
     {
+        return $twig->render($response, 'user.twig', [
+            'user' => $user,
+            'page_type' => $isSelf ? 'me' : 'public'
+        ]);
+    }
+
+    public function loadUploadList($userId, $request, $response, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
+    {
+        $user = $em->getRepository('App:User')->find($userId);
+        if (!$user) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
         $upEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v WHERE v.user = :uid GROUP BY e.id')
             ->setParameter('uid', $user->getId())->getResult();
 
@@ -33,6 +46,15 @@ class UserController
                 'full_name' => $fullName,
                 'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
+        }
+        return Utils::jsonResponse($response, $uploadedEpisodes)->withStatus(200);
+    }
+
+    public function loadCollaborationsList($userId, $request, $response, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
+    {
+        $user = $em->getRepository('App:User')->find($userId);
+        if (!$user) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $collabEpisodesRes = $em->createQuery('SELECT e FROM App:Episode e JOIN e.versions v JOIN v.subtitles sb JOIN sb.sequences s WHERE s.author = :uid AND sb.directUpload = 0 GROUP BY e.id')
@@ -47,31 +69,25 @@ class UserController
                 'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
         }
-
-        return $twig->render($response, 'user.twig', [
-            'user' => $user,
-            'uploaded_episodes' => $uploadedEpisodes,
-            'collaborated_episodes' => $colaboratedEpisodes,
-            'page_type' => $isSelf ? 'me' : 'public'
-        ]);
+        return Utils::jsonResponse($response, $colaboratedEpisodes)->withStatus(200);
     }
 
-    public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
+    public function publicProfile($userId, $request, $response, Twig $twig, EntityManager $em)
     {
         $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        return $this->renderProfile($user, $request, $response, $twig, $em, $urlHelper, $slugify, false);
+        return $this->renderProfile($user, $request, $response, $twig, false);
     }
 
-    public function viewSettings($request, $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify, Auth $auth)
+    public function viewSettings($request, $response, Twig $twig, Auth $auth)
     {
-        return $this->renderProfile($auth->getUser(), $request, $response, $twig, $em, $urlHelper, $slugify, true);
+        return $this->renderProfile($auth->getUser(), $request, $response, $twig, true);
     }
 
-    public function saveSettings($request, $response, Twig $twig, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
+    public function saveSettings($request, $response, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
     {
         $user = $auth->getUser();
         $password = $body['newpwd'] ?? '';

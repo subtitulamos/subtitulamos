@@ -121,8 +121,6 @@ class UploadController
                     $show = new Show();
                     $show->setName($newShowName);
                     $em->persist($show);
-
-                    /* TODO: Log */
                 }
             } else {
                 $errors[] = ['new-show', 'El nombre no puede estar vacío'];
