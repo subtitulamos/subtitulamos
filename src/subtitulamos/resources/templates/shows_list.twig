@@ -35,6 +35,33 @@
         {% endfor %}
       </ul>
     </div>
+
+    <noscript>
+      <br/>
+
+      <div id="letter-container">
+        <button class="letter" data-letter="{{letter}}">{{ letter|upper }}</button>
+      </div>
+
+      <div class="shows-in-letter" id="{{ letter }}">
+        <ul>
+          {% for i in range(0, shows|length - 1) %}
+          {% set show = shows[i].show %}
+          {% set seasons = shows[i].season_count %}
+          <li>
+            <a href='shows/{{ show.id }}'>
+              <span>{{ show.name }}</span>
+              {% if seasons != 1 %}
+              <span class="season-info text small">({{ seasons }} temporadas)</span>
+              {% else %}
+              <span class="season-info text small">(1 temporada)</span>
+              {% endif %}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </noscript>
     {% endfor %}
   </div>
 {% endblock %}
