@@ -50,6 +50,14 @@ $getEle("#show-name").addEventListener("click", () => {
   });
 });
 
+$getAllEle(".subtitle-properties-button").forEach((button) => {
+  button.addEventListener("click", (e) => {
+    const $subId = e.currentTarget.dataset.subtitleId;
+    console.log($subId);
+    showOverlayFromTpl("subtitle-properties-" + $subId);
+  });
+});
+
 document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
   $ele.addEventListener("click", function (e) {
     const subId = this.dataset.id;
