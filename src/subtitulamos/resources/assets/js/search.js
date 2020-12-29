@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { onDomReady, easyFetch } from "./utils";
+import { onDomReady, easyFetch, $getById } from "./utils";
 
 function createResultRow(contents) {
   const $row = document.createElement("li");
@@ -17,13 +17,13 @@ function createResultRow(contents) {
 }
 
 onDomReady(function () {
-  let $searchBar = document.getElementById("search-field");
-  let $searchResults = document.getElementById("search-results");
+  let $searchBars = document.querySelectorAll("[data-search-bar-target]");
   let searchTimerHandle = null;
   let lastSearchedText = "";
   let linkResultList = [];
 
-  function search() {
+  function search($searchBar) {
+    const $searchResults = $getById($searchBar.dataset.searchBarTarget);
     searchTimerHandle = null;
 
     let searchQuery = $searchBar.value;
@@ -76,18 +76,20 @@ onDomReady(function () {
       });
   }
 
-  $searchBar.addEventListener("keyup", function (e) {
-    if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
-      window.location = linkResultList[0];
-      e.preventDefault();
-    }
+  for (const $searchBar of $searchBars) {
+    $searchBar.addEventListener("keyup", function (e) {
+      if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
+        window.location = linkResultList[0];
+        e.preventDefault();
+      }
 
-    if (searchTimerHandle) {
-      clearTimeout(searchTimerHandle);
-    }
+      if (searchTimerHandle) {
+        clearTimeout(searchTimerHandle);
+      }
 
-    searchTimerHandle = setTimeout(search, 200);
-  });
+      searchTimerHandle = setTimeout(() => search($searchBar), 200);
+    });
+  }
 
   // let hideTimeoutHandle = null;
   // $searchBar.addEventListener("focusin", function () {

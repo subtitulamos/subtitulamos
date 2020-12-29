@@ -54,7 +54,9 @@
           </a>
           <div id="control-panel-search">
               <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
-              <input id="search-input" type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
+              <input id="search-input" data-search-bar-target='panel-search-results' type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
+              <div id='panel-search-results'>
+              </div>
           </div>
           <button class="control-panel-button search" id='search-icon'>
             <i class="fa fa-search"></i>
