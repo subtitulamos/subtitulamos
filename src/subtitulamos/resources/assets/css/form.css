@@ -10,6 +10,11 @@
 
 .form-wrap form {
   width: 100%;
+  transition-duration: 0s !important;
+}
+
+.form-wrap form * {
+  transition-duration: 0s !important;
 }
 
 .form-field {
