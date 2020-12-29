@@ -113,9 +113,6 @@ onDomReady(function () {
       body: data, // Already form-encoded
     })
       .then((res) => {
-        $getEle("#uploading-overlay").classList.toggle("hidden", true);
-        $uploadForm.classList.toggle("uploading", false);
-
         if (res.ok === false) {
           throw {
             error: true,
@@ -129,6 +126,9 @@ onDomReady(function () {
         window.location.href = data;
       })
       .catch((err) => {
+        $getEle("#uploading-overlay").classList.toggle("hidden", true);
+        $uploadForm.classList.toggle("uploading", false);
+
         const reportUnknownError = () =>
           Toasts.error.fire("Ha ocurrido un error no identificado al intentar subir el subtítulo");
         if (err.response) {
