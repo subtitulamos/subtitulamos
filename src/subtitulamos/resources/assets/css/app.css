@@ -455,6 +455,18 @@ footer > #footer-content {
   display: grid;
 }
 
+.role-tt,
+.role-tt:hover,
+.role-tt:active {
+  color: var(--color-green) !important;
+}
+
+.role-mod,
+.role-mod:hover,
+.role-mod:active {
+  color: var(--color-blue-b) !important;
+}
+
 @media all and (max-width: 830px) {
   header {
     --padding-x: 25px;
