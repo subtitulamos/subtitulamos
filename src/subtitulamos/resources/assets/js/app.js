@@ -245,11 +245,12 @@ if (document.getElementById("control-panel")) {
   new Vue({
     el: "#control-panel",
     data: {
-      isOpen: false,
+      isOpen: localStorage.getItem("menu-open") === "true" || false,
     },
     methods: {
       updateControlPanelStatus() {
         this.isOpen = !this.isOpen;
+        localStorage.setItem("menu-open", this.isOpen);
         this.updateElementsStatus();
       },
       updateElementsStatus() {
