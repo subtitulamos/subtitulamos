@@ -42,7 +42,7 @@ Vue.component("comment", {
         <span class="text tiny" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
         <span class="text tiny" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
         <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
-          <span class="text tiny" v-if="pinned">Quitar fijado</span>
+          <span class="text tiny" v-if="pinned">Desfijar</span>
           <span class="text tiny" v-else>Fijar</span>
         </span>
       </section>
