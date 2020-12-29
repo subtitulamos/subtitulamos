@@ -26,9 +26,10 @@
         <input class="file-input " type="file" id="sub" name="sub" accept=".srt" required>
       </div>
       <div class="form-field disabled" fieldname="Serie">
-        <input id="show-id" required name="show-id" class="input" type="text"
-          autocomplete="off" disabled value="{{ show_name }}">
-          <i class="fas fa-film"></i>
+        <select id="show-id" name="show-id" required>
+          <option selected value="{{ show_id }}">{{show_name}}</option>
+        </select>
+        <i class="fas fa-film"></i>
       </div>
 
       <div class="form-field disabled" fieldname="Episodio (formato: 0x00 - Nombre del episodio)">

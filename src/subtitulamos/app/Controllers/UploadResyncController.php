@@ -34,6 +34,7 @@ class UploadResyncController
 
         $show = $ep->getShow();
         return $twig->render($response, 'upload_resync.twig', [
+            'show_id' => $show->getId(),
             'show_name' => $show->getName(),
             'ep_name' => $ep->getNameAndSeason()
         ]);

@@ -13,8 +13,8 @@ let uploadInfo = {
   name: "",
 };
 
-function splitSeasonAndEpisodeCallback() {
-  const val = this.value.trim();
+function splitSeasonAndEpisodeCallback(element) {
+  const val = element.value;
   const match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/);
   let error = "";
   if (val == "" || (!match && val === "S")) {
@@ -33,7 +33,7 @@ function splitSeasonAndEpisodeCallback() {
     name: error ? "" : match[3].trim(),
   };
 
-  this.setCustomValidity(error);
+  element.setCustomValidity(error);
 }
 
 onDomReady(function () {
@@ -53,8 +53,11 @@ onDomReady(function () {
   });
 
   // Logic for splitting season/episode and name
-  $getEle("#ep-name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
-  $getEle("#ep-name").addEventListener("change", splitSeasonAndEpisodeCallback);
+  ["keyup", "change"].forEach((event) =>
+    $getEle("#ep-name").addEventListener(event, (e) =>
+      splitSeasonAndEpisodeCallback(e.currentTarget)
+    )
+  );
 
   // SRT FILE
   // Always clear the file input on load
@@ -87,7 +90,6 @@ onDomReady(function () {
           }
         }
       }
-
       const $epName = $getEle("#ep-name");
       if ($epName && !$epName.value) {
         $epName.value = `${Number(m[2])}x${m[3]} - ${m[4]}`;
@@ -101,8 +103,12 @@ onDomReady(function () {
     $getEle("#uploading-overlay").classList.toggle("hidden", false);
     $uploadForm.classList.toggle("uploading", true);
 
+    const $episodeNameField = $getEle("#ep-name");
+    splitSeasonAndEpisodeCallback($episodeNameField);
+
     const form = e.target;
     let data = new FormData(form);
+
     data.delete("name");
     data.append("title", uploadInfo.name);
     data.append("season", uploadInfo.season);

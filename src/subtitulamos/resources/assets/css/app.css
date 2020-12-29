@@ -9,7 +9,6 @@
 * {
   font-weight: 400;
   -webkit-tap-highlight-color: transparent;
-  transition: all 0.2s ease;
 }
 
 :root {
@@ -125,6 +124,8 @@ a:active {
 .disabled * {
   background-color: var(--color-gray-e) !important;
   color: var(--color-gray-c) !important;
+  opacity: 1;
+  pointer-events: none;
 }
 
 a.light:hover {

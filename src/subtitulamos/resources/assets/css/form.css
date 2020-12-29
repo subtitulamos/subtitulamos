@@ -10,11 +10,6 @@
 
 .form-wrap form {
   width: 100%;
-  transition-duration: 0s !important;
-}
-
-.form-wrap form * {
-  transition-duration: 0s !important;
 }
 
 .form-field {
@@ -68,7 +63,7 @@
 .form-field input:-webkit-autofill:hover,
 .form-field input:-webkit-autofill:focus,
 .form-field input:-webkit-autofill:active {
-  transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s !important;
 }
 
 .form-field.dropdown-field {
