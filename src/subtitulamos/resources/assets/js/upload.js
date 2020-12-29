@@ -37,6 +37,7 @@ function splitSeasonAndEpisodeCallback() {
 }
 
 onDomReady(function () {
+  const $uploadForm = document.getElementById("upload-form");
   let $newShow;
   document.getElementById("show-id").addEventListener("change", function () {
     if (this.value == "NEW") {
@@ -52,8 +53,8 @@ onDomReady(function () {
   });
 
   // Logic for splitting season/episode and name
-  $getEle("#name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
-  $getEle("#name").addEventListener("change", splitSeasonAndEpisodeCallback);
+  $getEle("#ep-name").addEventListener("keyup", splitSeasonAndEpisodeCallback);
+  $getEle("#ep-name").addEventListener("change", splitSeasonAndEpisodeCallback);
 
   // SRT FILE
   // Always clear the file input on load
@@ -63,24 +64,42 @@ onDomReady(function () {
   // Update of SRT file selection
   $sub.addEventListener("change", (e) => {
     const $fileInput = e.target;
-    let $filename = $fileInput.value.split(/(\\|\/)/g).pop();
+    let filename = $fileInput.value.split(/(\\|\/)/g).pop();
 
-    if ($filename.substring($filename.length - 3) !== "srt") {
-      $fileInput.setCustomValidity("Invalid file type");
-      $filename = "";
+    if (filename.substring(filename.length - 3) !== "srt") {
+      $fileInput.setCustomValidity("Tipo de fichero incorrecto");
+      filename = "";
     } else {
       $fileInput.setCustomValidity("");
     }
 
-    $getEle("#file-name").innerHTML = $filename;
-    $getEle("#file-upload-container").classList.toggle("has-file", $filename !== "");
+    $getEle("#file-name").innerHTML = filename;
+    $getEle("#file-upload-container").classList.toggle("has-file", filename !== "");
+
+    const m = filename.match(/^([\w\s]+)\s-?\s*(\d{1,2})x(\d{1,2})\s*-\s*([^.]+)/);
+    if (m) {
+      const cleanShowName = m[1].trim().toLowerCase();
+      const $showIdSelect = $getEle("#show-id");
+      if (!$showIdSelect.value) {
+        for (const opt of $showIdSelect.options) {
+          if (opt.textContent.trim().toLowerCase() === cleanShowName) {
+            $showIdSelect.value = opt.value;
+          }
+        }
+      }
+
+      const $epName = $getEle("#ep-name");
+      if ($epName && !$epName.value) {
+        $epName.value = `${Number(m[2])}x${m[3]} - ${m[4]}`;
+      }
+    }
   });
 
-  document.getElementById("upload-form").addEventListener("submit", function (e) {
+  $uploadForm.addEventListener("submit", function (e) {
     e.preventDefault(); // Don't submit the form
 
     $getEle("#uploading-overlay").classList.toggle("hidden", false);
-    $getEle("form").classList.toggle("uploading", true);
+    $uploadForm.classList.toggle("uploading", true);
 
     const form = e.target;
     let data = new FormData(form);
@@ -95,7 +114,7 @@ onDomReady(function () {
     })
       .then((res) => {
         $getEle("#uploading-overlay").classList.toggle("hidden", true);
-        $getEle("form").classList.toggle("uploading", false);
+        $uploadForm.classList.toggle("uploading", false);
 
         if (res.ok === false) {
           throw {
