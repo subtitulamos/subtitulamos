@@ -6,8 +6,14 @@
 import Vue from "vue";
 import "./vue/comment.js";
 import "../css/episode.scss";
-import { onDomReady, easyFetch, $getAllEle, $getEle } from "./utils.js";
-import { showOverlayFromTpl, invertDropdown } from "./app.js";
+import {
+  onDomReady,
+  easyFetch,
+  $getAllEle,
+  $getEle,
+  showOverlayFromTpl,
+  invertDropdown,
+} from "./utils.js";
 
 const lastLangVal = localStorage.getItem("last-selected-translation-lang");
 $getEle(".translate-subtitle").addEventListener("click", function () {
