@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Entities\EventLog;
+use App\Entities\Show;
 use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\UrlHelper;
@@ -132,40 +133,6 @@ class ShowController
         ]);
     }
 
-    public function canDeleteShow(\App\Entities\Show $show, EntityManager $em)
-    {
-        $episodeCount = $em->createQuery('SELECT COUNT(e.id) FROM App:Episode e WHERE e.show = :show')
-            ->setParameter('show', $show)
-            ->getSingleScalarResult();
-
-        return $episodeCount == 0;
-    }
-
-    public function editProperties($showId, RequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig)
-    {
-        $show = $em->getRepository('App:Show')->find($showId);
-        if (!$show) {
-            throw new \Slim\Exception\HttpNotFoundException($request);
-        }
-
-        $seasonsRes = $em->createQuery('SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
-            ->setParameter('id', $showId)
-            ->getResult();
-
-        $seasons = [];
-        foreach ($seasonsRes as $seasonRes) {
-            $seasons[] = (int)$seasonRes['season'];
-        }
-        sort($seasons);
-
-        $canDelete = $this->canDeleteShow($show, $em);
-        return $twig->render($response, 'edit_show.twig', [
-            'show' => $show,
-            'can_delete' => $canDelete,
-            'seasons' => $seasons
-        ]);
-    }
-
     public function saveProperties($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $show = $em->getRepository('App:Show')->find($showId);
@@ -187,6 +154,6 @@ class ShowController
             $em->flush();
         }
 
-        return $urlHelper->responseWithRedirectToRoute('show-edit', ['showId' => $showId]);
+        return $urlHelper->responseWithRedirectToRoute('show', ['showId' => $showId]);
     }
 }

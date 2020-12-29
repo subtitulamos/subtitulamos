@@ -69,7 +69,6 @@ function addRoutes(&$app)
     $app->get('/episodes/{id:[0-9]+}[/{slug}]', ['\App\Controllers\EpisodeController', 'view'])->setName('episode');
     $app->get('/shows', ['\App\Controllers\ShowController', 'viewAll'])->setName('showlist');
     $app->get('/shows/{showId:[0-9]+}[/season/{season:[0-9]+}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
-    $app->get('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('show-edit');
     $app->post('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
     $app->get('/subtitles/{id:[0-9]+}/download', ['\App\Controllers\DownloadController', 'download']);
 
