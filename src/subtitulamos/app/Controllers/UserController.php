@@ -137,7 +137,7 @@ class UserController
         $pwd = Utils::generateRandomString(16);
         $user->setPassword($pwd);
 
-        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Password usuario reiniciada ([[user:%d]])', $user->getId()));
+        $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Contraseña de usuario reiniciada ([[user:%d]])', $user->getId()));
         $em->persist($event);
         $em->flush();
 

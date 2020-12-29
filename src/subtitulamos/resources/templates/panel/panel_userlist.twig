@@ -2,17 +2,6 @@
 {% import 'macros/assets.twig' as assets %}
 
 {% block title %}Listado de usuarios{% endblock %}
-
-{% block breadcrumb %}
-  <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-    <ul>
-      <li><a href="/">Subtitulamos.tv</a></li>
-      <li><a href="/panel">Panel de moderación</a></li>
-      <li class="is-active"><a href="#" aria-current="page">Listado de usuarios</a></li>
-    </ul>
-  </nav>
-{% endblock %}
-
 {% block panel_content %}
     <ul>
     {% for user in users %}
