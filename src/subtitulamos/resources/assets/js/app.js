@@ -11,6 +11,7 @@ import {
   closeOverlay,
   $getAllEle,
   invertDropdown,
+  invertCheckbox,
 } from "./utils";
 
 function doLogin(e) {
@@ -174,4 +175,8 @@ if ($ctrlPanel) {
 
 $getAllEle(".dropdown-field").forEach((dropdown) => {
   dropdown.addEventListener("click", invertDropdown);
+});
+
+$getAllEle(".checkbox").forEach((checkbox) => {
+  checkbox.addEventListener("click", invertCheckbox);
 });

@@ -103,3 +103,10 @@ export function invertDropdown(e) {
   $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
   $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
 }
+
+export function invertCheckbox(e) {
+  console.log("here");
+  const $checkbox = e.currentTarget;
+  $checkbox.classList.toggle("checked");
+  $checkbox.querySelector("input").value = !$checkbox.querySelector("input").value;
+}
