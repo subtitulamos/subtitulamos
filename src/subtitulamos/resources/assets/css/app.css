@@ -4,7 +4,7 @@
 @import "effects.css";
 @import "control_panel.css";
 @import "animations.css";
-@import "form.scss";
+@import "form.css";
 
 * {
   font-weight: 400;
