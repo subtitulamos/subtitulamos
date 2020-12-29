@@ -5,13 +5,13 @@
       <div class='form-field validated' fieldname="Temporada">
         <input id="season" type="number" class="form_input"
           name="season" value="{{ episode.season }}" required>
-        <i class="fas fa-video"></i>
+        <i class="fas fa-file-video"></i>
       </div>
 
       <div class='form-field validated' fieldname="Capítulo">
         <input id="episode" type="number" class="form_input"
           name="episode" value="{{ episode.number }}" required>
-        <i class="fas fa-file-video"></i>
+        <i class="far fa-file-video"></i>
       </div>
 
       <div class='form-field validated' fieldname="Nombre">
@@ -20,7 +20,7 @@
         <i class="fas fa-film"></i>
       </div>
 
-      <button id="save-edit" type="submit">GUARDAR</button>
+      <button id="save-edit" class="text" type="submit">Guardar</button>
     </form>
   </div>
 </template>

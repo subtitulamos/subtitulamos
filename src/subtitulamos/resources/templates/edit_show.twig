@@ -1,77 +1,29 @@
-{% extends "base.twig" %}
-{% import 'macros/assets.twig' as assets %}
-{% import 'macros/alerts.twig' as alerts %}
-
-{% block title %}Editando {{ show.name }}{% endblock %}
-{% block css %}
-  {{ assets.css('edit_show') }}
-{% endblock %}
-
-{% block content %}
-
-<div id="editshow_content_wrapper">
-  <div class='container'>
-    <!-- Breadcrumbs -->
-    <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-      <ul>
-        <li><a href="/">Subtitulamos.tv</a></li>
-        <li><a href="/shows/{{ show.id }}">{{ show.name }}</a></li>
-        <li class="is-active">
-          <a href="#">Propiedades</a>
-        </li>
-      </ul>
-    </nav>
-
-    <div id='wrapper'>
-      <div class='tabs'>
-        <ul>
-          <li class="is-active">
-            <a href="/shows/{{ show.id }}/properties">[Propiedades]</a></li>
-          </li>
-          {% for season in seasons %}
-            <li><a href="/shows/{{ show.id }}/season/{{ season }}">Temporada {{ season }}</a></li>
-          {% endfor %}
-        </ul>
+<template id="show-properties">
+  <div class="form-wrap">
+    <h3>Propiedades de la serie</h3>
+    <form  method="POST" action="/shows/{{episode.show.id}}/properties">
+      <div class='form-field validated' fieldname="Nombre de la serie">
+        <input id="name" type="text" class="form_input" name="name"
+          value="{{ episode.show.name }}" required>
+        <i class="fas fa-film"></i>
       </div>
-    </div>
 
-    <div id='info'>
-      <br/>
-      <form name="" action="" method="POST">
-        {% for error in auth.flash.errors() %}
-          {{ alerts.show('error', error) }}
-        {% endfor %}
-        {% for success in auth.flash.successes() %}
-          {{ alerts.show('success', success) }}
-        {% endfor %}
-
-        <div class='form-group'>
-          <label for="name">Nombre de la serie</label>
-          <input id="name" type="text" class="form_input" name="name" value="{{ show.name }}" required>
+      <div class='form-field checkbox-field'>
+        {% if can_delete_show %}
+        <div class="checkbox">
+          <input type="checkbox" class="form_input" name="delete">
+          <i class="fas fa-check"></i>
         </div>
-
-
-        <div class='form-group'>
-          <label for="name">¿Borrar serie?</label>
-          <span id="delete">
-            {% if can_delete %}
-              <input type="checkbox" class="form_input" name="delete">
-            {% else %}
-              <span class='hint--bottom hint--bounce' data-hint="Una serie con capítulos no se puede borrar">
-                <input type="checkbox" class="form_input" value="" disabled>
-              </span>
-            {% endif %}
-          </span>
+        <div>Borrar serie?</div>
+        {% else %}
+        <div class="checkbox disabled">
+          <input type="checkbox" class="form_input" name="delete" disabled>
         </div>
+        <div>No se puede borrar una serie con capítulos.</div>
+        {% endif %}
+      </div>
 
-        <div class='form-group'>
-          <button id="save-edit" type="submit" class='button button-fat'>GUARDAR</button>
-        </div>
-      </form>
-    </div>
+      <button id="save-edit" type="submit" class='text'>Guardar</button>
+    </form>
   </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-{% endblock %}
+</template>

@@ -30,7 +30,6 @@ module.exports = (env, argv) => {
       restricted: "./resources/assets/js/restricted.js",
       panel_banlist: "./resources/assets/js/panel/banlist.js",
       panel_base: "./resources/assets/js/panel/base.js",
-      edit_show: "./resources/assets/js/edit_show.js",
     },
     output: {
       filename: "js/[name].[contenthash].bundle.js",
