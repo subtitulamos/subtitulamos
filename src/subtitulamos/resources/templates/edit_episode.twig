@@ -1,7 +1,7 @@
 <template id="episode-properties">
   <div class="form-wrap">
     <h3>Propiedades del episodio</h3>
-    <form method="POST">
+    <form method="POST" action="">
       {% for error in auth.flash.errors %}
         {{ alerts.show('error', error) }}
       {% endfor %}
