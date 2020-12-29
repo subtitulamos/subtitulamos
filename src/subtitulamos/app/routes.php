@@ -89,6 +89,8 @@ function addRoutes(&$app)
     $app->post('/me', ['\App\Controllers\UserController', 'saveSettings'])->add($needsRole('ROLE_USER'));
 
     $app->get('/users/{userId:[0-9]+}', ['\App\Controllers\UserController', 'publicProfile'])->setName('user');
+    $app->get('/users/{userId:[0-9]+}/upload-list', ['\App\Controllers\UserController', 'loadUploadList']);
+    $app->get('/users/{userId:[0-9]+}/collab-list', ['\App\Controllers\UserController', 'loadCollaborationsList']);
     $app->post('/users/{userId:[0-9]+}/resetpwd', ['\App\Controllers\UserController', 'resetPassword'])->add($needsRole('ROLE_MOD'));
     $app->post('/users/{userId:[0-9]+}/changerole', ['\App\Controllers\UserController', 'changeRole'])->add($needsRole('ROLE_MOD'));
     $app->post('/users/{userId:[0-9]+}/ban', ['\App\Controllers\UserController', 'ban'])->add($needsRole('ROLE_MOD'));
