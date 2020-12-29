@@ -121,7 +121,7 @@
                   {% else %}
                     <div class="progress-bar {{ pause_class }}">
                       <div class="progress progress_{{ progress_class }}"
-                        style="width: {{ max(sub.progress//1, 7) }}%">
+                        style="width: {{ sub.progress//1 }}%">
                       </div>
                     </div>
                   {% endif %}
