@@ -54,9 +54,9 @@
           </a>
           <div id="control-panel-search">
               <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
-              <input ref="cpSearchInput" type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
+              <input id="search-input" type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
           </div>
-          <button class="control-panel-button search" v-on:click="focusSearchInput">
+          <button class="control-panel-button search" id='search-icon'>
             <i class="fa fa-search"></i>
           </button>
           <button class="control-panel-button">
@@ -79,7 +79,7 @@
           </a>
         </div>
         <div id="control-panel-bottom-section">
-          <button class="control-panel-button" v-on:click="updateControlPanelStatus">
+          <button class="control-panel-button" id="control-panel-minimize-toggle">
             <i class="fas fa-chevron-circle-left"></i>
             <i class="fas fa-chevron-circle-right"></i>
             <span class="text small">Minimizar</span>

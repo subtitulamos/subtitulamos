@@ -132,48 +132,41 @@ onDomReady(function () {
   // }
 });
 
-import Vue from "vue";
+const $ctrlPanel = document.getElementById("control-panel");
+if ($ctrlPanel) {
+  let openStatus = localStorage.getItem("menu-open") === "true";
+  const updateDomWithStatus = () => {
+    document.getElementById("page-container").classList.toggle("control-panel-is-open", openStatus);
 
-if (document.getElementById("control-panel")) {
-  new Vue({
-    el: "#control-panel",
-    data: {
-      isOpen: localStorage.getItem("menu-open") === "true" || false,
-    },
-    methods: {
-      updateControlPanelStatus() {
-        this.isOpen = !this.isOpen;
-        localStorage.setItem("menu-open", this.isOpen);
-        this.updateElementsStatus();
-      },
-      updateElementsStatus() {
-        this.$el.classList.toggle("open", this.isOpen);
-        document
-          .getElementById("page-container")
-          .classList.toggle("control-panel-is-open", this.isOpen);
-        document
-          .getElementById("page-container")
-          .classList.toggle("control-panel-is-closed", !this.isOpen);
-      },
-      focusSearchInput() {
-        this.updateControlPanelStatus();
+    document
+      .getElementById("page-container")
+      .classList.toggle("control-panel-is-closed", !openStatus);
 
-        setTimeout(() => {
-          if (this.isOpen) {
-            this.$refs.cpSearchInput.focus();
-          }
-        }, 200);
-      },
-    },
-    mounted() {
-      this.updateElementsStatus();
+    $ctrlPanel.classList.toggle("open", openStatus);
 
-      const $currentPath = window.location.pathname;
-      const $ele = $getEle(`a[href="/${$currentPath.split("/")[1]}"]`);
-      if ($ele) {
-        $ele.classList.toggle("selected", true);
-      }
-    },
+    const $currentPath = window.location.pathname;
+    const $ele = $getEle(`a[href="/${$currentPath.split("/")[1]}"]`);
+    if ($ele) {
+      $ele.classList.toggle("selected", true);
+    }
+  };
+
+  const togglePanelStatus = (skipSave) => {
+    openStatus = !openStatus;
+    if (!skipSave) {
+      localStorage.setItem("menu-open", openStatus);
+    }
+    updateDomWithStatus();
+  };
+
+  updateDomWithStatus(); // Update on load, make sure local prefs are respected
+  $getEle("#control-panel-minimize-toggle").addEventListener("click", togglePanelStatus);
+
+  $getEle("#search-icon").addEventListener("click", () => {
+    if (!openStatus) {
+      togglePanelStatus(true /* dont save status */);
+    }
+    setTimeout(() => $getEle("#search-input").focus(), 200);
   });
 }
 
