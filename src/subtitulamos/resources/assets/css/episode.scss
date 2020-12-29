@@ -477,10 +477,6 @@
   textarea {
     width: 100%;
     resize: none;
-
-    &:disabled {
-      background-color: var(--color-gray-d);
-    }
   }
 
   .save-comment {
@@ -495,7 +491,7 @@
     }
 
     &:disabled {
-      color: var(--color-gray-d);
+      color: var(--color-gray-c);
     }
   }
 }
