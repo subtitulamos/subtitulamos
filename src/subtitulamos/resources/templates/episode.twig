@@ -73,7 +73,7 @@
           <i class="fas fa-chevron-up"></i>
         </button>
 
-        <div class="text small bold blue-a language-name">{{ lang }}</div>
+        <div class="text small bold blue-a language-name"  data-lang-id="{{lang}}">{{ LANG_NAMES[LANG_LIST[lang]] }}</div>
 
         <div class="language-content">
           {% for sub in subs %}
