@@ -165,14 +165,14 @@
                     {% endif %}
                   </div>
                 </div>
-                <div class="more-options">
-                  <div class="fade-pan hidden"></div>
-                  <div class="ellipsis-wrapper">
-                    <i class="fas fa-ellipsis-v"></i>
-                  </div>
-                  <div class="more-options-list w-box-shadow">
-                    {% if auth.has_role('ROLE_TT') %}
-                      {% if sub.pause %}
+                {% if auth.has_role('ROLE_TT') or auth.has_role('ROLE_MOD') %}
+                        <div class="more-options">
+                          <div class="fade-pan hidden"></div>
+                          <div class="ellipsis-wrapper">
+                            <i class="fas fa-ellipsis-v"></i>
+                          </div>
+                          <div class="more-options-list w-box-shadow">
+                            {% if sub.pause %}
                         <a href="/subtitles/{{ sub.id }}/unpause">
                           <div class="option">Liberar</div>
                         </a>
@@ -181,20 +181,20 @@
                           <div class="option">Pausar</div>
                         </a>
                       {% endif %}
-                    {% endif %}
-                    {% if auth.has_role('ROLE_MOD') %}
-                      <a data-action="delete" data-id="{{ sub.id }}">
-                        <div class="option">Borrar</div>
-                      </a>
-                      <a href='/subtitles/{{ sub.id }}/hammer'>
-                        <div class="option">Pasar pala</div>
-                      </a>
-                      <a class="subtitle-properties-button" data-subtitle-id="{{sub.id}}">
-                        <div class="option">Propiedades</div>
-                      </a>
-                    {% endif %}
+                      {% if auth.has_role('ROLE_MOD') %}
+                        <a data-action="delete" data-id="{{ sub.id }}">
+                          <div class="option">Borrar</div>
+                        </a>
+                        <a href='/subtitles/{{ sub.id }}/hammer'>
+                          <div class="option">Pasar pala</div>
+                        </a>
+                        <a class="subtitle-properties-button" data-subtitle-id="{{sub.id}}">
+                          <div class="option">Propiedades</div>
+                        </a>
+                      {% endif %}
+                    </div>
                   </div>
-                </div>
+                {% endif %}
               </div>
             </div>
           {% endfor %}
