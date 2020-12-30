@@ -50,23 +50,7 @@
     </div>
   </div>
 
-  {% verbatim %}
-  <template id="subtitle-card">
-    <div class="subtitle-card w-box-shadow">
-      <a href='{ep_url}'>
-        <div class="metadata hidden">
-          <p class="title text bold">{ep_show}</p>
-          <p class="episode-number text mini">{ep_season}x{ep_num}</p>
-          <p class="episode-name">{ep_name}</p>
-        </div>
-        <div class="metadata loading">
-          Cargando...
-        </div>
-        <button class="text tiny spaced-wide">IR AL EPISODIO</button>
-      </a>
-    </div>
-  </template>
-  {% endverbatim %}
+{% include "card.twig" %}
 {% endblock %}
 
 {% block scripts %}
