@@ -159,13 +159,6 @@
         overflow: hidden;
         margin: 0 12px;
         flex-shrink: 0;
-        animation: 0.4s ease slide_down;
-
-        @keyframes slide_down {
-          from {
-            margin-top: -50px;
-          }
-        }
 
         a {
           height: 100%;
