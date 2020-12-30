@@ -13,6 +13,11 @@
     border-radius: var(--standard-border-radius);
     overflow: hidden;
     flex-shrink: 0;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-15px);
+    }
 
     a {
       height: 100%;
@@ -26,7 +31,7 @@
       color: var(--color-gray-a);
 
       .title {
-        color: var(--color-blue-a);
+        color: var(--color-pink);
         margin-bottom: 10px;
       }
 
