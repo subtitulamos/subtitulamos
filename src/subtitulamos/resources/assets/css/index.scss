@@ -92,7 +92,7 @@
           background-color: var(--color-offwhite);
           border-radius: var(--standard-border-radius);
           max-height: 200px;
-          overflow-y: scroll;
+          overflow-y: auto;
 
           li {
             font-size: 0.9rem;

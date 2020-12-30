@@ -89,6 +89,16 @@ onDomReady(function () {
 
       searchTimerHandle = setTimeout(() => search($searchBar), 200);
     });
+
+    $searchBar.addEventListener("blur", (e) => {
+      const $searchResults = $getById($searchBar.dataset.searchBarTarget);
+      $searchResults.classList.toggle("hidden", true);
+    });
+
+    $searchBar.addEventListener("focus", (e) => {
+      const $searchResults = $getById($searchBar.dataset.searchBarTarget);
+      $searchResults.classList.toggle("hidden", false);
+    });
   }
 
   // let hideTimeoutHandle = null;
