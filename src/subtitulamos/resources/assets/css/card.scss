@@ -1,6 +1,9 @@
-.subtitle-cards-wrap {
+:root {
   --card-height: 200px;
   --card-width: 170px;
+}
+
+.subtitle-cards-wrap {
   width: 100%;
   min-height: var(--card-height);
   display: flex;

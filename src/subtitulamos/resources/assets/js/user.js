@@ -4,7 +4,7 @@
  */
 
 import "../css/user.scss";
-import { $getAllEle, $getEle, $getById, easyFetch, showOverlayFromTpl } from "./utils";
+import { $getAllEle, $getEle, $getById, easyFetch, showOverlayFromTpl, onDomReady } from "./utils";
 
 const $roleChangeForm = $getEle("#reset-user-pwd");
 if ($roleChangeForm) {
@@ -76,7 +76,6 @@ const loadList = (target, msgs) => {
   })
     .then((reply) => reply.json())
     .then((data) => {
-      console.log(data);
       const count = data.length;
       subsByTab[target].loading = true;
       addEpisodes(target, 0, count);
@@ -105,30 +104,51 @@ const loadList = (target, msgs) => {
     });
 };
 
-loadList("upload", {
-  noResults: "El usuario no ha colaborado en ningún capítulo",
-  error: "Ha ocurrido un error al cargar los capítulos en los que ha colaborado",
-});
-loadList("collab", {
-  noResults: "El usuario no ha subido ningún capítulo",
-  error: "Ha ocurrido un error al cargar los capítulos subidos",
-});
-
-$getAllEle(".option").forEach((option) => {
-  option.addEventListener("click", (e) => {
-    const $option = e.currentTarget;
-    const $parent = $option.closest(".option-wrapper");
-    const $toggleTargetsClass = $option.dataset.toggleTargets;
-    const $enableElementId = $option.dataset.enable;
-
-    $parent
-      .querySelectorAll(".option.selected")
-      .forEach((element) => element.classList.toggle("selected", false));
-    $option.classList.toggle("selected");
-
-    $getAllEle("." + $toggleTargetsClass).forEach((element) =>
-      element.classList.toggle("hidden", true)
-    );
-    $getById($enableElementId).classList.toggle("hidden", false);
+onDomReady(() => {
+  loadList("upload", {
+    noResults: "El usuario no ha colaborado en ningún capítulo",
+    error: "Ha ocurrido un error al cargar los capítulos en los que ha colaborado",
   });
+  loadList("collab", {
+    noResults: "El usuario no ha subido ningún capítulo",
+    error: "Ha ocurrido un error al cargar los capítulos subidos",
+  });
+
+  $getAllEle(".option").forEach((option) => {
+    option.addEventListener("click", (e) => {
+      const $option = e.currentTarget;
+      const $parent = $option.closest(".option-wrapper");
+      const $toggleTargetsClass = $option.dataset.toggleTargets;
+      const $enableElementId = $option.dataset.enable;
+
+      $parent
+        .querySelectorAll(".option.selected")
+        .forEach((element) => element.classList.toggle("selected", false));
+      $option.classList.toggle("selected");
+
+      $getAllEle("." + $toggleTargetsClass).forEach((element) =>
+        element.classList.toggle("hidden", true)
+      );
+      $getById($enableElementId).classList.toggle("hidden", false);
+    });
+  });
+
+  for (const $spoilerName of $getAllEle(".spoiler-name")) {
+    $spoilerName.addEventListener("click", function () {
+      const $spoilerWrapper = this.closest(".spoiler-wrapper");
+      const $spoiler = $spoilerWrapper.querySelector(".spoiler-content");
+
+      if ($spoilerName.innerHTML.includes("MÁS")) {
+        $spoilerName.innerHTML = $spoilerName.innerHTML.replace("MÁS", "MENOS");
+      } else if ($spoilerName.innerHTML.includes("MENOS")) {
+        $spoilerName.innerHTML = $spoilerName.innerHTML.replace("MENOS", "MÁS");
+      }
+
+      const $icon = this.querySelector(".spoiler-name i");
+      $icon.classList.toggle("fa-chevron-down");
+      $icon.classList.toggle("fa-chevron-up");
+
+      $spoiler.classList.toggle("expanded");
+    });
+  }
 });
