@@ -4,7 +4,7 @@
  */
 
 import "../css/user.scss";
-import { $getEle, easyFetch, showOverlayFromTpl } from "./utils";
+import { $getAllEle, $getEle, $getById, easyFetch, showOverlayFromTpl } from "./utils";
 
 const $roleChangeForm = $getEle("#reset-user-pwd");
 if ($roleChangeForm) {
@@ -50,7 +50,7 @@ const loadList = (target, msgs) => {
       const $list = document.createElement("ul");
       for (const ep of reply) {
         const $li = document.createElement("li");
-        $li.innerHTML = `<a href="${ep.url}">${ep.full_name}</a></li>`;
+        $li.innerHTML = `<a class="text small" href="${ep.url}">${ep.full_name}</a></li>`;
         $list.appendChild($li);
       }
 
@@ -74,4 +74,23 @@ loadList("upload", {
 loadList("collab", {
   noResults: "El usuario no ha subido ningún capítulo",
   error: "Ha ocurrido un error al cargar los capítulos subidos",
+});
+
+$getAllEle(".option").forEach((option) => {
+  option.addEventListener("click", (e) => {
+    const $option = e.currentTarget;
+    const $parent = $option.closest(".option-wrapper");
+    const $toggleTargetsClass = $option.dataset.toggleTargets;
+    const $enableElementId = $option.dataset.enable;
+
+    $parent
+      .querySelectorAll(".option.selected")
+      .forEach((element) => element.classList.toggle("selected", false));
+    $option.classList.toggle("selected");
+
+    $getAllEle("." + $toggleTargetsClass).forEach((element) =>
+      element.classList.toggle("hidden", true)
+    );
+    $getById($enableElementId).classList.toggle("hidden", false);
+  });
 });
