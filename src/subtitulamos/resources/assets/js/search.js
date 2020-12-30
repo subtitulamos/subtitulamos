@@ -90,14 +90,22 @@ onDomReady(function () {
       searchTimerHandle = setTimeout(() => search($searchBar), 200);
     });
 
-    $searchBar.addEventListener("blur", (e) => {
+    $searchBar.closest(".search-bar-container").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const $searchContainer = e.currentTarget;
       const $searchResults = $getById($searchBar.dataset.searchBarTarget);
-      $searchResults.classList.toggle("hidden", true);
-    });
+      if ($searchBar.value !== "") {
+        $searchResults.classList.toggle("hidden", false);
+      }
 
-    $searchBar.addEventListener("focus", (e) => {
-      const $searchResults = $getById($searchBar.dataset.searchBarTarget);
-      $searchResults.classList.toggle("hidden", false);
+      document.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (e.currentTarget !== $searchContainer) {
+          if ($searchBar.value !== "") {
+            $searchResults.classList.toggle("hidden", true);
+          }
+        }
+      });
     });
   }
 

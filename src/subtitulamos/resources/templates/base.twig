@@ -52,11 +52,10 @@
               <span id="logo-text" class="text bold">subtitulamos.tv</span>
             </div>
           </a>
-          <div id="control-panel-search">
-              <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
-              <input id="search-input" data-search-bar-target='panel-search-results' type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
-              <div id='panel-search-results'>
-              </div>
+          <div id="control-panel-search" class="search-bar-container">
+            <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
+            <input id="search-input" data-search-bar-target='panel-search-results' type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
+            <ul class="search-results w-box-shadow hidden" id='panel-search-results'></ul>
           </div>
           <button class="control-panel-button search" id='search-icon'>
             <i class="fa fa-search"></i>
