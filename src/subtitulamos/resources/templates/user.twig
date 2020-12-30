@@ -40,147 +40,146 @@
     {% include "user/user_settings.twig" %}
   {% endif %}
   <div id="public-info" class="info-group {% if page_type == "me" %} hidden {% endif %}">
+    <div class="grid">
+      {% if user.hasRole('ROLE_MOD') %}
+        <div class='grid-row'>
+          <div class="text bold">Email</div>
+          <div>
+            {% set at_pos = user.email|split("@")[0]|length %}
+            {% apply spaceless %}
+              <span>{{ user.email|slice(0, 2) }}</span>
+              <span>{% if at_pos > 3 %}{% for i in range(2, at_pos - 2) %}*{% endfor %}{% endif %}</span>
+              <span>{{ user.email|slice(at_pos - 1, 3) }}</span>
+              <span>{% for i in range(2, user.email|length - at_pos - 6) %}*{% endfor %}</span>
+              <span>{{ user.email|slice(user.email|length - 5) }}</span>
+            {% endapply %}
+          </div>
+        </div>
 
-        <div class="grid">
+        {% if "ROLE_MOD" not in user.roles %}
+        <div class='grid-row'>
+          <div class="text bold">Otras acciones</div>
+          <form id='reset-user-pwd' action="/users/{{user.id}}/resetpwd" method="POST">
+            <button type='submit'>Reiniciar contraseña</button>
+          </form>
+        </div>
+        {% endif %}
+
+        {% if user.ban is not null and not user.ban.expired %}
+          <div class='grid-row' data-hint="{{ user.ban.reason }}">
+            <div class="text bold">Baneado hasta</div>
+            <div>{{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> <a href='/users/{{ user.id }}/unban'>(Desbanear)</a></div>
+          </div>
+        {% else %}
+          <div class='grid-row'>
+            <div class="text bold">Baneado</div>
+            <div>No <button id='ban'>(Banear)</button></div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <div class='grid-row'>
+        <div class="text bold">Tipo de usuário</div>
+        <div>
           {% if user.hasRole('ROLE_MOD') %}
-            <div class='grid-row'>
-              <div class="text bold">Email</div>
-              <div>
-                {% set at_pos = user.email|split("@")[0]|length %}
-                {% apply spaceless %}
-                  <span>{{ user.email|slice(0, 2) }}</span>
-                  <span>{% if at_pos > 3 %}{% for i in range(2, at_pos - 2) %}*{% endfor %}{% endif %}</span>
-                  <span>{{ user.email|slice(at_pos - 1, 3) }}</span>
-                  <span>{% for i in range(2, user.email|length - at_pos - 6) %}*{% endfor %}</span>
-                  <span>{{ user.email|slice(user.email|length - 5) }}</span>
-                {% endapply %}
-              </div>
-            </div>
-
-            {% if "ROLE_MOD" not in user.roles %}
-            <div class='grid-row'>
-              <div class="text bold">Otras acciones</div>
-              <form id='reset-user-pwd' action="/users/{{user.id}}/resetpwd" method="POST">
-                <button type='submit'>Reiniciar contraseña</button>
+            <i class="fas fa-gem role-mod role-icon"></i>
+            <div class="role-mod">
+              Traductor habitual
+              <form action="/users/{{user.id}}/changerole" method="POST">
+                <button type='submit'>
+                  {% if "ROLE_TT" in user.roles %}(Quitar TH){% else %}(Hacer TH){% endif %}
+                </button>
               </form>
             </div>
-            {% endif %}
-
-            {% if user.ban is not null and not user.ban.expired %}
-              <div class='grid-row' data-hint="{{ user.ban.reason }}">
-                <div class="text bold">Baneado hasta</div>
-                <div>{{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> <a href='/users/{{ user.id }}/unban'>(Desbanear)</a></div>
-              </div>
-            {% else %}
-              <div class='grid-row'>
-                <div class="text bold">Baneado</div>
-                <div>No <button id='ban'>(Banear)</button></div>
-              </div>
-            {% endif %}
+          {% elseif user.hasRole('ROLE_TT') %}
+            <i class="fas fa-hand-sparkles role-tt role-icon"></i> <div class="role-tt">Moderador</div>
+          {% else %}
+            <div>Normal</div>
           {% endif %}
-
-          <div class='grid-row'>
-            <div class="text bold">Tipo de usuário</div>
-            <div>
-              {% if user.hasRole('ROLE_MOD') %}
-                <i class="fas fa-gem role-mod role-icon"></i>
-                <div class="role-mod">
-                  Traductor habitual
-                  <form action="/users/{{user.id}}/changerole" method="POST">
-                    <button type='submit'>
-                      {% if "ROLE_TT" in user.roles %}(Quitar TH){% else %}(Hacer TH){% endif %}
-                    </button>
-                  </form>
-                </div>
-              {% elseif user.hasRole('ROLE_TT') %}
-                <i class="fas fa-hand-sparkles role-tt role-icon"></i> <div class="role-tt">Moderador</div>
-              {% else %}
-                <div>Normal</div>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class='grid-row'>
-            <div class="text bold">Última conexión</div>
-            <div>
-              {% if user.lastSeen is not null %}
-                {{ user.lastSeen|date('d/M/Y H:i') }}
-              {% else %}
-                Nunca
-              {% endif %}
-            </div>
-          </div>
-
-          <div class='grid-row'>
-            <div class="text bold">Fecha de registro</div>
-            <div>
-              {% if user.registeredAt is not null %}
-                {{ user.registeredAt|date('d/M/Y H:i') }}
-              {% else %}
-                Nunca (¿magia?)
-              {% endif %}
-            </div>
-          </div>
-        </div>
-
-      <div id="subtitles-participated-container">
-        <div class="tabs option-wrapper">
-          <button data-toggle-targets="subtitles" data-enable="collaborations" class="option text tiny spaced-wide selected">COLABORACIONES (<span class="text bold tiny" id='collab-count'>...</span>)</button>
-          <button data-toggle-targets="subtitles" data-enable="uploads" class="option text tiny spaced-wide">CAPÍTULOS SUBIDOS (<span class="text bold tiny" id='upload-count'>...</span>)</button>
-        </div>
-        <div id="collaborations" class='subtitles'>
-          <div id='collab-list'>
-          ...
-          </div>
-          <ul>
-            {# {% for episode in collaborated_episodes %}
-              <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-            {% else %}
-              {{ user.username }} no ha colaborado en ningún capítulo
-            {% endfor %} #}
-          </ul>
-        </div>
-
-        <div id="uploads" class="subtitles hidden">
-          <div id='upload-list'>
-          ...
-          </div>
-          <ul>
-            {# {% for episode in uploaded_episodes %}
-              <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-            {% else %}
-              {{ user.username }} no ha subido ningún capítulo
-            {% endfor %} #}
-          </ul>
         </div>
       </div>
 
-      {% if auth.has_role('ROLE_MOD') %}
-        <template id='ban-dialog'>
-          <h4>Banear</h4>
-          <form action="/users/{{ user.id }}/ban" method="POST">
-            <div class='form-group'>
-              <label for='time'>Duración</label>
-              <div id='time'>
-                <input type='radio' name='duration-type' value='permanent' v-model='duration'/> Permanente &nbsp;&nbsp;
-                <input type='radio' name='duration-type' value='temporary' v-model='duration'/> Temporal
-                <div v-if='duration == "temporary"'>
-                  <input type='number' name='days' class='form_input input-extra-sm nospinner' placeholder="0" /> días y <input type='number' name='hours' class='form_input input-extra-sm nospinner' placeholder="0" /> horas
-                </div>
+      <div class='grid-row'>
+        <div class="text bold">Última conexión</div>
+        <div>
+          {% if user.lastSeen is not null %}
+            {{ user.lastSeen|date('d/M/Y H:i') }}
+          {% else %}
+            Nunca
+          {% endif %}
+        </div>
+      </div>
+
+      <div class='grid-row'>
+        <div class="text bold">Fecha de registro</div>
+        <div>
+          {% if user.registeredAt is not null %}
+            {{ user.registeredAt|date('d/M/Y H:i') }}
+          {% else %}
+            Nunca (¿magia?)
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div id="subtitles-participated-container">
+      <div class="tabs option-wrapper">
+        <button data-toggle-targets="subtitles" data-enable="collaborations" class="option text tiny spaced-wide selected">COLABORACIONES (<span class="text bold tiny" id='collab-count'>...</span>)</button>
+        <button data-toggle-targets="subtitles" data-enable="uploads" class="option text tiny spaced-wide">CAPÍTULOS SUBIDOS (<span class="text bold tiny" id='upload-count'>...</span>)</button>
+      </div>
+      <div id="collaborations" class='subtitles'>
+        <div id='collab-list'>
+        ...
+        </div>
+        <ul>
+          {# {% for episode in collaborated_episodes %}
+            <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+          {% else %}
+            {{ user.username }} no ha colaborado en ningún capítulo
+          {% endfor %} #}
+        </ul>
+      </div>
+
+      <div id="uploads" class="subtitles hidden">
+        <div id='upload-list'>
+        ...
+        </div>
+        <ul>
+          {# {% for episode in uploaded_episodes %}
+            <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
+          {% else %}
+            {{ user.username }} no ha subido ningún capítulo
+          {% endfor %} #}
+        </ul>
+      </div>
+    </div>
+
+    {% if auth.has_role('ROLE_MOD') %}
+      <template id='ban-dialog'>
+        <h4>Banear</h4>
+        <form action="/users/{{ user.id }}/ban" method="POST">
+          <div class='form-group'>
+            <label for='time'>Duración</label>
+            <div id='time'>
+              <input type='radio' name='duration-type' value='permanent' v-model='duration'/> Permanente &nbsp;&nbsp;
+              <input type='radio' name='duration-type' value='temporary' v-model='duration'/> Temporal
+              <div v-if='duration == "temporary"'>
+                <input type='number' name='days' class='form_input input-extra-sm nospinner' placeholder="0" /> días y <input type='number' name='hours' class='form_input input-extra-sm nospinner' placeholder="0" /> horas
               </div>
             </div>
-            <div class='form-group'>
-              <label for='reason'>Razón</label>
-              <textarea id='reason' name='reason' type='text' class='form_input' maxlength="255" required>
-              </textarea>
-            </div>
-            <div class='form-group'>
-              <button type='submit' class='button button-fat'>Banear</button>
-            </div>
-          </form>
-        </template>
-      {% endif %}
-    </div>
+          </div>
+          <div class='form-group'>
+            <label for='reason'>Razón</label>
+            <textarea id='reason' name='reason' type='text' class='form_input' maxlength="255" required>
+            </textarea>
+          </div>
+          <div class='form-group'>
+            <button type='submit' class='button button-fat'>Banear</button>
+          </div>
+        </form>
+      </template>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
 
