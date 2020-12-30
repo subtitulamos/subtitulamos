@@ -139,9 +139,10 @@
 }
 
 #control-panel #control-panel-search {
+  --padding-x: 10px;
   flex-shrink: 0;
   margin: 2rem 0;
-  padding: 0px 10px;
+  padding: 0 var(--padding-x);
   height: 3rem;
   background-color: var(--color-blue-b);
   border-radius: 25px;

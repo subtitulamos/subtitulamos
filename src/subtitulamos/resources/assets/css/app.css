@@ -5,6 +5,7 @@
 @import "control_panel.css";
 @import "animations.css";
 @import "form.css";
+@import "search.css";
 
 * {
   font-weight: 400;
