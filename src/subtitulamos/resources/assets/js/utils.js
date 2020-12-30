@@ -108,7 +108,7 @@ export function invertDropdown(e) {
 export function invertCheckbox(e) {
   const $checkbox = e.currentTarget;
   $checkbox.classList.toggle("checked");
-  $checkbox.querySelector("input").value = !$checkbox.querySelector("input").value;
+  $checkbox.querySelector("input").checked = !$checkbox.querySelector("input").checked;
 }
 
 export function isElementInViewport(el) {
