@@ -60,7 +60,7 @@ class AccessController
             $loginName = 'Usuario';
         }
 
-        if (!$user || !\password_verify($password, $user->getPassword())) {
+        if (!$user->checkPassword($password)) {
             return Utils::jsonResponse($response, [$loginName.' o contraseña incorrectos'])->withStatus(403);
         }
 
