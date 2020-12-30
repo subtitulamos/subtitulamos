@@ -31,7 +31,7 @@
 
   <div class="navigation-list no-scroll-bar option-wrapper">
     {% if page_type == "me" %}
-    <div data-toggle-targets="info-group" data-enable="private-info" class="navigation-item selected option">INFORMACIÓN PRIVADA</div>
+    <div data-toggle-targets="info-group" data-enable="private-info" class="navigation-item selected option">CONFIGURACIONES</div>
     {% endif %}
     <div data-toggle-targets="info-group" data-enable="public-info" class="navigation-item {% if page_type != "me" %}selected{% endif %} option">INFORMACIÓN PÚBLICA</div>
   </div>
@@ -40,76 +40,88 @@
     {% include "user/user_settings.twig" %}
   {% endif %}
   <div id="public-info" class="info-group {% if page_type == "me" %} hidden {% endif %}">
-    <div>
-      {% if user.hasRole('ROLE_MOD') %}
-        <i class="fas fa-gem role-mod"></i> <span class="role-mod">Traductor habitual</span>
-      {% elseif user.hasRole('ROLE_TT') %}
-        <i class="fas fa-hand-sparkles role-tt"></i> <span class="role-tt">Moderador</span>
-      {% endif %}
-    </div>
-      {% if auth.has_role('ROLE_MOD') %}
-        <div class='oneline'>
-          <b>Email</b>: <span>
-            {% set at_pos = user.email|split("@")[0]|length %}
-            {% apply spaceless %}
-              <span>{{ user.email|slice(0, 2) }}</span>
-              <span>{% if at_pos > 3 %}{% for i in range(2, at_pos - 2) %}*{% endfor %}{% endif %}</span>
-              <span>{{ user.email|slice(at_pos - 1, 3) }}</span>
-              <span>{% for i in range(2, user.email|length - at_pos - 6) %}*{% endfor %}</span>
-              <span>{{ user.email|slice(user.email|length - 5) }}</span>
-            {% endapply %}
-          </span>
-        </div>
-        <div class='oneline'>
-          {% if "ROLE_MOD" not in user.roles %}
-          <form id='reset-user-pwd' action="/users/{{user.id}}/resetpwd" method="POST">
-            <b>Otras acciones</b>: <button type='submit'>Reiniciar contraseña</button>
-          </form>
-          {% endif %}
-        </div>
-        {% if user.ban is not null and not user.ban.expired %}
-          <div class='oneline hint--top-right hint--bounce hint--rounded' data-hint="{{ user.ban.reason }}">
-            <b>Baneado hasta</b>: {{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> (<a href='/users/{{ user.id }}/unban'>Desbanear</a>)
-          </div>
-        {% else %}
-          <div class='oneline'>
-            <b>Baneado:</b> No (<button id='ban' href='#'>Banear</a>)
-          </div>
-        {% endif %}
-        <div class='oneline'>
-          <form action="/users/{{user.id}}/changerole" method="POST">
-            <b>¿Traductor habitual?</b>:
-            <span>{% if "ROLE_TT" in user.roles %}Sí{% else %}No{% endif %}</span>
-            {% if "ROLE_MOD" not in user.roles %}
-              <button type='submit'>
-                {% if "ROLE_TT" in user.roles %}Quitar TH{% else %}Hacer TH{% endif %}
-              </button>
-            {% endif %}
-          </form>
-        </div>
-        <div class='oneline'>
-          <b>Última conexión:</b>
-          <span>
-            {% if user.lastSeen is not null %}
-              {{ user.lastSeen|date('d/M/Y H:i') }}
-            {% else %}
-              Nunca
-            {% endif %}
-          </span>
-        </div>
-        <div class='oneline'>
-          <b>Fecha de registro:</b>
-          <span>
-            {% if user.registeredAt is not null %}
-              {{ user.registeredAt|date('d/M/Y H:i') }}
-            {% else %}
-              Nunca (¿magia?)
-            {% endif %}
-          </span>
-        </div>
 
-        <br/>
-      {% endif %}
+        <div class="grid">
+          {% if user.hasRole('ROLE_MOD') %}
+            <div class='grid-row'>
+              <div class="text bold">Email</div>
+              <div>
+                {% set at_pos = user.email|split("@")[0]|length %}
+                {% apply spaceless %}
+                  <span>{{ user.email|slice(0, 2) }}</span>
+                  <span>{% if at_pos > 3 %}{% for i in range(2, at_pos - 2) %}*{% endfor %}{% endif %}</span>
+                  <span>{{ user.email|slice(at_pos - 1, 3) }}</span>
+                  <span>{% for i in range(2, user.email|length - at_pos - 6) %}*{% endfor %}</span>
+                  <span>{{ user.email|slice(user.email|length - 5) }}</span>
+                {% endapply %}
+              </div>
+            </div>
+
+            {% if "ROLE_MOD" not in user.roles %}
+            <div class='grid-row'>
+              <div class="text bold">Otras acciones</div>
+              <form id='reset-user-pwd' action="/users/{{user.id}}/resetpwd" method="POST">
+                <button type='submit'>Reiniciar contraseña</button>
+              </form>
+            </div>
+            {% endif %}
+
+            {% if user.ban is not null and not user.ban.expired %}
+              <div class='grid-row' data-hint="{{ user.ban.reason }}">
+                <div class="text bold">Baneado hasta</div>
+                <div>{{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> <a href='/users/{{ user.id }}/unban'>(Desbanear)</a></div>
+              </div>
+            {% else %}
+              <div class='grid-row'>
+                <div class="text bold">Baneado</div>
+                <div>No <button id='ban'>(Banear)</button></div>
+              </div>
+            {% endif %}
+          {% endif %}
+
+          <div class='grid-row'>
+            <div class="text bold">Tipo de usuário</div>
+            <div>
+              {% if user.hasRole('ROLE_MOD') %}
+                <i class="fas fa-gem role-mod role-icon"></i>
+                <div class="role-mod">
+                  Traductor habitual
+                  <form action="/users/{{user.id}}/changerole" method="POST">
+                    <button type='submit'>
+                      {% if "ROLE_TT" in user.roles %}(Quitar TH){% else %}(Hacer TH){% endif %}
+                    </button>
+                  </form>
+                </div>
+              {% elseif user.hasRole('ROLE_TT') %}
+                <i class="fas fa-hand-sparkles role-tt role-icon"></i> <div class="role-tt">Moderador</div>
+              {% else %}
+                <div>Normal</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class='grid-row'>
+            <div class="text bold">Última conexión</div>
+            <div>
+              {% if user.lastSeen is not null %}
+                {{ user.lastSeen|date('d/M/Y H:i') }}
+              {% else %}
+                Nunca
+              {% endif %}
+            </div>
+          </div>
+
+          <div class='grid-row'>
+            <div class="text bold">Fecha de registro</div>
+            <div>
+              {% if user.registeredAt is not null %}
+                {{ user.registeredAt|date('d/M/Y H:i') }}
+              {% else %}
+                Nunca (¿magia?)
+              {% endif %}
+            </div>
+          </div>
+        </div>
 
       <div id="subtitles-participated-container">
         <div class="tabs option-wrapper">
