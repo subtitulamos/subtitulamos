@@ -61,12 +61,14 @@
     }
 
     .subtitles {
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
-
-      &.expanded {
-        max-height: 9999px;
-        transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+      .spoiler-name {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        color: var(--color-blue-a);
+        text-align: right;
+        cursor: pointer;
+        padding: var(--spacing-s);
+        border-top: 1px solid var(--color-gray-divisions);
       }
 
       .subtitle-cards-wrap {
@@ -75,14 +77,22 @@
         grid-template-columns: repeat(auto-fit, minmax(var(--card-width), max-content));
         grid-gap: var(--spacing-m) var(--spacing-s);
         justify-content: center;
-      }
+        overflow: hidden;
+        transition: max-height 2s cubic-bezier(0, 1, 0, 1);
+        max-height: calc(var(--card-height) * 2.5);
 
-      @media all and (max-width: 770px) {
-        .subtitle-cards-wrap {
-          display: flex !important;
-          grid-template-columns: unset;
-          grid-gap: unset;
+        &.expanded {
+          max-height: 99999px;
+          transition: max-height 2s cubic-bezier(1, 0, 1, 0);
         }
+      }
+    }
+
+    @media all and (max-width: 770px) {
+      .subtitle-cards-wrap {
+        display: flex !important;
+        grid-template-columns: unset;
+        grid-gap: unset;
       }
     }
   }
