@@ -1,23 +1,26 @@
 {# Included in the scope of user.twig #}
 
-<form name="" action="" method="POST">
-  <div class="form-group">
-    <label for="username">Nombre de usuario</label>
-    <span class='details'>{{ user.username }}
+<div id="private-info" class="info-group">
+  <div class="form-wrap">
+    <form name="" action="" method="POST">
+      <div class="form-field validated disabled" fieldname="Nombre de usuario">
+        <input disabled required value="{{ user.username }}">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="form-field validated disabled" fieldname="Correo electrónico">
+        <input disabled required value="{{ user.email }}">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="form-field validated" fieldname="Nueva contraseña">
+        <input required id="newpwd" name="newpwd" type="password" class="form_input" value="" v-model="newpwd">
+        <i class="fas fa-key"></i>
+      </div>
+      <div class="form-field validated" fieldname="Repetir contraseña">
+        <input required id="pwdconfirm" name="pwdconfirm" type="password" class="form_input" value="" :disabled="!newpwd">
+        <i class="fas fa-key"></i>
+      </div>
+
+      <button type="submit" class='button button-fat'>Guardar</button>
+    </form>
   </div>
-  <div class="form-group">
-    <label for="email">Correo electrónico</label>
-    <span class='details'>{{ user.email }}</span>
-  </div>
-  <div class="form-group">
-    <label for="newpwd">Nueva contraseña</label>
-    <input id="newpwd" name="newpwd" type="password" class="form_input" value="" v-model="newpwd">
-  </div>
-  <div class="form-group">
-    <label for="pwdconfirm">Repetir contraseña</label>
-    <input id="pwdconfirm" name="pwdconfirm" type="password" class="form_input" value="" :disabled="!newpwd">
-  </div>
-  <div class='form-group'>
-    <button type="submit" class='button button-fat'>Guardar</button>
-  </div>
-</form>
+</div>

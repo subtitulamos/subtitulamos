@@ -12,29 +12,41 @@
 
 {% block content %}
 <div class="content limited-width">
-  <div id='user-profile' class='container'>
-    {% for error in auth.flash.errors() %}
-      {{ alerts.show('error', error) }}
-    {% endfor %}
-    {% for success in auth.flash.successes() %}
-      {{ alerts.show('success', success) }}
-    {% endfor %}
+  {% for error in auth.flash.errors() %}
+    {{ alerts.show('error', error) }}
+  {% endfor %}
+  {% for success in auth.flash.successes() %}
+    {{ alerts.show('success', success) }}
+  {% endfor %}
 
-    <div>
+  <h1 class="subtitle">
+    <span class='name role-user'>
       {% if page_type == "me" %}
-        {% include "user/user_settings.twig" %}
+        Mi perfil
+      {% else %}
+        Perfil de {{ user.username }}
       {% endif %}
+    </span>
+  </h1>
 
-      <h1 class="subtitle">
-        {% if user.hasRole('ROLE_MOD') %}
-          Perfil de <span class='name role-mod'>{{ user.username }}</span> <span class='user-title role-mod tag is-dark'>Moderador</span>
-        {% elseif user.hasRole('ROLE_TT') %}
-          Perfil de <span class='name role-tt'>{{ user.username }}</span> <span class='user-title role-tt tag is-dark'>Traductor Habitual</span>
-        {% else %}
-          Perfil de <span class='name role-user'>{{ user.username }}</span>
-        {% endif %}
-      </h1>
+  <div class="navigation-list no-scroll-bar option-wrapper">
+    {% if page_type == "me" %}
+    <div data-toggle-targets="info-group" data-enable="private-info" class="navigation-item selected option">INFORMACIÓN PRIVADA</div>
+    {% endif %}
+    <div data-toggle-targets="info-group" data-enable="public-info" class="navigation-item {% if page_type != "me" %}selected{% endif %} option">INFORMACIÓN PÚBLICA</div>
+  </div>
 
+  {% if page_type == "me" %}
+    {% include "user/user_settings.twig" %}
+  {% endif %}
+  <div id="public-info" class="info-group {% if page_type == "me" %} hidden {% endif %}">
+    <div>
+      {% if user.hasRole('ROLE_MOD') %}
+        <i class="fas fa-gem role-mod"></i> <span class="role-mod">Traductor habitual</span>
+      {% elseif user.hasRole('ROLE_TT') %}
+        <i class="fas fa-hand-sparkles role-tt"></i> <span class="role-tt">Moderador</span>
+      {% endif %}
+    </div>
       {% if auth.has_role('ROLE_MOD') %}
         <div class='oneline'>
           <b>Email</b>: <span>
@@ -99,9 +111,12 @@
         <br/>
       {% endif %}
 
-      <div class="columns is-desktop">
-        <div class='column'>
-          <h2 class='subtitle'>Capítulos en los que ha colaborado (<span id='collab-count'>...</span>)</h2>
+      <div id="subtitles-participated-container">
+        <div class="tabs option-wrapper">
+          <button data-toggle-targets="subtitles" data-enable="collaborations" class="option text tiny spaced-wide selected">COLABORACIONES (<span class="text bold tiny" id='collab-count'>...</span>)</button>
+          <button data-toggle-targets="subtitles" data-enable="uploads" class="option text tiny spaced-wide">CAPÍTULOS SUBIDOS (<span class="text bold tiny" id='upload-count'>...</span>)</button>
+        </div>
+        <div id="collaborations" class='subtitles'>
           <div id='collab-list'>
           ...
           </div>
@@ -114,8 +129,7 @@
           </ul>
         </div>
 
-        <div class="column">
-          <h2 class='subtitle'>Capítulos subidos (<span id='upload-count'>...</span>)</h2>
+        <div id="uploads" class="subtitles hidden">
           <div id='upload-list'>
           ...
           </div>
@@ -155,7 +169,6 @@
         </template>
       {% endif %}
     </div>
-  </div>
 </div>
 {% endblock %}
 
