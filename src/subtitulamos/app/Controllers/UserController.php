@@ -100,8 +100,13 @@ class UserController
     public function saveSettings($request, $response, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
     {
         $user = $auth->getUser();
+        $body = $request->getParsedBody();
+        $oldpass = $body['oldpwd'] ?? '';
         $password = $body['newpwd'] ?? '';
-        if ($password != '') {
+
+        if (!$user->checkPassword($oldpass)) {
+            $auth->addFlash('error', 'La contraseña antigua no es correcta');
+        } elseif ($password != '') {
             $password_confirmation = $body['pwdconfirm'] ?? '';
 
             // TODO: Unify this into a single validation/encryption point with reg
