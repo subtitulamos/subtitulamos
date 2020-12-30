@@ -3,118 +3,189 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import Vue from "vue";
-import { dateDiff, easyFetch, $getEle, $getAllEle } from "./utils.js";
+import { dateDiff, easyFetch, $getEle, $getAllEle, $getById } from "./utils.js";
 import "../css/index.scss";
 
-let episodeList = new Vue({
-  el: "#subtitle-cards-wrap",
-  data: {
-    category: "",
-    episodes: [],
-  },
-  methods: {
-    subURI: function (ep) {
-      return "/episodes/" + ep.id + "/" + ep.slug;
-    },
+const getTimeDiff = (time) => {
+  let diff = dateDiff(new Date(time), new Date(Date.now())) / 1000;
+  let unit = "";
+  if (diff >= 60) {
+    diff = Math.floor(diff / 60);
+    if (diff >= 60) {
+      diff = Math.floor(diff / 60);
+      if (diff >= 24) {
+        diff = Math.floor(diff / 24);
+        unit = diff > 1 ? "días" : "día";
+      } else {
+        unit = diff > 1 ? "horas" : "hora";
+      }
+    } else {
+      unit = diff > 1 ? "mins" : "min";
+    }
+  } else {
+    // < 60s, display every 10s
+    diff = Math.floor(diff / 10) * 10;
+    unit = "seg";
+  }
 
-    loadData: (self) => {
-      easyFetch("/search/popular", {
-        params: {
-          page: 1,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          self.episodes = data;
-        });
-    },
+  return [diff, unit];
+};
 
-    update: function () {
-      let self = this;
-      let u = function () {
-        self.episodes.forEach(function (ep, idx, arr) {
-          let diff = dateDiff(new Date(ep.time), new Date(Date.now())) / 1000;
-          let unit = "";
-          if (diff >= 60) {
-            diff = Math.floor(diff / 60);
-            if (diff >= 60) {
-              diff = Math.floor(diff / 60);
-              if (diff >= 24) {
-                diff = Math.floor(diff / 24);
-                unit = diff > 1 ? "días" : "día";
-              } else {
-                unit = diff > 1 ? "horas" : "hora";
-              }
-            } else {
-              unit = diff > 1 ? "mins" : "min";
-            }
-          } else {
-            // < 60s, display every 10s
-            diff = Math.floor(diff / 10) * 10;
-            unit = "seg";
-          }
+let curTarget = "popular";
+let subsByTab = {};
 
-          if (diff != ep.time_ago) {
-            ep.time_ago = diff;
-            ep.time_unit = unit;
-            arr[idx] = ep;
-          }
-        });
-      };
+function loadTabData(target, startIdx, count) {
+  // Start up
+  subsByTab[target].maxCardIdx += count;
 
-      u(); // Insta update times
-      this.interval = setInterval(u, 2000);
-    },
-  },
-  created() {
-    this.loadData(this);
-  },
-  watch: {
-    episodes: function (newEpisodes) {
-      clearInterval(this.interval);
-      this.update();
-    },
-  },
-});
+  // Prefill with some loading cards
+  addEpisodes(target, startIdx, count);
 
-let categoryPage = {};
-const subsPerPage = 5;
-function loadTab(target, page) {
   easyFetch("/search/" + target, {
     params: {
-      page: page,
+      from: startIdx,
+      count: count,
     },
   })
     .then((res) => res.json())
     .then((data) => {
-      data.forEach(function (_, idx, data) {
-        data[idx].time_ago = 0;
-        data[idx].time_unit = "sec";
+      if (data.length < count) {
+        // Got less data than we requested - we've reached the end
+        if (!subsByTab[target].endFound) {
+          subsByTab[target].maxCardIdx = startIdx + data.length;
+        }
+
+        subsByTab[target].endFound = true;
+
+        for (let i = startIdx + data.length; i < startIdx + count; ++i) {
+          subsByTab[target].$episodes[i].remove();
+          console.log("Del", i);
+        }
+      }
+
+      data.forEach(function (ep, idx) {
+        ep.time_ago = 0;
+        ep.time_unit = "sec";
+
+        const i = startIdx + idx;
+        const $card = subsByTab[target].$episodes[i];
+        if (!$card) {
+          console.log("RIP", i);
+        }
+        $card.innerHTML = $card.innerHTML.replace("{ep_show}", ep.show);
+        $card.innerHTML = $card.innerHTML.replace("{ep_season}", ep.season);
+        $card.innerHTML = $card.innerHTML.replace("{ep_num}", ep.episode_num);
+        $card.innerHTML = $card.innerHTML.replace("{ep_name}", ep.name);
+        $card.innerHTML = $card.innerHTML.replace("{ep_url}", `/episodes/${ep.id}/${ep.slug}`);
+        $card.querySelector(".metadata").classList.toggle("hidden", false);
+        $card.querySelector(".loading").classList.toggle("hidden", true);
       });
-
-      episodeList.category = target;
-      episodeList.episodes = data;
-      categoryPage[target] = page;
-
-      const isFirstPage = page <= 1;
-      const isLastPage = episodeList.episodes.length < subsPerPage;
-
-      $getEle("#category-container").classList.toggle("first-page", isFirstPage);
-      $getEle("#category-container").classList.toggle("last-page", isLastPage);
     });
 }
 
-$getEle("#previous-page").addEventListener("click", function () {
-  let targetPage = Math.max(categoryPage[episodeList.category] - 1, 1);
+const $subtitleCardsWrap = $getById("subtitle-cards-wrap");
+let visibleCards = [];
+let options = {
+  root: $subtitleCardsWrap,
+  rootMargin: "0px",
+  threshold: 0.9,
+};
 
-  loadTab(episodeList.category, targetPage);
+let observer = new IntersectionObserver(function (events) {
+  for (let ev of events) {
+    if (ev.isIntersecting) {
+      visibleCards.push(ev.target);
+    } else {
+      visibleCards = visibleCards.filter((card) => card !== ev.target);
+    }
+  }
+
+  let highestVisibleIdx = 0;
+  let smallestVisibleIdx = Infinity;
+  for (let card of visibleCards) {
+    smallestVisibleIdx = Math.min(smallestVisibleIdx, Number(card.dataset.idx));
+    highestVisibleIdx = Math.max(highestVisibleIdx, Number(card.dataset.idx));
+  }
+
+  console.log(
+    "sm",
+    smallestVisibleIdx,
+    "hi",
+    highestVisibleIdx,
+    "max",
+    subsByTab[curTarget].maxCardIdx
+  );
+  if (highestVisibleIdx >= subsByTab[curTab].maxCardIdx - 5 && !subsByTab[curTab].endFound) {
+    loadTab(curTab);
+  }
+
+  const isFirstCardVisible = smallestVisibleIdx === 0;
+  const isLastCardVisible =
+    highestVisibleIdx === subsByTab[curTarget].maxCardIdx - 1 && subsByTab[curTab].endFound;
+  $getEle("#category-container").classList.toggle("first-page", isFirstCardVisible);
+  $getEle("#category-container").classList.toggle("last-page", isLastCardVisible);
+}, options);
+
+const curTab = "popular";
+const $epTemplate = $getById("subtitle-card");
+function addEpisodes(target, startIdx, count) {
+  for (let i = startIdx; i < startIdx + count; ++i) {
+    const $node = document.importNode($epTemplate.content, true);
+    const $targetDiv = $node.children[0];
+    $targetDiv.dataset.idx = i;
+    subsByTab[target].$episodes[i] = $targetDiv;
+    observer.observe($targetDiv);
+    $subtitleCardsWrap.appendChild($node);
+  }
+}
+
+const INITIAL_CARD_LOAD_SIZE = 10;
+function loadTab(target) {
+  if (!subsByTab[target]) {
+    subsByTab[target] = {
+      $episodes: [],
+      maxCardIdx: 0,
+      endFound: false,
+    };
+  }
+
+  const curLoadCount = subsByTab[target].$episodes.length;
+  loadTabData(target, curLoadCount, curLoadCount > 0 ? 5 : INITIAL_CARD_LOAD_SIZE);
+}
+
+$getEle("#previous-page").addEventListener("click", function () {
+  const firstCardInVisibleStack = visibleCards[0];
+  const lastCardInVisibleStack = visibleCards[visibleCards.length - 1];
+  const leftmostVisibleCard =
+    firstCardInVisibleStack.getBoundingClientRect().left <
+    lastCardInVisibleStack.getBoundingClientRect().left
+      ? firstCardInVisibleStack
+      : lastCardInVisibleStack;
+
+  const firstIdx = Number(leftmostVisibleCard.dataset.idx);
+  const visibleCount = visibleCards.length;
+
+  const nextTargetIdx = Math.max(0, firstIdx - visibleCount);
+  const $nextLastCard = subsByTab[curTab].$episodes[nextTargetIdx];
+  $nextLastCard.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
 });
 
 $getEle("#next-page").addEventListener("click", function () {
-  let targetPage = Math.min(categoryPage[episodeList.category] + 1, subsPerPage);
+  const firstCardInVisibleStack = visibleCards[0];
+  const lastCardInVisibleStack = visibleCards[visibleCards.length - 1];
+  const rightmostVisibleCard =
+    firstCardInVisibleStack.getBoundingClientRect().left >
+    lastCardInVisibleStack.getBoundingClientRect().left
+      ? firstCardInVisibleStack
+      : lastCardInVisibleStack;
 
-  loadTab(episodeList.category, targetPage);
+  const lastIdx = Number(rightmostVisibleCard.dataset.idx);
+  const visibleCount = visibleCards.length;
+
+  const maxIdx = subsByTab[curTab].$episodes.length - 1;
+  const nextTargetIdx = Math.min(lastIdx + visibleCount, maxIdx);
+  const $nextLastCard = subsByTab[curTab].$episodes[nextTargetIdx];
+  $nextLastCard.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "end" });
 });
 
 $getAllEle(".navigation-item").forEach(($ele) => {
@@ -159,3 +230,5 @@ $getAllEle(".navigation-item").forEach(($ele) => {
     loadTab(target, 1);
   });
 });
+
+loadTab(curTab);
