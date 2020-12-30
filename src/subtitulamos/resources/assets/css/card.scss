@@ -56,15 +56,13 @@
 @media all and (max-width: 770px) {
   .subtitle-cards-wrap {
     flex-direction: column;
-    padding: 10px 0;
-    border: none;
 
     .subtitle-card {
-      width: 100%;
-      height: auto;
-      margin: 0;
-      margin-bottom: 16px;
-      flex-direction: row;
+      width: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+      margin-bottom: var(--spacing-s) !important;
+      flex-direction: row !important;
 
       &:last-of-type {
         margin-bottom: 26px;
