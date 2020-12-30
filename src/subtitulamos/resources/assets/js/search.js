@@ -69,14 +69,19 @@ onDomReady(function () {
     searchTimerHandle = null;
 
     let searchQuery = $searchBar.value;
-    if (searchQuery === "" || searchQuery === lastSearchedText) {
+
+    console.log("called", searchQuery);
+    if (searchQuery === lastSearchedText) {
       return;
     }
 
-    lastSearchedText = searchQuery;
     linkResultList = [];
+    lastSearchedText = searchQuery;
 
-    if (searchQuery.length < 3) {
+    if (searchQuery === "") {
+      $searchResults.classList.toggle("hidden", true);
+      return;
+    } else if (searchQuery.length < 3) {
       $searchResults.innerHTML = "";
       $searchResults.classList.toggle("hidden", false);
       $searchResults.append(createResultRow("Sigue escribiendo..."));
@@ -120,21 +125,22 @@ onDomReady(function () {
 
   for (const $searchBar of $searchBars) {
     $searchBar.addEventListener("keyup", function (e) {
-      if (e.key === "ArrowDown") {
-        updateSelected($searchBar, 1);
-      } else if (e.key === "ArrowUp") {
-        updateSelected($searchBar, -1);
-      }
+      if ($searchBar.value !== "") {
+        if (e.key === "ArrowDown") {
+          updateSelected($searchBar, 1);
+        } else if (e.key === "ArrowUp") {
+          updateSelected($searchBar, -1);
+        }
 
-      if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
-        window.location = linkResultList[selectedElementIdx];
-        e.preventDefault();
+        if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
+          window.location = linkResultList[selectedElementIdx];
+          e.preventDefault();
+        }
       }
 
       if (searchTimerHandle) {
         clearTimeout(searchTimerHandle);
       }
-
       searchTimerHandle = setTimeout(() => search($searchBar), 200);
     });
 
