@@ -70,7 +70,6 @@ onDomReady(function () {
 
     let searchQuery = $searchBar.value;
 
-    console.log("called", searchQuery);
     if (searchQuery === lastSearchedText) {
       return;
     }
