@@ -4,19 +4,19 @@
   <div class="form-wrap">
     <form name="" action="" method="POST">
       <div class="form-field validated disabled" fieldname="Nombre de usuario">
-        <input disabled required value="{{ user.username }}">
+        <input disabled required value="{{ target_user.username }}">
         <i class="fas fa-user"></i>
       </div>
       <div class="form-field validated disabled" fieldname="Correo electrónico">
-        <input disabled required value="{{ user.email }}">
+        <input disabled required value="{{ target_user.email }}">
         <i class="fas fa-envelope"></i>
       </div>
       <div class="form-field validated" fieldname="Nueva contraseña">
-        <input required id="newpwd" name="newpwd" type="password" class="form_input" value="" v-model="newpwd">
+        <input required id="newpwd" name="newpwd" type="password" class="form_input" value="">
         <i class="fas fa-key"></i>
       </div>
       <div class="form-field validated" fieldname="Repetir contraseña">
-        <input required id="pwdconfirm" name="pwdconfirm" type="password" class="form_input" value="" :disabled="!newpwd">
+        <input required id="pwdconfirm" name="pwdconfirm" type="password" class="form_input" value="">
         <i class="fas fa-key"></i>
       </div>
 

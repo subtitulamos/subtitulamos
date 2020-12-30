@@ -5,7 +5,7 @@
 {% block meta %}
   <meta name="robots" content="noindex">
 {% endblock %}
-{% block title %}Perfil de {{ user.username }}{% endblock %}
+{% block title %}Perfil de {{ target_user.username }}{% endblock %}
 {% block css %}
   {{ assets.css('user') }}
 {% endblock %}
@@ -24,7 +24,7 @@
       {% if page_type == "me" %}
         Mi perfil
       {% else %}
-        Perfil de {{ user.username }}
+        Perfil de {{ target_user.username }}
       {% endif %}
     </span>
   </h1>
@@ -41,34 +41,34 @@
   {% endif %}
   <div id="public-info" class="info-group {% if page_type == "me" %} hidden {% endif %}">
     <div class="grid">
-      {% if user.hasRole('ROLE_MOD') %}
+      {% if auth.has_role('ROLE_MOD') %}
         <div class='grid-row'>
           <div class="text bold">Email</div>
           <div>
-            {% set at_pos = user.email|split("@")[0]|length %}
+            {% set at_pos = target_user.email|split("@")[0]|length %}
             {% apply spaceless %}
-              <span>{{ user.email|slice(0, 2) }}</span>
+              <span>{{ target_user.email|slice(0, 2) }}</span>
               <span>{% if at_pos > 3 %}{% for i in range(2, at_pos - 2) %}*{% endfor %}{% endif %}</span>
-              <span>{{ user.email|slice(at_pos - 1, 3) }}</span>
-              <span>{% for i in range(2, user.email|length - at_pos - 6) %}*{% endfor %}</span>
-              <span>{{ user.email|slice(user.email|length - 5) }}</span>
+              <span>{{ target_user.email|slice(at_pos - 1, 3) }}</span>
+              <span>{% for i in range(2, target_user.email|length - at_pos - 6) %}*{% endfor %}</span>
+              <span>{{ target_user.email|slice(target_user.email|length - 5) }}</span>
             {% endapply %}
           </div>
         </div>
 
-        {% if "ROLE_MOD" not in user.roles %}
+        {% if "ROLE_MOD" not in target_user.roles %}
         <div class='grid-row'>
           <div class="text bold">Otras acciones</div>
-          <form id='reset-user-pwd' action="/users/{{user.id}}/resetpwd" method="POST">
+          <form id='reset-user-pwd' action="/users/{{target_user.id}}/resetpwd" method="POST">
             <button type='submit'>Reiniciar contraseña</button>
           </form>
         </div>
         {% endif %}
 
-        {% if user.ban is not null and not user.ban.expired %}
-          <div class='grid-row' data-hint="{{ user.ban.reason }}">
+        {% if target_user.ban is not null and not target_user.ban.expired %}
+          <div class='grid-row' data-hint="{{ target_user.ban.reason }}">
             <div class="text bold">Baneado hasta</div>
-            <div>{{ user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ user.ban.byUser.username }}</b> <a href='/users/{{ user.id }}/unban'>(Desbanear)</a></div>
+            <div>{{ target_user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ target_user.ban.byUser.username }}</b> <a href='/users/{{ target_user.id }}/unban'>(Desbanear)</a></div>
           </div>
         {% else %}
           <div class='grid-row'>
@@ -79,22 +79,29 @@
       {% endif %}
 
       <div class='grid-row'>
-        <div class="text bold">Tipo de usuário</div>
+        <div class="text bold">Tipo de usuario</div>
         <div>
-          {% if user.hasRole('ROLE_MOD') %}
+          {% if target_user.hasRole('ROLE_TT') %}
             <i class="fas fa-gem role-mod role-icon"></i>
             <div class="role-mod">
               Traductor habitual
-              <form action="/users/{{user.id}}/changerole" method="POST">
-                <button type='submit'>
-                  {% if "ROLE_TT" in user.roles %}(Quitar TH){% else %}(Hacer TH){% endif %}
-                </button>
-              </form>
+              {% if auth.has_role('ROLE_MOD') %}
+                <form action="/users/{{target_user.id}}/changerole" method="POST">
+                  <button type='submit'>(Quitar TH)
+                </form>
+              {% endif %}
             </div>
-          {% elseif user.hasRole('ROLE_TT') %}
+          {% elseif target_user.hasRole('ROLE_MOD') %}
             <i class="fas fa-hand-sparkles role-tt role-icon"></i> <div class="role-tt">Moderador</div>
           {% else %}
-            <div>Normal</div>
+            <div>
+              Normal
+              {% if auth.has_role('ROLE_MOD') %}
+                <form action="/users/{{target_user.id}}/changerole" method="POST">
+                  <button type='submit'>(Hacer TH)
+                </form>
+              {% endif %}
+            </div>
           {% endif %}
         </div>
       </div>
@@ -102,8 +109,8 @@
       <div class='grid-row'>
         <div class="text bold">Última conexión</div>
         <div>
-          {% if user.lastSeen is not null %}
-            {{ user.lastSeen|date('d/M/Y H:i') }}
+          {% if target_user.lastSeen is not null %}
+            {{ target_user.lastSeen|date('d/M/Y H:i') }}
           {% else %}
             Nunca
           {% endif %}
@@ -113,8 +120,8 @@
       <div class='grid-row'>
         <div class="text bold">Fecha de registro</div>
         <div>
-          {% if user.registeredAt is not null %}
-            {{ user.registeredAt|date('d/M/Y H:i') }}
+          {% if target_user.registeredAt is not null %}
+            {{ target_user.registeredAt|date('d/M/Y H:i') }}
           {% else %}
             Nunca (¿magia?)
           {% endif %}
@@ -131,33 +138,19 @@
         <div id='collab-list'>
         ...
         </div>
-        <ul>
-          {# {% for episode in collaborated_episodes %}
-            <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-          {% else %}
-            {{ user.username }} no ha colaborado en ningún capítulo
-          {% endfor %} #}
-        </ul>
       </div>
 
       <div id="uploads" class="subtitles hidden">
         <div id='upload-list'>
         ...
         </div>
-        <ul>
-          {# {% for episode in uploaded_episodes %}
-            <li class=''><a href="{{ episode.url }}">{{ episode.full_name }}</a></li>
-          {% else %}
-            {{ user.username }} no ha subido ningún capítulo
-          {% endfor %} #}
-        </ul>
       </div>
     </div>
 
     {% if auth.has_role('ROLE_MOD') %}
       <template id='ban-dialog'>
         <h4>Banear</h4>
-        <form action="/users/{{ user.id }}/ban" method="POST">
+        <form action="/users/{{ target_user.id }}/ban" method="POST">
           <div class='form-group'>
             <label for='time'>Duración</label>
             <div id='time'>
@@ -185,7 +178,7 @@
 
 {% block scripts %}
   <script>
-    const targetUserId = {{ user.id }};
+    const targetUserId = {{ target_user.id }};
   </script>
   {{ assets.js('user') }}
 {% endblock %}
