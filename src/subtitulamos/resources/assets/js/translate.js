@@ -11,7 +11,7 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 import "../css/translate.scss";
-import { easyFetch } from "./utils.js";
+import { easyFetch, isElementInViewport } from "./utils.js";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
@@ -616,17 +616,6 @@ Vue.component("pagelist", {
 function getSeqNumFromHash() {
   let seqNum = window.location.hash.substr(1);
   return Number(seqNum);
-}
-
-function isElementInViewport(el) {
-  var rect = el.getBoundingClientRect();
-
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
 }
 
 const SEQS_PER_PAGE = 20;
