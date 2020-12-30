@@ -21,6 +21,48 @@ onDomReady(function () {
   let searchTimerHandle = null;
   let lastSearchedText = "";
   let linkResultList = [];
+  let selectedElementIdx;
+
+  function updateSelected($searchBar, offset) {
+    const $searchResults = $getById($searchBar.dataset.searchBarTarget);
+    const $listItems = $searchResults.querySelectorAll("li");
+    let currentSelectedIdx = null;
+
+    for (let idx = 0; idx < $listItems.length; idx++) {
+      if ($listItems[idx].classList.contains("selected")) {
+        currentSelectedIdx = idx;
+      }
+    }
+
+    if (currentSelectedIdx === null) {
+      $listItems[0].classList.toggle("selected");
+      selectedElementIdx = 0;
+    } else {
+      $listItems[currentSelectedIdx].classList.toggle("selected");
+
+      if (currentSelectedIdx === 0 && offset === -1) {
+        $listItems[$listItems.length - 1].classList.toggle("selected");
+        $listItems[$listItems.length - 1].scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest",
+        });
+        selectedElementIdx = $listItems.length - 1;
+      } else if (currentSelectedIdx === $listItems.length - 1 && offset === 1) {
+        $listItems[0].classList.toggle("selected");
+        $listItems[0].scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        selectedElementIdx = 0;
+      } else {
+        $listItems[currentSelectedIdx + offset].classList.toggle("selected");
+        $listItems[currentSelectedIdx + offset].scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest",
+        });
+        selectedElementIdx = currentSelectedIdx + offset;
+      }
+    }
+  }
 
   function search($searchBar) {
     const $searchResults = $getById($searchBar.dataset.searchBarTarget);
@@ -78,8 +120,14 @@ onDomReady(function () {
 
   for (const $searchBar of $searchBars) {
     $searchBar.addEventListener("keyup", function (e) {
+      if (e.key === "ArrowDown") {
+        updateSelected($searchBar, 1);
+      } else if (e.key === "ArrowUp") {
+        updateSelected($searchBar, -1);
+      }
+
       if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
-        window.location = linkResultList[0];
+        window.location = linkResultList[selectedElementIdx];
         e.preventDefault();
       }
 
