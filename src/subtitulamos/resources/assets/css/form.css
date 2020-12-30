@@ -111,7 +111,7 @@
 
 .form-field > .dropdown {
   position: absolute;
-  margin-right: 15px;
+  right: 15px;
 }
 
 .form-field input::placeholder,
