@@ -9,6 +9,31 @@
 * {
   font-weight: 400;
   -webkit-tap-highlight-color: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-c) var(--color-gray-e);
+}
+
+/* width */
+*::-webkit-scrollbar {
+  width: 16px;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+  background-color: var(--color-gray-e);
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+  background: var(--color-gray-c);
+  border-color: var(--color-gray-e);
+  border-style: solid;
+  border-width: 0 2px 0 2px;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-b);
 }
 
 :root {
