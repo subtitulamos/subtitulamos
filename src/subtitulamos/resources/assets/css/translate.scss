@@ -3,6 +3,8 @@
 @import "comment.scss";
 
 #translation {
+  min-width: calc(var(--max-width) - var(--content-pading-x) * 2);
+
   #show-info-header {
     margin-bottom: var(--spacing-xs);
 
