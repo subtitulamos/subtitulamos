@@ -127,7 +127,7 @@
 
   #sequences {
     border-collapse: collapse;
-    width: var(--max-width);
+    width: calc(var(--max-width) - var(--content-pading-x) * 2);
 
     thead {
       tr {
@@ -164,10 +164,16 @@
           }
 
           &.time {
-            width: 250px;
+            width: 130px;
+
+            input {
+              background-color: var(--color-offwhite);
+            }
+
             input,
             span {
-              width: 100px;
+              margin: 1px 0;
+              width: calc(100% - 4px);
               text-align: center;
               display: inline-block;
               padding: 2px;

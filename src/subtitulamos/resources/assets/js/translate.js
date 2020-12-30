@@ -92,13 +92,11 @@ Vue.component("sequence", {
             <td class="time" @click="openSequence">
                 <div v-if="!editing || !canEditTimes">
                     <span>{{ tstart | timeFmt }}</span>
-                    <i class="fas fa-long-arrow-alt-right"></i>
                     <span>{{ tend | timeFmt }}</span>
                 </div>
 
                 <div v-if="editing && canEditTimes">
                     <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
-                    <i class="fas fa-long-arrow-alt-right"></i>
                     <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
                 </div>
             </td>
