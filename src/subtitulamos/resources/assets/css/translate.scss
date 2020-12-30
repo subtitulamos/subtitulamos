@@ -139,6 +139,7 @@
 
     .grid-header {
       display: grid;
+      height: 50px !important;
 
       * {
         font-weight: bold;
@@ -152,7 +153,8 @@
       grid-template-columns: repeat(6, max-content);
       border-bottom: 1px solid var(--color-gray-divisions);
 
-      &:last-of-type {
+      &:last-of-type,
+      &:first-of-type {
         border-bottom: 0;
       }
 
