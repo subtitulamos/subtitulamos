@@ -112,18 +112,15 @@
     <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
 
     <div>
-      <table id="sequences">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Autor</th>
-            <th>Tiempos</th>
-            <th>Idioma secundario{#: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i>#}</th>
-            <th>Traducción al <span id='target-language-name'>{{ sub_lang }}</span></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
+      <div id="sequences" class="grid">
+        <div class="grid-row grid-header">
+          <div class="number">#</div>
+          <div class="user">Autor</div>
+          <div class="time">Tiempos</div>
+          <div class="text">Idioma secundario</div>
+          <div class="editable-text">Traducción al {{ sub_lang }}</div>
+          <div class="actions"></div>
+        </div>
         {% verbatim %}
           <template v-for="seq in pageSequences">
             <sequence v-for="hseq in seq.history"
@@ -161,8 +158,7 @@
             ></sequence>
           </template>
         {% endverbatim %}
-        </tbody>
-      </table>
+      </div>
     </div>
 
     <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>

@@ -80,7 +80,7 @@ Vue.component("seqlock", {
 
 Vue.component("sequence", {
   template: `
-        <tr
+        <div class="grid-row"
           :id="!history ? 'seqn-'+number : null"
           :class="{
             'highlighted': !history && highlighted,
@@ -89,48 +89,48 @@ Vue.component("sequence", {
             'current': !history,
             'history': history
           }">
-            <td><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></td>
-            <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
-            <td class="time" @click="openSequence">
+            <div class="number"><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></div>
+            <div class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></div>
+            <div class="time" @click="openSequence">
                 <div v-if="!editing || !canEditTimes">
-                    <span>{{ tstart | timeFmt }}</span>
-                    <span>{{ tend | timeFmt }}</span>
+                  <div>{{ tstart | timeFmt }}</div>
+                  <div>{{ tend | timeFmt }}</div>
                 </div>
 
                 <div v-if="editing && canEditTimes">
-                    <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
-                    <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
+                  <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
+                  <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
                 </div>
-            </td>
-            <td class="text"><pre>{{ secondaryText }}</pre></td>
-            <td class="text" @click="openSequence"
+            </div>
+            <div class="text">{{ secondaryText }}</div>
+            <div class="editable-text" @click="openSequence"
               :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <div :class="{
                   'untranslated':!editing && !id,
                   'editing': editing,
                   'translatable': !history && !openByOther}">
-                  <pre v-if="!editing && id">{{ text }}</pre>
-                  <pre v-if="!editing && !id">- Sin traducir -</pre>
+                  <div class="closed" v-if="!editing && id">{{ text }}</div>
+                  <div class="closed" v-if="!editing && !id">- Sin traducir -</div>
 
                   <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
 
                   <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
 
-                  <i v-if="editing" class="fas fa-times" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+                  <i v-if="editing" class="fas fa-times-circle" @click="discard" tabindex="0" @keyup.enter="discard"></i>
 
                   <div class="line-status" v-if="editing">
                       <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
                       <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
                   </div>
                 </div>
-            </td>
-            <td class="actions">
+            </div>
+            <div class="actions">
                 <template v-if="!saving">
                     <template v-if="!history && editing">
                         <i class="fas fa-save" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
                         <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
-                        <i class="fas fa-magic"></i>
-                      </div>
+                          <i class="fas fa-magic"></i>
+                        </div>
                     </template>
 
                     <template v-if="translated && !history && !editing">
@@ -146,7 +146,7 @@ Vue.component("sequence", {
                 <template v-if="saving">
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                 </template>
-            </td>
+            </div>
         </tr>
         `,
 
