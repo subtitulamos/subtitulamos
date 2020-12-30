@@ -10,13 +10,19 @@
 {% endblock %}
 
 {% block content %}
-<div id="translation">
-  <header>
-    Traduciendo <span id="episode-title"><a href='/episodes/{{ sub.version.episode.id }}'>{{ sub.version.episode.fullname }}</a></span>
-    {% if feature_on('ALERTS') %}
-      <button type="button" @click="alertMod" class='alert-mod'><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Avisar a un moderador</button>
-    {% endif %}
-  </header>
+<div id="translation" class="content limited-width">
+  <div id="show-info-header">
+    <a href="/episodes/{{ sub.version.episode.id }}/{{ sub.version.episode.fullName }}" id="translating-header" class="text small blue-a"><i class="fas fa-chevron-left"></i> Traduciendo...</a>
+    <div id="show-name">
+      <h1 class="blue-a">{{ episode.show.name }}</h1>
+    </div>
+    <div id="episode-header">
+      <div id="episode-name">
+        <h3 class="blue-a">{{ episode.name }}</h3>
+        <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
+      </div>
+    </div>
+  </div>
 
   <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
     Conexión con el servidor de traducción perdida. Reestableciendo...
@@ -24,144 +30,197 @@
 
   <div id="translation-details" :class="{'disabled': !loaded}">
     <div id='translation-tools'>
-      <button type="button" @click="goTo" class='hint--top hint--bounce' data-hint="Ctrl+G">Ir a secuencia</button>
-      <button type="button" @click="openPage">Abrir todo</button>
-      <button type="button" @click="openUntranslatedPage">Abrir sin traducir</button>
-      <button type="button" @click="savePage" class='hint--top hint--bounce' data-hint="Ctrl+Shift+S">Guardar todo</button>
-      <button type="button" @click="fixPage">Alinear todo</button>
-      <button type="button" @click="closePage">Cerrar todo</button>
-      <button type="button" @click="lockPage(true)" class="lock-tool" v-if="hasAdvancedTools">Bloquear todo</button>
-      <button type="button" @click="lockPage(false)" class="lock-tool" v-if="hasAdvancedTools">Desbloquear todo</button>
+      <div class="tool-group">
+        <button type="button" @click="savePage" class='tool' data-hint="Ctrl+Shift+S">
+          <i class="fas fa-save"></i>
+          Guardar
+        </button>
+      </div>
+      <div class="tool-group">
+        <button type="button" @click="goTo" class='tool' data-hint="Ctrl+G">
+          <i class="fas fa-angle-double-right"></i>
+          Ir a secuencia
+        </button>
+      </div>
+      <div class="tool-group">
+        <button type="button" @click="openPage" class="tool">
+          <i class="fas fa-envelope-open-text"></i>
+          Abrir todo
+        </button>
+        <button type="button" @click="openUntranslatedPage" class="tool">
+          <i class="fas fa-envelope-open"></i>
+          Abrir <i>sin traducir</i>
+        </button>
+        <button type="button" @click="closePage" class="tool">
+          <i class="fas fa-envelope"></i>
+          Cerrar todo
+        </button>
+      </div>
+      <div class="tool-group">
+        <button type="button" @click="fixPage" class="tool">
+          <i class="fas fa-align-left"></i>
+          Alinear todo
+        </button>
+      </div>
+      <div class="tool-group">
+        <button type="button" @click="lockPage(true)" class="tool lock-tool" v-if="hasAdvancedTools">
+          <i class="fas fa-lock"></i>
+          Bloquear todo
+        </button>
+        <button type="button" @click="lockPage(false)" class="tool lock-tool" v-if="hasAdvancedTools">
+          <i class="fas fa-lock-open"></i>
+          Desbloquear todo
+        </button>
+      </div>
+      <div class="tool-group">
+        <button type="button" @click="fixPage" class="tool">
+          <i class="fas fa-filter"></i>
+          Filtrar
+        </button>
+      </div>
     </div>
 
     {% verbatim %}
       <div id='filters'>
-        Filtrar por cadena: <input type="text" id="text-filter" @keyup="(e) => { filters.text = e.target.value; onChangePage(1) }" :value="filters.text" />
-        <span class='hint--bottom-right hint--bounce hint--rounded bullseye-wrapper'
-          :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
-            <i class="fa fa-bullseye" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
-        </span>
-        &nbsp;&nbsp;-&nbsp;&nbsp;
-        Filtrar por autor:
+        <div class="filter">
+          Filtrar por cadena <input type="text" id="text-filter" @keyup="(e) => { filters.text = e.target.value; onChangePage(1) }" :value="filters.text" />
+          <span
+            :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
+              <i class="fas fa-crosshairs" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
+          </span>
+        </div>
+
+        <div class="filter">
+        Filtrar por autor
         <select id='author-filter' @change="onChangePage(1)" v-model="filters.author">
           <option value="0">Todos</option>
           <option v-for="(username, uid) in authors" :value="uid">{{ username }}</option>
         </select>
-        &nbsp;&nbsp;-&nbsp;&nbsp;
-        <input type='checkbox' id='untranslated-filter' @change="onChangePage(1)" v-model="filters.onlyUntranslated">
-        <label for='untranslated-filter'>
+        </div>
+
+        <div class="filter">
+          <div class="checkbox-field">
+            <div class="checkbox">
+              <i class="fas fa-check"></i>
+              <input type='checkbox' id='untranslated-filter' @change="onChangePage(1)" v-model="filters.onlyUntranslated">
+            </div>
+          </div>
           Ver solo secuencias sin traducir
-        </label>
+        </div>
       </div>
     {% endverbatim %}
-    <div class="page-wrapper">
-      <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
+    <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
+
+    <div>
+      <div id="sequences" class="grid">
+        <div class="grid-row grid-header">
+          <div class="number">#</div>
+          <div class="user">Autor</div>
+          <div class="time">Tiempos</div>
+          <div class="text">Idioma secundario</div>
+          <div class="editable-text">Traducción al {{ sub_lang }}</div>
+          <div class="actions"></div>
+        </div>
+        {% verbatim %}
+          <template v-for="seq in pageSequences">
+            <sequence v-for="hseq in seq.history"
+              :key="hseq.id"
+
+              :id="hseq.id"
+              :number="seq.number"
+              :locked="false"
+              :verified="false"
+              :author="hseq.author"
+              :tstart="hseq.tstart"
+              :tend="hseq.tend"
+              :secondary-text="seq.secondary_text"
+              :text="hseq.text"
+              :history="true">
+            ></sequence>
+
+            <sequence
+              :key="'main-' + seq.number"
+
+              :id="seq.id"
+              :number="seq.number"
+              :locked="seq.locked"
+              :verified="seq.verified"
+              :highlighted="seq.number == highlightedSequence"
+              :author="seq.author"
+              :tstart="seq.tstart"
+              :tend="seq.tend"
+              :secondary-text="seq.secondary_text"
+              :text="seq.text"
+              :open-info="seq.openInfo ? seq.openInfo : {id: 0}"
+              :history="false"
+              @highlight-on="highlight(seq.number)"
+              @highlight-off="highlight(0)"
+            ></sequence>
+          </template>
+        {% endverbatim %}
+      </div>
     </div>
 
-    <table id="sequences">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Autor</th>
-          <th>Tiempos</th>
-          <th>Idioma secundario{#: <span id='secondary-language-name'>English</span> <i class="fa fa-caret-down" aria-hidden="true"></i>#}</th>
-          <th>Traducción al <span id='target-language-name'>{{ sub_lang }}</span></th>
-          <th></th>
-        </tr>
-      </thead>
-
-      {% verbatim %}
-        <template v-for="seq in pageSequences">
-          <sequence v-for="hseq in seq.history"
-            :key="hseq.id"
-
-            :id="hseq.id"
-            :number="seq.number"
-            :locked="false"
-            :verified="false"
-            :author="hseq.author"
-            :tstart="hseq.tstart"
-            :tend="hseq.tend"
-            :secondary-text="seq.secondary_text"
-            :text="hseq.text"
-            :history="true">
-          ></sequence>
-
-          <sequence
-            :key="'main-' + seq.number"
-
-            :id="seq.id"
-            :number="seq.number"
-            :locked="seq.locked"
-            :verified="seq.verified"
-            :highlighted="seq.number == highlightedSequence"
-            :author="seq.author"
-            :tstart="seq.tstart"
-            :tend="seq.tend"
-            :secondary-text="seq.secondary_text"
-            :text="seq.text"
-            :open-info="seq.openInfo ? seq.openInfo : {id: 0}"
-            :history="false"
-            @highlight-on="highlight(seq.number)"
-            @highlight-off="highlight(0)"
-          ></sequence>
-        </template>
-      {% endverbatim %}
-    </table>
-
-    <div class="page-wrapper">
-      <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
-    </div>
+    <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
 
     <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
-      Secuencias abiertas:
-
+      <h4>Secuencias abiertas</h4>
       <ul>
         <seqlock v-for="lock in openLocks" :key="lock.seq_number" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time" @jump="jumpToSequence(lock.seq_number)"></seqlock>
       </ul>
     </div>
   </div>
 
-  <div id="translation-comments">
+  <div id="translation-comments" class="comments-container ">
     <h4>Comentarios de traducción</h4>
     <div class='newcomment-box'>
-      <textarea id="new-comment" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." autocomplete="off"></textarea>
       {% verbatim %}
-      <span
-        class='comment-char-counter'
-        :class='{
-          "normal-count": newComment.length <= maxCommentLength*0.9,
-          "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
-          "too-many": newComment.length > maxCommentLength
-        }'
-      >
-        <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}</span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
-      </span>
-      {% endverbatim %}
-      <button :class="{'hidden': newComment == '', 'is-loading': submittingComment, 'is-primary': newComment.length <= maxCommentLength, 'is-danger': newComment.length > maxCommentLength}" class="button comment-publish" @click="publishComment">
-         <span v-if="!submittingComment">
-          Enviar
-        </span>
-        {# TODO: Remove this when using Bulma on this page (is-loading won't be active until then) #}
-        <span v-else>
-          ...
-        </span>
-      </button>
-    </div>
+        <div class="open-comment">
+          <label class="input-auto-sizer stacked" :data-value="newComment">
+            <textarea id="new-comment" rows="2" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+          </label>
+
+          <div class="comment-meta">
+            <div
+              class='comment-char-counter text tiny'
+              :class='{
+                "normal-count": newComment.length <= maxCommentLength*0.9,
+                "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
+                "too-many": newComment.length > maxCommentLength
+              }'
+            >
+              <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
+              </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
+            </div>
+
+            <button class="save-comment" @click="publishComment"
+              :class="{'hidden': newComment == '',
+                'is-loading': submittingComment,
+                'is-primary': newComment.length <= maxCommentLength,
+                'is-danger': newComment.length > maxCommentLength}"
+              :disabled="newComment.length > maxCommentLength"
+              @click="publishComment">
+              <i class="fab fa-telegram-plane"></i>
+              <span class="text mini spaced">ENVIAR</span>
+            </button>
+          </div>
+        </div>
+        {% endverbatim %}
+      </div>
 
     <comment v-for="comment in comments"
-      :key="comment.id"
-      :id="comment.id"
-      :user="comment.user"
-      :base-text="comment.text"
-      :published-at="comment.published_at"
-      :pinned="comment.pinned"
-      :create-sequence-jumps="true"
-      @remove="remove"
-      @pin="pin"
-      @save="save"
-    >
+        :key="comment.id"
+        :id="comment.id"
+        :user="comment.user"
+        :base-text="comment.text"
+        :published-at="comment.published_at"
+        :pinned="comment.pinned"
+        @remove="remove"
+        @pin="pin"
+        @save="save"
+      >
     </comment>
+    <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
   </div>
 </div>
 {% endblock %}

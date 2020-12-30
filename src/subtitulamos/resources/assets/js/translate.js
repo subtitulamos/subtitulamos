@@ -11,7 +11,7 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 import "../css/translate.scss";
-import { easyFetch, isElementInViewport } from "./utils.js";
+import { $getAllEle, easyFetch, invertCheckbox, isElementInViewport } from "./utils.js";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
@@ -40,9 +40,11 @@ window.onbeforeunload = function (e) {
 Vue.component("seqlock", {
   template: `
   <li>
-    <a href='javascript:void(0)' @click='$emit("jump", seqnum)'>#{{ seqnum }}</a>
-    por <a :href="'/users/'+uid">{{ username }}</a>
-    [ {{ niceTime }} ] <i class='fa fa-times' aria-hidden='true' @click='release'></i>
+    <span>
+      <a href='javascript:void(0)' @click='$emit("jump", seqnum)'>#{{ seqnum }}</a>
+      por <a :href="'/users/'+uid">{{ username }}</a>
+      [ {{ niceTime }} ] <span class="close text tiny" @click='release'>Cerrar</span>
+    </span>
   </li>
     `,
   props: ["id", "seqnum", "uid", "time"],
@@ -78,7 +80,7 @@ Vue.component("seqlock", {
 
 Vue.component("sequence", {
   template: `
-        <tr
+        <div class="grid-row"
           :id="!history ? 'seqn-'+number : null"
           :class="{
             'highlighted': !history && highlighted,
@@ -87,40 +89,48 @@ Vue.component("sequence", {
             'current': !history,
             'history': history
           }">
-            <td><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></td>
-            <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
-            <td class="time" @click="openSequence">
+            <div class="number"><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></div>
+            <div class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></div>
+            <div class="time" @click="openSequence">
                 <div v-if="!editing || !canEditTimes">
-                    {{ tstart | timeFmt }} <i class="fa fa-long-arrow-right"></i> {{ tend | timeFmt }}
+                  <div>{{ tstart | timeFmt }}</div>
+                  <div>{{ tend | timeFmt }}</div>
                 </div>
 
                 <div v-if="editing && canEditTimes">
-                    <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
-                    <i class="fa fa-long-arrow-right"></i>
-                    <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
+                  <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
+                  <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
                 </div>
-            </td>
-            <td class="text"><pre>{{ secondaryText }}</pre></td>
-            <td class="text" @click="openSequence" :class="{'translatable': !history && !openByOther, 'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
-                <pre v-if="!editing && id">{{ text }}</pre>
-                <pre v-if="!editing && !id" class="untranslated">- Sin traducir -</pre>
+            </div>
+            <div class="text">{{ secondaryText }}</div>
+            <div class="editable-text" @click="openSequence"
+              :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
+                <div :class="{
+                  'untranslated':!editing && !id,
+                  'editing': editing,
+                  'translatable': !history && !openByOther}">
+                  <div class="closed" v-if="!editing && id">{{ text }}</div>
+                  <div class="closed" v-if="!editing && !id">- Sin traducir -</div>
 
-                <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
+                  <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
 
-                <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="new-password"></textarea>
-                <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
-                    <i class="fa fa-wrench" aria-hidden="true"></i>
+                  <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
+
+                  <i v-if="editing" class="fas fa-times-circle" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+
+                  <div class="line-status" v-if="editing">
+                      <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
+                      <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
+                  </div>
                 </div>
-                <div class="line-status" v-if="editing">
-                    <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
-                    <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
-                </div>
-            </td>
-            <td class="actions">
+            </div>
+            <div class="actions">
                 <template v-if="!saving">
                     <template v-if="!history && editing">
                         <i class="fas fa-save" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
-                        <i class="fas fa-times-circle" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+                        <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
+                          <i class="fas fa-magic"></i>
+                        </div>
                     </template>
 
                     <template v-if="translated && !history && !editing">
@@ -136,7 +146,7 @@ Vue.component("sequence", {
                 <template v-if="saving">
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                 </template>
-            </td>
+            </div>
         </tr>
         `,
 
@@ -587,10 +597,12 @@ Vue.component("sequence", {
  ***************************/
 Vue.component("pagelist", {
   template: `
-        <ul class="pagination">
-            <li class="change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></li>
-            <li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" @click="toPage(page)">{{ page }}</li>
-            <li class="change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+        <div class="page-wrapper">
+            <button class="choice change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+            <div class="choices">
+              <button v-for="page in pages" class="choice target-page" :class="page == curPage ? 'selected' : ''" @click="toPage(page)">{{ page }}</button>
+            </div>
+            <button class="choice change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></button>
         </ul>
     `,
   props: ["curPage", "pages", "lastPage"],
@@ -1113,4 +1125,8 @@ document.addEventListener("keydown", function (e) {
     translation.goTo();
     e.preventDefault();
   }
+});
+
+$getAllEle(".checkbox").forEach((checkbox) => {
+  checkbox.addEventListener("click", invertCheckbox);
 });

@@ -336,12 +336,6 @@ header {
   margin: 0 auto;
 }
 
-.unlimited-width {
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-}
-
 .content-padding {
   width: calc(100% - var(--content-pading-x) * 2);
   padding-left: var(--content-pading-x);
