@@ -12,6 +12,7 @@ import {
   $getAllEle,
   invertDropdown,
   invertCheckbox,
+  $getById,
 } from "./utils";
 
 function doLogin(e) {
@@ -136,6 +137,13 @@ onDomReady(function () {
 const $ctrlPanel = document.getElementById("control-panel");
 if ($ctrlPanel) {
   let openStatus = localStorage.getItem("menu-open") === "true";
+
+  if (openStatus) {
+    $ctrlPanel.classList.toggle("opening", false);
+  } else {
+    $ctrlPanel.classList.toggle("opening", true);
+  }
+
   const updateDomWithStatus = () => {
     document.getElementById("page-container").classList.toggle("control-panel-is-open", openStatus);
 
@@ -153,6 +161,7 @@ if ($ctrlPanel) {
   };
 
   const togglePanelStatus = (save) => {
+    $ctrlPanel.classList.toggle("opening", true);
     openStatus = !openStatus;
     if (save) {
       localStorage.setItem("menu-open", openStatus);

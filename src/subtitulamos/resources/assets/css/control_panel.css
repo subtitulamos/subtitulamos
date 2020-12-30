@@ -26,8 +26,12 @@
   flex-shrink: 0;
 }
 
+#control-panel.opening {
+  transition-duration: 0.3s !important;
+}
+
 #control-panel.open {
-  transition: 0.3s ease width;
+  transition: 0s ease width;
   width: var(--control-panel-open-width);
 }
 
