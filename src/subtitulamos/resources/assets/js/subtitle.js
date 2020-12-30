@@ -213,7 +213,7 @@ Subtitle.prototype.openSeq = function (seqNum, by, openLockID) {
 Subtitle.prototype.closeSeq = function (seqNum) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
-    console.log("Could not close sequence " + seqNum + " (not found)");
+    console.error("Could not close sequence " + seqNum + " (not found)");
     return;
   }
 
@@ -223,7 +223,7 @@ Subtitle.prototype.closeSeq = function (seqNum) {
 Subtitle.prototype.lockSeq = function (seqID, status) {
   let idx = this.findSeqIdxByID(seqID);
   if (idx < 0) {
-    console.log("Could not set lock status for sequence " + seqID + " (not found)");
+    console.error("Could not set lock status for sequence " + seqID + " (not found)");
     return;
   }
 
@@ -275,7 +275,7 @@ Subtitle.prototype.changeSeq = function (
 ) {
   let idx = this.findSeqIdxByNum(seqNum);
   if (idx < 0) {
-    console.log("Could not update sequence text for " + seqNum + " (not found)");
+    console.error("Could not update sequence text for " + seqNum + " (not found)");
     return;
   }
 
@@ -284,7 +284,7 @@ Subtitle.prototype.changeSeq = function (
   if (seq.id) {
     if (seq.id == newSeqID) {
       // We already did this change!
-      console.log("Ignoring update, no change for " + seqNum);
+      console.info("Ignoring update, no change for " + seqNum);
       return;
     }
 
