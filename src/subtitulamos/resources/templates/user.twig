@@ -31,15 +31,15 @@
 
   <div class="navigation-list no-scroll-bar option-wrapper">
     {% if page_type == "me" %}
-    <div data-toggle-targets="info-group" data-enable="private-info" class="navigation-item selected option">CONFIGURACIONES</div>
+    <div data-toggle-targets="info-group" data-enable="settings" class="navigation-item selected option">CONFIGURACIONES</div>
     {% endif %}
-    <div data-toggle-targets="info-group" data-enable="public-info" class="navigation-item {% if page_type != "me" %}selected{% endif %} option">INFORMACIÓN PÚBLICA</div>
+    <div data-toggle-targets="info-group" data-enable="info" class="navigation-item {% if page_type != "me" %}selected{% endif %} option">INFORMACIÓN</div>
   </div>
 
   {% if page_type == "me" %}
     {% include "user/user_settings.twig" %}
   {% endif %}
-  <div id="public-info" class="info-group {% if page_type == "me" %} hidden {% endif %}">
+  <div id="info" class="info-group {% if page_type == "me" %} hidden {% endif %}">
     <div class="grid">
       {% if auth.has_role('ROLE_MOD') %}
         <div class='grid-row'>
