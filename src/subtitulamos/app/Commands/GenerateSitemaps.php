@@ -34,7 +34,6 @@ class GenerateSitemaps extends Command
                     JOIN e.show s'
         )->getResult();
 
-        $shows = [];
         $episodes = [];
         foreach ($allEpisodes as $ep) {
             $lastmodRow = $entityManager->createQuery(
@@ -74,44 +73,7 @@ class GenerateSitemaps extends Command
                 'lastmod' => $lastmod,
                 'frequency' => $frequency
             ];
-
-            // Update the season time to the most recently created episode
-            $show = $ep->getShow();
-            $showId = $show->getId();
-            if (!isset($shows[$showId])) {
-                $shows[$showId] = [];
-            }
-
-            $shows[$showId][$ep->getSeason()] = isset($shows[$showId][$ep->getSeason()])
-                ? max($shows[$showId][$ep->getSeason()], $ep->getCreationTime()->getTimestamp())
-                : $ep->getCreationTime()->getTimestamp();
         }
-
-        // Create the seasons list
-        $sitemapShows = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
-        foreach ($shows as $id => $seasons) {
-            foreach ($seasons as $season => $lastmod) {
-                $url = $sitemapShows->addChild('url');
-                $url->addChild('loc', sprintf('%s/shows/%d/season/%d', SITE_URL, $id, $season));
-                $url->addChild('lastmod', date(DATE_ATOM, $lastmod));
-
-                $modDif = time() - $lastmod;
-                if ($modDif < 60*60*24*15) {
-                    // An episode was added last 15d, likely new episode soon (either user upload of old ep or new release)
-                    $url->addChild('changefreq', 'daily');
-                } elseif ($modDif < 60*60*24*30*6) {
-                    // An episode was added within the last 6 months, crawl weekly in case new season comes out
-                    $url->addChild('changefreq', 'weekly');
-                } elseif ($modDif < 60*60*24*365) {
-                    // An episode was added within the last year, monthly frequency possible
-                    $url->addChild('changefreq', 'monthly');
-                } else {
-                    // No episode within the last year, it's fairly unlikely that this SEASON will change...
-                    $url->addChild('changefreq', 'yearly');
-                }
-            }
-        }
-        \file_put_contents(self::SITEMAP_DIR.'/sitemap_shows.xml', $sitemapShows->asXML());
 
         // Create the episodes list
         $sitemapEpisodes = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
@@ -125,11 +87,9 @@ class GenerateSitemaps extends Command
 
         // Lastly, generate an updated sitemap list from the files on the directory
         $sitemapList = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></sitemapindex>');
-        foreach (['shows', 'episodes'] as $sitemapType) {
-            $sitemapEntry = $sitemapList->addChild('sitemap');
-            $sitemapEntry->addChild('loc', SITE_URL.'/sitemap_'.$sitemapType.'.xml');
-            $sitemapEntry->addChild('lastmod', date(DATE_ATOM));
-        }
+        $sitemapEntry = $sitemapList->addChild('sitemap');
+        $sitemapEntry->addChild('loc', SITE_URL.'/sitemap_episodes.xml');
+        $sitemapEntry->addChild('lastmod', date(DATE_ATOM));
 
         \file_put_contents(self::SITEMAP_DIR.'/sitemap.xml', $sitemapList->asXML());
         $output->writeln('Sitemaps generated');
