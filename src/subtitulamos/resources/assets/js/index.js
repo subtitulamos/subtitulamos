@@ -142,7 +142,7 @@ let observer = new IntersectionObserver(
 );
 
 const $epTemplate = $getById("subtitle-card");
-function addEpisodes(target, startIdx, count) {
+export function addEpisodes(target, startIdx, count) {
   for (let i = startIdx; i < startIdx + count; ++i) {
     const $node = document.importNode($epTemplate.content, true);
     const $targetDiv = $node.children[0];
