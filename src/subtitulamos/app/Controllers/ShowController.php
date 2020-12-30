@@ -61,74 +61,12 @@ class ShowController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $seasonsRes = $em->createQuery('SELECT DISTINCT e.season FROM App:Episode e WHERE e.show = :id ORDER BY e.season ASC')
+        $epRes = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :id ORDER BY e.season DESC, e.number DESC')
             ->setParameter('id', $showId)
-            ->getResult();
-
-        $seasons = [];
-        foreach ($seasonsRes as $seasonRes) {
-            $seasons[] = (int)$seasonRes['season'];
-        }
-        sort($seasons);
-
-        // Let's see if the URI contains the season, otherwise, fill it
-        $routeContext = RouteContext::fromRequest($request);
-        $route = $routeContext->getRoute();
-        $seasonArg = $route->getArgument('season');
-        if ($seasonArg !== null) {
-            $season = (int)$seasonArg;
-
-            if (!in_array($season, $seasons)) {
-                // If the season passed is not a valid season, redirect to default
-                return $urlHelper->responseWithRedirectToRoute('show', ['showId' => $showId]);
-            }
-        } else {
-            // Default season: latest
-            $season = $seasons[count($seasons) - 1];
-        }
-
-        $show = $em->createQuery('SELECT sw, e, v, s FROM App:Show sw JOIN sw.episodes e JOIN e.versions v JOIN v.subtitles s WHERE sw.id = :id AND e.season = :season ORDER BY e.number ASC')
-            ->setParameter('id', $showId)
-            ->setParameter('season', $season)
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
-        $episodeList = [];
-        foreach ($show->getEpisodes() as $ep) {
-            $epInfo = [
-                'id' => $ep->getId(),
-                'name' => $ep->getFullName(),
-                'langs' => []
-            ];
-
-            foreach ($ep->getVersions() as $v) {
-                foreach ($v->getSubtitles() as $sub) {
-                    $lang = Langs::getLocalizedName(Langs::getLangCode($sub->getLang()));
-                    if (!isset($epInfo['langs'][$lang])) {
-                        $epInfo['langs'][$lang] = [];
-                    }
-
-                    $epInfo['langs'][$lang][] = [
-                        'id' => $sub->getId(),
-                        'version_name' => $v->getName(),
-                        'progress' => $sub->getProgress(),
-                        'pause' => $sub->getPause()
-                    ];
-                }
-            }
-
-            $episodeList[] = $epInfo;
-        }
-
-        return $twig->render($response, 'show_seasons.twig', [
-            'show' => [
-                'id' => $showId,
-                'name' => $show->getName(),
-            ],
-            'seasons' => $seasons,
-            'episodes' => $episodeList,
-            'cur_season' => $season,
-            'add_canonical' => $seasonArg === null
-        ]);
+        return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $epRes->getId()]);
     }
 
     public function saveProperties($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)

@@ -46,7 +46,7 @@ class EpisodeController
         $langs = [];
         foreach ($ep->getVersions() as $version) {
             foreach ($version->getSubtitles() as $sub) {
-                $lang = Langs::getLocalizedName(Langs::getLangCode($sub->getLang()));
+                $lang = $sub->getLang();
                 if (!isset($langs[$lang])) {
                     $langs[$lang] = [];
                 }
@@ -56,7 +56,6 @@ class EpisodeController
             }
         }
 
-        $show = $ep->getShow();
         $showId = $ep->getShow()->getId();
 
         // Get the data all episodes in all seasons to show top nav bar
