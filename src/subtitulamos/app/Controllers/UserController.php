@@ -40,9 +40,17 @@ class UserController
 
         $uploadedEpisodes = [];
         foreach ($upEpisodesRes as $ep) {
+            $show = $ep->getShow()->getName();
+            $season = $ep->getSeason();
+            $episodeNumber = $ep->getNumber();
+            $name = $ep->getName();
             $fullName = $ep->getFullName();
 
             $uploadedEpisodes[] = [
+                'show' => $show,
+                'season' => $season,
+                'episode_number' => $episodeNumber,
+                'name' => $name,
                 'full_name' => $fullName,
                 'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];
@@ -67,9 +75,17 @@ class UserController
 
         $colaboratedEpisodes = [];
         foreach ($collabEpisodesRes as $ep) {
+            $show = $ep->getShow()->getName();
+            $season = $ep->getSeason();
+            $episodeNumber = $ep->getNumber();
+            $name = $ep->getName();
             $fullName = $ep->getFullName();
 
             $colaboratedEpisodes[] = [
+                'show' => $show,
+                'season' => $season,
+                'episode_number' => $episodeNumber,
+                'name' => $name,
                 'full_name' => $fullName,
                 'url' => $urlHelper->pathFor('episode', ['id' => $ep->getId(), 'slug' => $slugify->slugify($fullName)])
             ];

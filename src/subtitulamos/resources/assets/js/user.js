@@ -40,23 +40,61 @@ if ($banButton) {
   });
 }
 
+const $epTemplate = $getById("subtitle-card");
+function addEpisodes(target, startIdx, count) {
+  let $subtitleCardsWrap;
+
+  switch (target) {
+    case "upload":
+      $subtitleCardsWrap = $getById(`${target}-list`);
+    case "collab":
+      $subtitleCardsWrap = $getById(`${target}-list`);
+  }
+
+  $subtitleCardsWrap.innerHTML = "";
+
+  for (let i = startIdx; i < startIdx + count; ++i) {
+    const $node = document.importNode($epTemplate.content, true);
+    const $targetDiv = $node.children[0];
+    $targetDiv.dataset.idx = i;
+    subsByTab[target].$episodes[i] = $targetDiv;
+    $subtitleCardsWrap.appendChild($node);
+  }
+}
+
+let subsByTab = {
+  collab: {
+    $episodes: [],
+  },
+  upload: {
+    $episodes: [],
+  },
+};
 const loadList = (target, msgs) => {
   easyFetch(`/users/${targetUserId}/${target}-list`, {
     method: "get",
   })
     .then((reply) => reply.json())
-    .then((reply) => {
-      const count = reply.length;
-      const $list = document.createElement("ul");
-      for (const ep of reply) {
-        const $li = document.createElement("li");
-        $li.innerHTML = `<a class="text small" href="${ep.url}">${ep.full_name}</a></li>`;
-        $list.appendChild($li);
-      }
+    .then((data) => {
+      console.log(data);
+      const count = data.length;
+      subsByTab[target].loading = true;
+      addEpisodes(target, 0, count);
 
       $getEle(`#${target}-count`).innerHTML = count;
       if (count > 0) {
-        $getEle(`#${target}-list`).innerHTML = $list.outerHTML;
+        for (let idx = 0; idx < count; idx++) {
+          const ep = data[idx];
+
+          const $card = subsByTab[target].$episodes[idx];
+          $card.innerHTML = $card.innerHTML.replace("{ep_show}", ep.show);
+          $card.innerHTML = $card.innerHTML.replace("{ep_season}", ep.season);
+          $card.innerHTML = $card.innerHTML.replace("{ep_num}", ep.episode_number);
+          $card.innerHTML = $card.innerHTML.replace("{ep_name}", ep.name);
+          $card.innerHTML = $card.innerHTML.replace("{ep_url}", ep.url);
+          $card.querySelector(".metadata").classList.toggle("hidden", false);
+          $card.querySelector(".loading").classList.toggle("hidden", true);
+        }
       } else {
         $getEle(`#${target}-list`).innerHTML = msgs.noResults;
       }
