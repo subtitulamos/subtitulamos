@@ -23,7 +23,7 @@ class UserController
     private function renderProfile($user, $request, $response, Twig $twig, bool $isSelf)
     {
         return $twig->render($response, 'user.twig', [
-            'user' => $user,
+            'target_user' => $user,
             'page_type' => $isSelf ? 'me' : 'public'
         ]);
     }
