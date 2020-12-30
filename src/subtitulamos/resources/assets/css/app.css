@@ -336,12 +336,6 @@ header {
   margin: 0 auto;
 }
 
-.content-padding {
-  width: calc(100% - var(--content-pading-x) * 2);
-  padding-left: var(--content-pading-x);
-  padding-right: var(--content-pading-x);
-}
-
 footer {
   background-color: var(--color-gray-a);
   padding: var(--footer-padding-y) 0;
