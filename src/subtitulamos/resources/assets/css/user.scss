@@ -9,6 +9,37 @@
 }
 
 #public-info {
+  .role-icon {
+    margin-right: var(--spacing-xxs);
+  }
+
+  .grid {
+    margin-bottom: var(--spacing-xxl);
+
+    .grid-row {
+      padding: var(--spacing-s);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+
+      div:nth-child(2n) {
+        color: var(--color-gray-b);
+        display: flex;
+        align-items: center;
+
+        button,
+        a {
+          margin-left: var(--spacing-xxs);
+        }
+      }
+
+      button,
+      a {
+        color: var(--color-gray-a);
+        padding: 0;
+      }
+    }
+  }
+
   #subtitles-participated-container {
     .tabs {
       margin-bottom: var(--spacing-s);
