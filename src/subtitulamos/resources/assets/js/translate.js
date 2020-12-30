@@ -11,7 +11,7 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 import "../css/translate.scss";
-import { easyFetch, isElementInViewport } from "./utils.js";
+import { $getAllEle, easyFetch, invertCheckbox, isElementInViewport } from "./utils.js";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
@@ -91,36 +91,46 @@ Vue.component("sequence", {
             <td class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></td>
             <td class="time" @click="openSequence">
                 <div v-if="!editing || !canEditTimes">
-                    {{ tstart | timeFmt }} <i class="fa fa-long-arrow-right"></i> {{ tend | timeFmt }}
+                    <span>{{ tstart | timeFmt }}</span>
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                    <span>{{ tend | timeFmt }}</span>
                 </div>
 
                 <div v-if="editing && canEditTimes">
                     <input type='text' v-model='editingTimeStart' :tabindex="this.parsedStartTime != this.tstart ? '0' : '-1'" :class="{'edited': this.parsedStartTime != this.tstart}">
-                    <i class="fa fa-long-arrow-right"></i>
+                    <i class="fas fa-long-arrow-alt-right"></i>
                     <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
                 </div>
             </td>
             <td class="text"><pre>{{ secondaryText }}</pre></td>
-            <td class="text" @click="openSequence" :class="{'translatable': !history && !openByOther, 'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
-                <pre v-if="!editing && id">{{ text }}</pre>
-                <pre v-if="!editing && !id" class="untranslated">- Sin traducir -</pre>
+            <td class="text" @click="openSequence"
+              :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
+                <div :class="{
+                  'untranslated':!editing && !id,
+                  'editing': editing,
+                  'translatable': !history && !openByOther}">
+                  <pre v-if="!editing && id">{{ text }}</pre>
+                  <pre v-if="!editing && !id">- Sin traducir -</pre>
 
-                <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
+                  <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
 
-                <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="new-password"></textarea>
-                <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
-                    <i class="fa fa-wrench" aria-hidden="true"></i>
-                </div>
-                <div class="line-status" v-if="editing">
-                    <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
-                    <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
+                  <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
+
+                  <i v-if="editing" class="fas fa-times" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+
+                  <div class="line-status" v-if="editing">
+                      <span class="line-counter" :class="lineCounters[0] > 40 ? 'counter-error' : (lineCounters[0] > 35 ? 'counter-warning' : '')">{{ lineCounters[0] }}</span>
+                      <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
+                  </div>
                 </div>
             </td>
             <td class="actions">
                 <template v-if="!saving">
                     <template v-if="!history && editing">
                         <i class="fas fa-save" :class="{'disabled': !canSave}" @click="save" tabindex="0" @keyup.enter="save"></i>
-                        <i class="fas fa-times-circle" @click="discard" tabindex="0" @keyup.enter="discard"></i>
+                        <div class='fix-sequence' :class="{'warning': shouldFixLevel > 1, 'suggestion': shouldFixLevel == 1}" v-if="editing && shouldFixLevel > 0" @click="fix">
+                        <i class="fas fa-magic"></i>
+                      </div>
                     </template>
 
                     <template v-if="translated && !history && !editing">
@@ -1113,4 +1123,8 @@ document.addEventListener("keydown", function (e) {
     translation.goTo();
     e.preventDefault();
   }
+});
+
+$getAllEle(".checkbox").forEach((checkbox) => {
+  checkbox.addEventListener("click", invertCheckbox);
 });
