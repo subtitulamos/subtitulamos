@@ -73,7 +73,7 @@
       .subtitle-cards-wrap {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(var(--card-width), max-content));
-        grid-gap: var(--spacing-s);
+        grid-gap: var(--spacing-m) var(--spacing-s);
         justify-content: center;
       }
     }
