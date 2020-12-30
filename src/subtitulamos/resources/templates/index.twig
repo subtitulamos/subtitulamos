@@ -42,26 +42,31 @@
       <button id="previous-page" class="subtitle-cards-navigation-chevron">
         <i class="fas fa-chevron-left"></i>
       </button>
-    {% verbatim %}
-      <div id="subtitle-cards-wrap" class="no-scroll-bar">
-        <div class="text small" v-if="episodes.length == 0">No hay episodios listados en esta categoria</div>
-        <div class="subtitle-card w-box-shadow" v-for="(ep, index) in episodes" v-bind:id="index">
-          <a :href='subURI(ep)'>
-            <div class="metadata">
-              <p class="title text bold">{{ ep.show }}</p>
-              <p class="episode-number text mini">S<span v-if="ep.season < 10">0</span>{{ ep.season }} - E<span v-if="ep.episode_num < 10">0</span>{{ ep.episode_num }}</p>
-              <p class="episode-name">{{ ep.name }}</p>
-            </div>
-            <button class="text tiny spaced-wide">IR AL EPISODIO</button>
-          </a>
-        </div>
+      <div id='subtitle-cards-wrap' class="no-scroll-bar">
       </div>
-    {% endverbatim %}
       <button id="next-page" class="subtitle-cards-navigation-chevron">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
   </div>
+
+  {% verbatim %}
+  <template id="subtitle-card">
+    <div class="subtitle-card w-box-shadow">
+      <a href='{ep_url}'>
+        <div class="metadata hidden">
+          <p class="title text bold">{ep_show}</p>
+          <p class="episode-number text mini">{ep_season}x{ep_num}</p>
+          <p class="episode-name">{ep_name}</p>
+        </div>
+        <div class="metadata loading">
+          Cargando...
+        </div>
+        <button class="text tiny spaced-wide">IR AL EPISODIO</button>
+      </a>
+    </div>
+  </template>
+  {% endverbatim %}
 {% endblock %}
 
 {% block scripts %}

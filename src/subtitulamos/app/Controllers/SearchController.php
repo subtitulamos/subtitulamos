@@ -14,16 +14,22 @@ use App\Services\Utils;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SearchController
 {
     // TODO: Separate popular listing into a weekly thing, with its own "popular" table and stuff
-    public function listPopular(RequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
+    public function listPopular(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
-        $episodes = $em->createQuery('SELECT e FROM App:Episode e ORDER BY e.downloads DESC')->setMaxResults(10)->getResult();
+        $params = $request->getQueryParams();
+        $resultCount = min((int)($params['count'] ?? 5), 10);
+        $from = max((int)($params['from'] ?? 0), 0);
+
+        $episodes = $em->createQuery('SELECT e FROM App:Episode e ORDER BY e.downloads DESC')
+            ->setMaxResults($resultCount)
+            ->setFirstResult($from)
+            ->getResult();
 
         $epList = [];
         foreach ($episodes as $ep) {
@@ -33,7 +39,6 @@ class SearchController
                 'id' => $ep->getId(),
                 'name' => $ep->getName(),
                 'show' => $ep->getShow()->getName(),
-                'download_count' => $ep->getDownloads(),
                 'slug' => $slugify->slugify($fullName),
                 'season' => $ep->getSeason(),
                 'episode_num' => $ep->getNumber()
