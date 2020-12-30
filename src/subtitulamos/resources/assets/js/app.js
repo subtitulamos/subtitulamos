@@ -135,21 +135,15 @@ onDomReady(function () {
 });
 
 const $ctrlPanel = document.getElementById("control-panel");
+const $pageContainer = $getById("page-container");
 if ($ctrlPanel) {
   let openStatus = localStorage.getItem("menu-open") === "true";
 
-  if (openStatus) {
-    $ctrlPanel.classList.toggle("opening", false);
-  } else {
-    $ctrlPanel.classList.toggle("opening", true);
-  }
+  $ctrlPanel.classList.toggle("opening", !openStatus);
 
   const updateDomWithStatus = () => {
-    document.getElementById("page-container").classList.toggle("control-panel-is-open", openStatus);
-
-    document
-      .getElementById("page-container")
-      .classList.toggle("control-panel-is-closed", !openStatus);
+    $pageContainer.classList.toggle("control-panel-is-open", openStatus);
+    $pageContainer.classList.toggle("control-panel-is-closed", !openStatus);
 
     $ctrlPanel.classList.toggle("open", openStatus);
 
@@ -161,6 +155,7 @@ if ($ctrlPanel) {
   };
 
   const togglePanelStatus = (save) => {
+    $pageContainer.classList.toggle("opening", true);
     $ctrlPanel.classList.toggle("opening", true);
     openStatus = !openStatus;
     if (save) {
