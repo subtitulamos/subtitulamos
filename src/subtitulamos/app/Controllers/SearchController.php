@@ -23,7 +23,7 @@ class SearchController
     public function listPopular(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
     {
         $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 10);
+        $resultCount = min((int)($params['count'] ?? 5), 12);
         $from = max((int)($params['from'] ?? 0), 0);
 
         $episodes = $em->createQuery('SELECT e FROM App:Episode e ORDER BY e.downloads DESC')
