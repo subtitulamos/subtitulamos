@@ -82,7 +82,7 @@
   height: 16px;
   border-radius: var(--standard-border-radius);
   border: 2px solid var(--color-gray-c);
-  margin-right: var(--spacing-s);
+  margin-right: var(--spacing-xs);
   position: relative;
   cursor: pointer;
   text-align: center;
@@ -97,7 +97,7 @@
 .checkbox:not(.disabled) i {
   position: absolute;
   top: 2px;
-  left: -2px;
+  left: 2px;
   font-size: 0.7rem;
   color: transparent !important;
 }
