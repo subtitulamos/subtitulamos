@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block content %}
-<div id="translation" class="content unlimited-width">
-  <div id="show-info-header" class="content-padding">
+<div id="translation" class="content limited-width">
+  <div id="show-info-header">
     <div id="show-name">
       <h1 class="blue-a">{{ episode.show.name }}</h1>
     </div>
@@ -110,7 +110,7 @@
     {% endverbatim %}
     <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
 
-    <div class="content-padding limited-width">
+    <div>
       <table id="sequences">
         <thead>
           <tr>
@@ -177,7 +177,7 @@
     </div>
   </div>
 
-  <div id="translation-comments" class="comments-container content-padding limited-width">
+  <div id="translation-comments" class="comments-container ">
     <h4>Comentarios de traducción</h4>
     <div class='newcomment-box'>
       {% verbatim %}

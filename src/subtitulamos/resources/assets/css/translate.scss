@@ -9,8 +9,7 @@
 
   #translation-tools {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    justify-content: center;
     padding: var(--spacing-s);
     background-color: var(--color-gray-e);
 
@@ -49,6 +48,7 @@
     color: var(--color-gray-a);
     display: flex;
     align-items: center;
+    justify-content: center;
 
     .filter {
       display: flex;
