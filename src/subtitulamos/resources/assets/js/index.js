@@ -177,6 +177,7 @@ function loadTab(target, loadMore) {
     // Do the actual swap, (re)introduce childs to DOM
     curTab = target;
 
+    visibleCards = [];
     $subtitleCardsWrap.innerHTML = "";
     for (let $ep of subsByTab[target].$episodes) {
       $subtitleCardsWrap.appendChild($ep);
