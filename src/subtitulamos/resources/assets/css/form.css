@@ -99,10 +99,11 @@
   top: 2px;
   left: -2px;
   font-size: 0.7rem;
+  color: transparent !important;
 }
 
 .checkbox.checked:not(.disabled) i {
-  color: var(--color-offwhite);
+  color: var(--color-offwhite) !important;
 }
 
 .form-field select {
