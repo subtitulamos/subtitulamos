@@ -331,8 +331,9 @@ header {
   flex-direction: column;
 }
 
-.content.limited-width {
+.limited-width {
   max-width: calc(var(--max-width) - var(--content-pading-x) * 2);
+  margin: 0 auto;
 }
 
 footer {
