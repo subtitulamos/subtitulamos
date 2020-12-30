@@ -1,0 +1,87 @@
+.subtitle-cards-wrap {
+  --card-height: 200px;
+  --card-width: 170px;
+  width: 100%;
+  min-height: var(--card-height);
+  display: flex;
+  flex: 0 1 100%;
+
+  .subtitle-card {
+    background-color: var(--color-offwhite);
+    width: var(--card-width);
+    height: var(--card-height);
+    border-radius: var(--standard-border-radius);
+    overflow: hidden;
+    flex-shrink: 0;
+
+    a {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metadata {
+      padding: 20px;
+      color: var(--color-gray-a);
+
+      .title {
+        color: var(--color-blue-a);
+        margin-bottom: 10px;
+      }
+
+      .episode-number {
+        margin-bottom: 3px;
+      }
+    }
+
+    button {
+      width: 100%;
+      height: 70px;
+      color: var(--color-blue-a);
+      background-color: var(--color-gray-blue);
+    }
+  }
+}
+
+@media all and (max-width: 770px) {
+  .subtitle-cards-wrap {
+    flex-direction: column;
+    padding: 10px 0;
+    border: none;
+
+    .subtitle-card {
+      width: 100%;
+      height: auto;
+      margin: 0;
+      margin-bottom: 16px;
+      flex-direction: row;
+
+      &:last-of-type {
+        margin-bottom: 26px;
+      }
+
+      .metadata {
+        padding: 12px 20px;
+
+        .title {
+          margin-right: 5px;
+        }
+
+        .title,
+        .episode-number {
+          display: inline-flex;
+          margin-bottom: 3px;
+        }
+
+        .episode-number {
+          margin-top: -5px;
+        }
+      }
+
+      button {
+        display: none;
+      }
+    }
+  }
+}
