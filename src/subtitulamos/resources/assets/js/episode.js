@@ -77,9 +77,8 @@ document.querySelectorAll("a[data-action='delete']").forEach(($ele) =>
 onDomReady(function () {
   // Expanding / collapsing a language's container
   $getAllEle(".language-name").forEach((dropdown) => {
-    dropdown.addEventListener("click", (e) => {
-      const $element = e.currentTarget;
-      const $languageContainer = $element.closest(".language-container");
+    const expandLanguage = () => {
+      const $languageContainer = dropdown.closest(".language-container");
       const isExpanded = $languageContainer
         .querySelector(".language-content")
         .classList.contains("expanded");
@@ -103,7 +102,14 @@ onDomReady(function () {
         },
         isExpanded ? 0 : 100
       );
-    });
+
+      localStorage.setItem("expand-lang-" + dropdown.dataset.langId, !isExpanded);
+    };
+
+    dropdown.addEventListener("click", expandLanguage);
+    if (localStorage.getItem("expand-lang-" + dropdown.dataset.langId) === "true") {
+      expandLanguage();
+    }
   });
 
   // Show subtitle options
