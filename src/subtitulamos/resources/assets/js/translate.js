@@ -595,7 +595,7 @@ Vue.component("sequence", {
  ***************************/
 Vue.component("pagelist", {
   template: `
-        <div class="page-wrapper content-padding limited-width">
+        <div class="page-wrapper">
             <button class="choice change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
             <div class="choices">
               <button v-for="page in pages" class="choice target-page" :class="page == curPage ? 'selected' : ''" @click="toPage(page)">{{ page }}</button>

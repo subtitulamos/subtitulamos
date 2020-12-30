@@ -5,6 +5,13 @@
 #translation {
   #show-info-header {
     margin-bottom: var(--spacing-xs);
+
+    #translating-header {
+      i {
+        margin-right: var(--spacing-xs);
+        font-size: 0.8rem;
+      }
+    }
   }
 
   #translation-tools {

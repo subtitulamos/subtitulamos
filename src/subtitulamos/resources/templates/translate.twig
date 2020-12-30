@@ -12,6 +12,7 @@
 {% block content %}
 <div id="translation" class="content limited-width">
   <div id="show-info-header">
+    <a href="/episodes/{{ sub.version.episode.id }}/{{ sub.version.episode.fullName }}" id="translating-header" class="text small blue-a"><i class="fas fa-chevron-left"></i> Traduciendo...</a>
     <div id="show-name">
       <h1 class="blue-a">{{ episode.show.name }}</h1>
     </div>
@@ -164,9 +165,7 @@
       </table>
     </div>
 
-    <div class="page-wrapper">
-      <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
-    </div>
+    <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
 
     <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
       Secuencias abiertas:
