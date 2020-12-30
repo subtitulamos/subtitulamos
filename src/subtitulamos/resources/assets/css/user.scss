@@ -70,6 +70,7 @@
       }
 
       .subtitle-cards-wrap {
+        padding: var(--spacing-s) 0;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(var(--card-width), max-content));
         grid-gap: var(--spacing-m) var(--spacing-s);
@@ -78,7 +79,6 @@
 
       @media all and (max-width: 770px) {
         .subtitle-cards-wrap {
-          padding-bottom: var(--spacing-s);
           display: flex !important;
           grid-template-columns: unset;
           grid-gap: unset;
