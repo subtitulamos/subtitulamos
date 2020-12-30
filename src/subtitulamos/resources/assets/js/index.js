@@ -103,13 +103,12 @@ function getVisibleCardIndexes() {
   return [smallestVisibleIdx, highestVisibleIdx];
 }
 
-function updateNavigationArrowsVisibility() {
+function updateNavigationArrowsVisibility(target) {
   let [smallestVisibleIdx, highestVisibleIdx] = getVisibleCardIndexes();
-  console.log(smallestVisibleIdx, highestVisibleIdx);
 
   const isFirstCardVisible = smallestVisibleIdx === 0;
   const isLastCardVisible =
-    highestVisibleIdx === subsByTab[curTab].maxCardIdx - 1 && subsByTab[curTab].endFound;
+    highestVisibleIdx === subsByTab[target].maxCardIdx - 1 && subsByTab[target].endFound;
   $getEle("#category-container").classList.toggle("first-page", isFirstCardVisible);
   $getEle("#category-container").classList.toggle("last-page", isLastCardVisible);
 }
@@ -126,13 +125,8 @@ let observer = new IntersectionObserver(
       }
     }
 
-    updateNavigationArrowsVisibility();
+    updateNavigationArrowsVisibility(curTab);
     const [_, highestVisibleIdx] = getVisibleCardIndexes();
-    console.log(
-      subsByTab[curTab].endFound,
-      highestVisibleIdx,
-      subsByTab[curTab].maxCardIdx - START_PRELOADING_WHEN_N_CARDS_AWAY
-    );
     if (
       highestVisibleIdx >= subsByTab[curTab].maxCardIdx - START_PRELOADING_WHEN_N_CARDS_AWAY &&
       !subsByTab[curTab].endFound
@@ -160,29 +154,40 @@ function addEpisodes(target, startIdx, count) {
 }
 
 function loadTab(target, loadMore) {
-  if (curTab != target) {
-    curTab = target;
-    $subtitleCardsWrap.innerHTML = "";
-  }
-
   if (!subsByTab[target]) {
     subsByTab[target] = {
       $episodes: [],
       maxCardIdx: 0,
       endFound: false,
       loading: false,
+      scrollPos: 0,
     };
 
     loadMore = true;
-  } else {
+  }
+
+  if (curTab != target) {
+    // Stop observing
     observer.disconnect();
+
+    // Reset scroll to last known scroll for this tab
+    subsByTab[curTab].scrollPos = $subtitleCardsWrap.scrollLeft;
+    let setScrollTo = subsByTab[target].scrollPos;
+
+    // Do the actual swap, (re)introduce childs to DOM
+    curTab = target;
+
+    $subtitleCardsWrap.innerHTML = "";
     for (let $ep of subsByTab[target].$episodes) {
       $subtitleCardsWrap.appendChild($ep);
       observer.observe($ep);
     }
 
-    updateNavigationArrowsVisibility();
+    // Needs to be after all the subtitles have been (re)added to DOM
+    $subtitleCardsWrap.scrollLeft = setScrollTo;
   }
+
+  updateNavigationArrowsVisibility(target);
 
   if (loadMore) {
     const curLoadCount = subsByTab[target].$episodes.length;

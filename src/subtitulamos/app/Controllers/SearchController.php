@@ -51,12 +51,12 @@ class SearchController
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $pageParam = $params['page'] ?? 1;
+        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $from = max((int)($params['from'] ?? 0), 0);
 
-        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC')
-            ->setMaxResults(10)
-            ->setFirstResult($page * 10)
+            ->setMaxResults($resultCount)
+            ->setFirstResult($from)
             ->getResult();
 
         $hideDetails = !$auth->hasRole('ROLE_TT');
@@ -84,12 +84,12 @@ class SearchController
     public function listRecentChanged(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $pageParam = $params['page'] ?? 1;
+        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $from = max((int)($params['from'] ?? 0), 0);
 
-        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC')
-            ->setMaxResults(10)
-            ->setFirstResult($page * 10)
+            ->setMaxResults($resultCount)
+            ->setFirstResult($from)
             ->getResult();
 
         $hideDetails = !$auth->hasRole('ROLE_TT');
@@ -119,12 +119,12 @@ class SearchController
     public function listRecentCompleted(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $pageParam = $params['page'] ?? 1;
+        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $from = max((int)($params['from'] ?? 0), 0);
 
-        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
-            ->setMaxResults(10)
-            ->setFirstResult($page * 10)
+            ->setMaxResults($resultCount)
+            ->setFirstResult($from)
             ->getResult();
 
         $hideDetails = !$auth->hasRole('ROLE_TT');
@@ -152,12 +152,12 @@ class SearchController
     public function listRecentResyncs(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $pageParam = $params['page'] ?? 1;
+        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $from = max((int)($params['from'] ?? 0), 0);
 
-        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 1 ORDER BY s.uploadTime DESC')
-            ->setMaxResults(10)
-            ->setFirstResult($page * 10)
+            ->setMaxResults($resultCount)
+            ->setFirstResult($from)
             ->getResult();
 
         $hideDetails = !$auth->hasRole('ROLE_TT');
@@ -239,12 +239,12 @@ class SearchController
     public function listPaused(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $pageParam = $params['page'] ?? 1;
+        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $from = max((int)($params['from'] ?? 0), 0);
 
-        $page = max(1, min(10, (int)$pageParam)) - 1;
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC')
-            ->setMaxResults(10)
-            ->setFirstResult($page * 10)
+            ->setMaxResults($resultCount)
+            ->setFirstResult($from)
             ->getResult();
 
         $hideDetails = !$auth->hasRole('ROLE_TT');
