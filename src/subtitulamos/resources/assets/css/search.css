@@ -6,7 +6,7 @@
 
 .search-bar-container .search-results {
   list-style: none;
-  padding: var(--spacing-xs);
+  padding: 0;
   top: calc(100% - 10px);
   position: absolute;
   z-index: 2;
@@ -20,9 +20,19 @@
 
 .search-results li {
   font-size: 0.9rem;
-  padding: var(--spacing-xs);
+  padding: var(--spacing-s);
   transition: all 0.4s ease;
   overflow: hidden;
+}
+
+.search-results li.selected {
+  background-color: var(--color-blue-d);
+  padding-left: var(--spacing-m);
+  color: var(--color-blue-a);
+}
+
+.search-results li.selected a {
+  font-weight: 500;
 }
 
 .search-results li:not(:last-of-type) {
@@ -36,9 +46,6 @@
 .search-results li a {
   display: block;
   position: relative;
-  overflow: hidden;
-  white-space: pre-wrap;
-  text-overflow: ellipsis;
 }
 
 .search-results li a::before {
