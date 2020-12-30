@@ -87,6 +87,7 @@
   cursor: pointer;
   text-align: center;
   flex-shrink: 0;
+  background-color: var(--color-offwhite);
 }
 
 .checkbox.checked:not(.disabled) {
