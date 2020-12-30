@@ -168,8 +168,7 @@
     <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
 
     <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
-      Secuencias abiertas:
-
+      <h4>Secuencias abiertas</h4>
       <ul>
         <seqlock v-for="lock in openLocks" :key="lock.seq_number" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time" @jump="jumpToSequence(lock.seq_number)"></seqlock>
       </ul>
