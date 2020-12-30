@@ -597,10 +597,12 @@ Vue.component("sequence", {
  ***************************/
 Vue.component("pagelist", {
   template: `
-        <ul class="pagination">
-            <li class="change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></li>
-            <li v-for="page in pages" class="target-page" :class="page == curPage ? 'active' : ''" @click="toPage(page)">{{ page }}</li>
-            <li class="change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+        <div class="page-wrapper content-padding limited-width">
+            <button class="choice change-page" @click="prevPage" :class="{ disabled: curPage == 1 }"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+            <div class="choices">
+              <button v-for="page in pages" class="choice target-page" :class="page == curPage ? 'selected' : ''" @click="toPage(page)">{{ page }}</button>
+            </div>
+            <button class="choice change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></button>
         </ul>
     `,
   props: ["curPage", "pages", "lastPage"],
