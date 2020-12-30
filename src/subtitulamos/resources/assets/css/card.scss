@@ -22,12 +22,21 @@
     }
 
     .metadata {
-      padding: 20px;
+      padding: var(--spacing-s) var(--spacing-m);
       color: var(--color-gray-a);
 
       .title {
         color: var(--color-blue-a);
         margin-bottom: 10px;
+      }
+
+      .title,
+      .episode-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
 
       .episode-number {
