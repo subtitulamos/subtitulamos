@@ -61,7 +61,6 @@
     }
 
     .subtitles {
-      max-height: 930px;
       overflow: hidden;
       transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
 
@@ -75,6 +74,15 @@
         grid-template-columns: repeat(auto-fit, minmax(var(--card-width), max-content));
         grid-gap: var(--spacing-m) var(--spacing-s);
         justify-content: center;
+      }
+
+      @media all and (max-width: 770px) {
+        .subtitle-cards-wrap {
+          padding-bottom: var(--spacing-s);
+          display: flex !important;
+          grid-template-columns: unset;
+          grid-gap: unset;
+        }
       }
     }
   }
