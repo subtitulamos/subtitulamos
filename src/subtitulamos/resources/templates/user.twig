@@ -29,12 +29,13 @@
     </span>
   </h1>
 
+  {% if page_type == "me" %}
   <div class="navigation-list no-scroll-bar option-wrapper">
-    {% if page_type == "me" %}
     <div data-toggle-targets="info-group" data-enable="settings" class="navigation-item selected option">CONFIGURACIONES</div>
-    {% endif %}
     <div data-toggle-targets="info-group" data-enable="info" class="navigation-item {% if page_type != "me" %}selected{% endif %} option">INFORMACIÓN</div>
   </div>
+  {% endif %}
+
 
   {% if page_type == "me" %}
     {% include "user/user_settings.twig" %}
@@ -132,9 +133,9 @@
     </div>
 
     <div id="subtitles-participated-container">
-      <div class="tabs option-wrapper">
-        <button data-toggle-targets="subtitles" data-enable="collaborations" class="option text tiny spaced-wide selected">COLABORACIONES (<span class="text bold tiny" id='collab-count'>...</span>)</button>
-        <button data-toggle-targets="subtitles" data-enable="uploads" class="option text tiny spaced-wide">CAPÍTULOS SUBIDOS (<span class="text bold tiny" id='upload-count'>...</span>)</button>
+      <div class="navigation-list no-scroll-bar option-wrapper">
+        <div data-toggle-targets="subtitles" data-enable="collaborations" class="option navigation-item selected">COLABORACIONES (<span class="text bold tiny" id='collab-count'>...</span>)</div>
+        <div data-toggle-targets="subtitles" data-enable="uploads" class="option navigation-item">CAPÍTULOS SUBIDOS (<span class="text bold tiny" id='upload-count'>...</span>)</div>
       </div>
       <div id="collaborations" class='subtitles'>
         <div id='collab-list'>
