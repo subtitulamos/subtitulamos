@@ -17,6 +17,12 @@
     }
   }
 
+  #translation-header {
+    position: sticky;
+    top: 0px;
+    z-index: 4;
+  }
+
   #translation-tools {
     display: flex;
     justify-content: space-between;
