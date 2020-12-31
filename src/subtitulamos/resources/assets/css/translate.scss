@@ -131,9 +131,11 @@
     .choices {
       flex: 1;
       margin: 0 var(--spacing-xs);
-      display: flex;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(1.8rem, max-content));
+      place-items: center;
       justify-content: center;
+      grid-gap: var(--spacing-xxs);
     }
 
     .choice {
@@ -146,9 +148,9 @@
       justify-content: center;
       border: 1px solid transparent;
       font-size: 0.9rem;
-      margin-right: var(--spacing-xxs);
 
       &:hover {
+        color: var(--color-blue-b);
         border: 1px solid var(--color-blue-b);
       }
 
