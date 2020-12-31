@@ -1,4 +1,3 @@
-import "../../css/panel/panel_alerts.css";
 import { onDomReady } from "../utils";
 
 onDomReady(() => {

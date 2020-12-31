@@ -6,42 +6,39 @@
 
 {% block title %}Alertas{% endblock %}
 {% block panel_content %}
-    <section class="content">
-      {% for error in auth.flash.errors %}
-          <div class="alert alert-danger alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              {{ error }}
-          </div>
-      {% endfor %}
-      {% for msg in auth.flash.successes %}
-          <div class="alert alert-success alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              {{ msg }}
-          </div>
-      {% endfor %}
+  {% for error in auth.flash.errors %}
+      <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          {{ error }}
+      </div>
+  {% endfor %}
+  {% for msg in auth.flash.successes %}
+      <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          {{ msg }}
+      </div>
+  {% endfor %}
 
-      <h3>Logs</h3>
-      <table>
-        <thead>
-          <th>Fecha</th>
-          <th>Usuario</th>
-          <th>Evento</th>
-        </thead>
+  <h1>Logs</h1>
+  <table>
+    <thead>
+      <th>Fecha</th>
+      <th>Usuario</th>
+      <th>Evento</th>
+    </thead>
 
-        <tbody>
+    <tbody>
 
-        {% for event in logs %}
-        <tr>
-          <td>{{event.date|date("D, d M Y, H:i:s")}}</td>
-          <td>{{event.user.username}}</td>
-          <td>{{event.data|raw}}</td>
-        </tr>
-        {% endfor %}
+    {% for event in logs %}
+    <tr>
+      <td>{{event.date|date("D, d M Y, H:i:s")}}</td>
+      <td>{{event.user.username}}</td>
+      <td>{{event.data|raw}}</td>
+    </tr>
+    {% endfor %}
 
-        </tbody>
-      </table>
-
-    </section>
+    </tbody>
+  </table>
 {% endblock %}
 
 {% block scripts %}

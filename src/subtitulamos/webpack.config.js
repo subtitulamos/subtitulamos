@@ -27,7 +27,6 @@ module.exports = (env, argv) => {
       banned_error: "./resources/assets/js/banned_error.js",
       shows_list: "./resources/assets/js/shows_list.js",
       restricted: "./resources/assets/js/restricted.js",
-      panel_banlist: "./resources/assets/js/panel/banlist.js",
       panel_base: "./resources/assets/js/panel/base.js",
     },
     output: {

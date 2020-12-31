@@ -6,4 +6,4 @@
 /**
  * This file exists because the CSS processed by webpack needs to exist in a file first
  */
-import "../../css/panel/panel_base.css";
+import "../../css/panel_base.scss";
