@@ -35,19 +35,52 @@
   width: var(--control-panel-open-width);
 }
 
-#control-panel .control-panel-button {
-  color: var(--color-blue-c);
+#control-panel .control-panel-section {
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  padding: 0;
-  width: 100%;
-  height: 30px;
-  position: relative;
+  flex-direction: column;
 }
 
-#control-panel-bottom-section .control-panel-button:last-child {
+#control-panel .control-panel-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  margin-bottom: var(--spacing-s);
+  min-height: 30px;
+  position: relative;
+  color: var(--color-blue-c);
+}
+
+#control-panel .control-panel-button.selected + .control-panel-sub-section {
+  padding-left: 0px;
+  margin-bottom: var(--spacing-s);
+  margin-top: calc(0px - var(--spacing-xxs));
+  display: flex;
+  flex-direction: column;
+}
+
+#control-panel.open .control-panel-sub-section {
+  display: none;
+  padding-left: var(--spacing-xs) !important;
+  width: calc(100% - var(--spacing-xs)) !important;
+}
+
+#control-panel .control-panel-sub-section .control-panel-button.selected::before {
+  display: none !important;
+}
+
+#control-panel .control-panel-sub-section .control-panel-button {
+  min-height: 20px;
+  margin-bottom: var(--spacing-xs);
+}
+
+#control-panel .control-panel-sub-section .control-panel-button:last-of-type {
   margin-bottom: 0px;
+}
+
+#control-panel .control-panel-sub-section .control-panel-button * {
+  font-size: 0.9rem;
 }
 
 #control-panel .control-panel-button:hover,
@@ -96,8 +129,7 @@
   flex: 1;
   text-align: left;
   overflow-x: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  word-wrap: break-word;
   display: none;
 }
 #control-panel.open .control-panel-button > span {

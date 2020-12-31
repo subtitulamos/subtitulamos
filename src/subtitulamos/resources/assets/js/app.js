@@ -148,9 +148,13 @@ if ($ctrlPanel) {
     $ctrlPanel.classList.toggle("open", openStatus);
 
     const $currentPath = window.location.pathname;
-    const $ele = $getEle(`a[href="/${$currentPath.split("/")[1]}"]`);
+    const $ele = $getEle(`a[page="/${$currentPath.split("/")[1]}"]`);
     if ($ele) {
       $ele.classList.toggle("selected", true);
+    }
+    const $subEle = $getEle(`.control-panel-sub-section > a[href="${$currentPath}"]`);
+    if ($subEle) {
+      $subEle.classList.toggle("selected", true);
     }
   };
 
