@@ -97,14 +97,12 @@
                 </form>
               {% endif %}</div>
           {% else %}
-            <div>
-              <span>Normal</span>
-              {% if auth.has_role('ROLE_MOD') %}
-                <form action="/users/{{target_user.id}}/changerole" method="POST">
-                  <button type='submit'>(Hacer TH)
-                </form>
-              {% endif %}
-            </div>
+            <span>Normal</span>
+            {% if auth.has_role('ROLE_MOD') %}
+              <form action="/users/{{target_user.id}}/changerole" method="POST">
+                <button type='submit'>(Hacer TH)
+              </form>
+            {% endif %}
           {% endif %}
         </div>
       </div>
