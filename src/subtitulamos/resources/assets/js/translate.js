@@ -147,6 +147,7 @@ Vue.component("sequence", {
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                 </template>
             </div>
+          </div>
         </tr>
         `,
 
@@ -603,7 +604,7 @@ Vue.component("pagelist", {
               <button v-for="page in pages" class="choice target-page" :class="page == curPage ? 'selected' : ''" @click="toPage(page)">{{ page }}</button>
             </div>
             <button class="choice change-page" @click="nextPage" :class="{ disabled: curPage == lastPage }"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></button>
-        </ul>
+        </div>
     `,
   props: ["curPage", "pages", "lastPage"],
   methods: {
