@@ -165,6 +165,18 @@ ul {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       column-gap: var(--spacing-xs);
+      width: 500px;
+
+      button:first-of-type {
+        color: var(--color-blue-a);
+        border: 1px solid var(--color-blue-a);
+        background-color: transparent;
+
+        &:hover {
+          background-color: var(--color-blue-a);
+          color: var(--color-offwhite);
+        }
+      }
     }
   }
 
