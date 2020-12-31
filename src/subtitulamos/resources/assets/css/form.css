@@ -96,11 +96,11 @@
 
 .checkbox input::before {
   content: "";
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   cursor: pointer;
 }
 
