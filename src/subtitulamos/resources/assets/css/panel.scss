@@ -91,30 +91,38 @@ ul {
     display: flex;
     align-items: center;
     width: calc(100% - var(--spacing-xxs) * 2);
-    justify-content: space-between;
     cursor: default;
-    padding: var(--spacing-xxs);
+    padding: var(--spacing-xs) var(--spacing-xxs);
+
+    .icon {
+      margin-right: var(--spacing-s);
+      color: var(--alert-color);
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
 
     .alert-comment {
-      padding: var(--spacing-xs);
       border-radius: 0 var(--standard-border-radius) var(--standard-border-radius) 0;
       display: flex;
       align-items: flex-start;
       flex-direction: column;
       width: 100%;
       margin-right: var(--spacing-s);
+      flex: 1;
 
       .metadata {
-        .icon {
-          margin-right: var(--spacing-xxs);
-          color: var(--alert-color);
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        color: var(--color-gray-b);
+
+        * {
+          margin-right: 3px;
         }
       }
 
       .alert-message {
-        border-top: 1px solid var(--color-gray-divisions-lighter);
-        margin-top: var(--spacing-xs);
-        padding-top: var(--spacing-xs);
+        margin-top: var(--spacing-xxs);
         display: flex;
         align-items: flex-start;
         line-height: 1.2rem;
