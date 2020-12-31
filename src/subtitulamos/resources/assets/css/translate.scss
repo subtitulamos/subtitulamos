@@ -148,7 +148,7 @@
 
     .grid-row {
       font-family: "Courier Prime", monospace;
-      height: 65px;
+      height: calc(2.8rem + var(--spacing-xs) * 2);
       display: grid;
       grid-template-columns: repeat(6, max-content);
       border-bottom: 1px solid var(--color-gray-divisions);
@@ -168,6 +168,10 @@
 
       * {
         font-size: 0.9rem;
+      }
+
+      &.history {
+        opacity: 0.5;
       }
     }
 
