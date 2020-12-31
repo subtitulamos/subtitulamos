@@ -328,16 +328,18 @@ header {
 }
 
 .content {
-  --content-pading-x: 40px;
-  width: calc(100% - var(--content-pading-x) * 2);
-  padding: 40px var(--content-pading-x) var(--footer-padding-y) var(--content-pading-x);
+  --content-padding-top: 40px;
+  --content-padding-x: 40px;
+  width: calc(100% - var(--content-padding-x) * 2);
+  padding: var(--content-padding-top) var(--content-padding-x) var(--footer-padding-y)
+    var(--content-padding-x);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
 
 .limited-width {
-  max-width: calc(var(--max-width) - var(--content-pading-x) * 2);
+  max-width: calc(var(--max-width) - var(--content-padding-x) * 2);
   margin: 0 auto;
 }
 
@@ -552,7 +554,8 @@ footer > #footer-content {
   }
 
   .content {
-    --content-pading-x: 20px;
+    --content-padding-x: 20px;
+    --content-padding-top: 15px;
   }
 
   #top-links {
