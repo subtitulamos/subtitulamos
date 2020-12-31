@@ -84,7 +84,6 @@
   border: 2px solid var(--color-gray-c);
   margin-right: var(--spacing-xs);
   position: relative;
-  cursor: pointer;
   text-align: center;
   flex-shrink: 0;
   background-color: var(--color-offwhite);
@@ -93,6 +92,16 @@
 .checkbox.checked:not(.disabled) {
   background-color: var(--color-blue-a);
   border: 2px solid var(--color-blue-a);
+}
+
+.checkbox input::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
 }
 
 .checkbox:not(.disabled) i {
