@@ -38,6 +38,7 @@
 #control-panel .control-panel-section {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 #control-panel .control-panel-button {
