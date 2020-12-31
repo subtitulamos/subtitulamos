@@ -20,21 +20,21 @@
   {% for alert in alerts %}
     <div class="alert-card w-box-shadow {% if alert.closed %}solved{% endif %}">
       <div class="card-header">
+        <div class="icon">
+        {% if alert.closed %}
+          <i class="fas fa-check-circle"></i>
+        {% else %}
+          <i class="fas fa-exclamation-circle"></i>
+        {% endif %}
+        </div>
         <div class="alert-comment">
-          <span class="metadata">
-            <span class="icon">
-            {% if alert.closed %}
-              <i class="fas fa-check-circle"></i>
-            {% else %}
-              <i class="fas fa-exclamation-triangle"></i>
-            {% endif %}
-            </span>
-            <time class="text small" datetime="{{ alert.creation_time|date('d-m-Y H:i:s') }}">{{ alert.creation_time|date('d/M/Y, H:i') }}</time>
-            por
+          <div class="metadata text small">
+            <time datetime="{{ alert.creation_time|date('d-m-Y H:i:s') }}">{{ alert.creation_time|date('d/M/Y, H:i') }}</time>
+            <span>por</span>
             <a href='/users/{{alert.from_user.id}}'>{{ alert.from_user.username }}</a>
-            en
+            <span>en</span>
             <a class="text bold blue-a" href='/subtitles/{{ alert.from_sub_id }}/translate'>@{{ alert.from_sub }}</a>
-          </span>
+          </div>
           <div class="alert-message">{{ alert.first_comment.text }}</div>
         </div>
         <div class='unhide-alert blue-a'>
