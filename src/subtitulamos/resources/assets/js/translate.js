@@ -87,7 +87,8 @@ Vue.component("sequence", {
             'locked':  locked,
             'verified': verified,
             'current': !history,
-            'history': history
+            'history': history,
+            'untranslated':!editing && !id,
           }">
             <div class="number"><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></div>
             <div class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></div>
@@ -106,7 +107,6 @@ Vue.component("sequence", {
             <div class="editable-text" @click="openSequence"
               :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <div :class="{
-                  'untranslated':!editing && !id,
                   'editing': editing,
                   'past': history,
                   'translatable': !history && !openByOther}">

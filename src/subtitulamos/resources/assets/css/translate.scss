@@ -150,11 +150,14 @@
       font-family: "Courier Prime", monospace;
       height: calc(2.8rem + var(--spacing-xs) * 2);
       display: grid;
+      border-top: 1px solid var(--color-gray-divisions);
       grid-template-columns: repeat(6, max-content);
-      border-bottom: 1px solid var(--color-gray-divisions);
 
-      &:last-of-type,
       &:first-of-type {
+        border-top: 0;
+      }
+
+      &:last-of-type {
         border-bottom: 0;
       }
 
@@ -171,13 +174,39 @@
       }
 
       &.history {
-        opacity: 0.5;
         background-color: var(--color-gray-e);
+        color: var(--color-gray-c);
+        border-bottom: 1px dashed var(--color-gray-divisions);
+        border-top: 0;
+      }
+
+      & + .history {
+        border-width: 1px;
+      }
+
+      &.untranslated {
+        background-color: var(--color-blue-d);
+        color: var(--color-blue-a);
+      }
+
+      &.locked {
+        background-color: var(--color-baby-green);
+        color: var(--color-green);
+
+        * {
+          color: var(--color-green);
+        }
       }
     }
 
     .number {
       width: 45px;
+      font-family: "Rubik", sans-serif;
+      font-weight: 500 !important;
+
+      * {
+        font-weight: 500 !important;
+      }
     }
 
     .user {
@@ -229,11 +258,6 @@
 
     .editable-text {
       width: calc(40ch + 5px + 59px);
-
-      .untranslated {
-        background-color: var(--color-blue-d);
-        color: var(--color-blue-a);
-      }
 
       .closed {
         height: calc(100% - var(--spacing-xs) * 2);
@@ -317,6 +341,19 @@
       i {
         cursor: pointer;
         color: var(--color-gray-a);
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &:active {
+          background-color: rgba(0, 0, 0, 0.15);
+        }
       }
     }
   }
