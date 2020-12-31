@@ -156,13 +156,14 @@
                           <span data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
                             (En revisión)
                           </span>
-                          {% if auth.has_role("ROLE_TT") %}
-                            - Pausado por {{sub.pause.user.username}}
-                          {% endif %}
                         {% elseif sub.progress >= 90 %}
                           <span data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
                             (Pendiente de revisión)
                           </span>
+                        {% endif %}
+
+                        {% if auth.has_role("ROLE_TT") %}
+                          - Pausado por {{sub.pause.user.username}}
                         {% endif %}
                       {% endif %}
                     {% endif %}
