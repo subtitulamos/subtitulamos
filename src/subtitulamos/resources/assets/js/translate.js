@@ -114,7 +114,7 @@ Vue.component("sequence", {
 
                   <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
 
-                  <textarea v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
+                  <textarea rows="2" v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
 
                   <i v-if="editing" class="fas fa-times-circle" @click="discard" tabindex="0" @keyup.enter="discard"></i>
 
