@@ -1,0 +1,41 @@
+@import "app.css";
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0px;
+
+  thead {
+    tr {
+      border-bottom: 0 !important;
+    }
+  }
+
+  th {
+    font-weight: 500;
+    padding: var(--spacing-xs);
+    padding-bottom: var(--spacing-s);
+    text-align: left;
+
+    &:nth-of-type(2) {
+      width: 150px;
+    }
+  }
+
+  td {
+    font-size: 0.9rem;
+    padding: var(--spacing-xs);
+    text-align: left;
+
+    &:nth-of-type(2) {
+      width: 150px;
+    }
+
+    a {
+      color: var(--color-blue-a);
+    }
+  }
+
+  tr {
+    border-bottom: 1px solid var(--color-gray-divisions);
+  }
+}

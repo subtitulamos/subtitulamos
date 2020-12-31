@@ -6,56 +6,53 @@
 
 {% block title %}Alertas{% endblock %}
 {% block panel_content %}
-    <section class="content">
-      {% for error in auth.flash.errors %}
-          <div class="alert alert-danger alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              {{ error }}
-          </div>
-      {% endfor %}
-      {% for msg in auth.flash.successes %}
-          <div class="alert alert-success alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              {{ msg }}
-          </div>
-      {% endfor %}
+  {% for error in auth.flash.errors %}
+      <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          {{ error }}
+      </div>
+  {% endfor %}
+  {% for msg in auth.flash.successes %}
+      <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          {{ msg }}
+      </div>
+  {% endfor %}
 
-      <h3>Lista de usuarios baneados</h3>
-      <h4 class='title'>Temporalmente</h4>
-      <ul>
-      {% for ban in banned_users.temporary %}
-        <li><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
-          <span
-            class='tooltip-hint hint--rounded hint--top'
-            data-hint='Razón: {{ ban.reason }}'
-          >[Baneado por <b>{{ ban.by.username }}</b>]</span>
-          <span class='actions'>
-            [<a href='/users/{{ ban.target.id }}/unban'>Desbanear</a>]
-          </span>
-        </li>
-      {% else %}
-        <li>Parece que no hay usuarios baneados temporalmente.</li>
-      {% endfor %}
-      </ul>
+  <h1>Lista de usuarios baneados</h1>
+  <h4>Temporalmente</h4>
+  <ul>
+  {% for ban in banned_users.temporary %}
+    <li><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
+      <span
+        class='tooltip-hint hint--rounded hint--top'
+        data-hint='Razón: {{ ban.reason }}'
+      >[Baneado por <b>{{ ban.by.username }}</b>]</span>
+      <span class='actions'>
+        [<a href='/users/{{ ban.target.id }}/unban'>Desbanear</a>]
+      </span>
+    </li>
+  {% else %}
+    <li>Parece que no hay usuarios baneados temporalmente.</li>
+  {% endfor %}
+  </ul>
 
-      <h4 class='title'>Permanentemente</h4>
-      <ul>
-      {% for ban in banned_users.permanent %}
-        <li><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
-          <span
-            class='tooltip-hint hint--rounded hint--top'
-            data-hint='Razón: {{ ban.reason }}'
-          >[Baneado por <b>{{ ban.by.username }}</b>]</span>
-          <span class='actions'>
-            [<a href='/users/{{ ban.target.id }}/unban'>Desbanear</a>]
-          </span>
-        </li>
-      {% else %}
-        <li>Parece que no hay usuarios baneados permanentemente.</li>
-      {% endfor %}
-      </ul>
-
-    </section>
+  <h4 >Permanentemente</h4>
+  <ul>
+  {% for ban in banned_users.permanent %}
+    <li><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
+      <span
+        class='tooltip-hint hint--rounded hint--top'
+        data-hint='Razón: {{ ban.reason }}'
+      >[Baneado por <b>{{ ban.by.username }}</b>]</span>
+      <span class='actions'>
+        [<a href='/users/{{ ban.target.id }}/unban'>Desbanear</a>]
+      </span>
+    </li>
+  {% else %}
+    <li>Parece que no hay usuarios baneados permanentemente.</li>
+  {% endfor %}
+  </ul>
 {% endblock %}
 
 {% block scripts %}

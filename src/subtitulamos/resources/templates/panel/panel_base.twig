@@ -7,36 +7,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="panel-wrapper">
-  <div class="container">
-    <section class="main-content columns is-fullheight">
-      {% block menu %}
-        <aside class="menu column is-2">
-          <p class="menu-label">
-            General
-          </p>
-          <ul class="menu-list">
-            <li><a href="javascript:void(0);" disabled>Configuración</a></li>
-            <li><a href="/panel/userlist">Listado de usuarios</a></li>
-          </ul>
-          <p class="menu-label">
-            Moderación
-          </p>
-          <ul class="menu-list">
-            <li><a href="/panel/alerts">Alertas</a></li>
-            <li><a href="/panel/logs">Log de eventos</a></li>
-            <li><a href="/panel/banlist">Usuarios baneados</a></li>
-          </ul>
-        </aside>
-      {% endblock %}
-
-      <div class="column is-10">
-        <section class="section">
-          {% block panel_content %}
-          {% endblock %}
-        </section>
-      </div>
-    </section>
-  </div>
+<div class="content limited-width">
+  {% block panel_content %}
+  {% endblock %}
 </div>
 {% endblock %}
