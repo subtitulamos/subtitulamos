@@ -172,6 +172,7 @@
 
       &.history {
         opacity: 0.5;
+        background-color: var(--color-gray-e);
       }
     }
 
@@ -234,6 +235,11 @@
         color: var(--color-blue-a);
       }
 
+      .closed {
+        height: calc(100% - var(--spacing-xs) * 2);
+      }
+
+      .past,
       .translatable {
         padding: 0;
         display: flex;
@@ -266,10 +272,6 @@
             background: var(--color-gray-b);
             border: none;
           }
-        }
-
-        .closed {
-          height: calc(100% - var(--spacing-xs) * 2);
         }
 
         .line-status {

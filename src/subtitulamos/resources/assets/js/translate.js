@@ -108,6 +108,7 @@ Vue.component("sequence", {
                 <div :class="{
                   'untranslated':!editing && !id,
                   'editing': editing,
+                  'past': history,
                   'translatable': !history && !openByOther}">
                   <div class="closed" v-if="!editing && id">{{ text }}</div>
                   <div class="closed" v-if="!editing && !id">- Sin traducir -</div>
