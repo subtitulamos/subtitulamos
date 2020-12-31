@@ -89,18 +89,41 @@ ul {
 
   .card-header {
     display: flex;
+    align-items: center;
     width: calc(100% - var(--spacing-xxs) * 2);
     justify-content: space-between;
-    cursor: pointer;
+    cursor: default;
     padding: var(--spacing-xxs);
-    color: var(--alert-color);
 
-    .name {
+    .alert-comment {
+      padding: var(--spacing-xs);
+      border-radius: 0 var(--standard-border-radius) var(--standard-border-radius) 0;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      flex-direction: column;
+      width: 100%;
+      margin-right: var(--spacing-s);
 
-      .icon {
-        margin-right: var(--spacing-xs);
+      .metadata {
+        .icon {
+          margin-right: var(--spacing-xxs);
+          color: var(--alert-color);
+        }
+      }
+
+      .alert-message {
+        border-top: 1px solid var(--color-gray-divisions-lighter);
+        margin-top: var(--spacing-xs);
+        padding-top: var(--spacing-xs);
+        display: flex;
+        align-items: flex-start;
+        line-height: 1.2rem;
+        width: 100%;
+
+        i {
+          flex-shrink: 0;
+          margin-right: var(--spacing-xs);
+        }
       }
     }
   }
@@ -111,37 +134,14 @@ ul {
     transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), margin 0.45s ease, padding 0.2s 0.2s ease;
 
     &.expanded {
-      margin-top: var(--spacing-xs);
       padding: var(--spacing-xs);
       padding-top: 0;
       max-height: 9999px;
       transition: max-height 0.3s cubic-bezier(1, 0, 1, 0), margin 0.45s ease;
     }
 
-    .alert-comment {
-      margin: var(--spacing-xs) 0;
-      margin-bottom: var(--spacing-s);
-      background-color: var(--color-gray-divisions-lighter);
-      border-left: 5px solid var(--alert-color);
-      padding: var(--spacing-xs);
-      border-radius: 0 var(--standard-border-radius) var(--standard-border-radius) 0;
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-
-      .alert-message {
-        margin-top: var(--spacing-xs);
-        display: flex;
-        align-items: flex-start;
-
-        i {
-          flex-shrink: 0;
-          margin-right: var(--spacing-xs);
-        }
-      }
-    }
-
     .comment {
+      border-color: var(--color-gray-divisions-lighter);
       div {
         align-items: flex-start;
         flex-direction: column;
@@ -163,6 +163,7 @@ ul {
   .form-wrap {
     background-color: transparent;
     max-width: unset;
+    padding-top: 0;
 
     .form-field {
       border-radius: 0;
