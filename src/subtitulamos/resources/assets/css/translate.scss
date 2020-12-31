@@ -218,11 +218,15 @@
       &.history {
         background-color: var(--color-gray-e);
         color: var(--color-gray-c);
-        border-bottom: 1px dashed var(--color-gray-divisions);
+        border-top: 1px dashed var(--color-gray-divisions);
+
+        & + :not(.history) {
+          border-top-width: 2px !important;
+        }
       }
 
-      & + .history {
-        border-width: 1px;
+      &:not(.history) + .history {
+        border-top: 2px solid var(--color-gray-divisions);
       }
 
       &.untranslated {
