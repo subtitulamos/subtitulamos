@@ -118,6 +118,26 @@
           width: 15px;
           text-align: right;
         }
+
+        .precise-search {
+          cursor: pointer;
+          font-size: 1rem;
+          background-color: var(--color-offwhite);
+          padding-left: 2px;
+          border-left: 1px solid var(--color-gray-divisions);
+
+          &.active {
+            color: var(--color-red);
+
+            &:hover {
+              color: var(--color-orange);
+            }
+          }
+
+          &:hover {
+            color: var(--color-gray-b);
+          }
+        }
       }
     }
   }
