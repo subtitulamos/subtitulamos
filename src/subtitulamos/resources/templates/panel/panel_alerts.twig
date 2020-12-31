@@ -1,8 +1,5 @@
 {% extends "panel/panel_base.twig" %}
 {% import 'macros/assets.twig' as assets %}
-{% block panel_css %}
-    {{ assets.css('panel/panel_alerts') }}
-{% endblock %}
 
 {% block title %}Alertas{% endblock %}
 {% block panel_content %}
@@ -22,7 +19,7 @@
 
   {% for alert in alerts %}
     <div class="card">
-      <header class="card-header">
+      <div class="card-header">
         <div class="card-header-title is-pulled-left">
           <div>
             <a href='/subtitles/{{ alert.from_sub_id }}/translate'>{{ alert.from_sub }}</a>
@@ -32,7 +29,7 @@
           {% if alert.closed %}{% set direction="down" %}{% else %}{% set direction="up" %}{% endif %}
           <i class="fa fa-chevron-{{ direction }}" aria-hidden="true"></i>
         </div>
-      </header>
+      </div>
 
       <form action="" method="POST">
         <input type='hidden' name='alert-id' value='{{ alert.id }}'>
