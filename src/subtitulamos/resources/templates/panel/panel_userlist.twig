@@ -6,7 +6,11 @@
     <h1>Listado de usuarios</h1>
     <ul>
     {% for user in users %}
-        <li><a href='/users/{{ user.id }}'><span class="id">#{{ user["id"] }}</span>{{ user.username }}</a></li>
+        <li>
+            <a href='/users/{{ user.id }}'>
+                <span class="username">{{ user.username }}</span>
+                <span class="id text small bold">#{{ user["id"] }}</span>
+            </a></li>
     {% endfor %}
     </ul>
 {% endblock %}

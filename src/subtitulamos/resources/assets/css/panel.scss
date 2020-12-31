@@ -54,16 +54,20 @@ ul {
       border-bottom: 0px;
     }
 
-    & > div,
-    & > a {
+    & > div {
       padding: var(--spacing-xs);
       transition: padding-left 0.2s ease;
       display: flex;
       align-items: center;
+    }
+
+    & > a {
+      padding: var(--spacing-xs);
+      transition: padding-left 0.2s ease;
+      display: block;
 
       .id {
         color: var(--color-blue-a);
-        margin-right: var(--spacing-xs);
       }
     }
 
