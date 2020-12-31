@@ -92,6 +92,10 @@
         margin-left: var(--spacing-xs);
       }
 
+      select {
+        width: 100px;
+      }
+
       span {
         display: flex;
         align-items: center;
@@ -230,9 +234,12 @@
 
     .user {
       width: 135px;
-      overflow: hidden;
-      white-space: pre-wrap;
-      text-overflow: ellipsis;
+
+      a {
+        text-align: center;
+        overflow: hidden;
+        word-break: break-word;
+      }
     }
 
     .time {
