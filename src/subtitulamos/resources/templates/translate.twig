@@ -86,7 +86,7 @@
           Filtrar por cadena <input type="text" id="text-filter" @keyup="(e) => { filters.text = e.target.value; onChangePage(1) }" :value="filters.text" />
           <span
             :data-hint="filters.preciseTextMatching ? 'Búsqueda estricta habilitada' : 'Búsqueda estricta deshabilitada'">
-              <i class="fas fa-crosshairs" :class="{ 'bullseye-active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
+              <i class="precise-search fas fa-crosshairs" :class="{ 'active': filters.preciseTextMatching }" aria-hidden="true" @click="togglePreciseTextMatching"></i>
           </span>
         </div>
 
