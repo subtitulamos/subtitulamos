@@ -1033,7 +1033,7 @@ window.translation = new Vue({
 
       this.curPage = targetPage;
       this.highlightedSequence = seqn;
-      window.location.hash = "#" + seqn;
+      window.location.hash = "#seqn-" + seqn;
 
       const isFirstSequence =
         Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
@@ -1058,8 +1058,8 @@ window.translation = new Vue({
           }
 
           const scrolledY = window.scrollY;
-          window.scroll(0, scrolledY - document.getElementById("translation-tools").offsetHeight);
-        }, 10);
+          window.scroll(0, scrolledY - document.getElementById("translation-header").offsetHeight);
+        }, 100);
       }
     },
 
