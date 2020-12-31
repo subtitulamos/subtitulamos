@@ -290,12 +290,16 @@
     }
 
     .text {
-      width: 41ch;
-      text-align: left;
-      white-space: pre-wrap;
-      word-wrap: break-word;
       margin: 0;
-      line-height: 1.4rem;
+
+      div {
+        line-height: 1.4rem;
+        text-align: left;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        width: 41ch;
+        height: 2.8rem;
+      }
     }
 
     .editable-text {

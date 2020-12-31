@@ -103,7 +103,9 @@ Vue.component("sequence", {
                   <input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}">
                 </div>
             </div>
-            <div class="text">{{ secondaryText }}</div>
+            <div class="text">
+              <div>{{ secondaryText }}</div>
+            </div>
             <div class="editable-text" @click="openSequence"
               :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <div :class="{
