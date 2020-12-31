@@ -29,55 +29,56 @@
   </div>
 
   <div id="translation-details" :class="{'disabled': !loaded}">
-    <div id='translation-tools'>
-      <div class="main-tools">
-        <div class="tool-group">
-          <button type="button" @click="savePage" class='tool' data-hint="Ctrl+Shift+S">
-            <i class="fas fa-save"></i>
-            Guardar
-          </button>
+    <div id="translation-header">
+      <div id='translation-tools'>
+        <div class="main-tools">
+          <div class="tool-group">
+            <button type="button" @click="savePage" class='tool' data-hint="Ctrl+Shift+S">
+              <i class="fas fa-save"></i>
+              Guardar
+            </button>
+          </div>
+          <div class="tool-group">
+            <button type="button" @click="goTo" class='tool' data-hint="Ctrl+G">
+              <i class="fas fa-angle-double-right"></i>
+              Ir a secuencia
+            </button>
+          </div>
+          <div class="tool-group">
+            <button type="button" @click="openPage" class="tool">
+              <i class="fas fa-envelope-open-text"></i>
+              Abrir todo
+            </button>
+            <button type="button" @click="openUntranslatedPage" class="tool">
+              <i class="fas fa-envelope-open"></i>
+              Abrir <i>sin traducir</i>
+            </button>
+            <button type="button" @click="closePage" class="tool">
+              <i class="fas fa-envelope"></i>
+              Cerrar todo
+            </button>
+          </div>
+          <div class="tool-group">
+            <button type="button" @click="fixPage" class="tool">
+              <i class="fas fa-align-left"></i>
+              Alinear todo
+            </button>
+          </div>
+          <div class="tool-group">
+            <button type="button" @click="lockPage(true)" class="tool lock-tool" v-if="hasAdvancedTools">
+              <i class="fas fa-lock"></i>
+              Bloquear todo
+            </button>
+            <button type="button" @click="lockPage(false)" class="tool lock-tool" v-if="hasAdvancedTools">
+              <i class="fas fa-lock-open"></i>
+              Desbloquear todo
+            </button>
+          </div>
         </div>
-        <div class="tool-group">
-          <button type="button" @click="goTo" class='tool' data-hint="Ctrl+G">
-            <i class="fas fa-angle-double-right"></i>
-            Ir a secuencia
-          </button>
-        </div>
-        <div class="tool-group">
-          <button type="button" @click="openPage" class="tool">
-            <i class="fas fa-envelope-open-text"></i>
-            Abrir todo
-          </button>
-          <button type="button" @click="openUntranslatedPage" class="tool">
-            <i class="fas fa-envelope-open"></i>
-            Abrir <i>sin traducir</i>
-          </button>
-          <button type="button" @click="closePage" class="tool">
-            <i class="fas fa-envelope"></i>
-            Cerrar todo
-          </button>
-        </div>
-        <div class="tool-group">
-          <button type="button" @click="fixPage" class="tool">
-            <i class="fas fa-align-left"></i>
-            Alinear todo
-          </button>
-        </div>
-        <div class="tool-group">
-          <button type="button" @click="lockPage(true)" class="tool lock-tool" v-if="hasAdvancedTools">
-            <i class="fas fa-lock"></i>
-            Bloquear todo
-          </button>
-          <button type="button" @click="lockPage(false)" class="tool lock-tool" v-if="hasAdvancedTools">
-            <i class="fas fa-lock-open"></i>
-            Desbloquear todo
-          </button>
+        <div>
+          <button type="button" @click="alertMod" class='alert-mod'><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></button>
         </div>
       </div>
-      <div>
-        <button type="button" @click="alertMod" class='alert-mod'><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></button>
-      </div>
-    </div>
 
     {% verbatim %}
       <div id='filters'>
@@ -108,6 +109,7 @@
         </div>
       </div>
     {% endverbatim %}
+    </div>
     <pagelist :pages="pages" :cur-page="curPage" :last-page="lastPage" @change-page="onChangePage"></pagelist>
 
     <div>
