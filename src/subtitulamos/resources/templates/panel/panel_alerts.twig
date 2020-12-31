@@ -20,15 +20,22 @@
   {% for alert in alerts %}
     <div class="alert-card w-box-shadow {% if alert.closed %}solved{% endif %}">
       <div class="card-header">
-        <div class="name">
-          <div class="icon">
-          {% if alert.closed %}
-            <i class="fas fa-check-circle"></i>
-          {% else %}
-            <i class="fas fa-exclamation-triangle"></i>
-          {% endif %}
-          </div>
-          <a href='/subtitles/{{ alert.from_sub_id }}/translate'>{{ alert.from_sub }}</a>
+        <div class="alert-comment">
+          <span class="metadata">
+            <span class="icon">
+            {% if alert.closed %}
+              <i class="fas fa-check-circle"></i>
+            {% else %}
+              <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+            </span>
+            <time class="text small" datetime="{{ alert.creation_time|date('d-m-Y H:i:s') }}">{{ alert.creation_time|date('d/M/Y, H:i') }}</time>
+            por
+            <a href='/users/{{alert.from_user.id}}'>{{ alert.from_user.username }}</a>
+            en
+            <a class="text bold blue-a" href='/subtitles/{{ alert.from_sub_id }}/translate'>@{{ alert.from_sub }}</a>
+          </span>
+          <div class="alert-message">{{ alert.first_comment.text }}</div>
         </div>
         <div class='unhide-alert blue-a'>
           {% if alert.closed %}{% set direction="down" %}{% else %}{% set direction="up" %}{% endif %}
@@ -40,18 +47,8 @@
         <div class="form-wrap">
           <form action="" method="POST">
             <input type='hidden' name='alert-id' value='{{ alert.id }}'>
-              <div class="alert-comment">
-                <div>
-                  <a class="text small" href='/users/{{alert.from_user.id}}'>@{{ alert.from_user.username }}</a> (<time class="text small" datetime="{{ alert.creation_time|date('d-m-Y H:i:s') }}">{{ alert.creation_time|date('d/M/Y, H:i') }}</time>)
-                </div>
-                <div class="alert-message">
-                  <div>
-                  <i class="fas fa-exclamation-triangle text tiny"></i>
-                  </div>
-                  <div>{{ alert.first_comment.text }}</div>
-                </div>
-              </div>
 
+              {% if alert.comments|length > 1 %}
               <ul class="comments">
               {% for comment in alert.comments %}
                 {% if not loop.first %}
@@ -69,6 +66,7 @@
                 {% endif %}
               {% endfor %}
               </ul>
+              {% endif %}
 
               {% if not alert.closed %}
                 <div class="form-field validated" fieldname="Añadir comentário">
