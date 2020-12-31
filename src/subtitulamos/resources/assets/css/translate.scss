@@ -206,8 +206,11 @@
       }
 
       * {
-        font-weight: normal !important;
         font-size: 0.9rem;
+
+        &:not(i) {
+          font-weight: normal !important;
+        }
       }
 
       &.history {
