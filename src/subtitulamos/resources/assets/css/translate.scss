@@ -1,3 +1,4 @@
+@import "animations.css";
 @import "app.css";
 @import "episode.scss";
 @import "comment.scss";
@@ -338,6 +339,21 @@
 
     .actions {
       width: 30px;
+
+      .warning {
+        animation: shake 0.25s linear infinite;
+        i {
+          color: var(--color-red);
+        }
+      }
+
+      .suggestion {
+        animation: shake 0.25s linear infinite;
+        i {
+          color: var(--color-blue-b);
+        }
+      }
+
       i {
         cursor: pointer;
         color: var(--color-gray-a);
