@@ -138,7 +138,7 @@ Vue.component("sequence", {
 
                     <template v-if="translated && !history && !editing">
                         <!--<i class="fa" @click="toggleVerify" :class="verified ? 'fa-check-circle' : 'fa-question-circle-o'" v-if="!locked"></i>-->
-                        <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock-alt'" v-if="canLock || locked"></i>
+                        <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock'" v-if="canLock || locked"></i>
                     </template>
 
                     <template v-if="false && history">
