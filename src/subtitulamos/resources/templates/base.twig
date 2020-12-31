@@ -66,17 +66,21 @@
           </button>
           {% if auth.has_role('ROLE_MOD') %}
             <a class="control-panel-button" page="/panel" href='/panel/alerts'>
-              <i class="fas fa-users-cog"></i>
+              <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-users-cog"></i>
               <span class="text small">Panel de moderador</span>
             </a>
             <div class="control-panel-sub-section">
               <a class="control-panel-button" href='/panel/alerts'>
-                <i class="fas fa-bell"></i>
+                <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-bell"></i>
                 <span>Alertas</span>
               </a>
               <a class="control-panel-button" href='/panel/logs'>
                 <i class="fas fa-clipboard-list"></i>
                 <span>Log de eventos</span>
+              </a>
+              <a class="control-panel-button" href='/panel/userlist'>
+                <i class="fas fa-user-friends"></i>
+                <span>Listado de usuarios</span>
               </a>
               <a class="control-panel-button" href='/panel/banlist'>
                 <i class="fas fa-user-slash"></i>
