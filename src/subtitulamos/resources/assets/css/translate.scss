@@ -181,12 +181,13 @@
       border-top: 1px solid var(--color-gray-divisions);
       grid-template-columns: repeat(6, max-content);
 
-      &:first-of-type {
-        border-top: 0;
+      &:first-of-type,
+      &:nth-child(2) {
+        border-top: none;
       }
 
       &:last-of-type {
-        border-bottom: 0;
+        border-bottom: none;
       }
 
       & > div {
@@ -205,7 +206,6 @@
         background-color: var(--color-gray-e);
         color: var(--color-gray-c);
         border-bottom: 1px dashed var(--color-gray-divisions);
-        border-top: 0;
       }
 
       & + .history {
