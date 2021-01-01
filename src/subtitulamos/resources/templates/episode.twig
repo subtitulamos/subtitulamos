@@ -213,6 +213,7 @@
     {% verbatim %}
     <h4 class="comment-header">Comentarios ({{comments.length}})</h4>
     {% endverbatim %}
+    {% if not auth.user.ban %}
     <div class='newcomment-box'>
       {% if auth.logged %}
         {% verbatim %}
@@ -253,6 +254,7 @@
         </div>
       {% endif %}
     </div>
+    {% endif %}
     <comment v-for="comment in comments"
         :key="comment.id"
         :id="comment.id"
@@ -306,6 +308,7 @@
     var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var isBanned = {{ auth.user.ban ? 'true' : 'false' }};
   </script>
   {{ assets.js('episode') }}
 {% endblock %}
