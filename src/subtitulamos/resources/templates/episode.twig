@@ -106,16 +106,14 @@
                   <a href="/subtitles/{{ sub.id }}/download">
                   {% endif %}
                     <div class="download-button
-                      {% if not can_download %}unavailable{% endif %}"
-                      data-hint="Descargar subtitulo">
+                      {% if not can_download %}unavailable{% endif %}">
                       <i class="far fa-arrow-alt-circle-down"></i>
                     </div>
                   {% if can_download %}
                   </a>
                   {% endif %}
                   <a href="/subtitles/{{ sub.id }}/translate">
-                    <div class="edit-button"
-                      data-hint="Colaborar en la traducción">
+                    <div class="edit-button">
                       <i class="fas fa-pencil-alt"></i>
                     </div>
                   </a>
@@ -228,47 +226,47 @@
     </comment>
     <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
 
-    {% if not auth.user.ban %}
-    <div class='newcomment-box'>
-      {% if auth.logged %}
-        {% verbatim %}
-        <div class="open-comment">
-          <label class="input-auto-sizer stacked" :data-value="newComment">
-            <textarea id="new-comment" rows="2" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
-          </label>
+    {% if not auth.logged or not auth.user.ban %}
+      <div class='newcomment-box'>
+        {% if auth.logged %}
+          {% verbatim %}
+          <div class="open-comment">
+            <label class="input-auto-sizer stacked" :data-value="newComment">
+              <textarea id="new-comment" rows="2" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+            </label>
 
-          <div class="comment-meta">
-            <div
-              class='comment-char-counter text tiny'
-              :class='{
-                "normal-count": newComment.length <= maxCommentLength*0.9,
-                "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
-                "too-many": newComment.length > maxCommentLength
-              }'
-            >
-              <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
-              </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
+            <div class="comment-meta">
+              <div
+                class='comment-char-counter text tiny'
+                :class='{
+                  "normal-count": newComment.length <= maxCommentLength*0.9,
+                  "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
+                  "too-many": newComment.length > maxCommentLength
+                }'
+              >
+                <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
+                </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
+              </div>
+
+              <button class="save-comment" @click="publishComment"
+                :class="{'hidden': newComment == '',
+                  'is-loading': submittingComment,
+                  'is-primary': newComment.length <= maxCommentLength,
+                  'is-danger': newComment.length > maxCommentLength}"
+                :disabled="newComment.length > maxCommentLength"
+                @click="publishComment">
+                <i class="fab fa-telegram-plane"></i>
+                <span class="text mini spaced">ENVIAR</span>
+              </button>
             </div>
-
-            <button class="save-comment" @click="publishComment"
-              :class="{'hidden': newComment == '',
-                'is-loading': submittingComment,
-                'is-primary': newComment.length <= maxCommentLength,
-                'is-danger': newComment.length > maxCommentLength}"
-              :disabled="newComment.length > maxCommentLength"
-              @click="publishComment">
-              <i class="fab fa-telegram-plane"></i>
-              <span class="text mini spaced">ENVIAR</span>
-            </button>
           </div>
-        </div>
-        {% endverbatim %}
-      {% else %}
-        <div class="open-comment disabled">
-          <textarea id="new-comment" rows="1" class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
-        </div>
-      {% endif %}
-    </div>
+          {% endverbatim %}
+        {% else %}
+          <div class="open-comment disabled">
+            <textarea id="new-comment" rows="1" class="textarea" disabled>Debes estar identificado para poder dejar comentarios</textarea>
+          </div>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
 </div>
@@ -310,7 +308,7 @@
     var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-    var isBanned = {{ auth.user.ban ? 'true' : 'false' }};
+    var isBanned = {{ auth.user ? (auth.user.ban ? 'true' : 'false') : false }};
   </script>
   {{ assets.js('episode') }}
 {% endblock %}
