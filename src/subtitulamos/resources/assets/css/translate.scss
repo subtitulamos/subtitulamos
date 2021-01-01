@@ -205,8 +205,7 @@
     }
 
     .grid-row {
-      font-family: "Courier Prime", monospace;
-      height: calc(2.8rem + var(--spacing-xs) * 2);
+      height: calc(3rem + var(--spacing-xs) * 2);
       display: grid;
       border-top: 1px solid var(--color-gray-divisions);
       grid-template-columns: repeat(6, max-content);
@@ -226,14 +225,11 @@
         display: grid;
         align-items: center;
         cursor: default;
+        font-family: "Courier Prime", monospace;
       }
 
       * {
         font-size: 0.9rem;
-
-        &:not(i) {
-          font-weight: normal;
-        }
       }
 
       &.history {
@@ -266,7 +262,7 @@
     }
 
     .number {
-      width: 45px;
+      width: 40px;
       font-family: "Rubik", sans-serif;
       font-weight: 500 !important;
       justify-content: center;
@@ -277,7 +273,7 @@
     }
 
     .user {
-      width: 148px;
+      width: 100px;
       justify-content: center;
 
       a {
@@ -310,6 +306,24 @@
           display: grid;
           place-items: center;
           cursor: text;
+          position: relative;
+        }
+
+        div {
+          &::before {
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            font-size: 0.7rem;
+            color: var(--color-gray-c);
+          }
+
+          &:first-of-type::before {
+            content: "de";
+          }
+          &:nth-of-type(2)::before {
+            content: "hasta";
+          }
         }
       }
     }
@@ -415,7 +429,7 @@
     }
 
     .actions {
-      width: 30px;
+      width: 27px;
 
       .warning {
         animation: shake 0.25s linear infinite;
