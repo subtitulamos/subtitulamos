@@ -40,7 +40,7 @@ Vue.component("comment", {
         </div>
       </section>
 
-      <section class='comment-actions'>
+      <section v-if="!isBanned" class='comment-actions'>
         <span class="text tiny" aria-hidden="true" @click="remove" v-if="canDelete">Borrar</span>
         <span class="text tiny" aria-hidden="true" @click="edit" v-if="canEdit">Editar</span>
         <span aria-hidden="true" @click="$emit('pin', id)" v-if="canPin">
@@ -91,6 +91,9 @@ Vue.component("comment", {
     },
     isTT() {
       return this.user.roles.includes("ROLE_TT");
+    },
+    isBanned() {
+      return isBanned;
     },
     userTypeClass: function () {
       let isTT = this.user.roles.includes("ROLE_TT");
