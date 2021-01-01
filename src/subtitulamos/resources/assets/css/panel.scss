@@ -53,18 +53,14 @@ ul {
     &.banlist {
       display: flex;
       align-items: center;
-      transition: padding-left 0.2s ease;
-
-      &:hover {
-        padding-left: var(--spacing-s);
-      }
 
       span {
-        margin-left: var(--spacing-xs);
+        margin-left: var(--spacing-xxs);
       }
 
       a {
         color: var(--color-blue-a);
+        padding: 0;
       }
     }
 
