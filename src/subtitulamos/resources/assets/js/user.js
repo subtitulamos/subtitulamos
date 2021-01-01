@@ -46,8 +46,16 @@ if ($banButton) {
   $banButton.addEventListener("click", () => {
     showOverlayFromTpl("ban-dialog");
 
-    $getAllEle(".radio").forEach((checkbox) => {
+    $getAllEle("[data-ban-radio]").forEach((checkbox) => {
       checkbox.addEventListener("click", invertRadio);
+
+      checkbox.addEventListener("click", () => {
+        console.log(checkbox.querySelector("input").value);
+        $getEle("#detailed-duration").classList.toggle(
+          "hidden",
+          checkbox.querySelector("input").value === "permanent"
+        );
+      });
     });
   });
 }

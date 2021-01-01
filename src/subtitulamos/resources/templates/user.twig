@@ -154,25 +154,25 @@
       <template id='ban-dialog'>
         <h3>Banear</h3>
         <form action="/users/{{ target_user.id }}/ban" method="POST">
-          <div id='time' class="radio-field">
+          <div id='time' class="radio-field" >
             <div class="radio-option">
-              <div class="radio">
+              <div class="radio" data-ban-radio>
                 <i class="fas fa-circle"></i>
-                <input type='radio' name='duration-type' value='permanent' v-model='duration'/>
+                <input type='radio' name='duration-type' value='permanent'/>
               </div>
               Permanente
             </div>
 
             <div class="radio-option">
-              <div class="radio">
+              <div class="radio" data-ban-radio>
                 <i class="fas fa-circle"></i>
-                <input type='radio' name='duration-type' value='temporary' v-model='duration'/>
+                <input type='radio' name='duration-type' value='temporary'/>
               </div>
               Temporal
             </div>
           </div>
 
-          <div v-if='duration == "temporary"'>
+          <div id='detailed-duration' class='hidden'>
             <span>
               <input type='number' name='days' placeholder="0" />
             </span>
