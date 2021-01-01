@@ -43,10 +43,24 @@
   color: var(--color-gray-a);
 }
 
+.global-alert.dismissing {
+  animation: dismissing 0.5s ease-out;
+}
+
 @keyframes appearing {
   from {
     height: 0px;
     padding: 0 var(--spacing-s);
     color: transparent;
+    margin: 0;
+  }
+}
+
+@keyframes dismissing {
+  to {
+    height: 0px;
+    padding: 0 var(--spacing-s);
+    color: transparent;
+    margin: 0;
   }
 }

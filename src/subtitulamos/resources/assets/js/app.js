@@ -188,3 +188,10 @@ $getAllEle(".dropdown-field").forEach((dropdown) => {
 $getAllEle(".checkbox").forEach((checkbox) => {
   checkbox.addEventListener("click", invertCheckbox);
 });
+
+$getAllEle(".global-alert").forEach((alert) => {
+  alert.addEventListener("click", () => {
+    alert.classList.toggle("dismissing", true);
+    setTimeout(() => alert.remove(), 450);
+  });
+});
