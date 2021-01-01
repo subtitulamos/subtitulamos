@@ -207,7 +207,7 @@ class UserController
         }
 
         $body = $request->getParsedBody();
-        $durationType = $body['days'] ?? '';
+        $durationType = $body['duration-type'] ?? '';
         $reason = $body['reason'] ?? '';
         $errors = [];
 
