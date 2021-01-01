@@ -97,7 +97,7 @@
             {% set pause_class = sub.pause ? 'paused' : '' %}
             {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
 
-            <div class="version-container">
+            <div class="version-container {% if sub.pause %}paused{% endif %}">
               <p class="text mini">versión</p>
               <p class="text tiny spaced bold">{{ sub.version.name }}</p>
               <div class="version-info">
@@ -124,7 +124,9 @@
                   {% if sub.directUpload %}
                     <div class="subtitle-uploader">
                       <span class="text mini">
-                        {% if not sub.resync %}
+                        {% if sub.pause %}
+                        PAUSADO
+                        {% elseif not sub.resync %}
                         ORIGINAL
                         {% else %}
                         RESINCRONIZADO
@@ -137,6 +139,9 @@
                     </div>
                   {% else %}
                     <div class="progress-bar {{ pause_class }}">
+                      {% if sub.pause %}
+                      <div class="paused-overlay" style="width: {{ sub.progress//1 }}%"></div>
+                      {% endif %}
                       <div class="progress progress_{{ progress_class }}"
                         style="width: {{ sub.progress//1 }}%">
                       </div>
@@ -144,27 +149,24 @@
                   {% endif %}
                   <div class="more-info">
                     {% if sub.directUpload %}
-                    <span class="text tiny">
+                    <span class="text small">
                       <i class="fa fa-comment" aria-hidden="true"></i> {{ sub.version.comments }}
                     </span>
                     {% else %}
-                      <span class="text tiny bold percentage-value">
+                      <span class="text small bold percentage-value">
                         {{ sub.progress // 1}}%
                       </span>
                       {% if sub.pause %}
                         {% if sub.progress >= 100 %}
-                          <span data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
+                          <span class="text small" data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
                             (En revisión)
                           </span>
                         {% elseif sub.progress >= 90 %}
-                          <span data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
+                          <span class="text small" data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
                             (Pendiente de revisión)
                           </span>
                         {% endif %}
-
-                        {% if auth.has_role("ROLE_TT") %}
-                          - Pausado por {{sub.pause.user.username}}
-                        {% endif %}
+                        <span class="text small"> - Pausado{% if auth.has_role("ROLE_TT") %} por {{sub.pause.user.username}}{% endif %}</span>
                       {% endif %}
                     {% endif %}
                   </div>
