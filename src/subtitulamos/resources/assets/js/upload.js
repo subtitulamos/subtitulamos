@@ -17,8 +17,9 @@ function splitSeasonAndEpisodeCallback(element) {
   const val = element.value;
   const match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/);
   let error = "";
+
   if (val == "" || (!match && val === "S")) {
-    error = "";
+    error = "Formato: 0x00 - Nombre";
   } else if (!match && val !== "S") {
     error = "Faltan la temporada y número de episodio (Formato: 0x00 - Nombre)";
   } else if (typeof match[1] !== "undefined" && typeof match[2] === "undefined") {
@@ -27,10 +28,11 @@ function splitSeasonAndEpisodeCallback(element) {
     error = "Falta el nombre del episodio (Formato: 0x00 - Nombre)";
   }
 
+  const hasError = error !== "";
   uploadInfo = {
-    season: error ? "" : match[1],
-    episode: error ? "" : match[2],
-    name: error ? "" : match[3].trim(),
+    season: hasError ? "" : match[1],
+    episode: hasError ? "" : match[2],
+    name: hasError ? "" : match[3].trim(),
   };
 
   element.setCustomValidity(error);
@@ -142,7 +144,8 @@ onDomReady(function () {
             .json()
             .then((data) => {
               data.forEach(function (e, idx, arr) {
-                document.getElementsByName(e[0])[0].setCustomValidity(err[1]);
+                document.getElementsByName(e[0])[0].setCustomValidity(e[1]);
+                form.submit();
               });
             })
             .catch(reportUnknownError);
