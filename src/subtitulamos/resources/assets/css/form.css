@@ -197,6 +197,7 @@
   display: grid;
   grid-template-columns: repeat(2, max-content);
   grid-gap: var(--spacing-m);
+  margin-bottom: var(--spacing-xs);
 }
 
 .radio-option {
