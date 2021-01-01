@@ -21,7 +21,6 @@ function addRoutes(&$app)
     $app->post('/upload', ['\App\Controllers\UploadController', 'do'])->add($needsRole('ROLE_USER'));
 
     $app->get('/search/query', ['\App\Controllers\SearchController', 'query']);
-    $app->get('/search/popular', ['\App\Controllers\SearchController', 'listPopular']);
     $app->get('/search/uploads', ['\App\Controllers\SearchController', 'listRecentUploads']);
     $app->get('/search/modified', ['\App\Controllers\SearchController', 'listRecentChanged']);
     $app->get('/search/completed', ['\App\Controllers\SearchController', 'listRecentCompleted']);

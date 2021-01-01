@@ -19,35 +19,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SearchController
 {
-    // TODO: Separate popular listing into a weekly thing, with its own "popular" table and stuff
-    public function listPopular(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify)
-    {
-        $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 12);
-        $from = max((int)($params['from'] ?? 0), 0);
-
-        $episodes = $em->createQuery('SELECT e FROM App:Episode e ORDER BY e.downloads DESC')
-            ->setMaxResults($resultCount)
-            ->setFirstResult($from)
-            ->getResult();
-
-        $epList = [];
-        foreach ($episodes as $ep) {
-            $fullName = $ep->getFullName();
-
-            $epList[] = [
-                'id' => $ep->getId(),
-                'name' => $ep->getName(),
-                'show' => $ep->getShow()->getName(),
-                'slug' => $slugify->slugify($fullName),
-                'season' => $ep->getSeason(),
-                'episode_num' => $ep->getNumber()
-            ];
-        }
-
-        return Utils::jsonResponse($response, $epList);
-    }
-
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
