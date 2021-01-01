@@ -4,7 +4,15 @@
  */
 
 import "../css/user.scss";
-import { $getAllEle, $getEle, $getById, easyFetch, showOverlayFromTpl, onDomReady } from "./utils";
+import {
+  $getAllEle,
+  $getEle,
+  $getById,
+  easyFetch,
+  showOverlayFromTpl,
+  onDomReady,
+  invertRadio,
+} from "./utils";
 
 const $roleChangeForm = $getEle("#reset-user-pwd");
 if ($roleChangeForm) {
@@ -37,6 +45,10 @@ const $banButton = $getEle("#ban");
 if ($banButton) {
   $banButton.addEventListener("click", () => {
     showOverlayFromTpl("ban-dialog");
+
+    $getAllEle(".radio").forEach((checkbox) => {
+      checkbox.addEventListener("click", invertRadio);
+    });
   });
 }
 
