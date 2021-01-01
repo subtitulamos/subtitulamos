@@ -83,19 +83,19 @@
         <div class="text bold">Tipo de usuario</div>
         <div>
           {% if target_user.hasRole('ROLE_MOD') %}
-            <i class="fas fa-gem role-mod role-icon"></i>
             <div class="role-mod">
+              <i class="fas fa-gem role-mod role-icon"></i>
               Moderador
             </div>
           {% elseif target_user.hasRole('ROLE_TT') %}
-            <i class="fas fa-hand-sparkles role-tt role-icon"></i>
             <div class="role-tt">
-              <span>Traductor Habitual</span>
-              {% if auth.has_role('ROLE_MOD') and not target_user.hasRole('ROLE_MOD') %}
-                <form action="/users/{{target_user.id}}/changerole" method="POST">
-                  <button type='submit'>(Quitar TH)
-                </form>
-              {% endif %}</div>
+              <i class="fas fa-hand-sparkles role-tt role-icon"></i> Traductor Habitual
+            </div>
+            {% if auth.has_role('ROLE_MOD') and not target_user.hasRole('ROLE_MOD') %}
+              <form action="/users/{{target_user.id}}/changerole" method="POST">
+                <button type='submit'>(Quitar TH)
+              </form>
+            {% endif %}
           {% else %}
             <span>Normal</span>
             {% if auth.has_role('ROLE_MOD') %}

@@ -25,11 +25,13 @@
       padding: var(--spacing-s);
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      grid-gap: var(--spacing-s);
 
       div:nth-child(2n) {
         color: var(--color-gray-b);
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
         button,
         a,
@@ -42,6 +44,7 @@
       a {
         color: var(--color-blue-a);
         padding: 0;
+        text-align: left;
       }
     }
   }
