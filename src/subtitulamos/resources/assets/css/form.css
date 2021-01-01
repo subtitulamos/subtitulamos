@@ -50,6 +50,7 @@
 }
 
 .form-field input:not([type="checkbox"]),
+.form-field input:not([type="radio"]),
 .form-field select,
 .form-field textarea {
   flex: 1;
@@ -71,43 +72,51 @@
   transition: background-color 5000s ease-in-out 0s !important;
 }
 
-.checkbox {
+.checkbox,
+.radio {
   width: 16px;
   height: 16px;
   border-radius: var(--standard-border-radius);
   border: 2px solid var(--color-gray-c);
   margin-right: var(--spacing-xs);
-  position: relative;
   text-align: center;
   flex-shrink: 0;
   background-color: var(--color-offwhite);
+  display: grid;
+  place-items: center;
+  position: relative;
 }
 
-.checkbox.checked:not(.disabled) {
+.radio {
+  border-radius: 50%;
+}
+
+.checkbox.checked:not(.disabled),
+.radio.checked:not(.disabled) {
   background-color: var(--color-blue-a);
   border: 2px solid var(--color-blue-a);
 }
 
-.checkbox input::before {
+.checkbox.checked:not(.disabled) i,
+.radio.checked:not(.disabled) i {
+  color: var(--color-offwhite) !important;
+}
+
+.checkbox input::before,
+.radio input::before {
   content: "";
   width: 20px;
   height: 20px;
+  cursor: pointer;
   position: absolute;
   top: -2px;
   left: -2px;
-  cursor: pointer;
 }
 
-.checkbox:not(.disabled) i {
-  position: absolute;
-  top: 2px;
-  left: 2px;
+.checkbox:not(.disabled) i,
+.radio:not(.disabled) i {
   font-size: 0.7rem;
   color: transparent !important;
-}
-
-.checkbox.checked:not(.disabled) i {
-  color: var(--color-offwhite) !important;
 }
 
 .form-field > .dropdown {
@@ -182,4 +191,19 @@
 
 .form-wrap form button:active {
   background-color: var(--color-blue-b);
+}
+
+.radio-field {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-gap: var(--spacing-m);
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+}
+
+.radio-option .radio {
+  margin-right: var(--spacing-xxs);
 }
