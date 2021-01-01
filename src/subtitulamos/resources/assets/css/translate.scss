@@ -195,11 +195,12 @@
 
     .grid-header {
       display: grid;
-      height: 50px !important;
+      height: 40px !important;
+      align-items: baseline;
 
-      * {
-        font-weight: bold;
-        justify-content: center;
+      span {
+        font-weight: bold !important;
+        text-align: center;
       }
     }
 
@@ -231,7 +232,7 @@
         font-size: 0.9rem;
 
         &:not(i) {
-          font-weight: normal !important;
+          font-weight: normal;
         }
       }
 
