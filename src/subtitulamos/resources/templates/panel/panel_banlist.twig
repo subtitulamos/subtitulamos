@@ -1,19 +1,14 @@
 {% extends "panel/panel_base.twig" %}
 {% import 'macros/assets.twig' as assets %}
+{% import 'macros/alerts.twig' as alerts %}
 
 {% block title %}Alertas{% endblock %}
 {% block panel_content %}
   {% for error in auth.flash.errors %}
-      <div class="alert alert-danger alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-          {{ error }}
-      </div>
+    {{ alerts.show('error', error) }}
   {% endfor %}
-  {% for msg in auth.flash.successes %}
-      <div class="alert alert-success alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-          {{ msg }}
-      </div>
+  {% for success in auth.flash.successes %}
+    {{ alerts.show('success', success) }}
   {% endfor %}
 
   <h1>Lista de usuarios baneados</h1>
