@@ -34,7 +34,7 @@ const getTimeDiff = (time) => {
 const INITIAL_CARD_LOAD_SIZE = 12;
 const SUBSEQUENT_LOAD_SIZE = 6;
 const START_PRELOADING_WHEN_N_CARDS_AWAY = 6;
-let curTab = "popular";
+let curTab = "completed";
 let subsByTab = {};
 
 function loadTabData(target, startIdx, count) {
@@ -245,10 +245,6 @@ $getAllEle(".navigation-item").forEach(($ele) => {
 
     let target;
     switch (this.id) {
-      case "highlighted":
-        target = "popular";
-        break;
-
       case "last-uploaded":
         target = "uploads";
         break;
