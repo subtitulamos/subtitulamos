@@ -1,0 +1,49 @@
+.swal2-container * {
+  font-size: 1rem;
+  background-color: var(--color-offwhite) !important;
+  color: var(--color-black) !important;
+}
+
+.swal2-popup {
+  border-radius: var(--standard-border-radius) !important;
+  font-family: "Rubik", sans-serif;
+}
+
+.swal2-title {
+  font-weight: 500 !important;
+  font-size: 1.3rem !important;
+}
+
+.swal2-actions button {
+  border: 1px solid var(--color-blue-b) !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
+  padding: var(--standard-padding) !important;
+  appearance: none;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  border-radius: var(--standard-border-radius) !important;
+}
+
+.swal2-actions button:active {
+  background-color: var(--color-blue-a) !important;
+  color: var(--color-offwhite) !important;
+  border: 1px solid !important;
+}
+
+.swal2-confirm {
+  color: var(--color-offwhite) !important;
+  background-color: var(--color-blue-b) !important;
+}
+
+.swal2-cancel {
+  background-color: transparent !important;
+  color: var(--color-blue-b) !important;
+  border: 1px solid !important;
+}
+
+.swal2-cancel:hover {
+  background-color: var(--color-blue-a) !important;
+  color: var(--color-offwhite) !important;
+  border: 1px solid !important;
+}
