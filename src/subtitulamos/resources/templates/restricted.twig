@@ -12,16 +12,16 @@
 
 {% block content %}
   <div class="content">
-    {% if auth.user.ban %}
+    {% if is_logged_in and auth.user.ban %}
     <i class="fas fa-user-slash forbidden"></i>
     {% else %}
     <i class="fa fa-ban forbidden" aria-hidden="true"></i>
     {% endif %}
 
-    <div class='forbidden-title'>Acceso {% if auth.user.ban %}denegado{% else %}restringido{% endif %}</div>
+    <div class='forbidden-title'>Acceso {% if is_logged_in and auth.user.ban %}denegado{% else %}restringido{% endif %}</div>
 
     <div>
-      {% if auth.user.ban %}
+      {% if is_logged_in and auth.user.ban %}
       Tu cuenta ha sido bloqueada por incumplimiento de las normas. Una cuenta bloqueada no puede acceder
       a ciertas funcionalidades, como la traducción o realizar comentarios.
       {% elseif not is_logged_in %}
