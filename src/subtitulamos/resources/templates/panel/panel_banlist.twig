@@ -15,9 +15,9 @@
   <h4>Temporalmente</h4>
   <ul>
   {% for ban in banned_users.temporary %}
-    <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
+    <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a>
+      <span >hasta el {{ ban.until|date('d/M/Y H:i (e)') }}</span>
       <span
-        class='tooltip-hint hint--rounded hint--top'
         data-hint='Razón: {{ ban.reason }}'
       > Baneado por <b>{{ ban.by.username }}</b> </span>
       <span class='actions'>
@@ -34,7 +34,6 @@
   {% for ban in banned_users.permanent %}
     <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
       <span
-        class='tooltip-hint hint--rounded hint--top'
         data-hint='Razón: {{ ban.reason }}'
       >[Baneado por <b>{{ ban.by.username }}</b>]</span>
       <span class='actions'>
