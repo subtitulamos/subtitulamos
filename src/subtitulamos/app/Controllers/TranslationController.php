@@ -140,7 +140,7 @@ class TranslationController
         $event = new EventLog(
             $auth->getUser(),
             new \DateTime(),
-            sprintf('Nuevo idioma abierto ([[subtitle:%d]])', $sub->getId())
+            sprintf('Nueva traducción abierta ([[subtitle:%d]])', $sub->getId())
         );
         $em->persist($event);
         $em->flush();
