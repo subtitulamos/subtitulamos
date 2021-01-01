@@ -51,7 +51,6 @@ function addRoutes(&$app)
     $app->get('/subtitles/{subId:[0-9]+}/unpause', ['\App\Controllers\SubtitleController', 'unpause'])->add($needsRole('ROLE_TT'));
     $app->get('/subtitles/{subId:[0-9]+}/hammer', ['\App\Controllers\SubtitleController', 'viewHammer'])->add($needsRole('ROLE_MOD'));
     $app->post('/subtitles/{subId:[0-9]+}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRole('ROLE_MOD'));
-    $app->get('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'editProperties'])->add($needsRole('ROLE_MOD'))->setName('subtitle-edit');
     $app->post('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
     $app->post('/subtitles/{subId:[0-9]+}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']); // "Access" managed at the controller level
 
