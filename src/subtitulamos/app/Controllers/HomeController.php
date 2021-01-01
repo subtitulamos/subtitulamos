@@ -17,9 +17,4 @@ class HomeController
             'catchphrase' => ''
         ]);
     }
-
-    public function bannedNotice($response, Twig $twig)
-    {
-        return $twig->render($response, 'errors/banned_error.twig');
-    }
 }
