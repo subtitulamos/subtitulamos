@@ -84,6 +84,8 @@
   background-color: var(--color-offwhite);
   display: grid;
   place-items: center;
+  grid-template-columns: 16px;
+  grid-template-rows: 16px;
   position: relative;
 }
 
@@ -100,6 +102,10 @@
 .checkbox.checked:not(.disabled) i,
 .radio.checked:not(.disabled) i {
   color: var(--color-offwhite) !important;
+}
+
+.radio.checked:not(.disabled) i {
+  font-size: 6px;
 }
 
 .checkbox input::before,
