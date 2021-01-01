@@ -64,9 +64,7 @@
   }
 
   .newcomment-box {
-    position: sticky;
-    top: var(--spacing-s);
-    margin-bottom: var(--spacing-m);
+    margin-top: var(--spacing-m);
 
     &::before {
       content: "";

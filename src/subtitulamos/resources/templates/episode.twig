@@ -213,6 +213,21 @@
     {% verbatim %}
     <h4 class="comment-header">Comentarios ({{comments.length}})</h4>
     {% endverbatim %}
+
+    <comment v-for="comment in comments"
+        :key="comment.id"
+        :id="comment.id"
+        :user="comment.user"
+        :base-text="comment.text"
+        :published-at="comment.published_at"
+        :pinned="comment.pinned"
+        @remove="remove"
+        @pin="pin"
+        @save="save"
+      >
+    </comment>
+    <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
+
     {% if not auth.user.ban %}
     <div class='newcomment-box'>
       {% if auth.logged %}
@@ -255,19 +270,6 @@
       {% endif %}
     </div>
     {% endif %}
-    <comment v-for="comment in comments"
-        :key="comment.id"
-        :id="comment.id"
-        :user="comment.user"
-        :base-text="comment.text"
-        :published-at="comment.published_at"
-        :pinned="comment.pinned"
-        @remove="remove"
-        @pin="pin"
-        @save="save"
-      >
-    </comment>
-    <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
   </div>
 </div>
 
