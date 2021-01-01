@@ -174,42 +174,6 @@
 
   <div id="translation-comments" class="comments-container ">
     <h4>Comentarios de traducción</h4>
-    {% if not auth.user.ban %}
-    <div class='newcomment-box'>
-      {% verbatim %}
-        <div class="open-comment">
-          <label class="input-auto-sizer stacked" :data-value="newComment">
-            <textarea id="new-comment" rows="2" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
-          </label>
-
-          <div class="comment-meta">
-            <div
-              class='comment-char-counter text tiny'
-              :class='{
-                "normal-count": newComment.length <= maxCommentLength*0.9,
-                "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
-                "too-many": newComment.length > maxCommentLength
-              }'
-            >
-              <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
-              </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
-            </div>
-
-            <button class="save-comment" @click="publishComment"
-              :class="{'hidden': newComment == '',
-                'is-loading': submittingComment,
-                'is-primary': newComment.length <= maxCommentLength,
-                'is-danger': newComment.length > maxCommentLength}"
-              :disabled="newComment.length > maxCommentLength"
-              @click="publishComment">
-              <i class="fab fa-telegram-plane"></i>
-              <span class="text mini spaced">ENVIAR</span>
-            </button>
-          </div>
-        </div>
-        {% endverbatim %}
-      </div>
-      {% endif %}
 
     <comment v-for="comment in comments"
         :key="comment.id"
@@ -224,6 +188,43 @@
       >
     </comment>
     <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
+
+    {% if not auth.user.ban %}
+    <div class='newcomment-box'>
+      {% verbatim %}
+      <div class="open-comment">
+        <label class="input-auto-sizer stacked" :data-value="newComment">
+          <textarea id="new-comment" rows="2" v-model="newComment" class="textarea" placeholder="Escribe aquí tu comentario..." resizable="false"></textarea>
+        </label>
+
+        <div class="comment-meta">
+          <div
+            class='comment-char-counter text tiny'
+            :class='{
+              "normal-count": newComment.length <= maxCommentLength*0.9,
+              "close-to-max": newComment.length > maxCommentLength*0.9 && newComment.length <= maxCommentLength,
+              "too-many": newComment.length > maxCommentLength
+            }'
+          >
+            <span id='comment-char-count'>{{ newComment.length < 1000 ? newComment.length : 999 }}
+            </span> / <span id='comment-max-chars'>{{ maxCommentLength }}</span>
+          </div>
+
+          <button class="save-comment" @click="publishComment"
+            :class="{'hidden': newComment == '',
+              'is-loading': submittingComment,
+              'is-primary': newComment.length <= maxCommentLength,
+              'is-danger': newComment.length > maxCommentLength}"
+            :disabled="newComment.length > maxCommentLength"
+            @click="publishComment">
+            <i class="fab fa-telegram-plane"></i>
+            <span class="text mini spaced">ENVIAR</span>
+          </button>
+        </div>
+      </div>
+      {% endverbatim %}
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
@@ -248,6 +249,7 @@
     var canEditComments = me.roles.includes('ROLE_MOD');
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditTimes = me.roles.includes('ROLE_MOD');
+    var isBanned = {{ auth.user.ban ? 'true' : 'false' }};
   </script>
   {{ assets.js('translate') }}
 {% endblock %}
