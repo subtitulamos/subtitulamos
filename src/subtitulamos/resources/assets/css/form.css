@@ -44,17 +44,23 @@
 }
 
 .form-field input:focus + i,
-.form-field select:focus + i {
+.form-field select:focus + i,
+.form-field textarea:focus + i {
   color: var(--color-blue-a);
 }
 
 .form-field input:not([type="checkbox"]),
-.form-field select {
+.form-field select,
+.form-field textarea {
   flex: 1;
   color: var(--color-gray-a);
   max-width: calc(100% - 20px); /* whole width minus icon size */
   margin: var(--standard-padding);
-  height: 1.5rem;
+  min-height: 1.5rem;
+}
+
+.form-field textarea {
+  resize: none;
 }
 
 /* Workaround to make the background of autofilled fields invisible */
@@ -110,12 +116,14 @@
 }
 
 .form-field input::placeholder,
+.form-field textarea::placeholder,
 .form-field select:required:invalid {
   color: var(--color-gray-b);
   opacity: 0.5;
 }
 
 .validated.form-field input:valid + i::after,
+.validated.form-field textarea:valid + i::after,
 .validated.form-field select:valid + i::after {
   content: "\f058";
   font-family: "Font Awesome 5 Free";
@@ -123,6 +131,7 @@
 }
 
 .validated.form-field input:invalid + i::after,
+.validated.form-field textarea:invalid + i::after,
 .validated.form-field select:invalid + i::after {
   content: "\f057";
   font-family: "Font Awesome 5 Free";
@@ -130,8 +139,10 @@
 }
 
 .validated.form-field input:valid + i::after,
+.validated.form-field textarea:valid + i::after,
 .validated.form-field select:valid + i::after,
 .validated.form-field input:invalid + i::after,
+.validated.form-field textarea:invalid + i::after,
 .validated.form-field select:invalid + i::after {
   font-style: normal;
   font-variant: normal;
