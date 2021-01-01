@@ -13,6 +13,7 @@ import {
   invertDropdown,
   invertCheckbox,
   $getById,
+  invertRadio,
 } from "./utils";
 
 function doLogin(e) {
@@ -187,6 +188,10 @@ $getAllEle(".dropdown-field").forEach((dropdown) => {
 
 $getAllEle(".checkbox").forEach((checkbox) => {
   checkbox.addEventListener("click", invertCheckbox);
+});
+
+$getAllEle(".radio").forEach((checkbox) => {
+  checkbox.addEventListener("click", invertRadio);
 });
 
 $getAllEle(".global-alert").forEach((alert) => {
