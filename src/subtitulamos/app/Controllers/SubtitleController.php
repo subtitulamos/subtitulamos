@@ -238,24 +238,6 @@ class SubtitleController
         return $response;
     }
 
-    public function editProperties($subId, $request, $response, EntityManager $em, Twig $twig)
-    {
-        $sub = $em->getRepository('App:Subtitle')->find($subId);
-        if (!$sub) {
-            throw new \Slim\Exception\HttpNotFoundException($request);
-        }
-
-        $v = $sub->getVersion();
-        $ep = $v->getEpisode();
-
-        return $twig->render($response, 'edit_subtitle.twig', [
-            'episode' => $ep,
-            'version' => $v,
-            'subtitle' => $sub,
-            'lang' => Langs::getLangCode($sub->getLang())
-        ]);
-    }
-
     public function saveProperties($subId, $request, $response, EntityManager $em, Twig $twig, Auth $auth, UrlHelper $urlHelper)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
@@ -319,6 +301,6 @@ class SubtitleController
             }
         }
 
-        return $urlHelper->responseWithRedirectToRoute('subtitle-edit', ['subId' => $subId]);
+        return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $v->getEpisode()->getId()]);
     }
 }
