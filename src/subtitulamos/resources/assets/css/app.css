@@ -6,6 +6,7 @@
 @import "animations.css";
 @import "form.css";
 @import "search.css";
+@import "alert.css";
 
 * {
   font-weight: 400;
@@ -58,8 +59,10 @@
   --color-baby-green: #efffe6;
   --color-yellow: #f8cb5f;
   --color-yellow-darker: #eabf27;
+  --color-baby-yellow: #fff6e6;
   --color-orange: #ec9752;
-  --color-red: #ef7868;
+  --color-red: #e46c5c;
+  --color-baby-red: #ffefef;
   --color-pink: #e276ac;
   --standard-padding-x: 0.9375rem;
   --standard-padding-y: 0.75rem;
