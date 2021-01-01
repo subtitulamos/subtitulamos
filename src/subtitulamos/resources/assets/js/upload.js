@@ -145,7 +145,8 @@ onDomReady(function () {
             .then((data) => {
               data.forEach(function (e, idx, arr) {
                 document.getElementsByName(e[0])[0].setCustomValidity(e[1]);
-                form.submit();
+                // Force submit again to trigger the custom validation
+                form.querySelector("button").click();
               });
             })
             .catch(reportUnknownError);
