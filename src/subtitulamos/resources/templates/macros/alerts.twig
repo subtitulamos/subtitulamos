@@ -1,10 +1,10 @@
 {% macro show(atype, text) %}
   {% if atype == 'success' %}
     {% set type = 'green' %}
-    {% set icon = 'fa-check' %}
+    {% set icon = 'fa-check-circle' %}
   {% elseif atype == 'error' %}
     {% set type = 'red' %}
-    {% set icon = 'fa-times' %}
+    {% set icon = 'fa-times-circle' %}
   {% elseif atype == 'notice' %}
     {% set type = 'blue' %}
     {% set icon = 'fa-info-circle' %}
@@ -13,10 +13,8 @@
     {% set icon = 'fa-exclamation-triangle' %}
   {% endif %}
 
-  <div class="alert alert-{{ type }}">
-    <div class="alert-inner-topbar"></div>
-    <div class="alert-line">
-      <i class="fa {{ icon }}" aria-hidden="true"></i>&nbsp;&nbsp;{{ text|raw }}
-    </div>
+  <div class="global-alert {{ type }}">
+    <i class="fa {{ icon }}" aria-hidden="true"></i>
+    <span>{{ text|raw }}</span>
   </div>
 {% endmacro %}
