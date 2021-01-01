@@ -122,12 +122,14 @@
                   {% if sub.directUpload %}
                     <div class="subtitle-uploader">
                       <span class="text mini">
-                        {% if sub.pause %}
-                        PAUSADO
-                        {% elseif not sub.resync %}
+                        {% if not sub.resync %}
                         ORIGINAL
                         {% else %}
                         RESINCRONIZADO
+                        {% endif %}
+
+                        {% if sub.pause %}
+                         (En revisión)
                         {% endif %}
                       </span>
                       <a href="/users/{{ sub.version.user.id }}" class="uploader_name text tiny bold blue-a">
@@ -159,12 +161,14 @@
                           <span class="text small" data-hint='¡Que esté traducido no implica necesariamente que esté bien! Nuestro objetivo es sacar buenos subtítulos, no ser los más rápidos'>
                             (En revisión)
                           </span>
-                        {% elseif sub.progress >= 90 %}
+                        {% elseif sub.progress >= 85 %}
                           <span class="text small" data-hint='El subtítulo no estará inmediatamente disponible al alcanzar el 100% traducido, sino solo cuando se termine la revisión del mismo'>
                             (Pendiente de revisión)
                           </span>
                         {% endif %}
-                        <span class="text small"> - Pausado{% if auth.has_role("ROLE_TT") %} por {{sub.pause.user.username}}{% endif %}</span>
+                        {% if auth.has_role("ROLE_TT") %}
+                          <span class="text small"> - Pausado por {{sub.pause.user.username}}</span>
+                        {% endif %}
                       {% endif %}
                     {% endif %}
                   </div>
