@@ -67,9 +67,9 @@
         {% endif %}
 
         {% if target_user.ban is not null and not target_user.ban.expired %}
-          <div class='grid-row' data-hint="{{ target_user.ban.reason }}">
-            <div class="text bold">Baneado hasta</div>
-            <div>{{ target_user.ban.until|date('d/M/Y H:i (e)') }} por <b>{{ target_user.ban.byUser.username }}</b> <a href='/users/{{ target_user.id }}/unban'>(Desbanear)</a></div>
+          <div class='grid-row'>
+            <div class="text bold">Baneado</div>
+            <div class="hint--left" data-hint="Razón: {{ target_user.ban.reason }}">Hasta el {{ target_user.ban.until|date('d/M/Y H:i (e)') }}, por <b>{{ target_user.ban.byUser.username }}</b> <a href='/users/{{ target_user.id }}/unban'>(Desbanear)</a></div>
           </div>
         {% else %}
           <div class='grid-row'>
