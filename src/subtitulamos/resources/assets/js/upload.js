@@ -7,14 +7,7 @@ import { $getEle, onDomReady } from "./utils";
 import "../css/upload.scss";
 import "../css/rules.scss";
 
-let uploadInfo = {
-  season: "",
-  episode: "",
-  name: "",
-};
-
-function splitSeasonAndEpisodeCallback(element) {
-  const val = element.value;
+function splitSeasonAndName(val) {
   const match = val.match(/^S?(\d+)(?:[xE](?:(\d+)(?:[\s-]+\s*([^-\s].*))?)?)?/);
   let error = "";
 
@@ -29,13 +22,12 @@ function splitSeasonAndEpisodeCallback(element) {
   }
 
   const hasError = error !== "";
-  uploadInfo = {
+  return {
     season: hasError ? "" : match[1],
     episode: hasError ? "" : match[2],
     name: hasError ? "" : match[3].trim(),
+    error,
   };
-
-  element.setCustomValidity(error);
 }
 
 onDomReady(function () {
@@ -54,12 +46,23 @@ onDomReady(function () {
     }
   });
 
+  // Makes sure all input fields have a validation clear when they change
+  // MUST GO BEFORE THE OTHER VALIDATORS (otherwise they will do nothing :) )
+  $uploadForm.querySelectorAll("input, select").forEach(($ele) => {
+    const clearValidity = (e) => {
+      e.target.setCustomValidity(""); // Reset error, user might've fixed it
+    };
+    $ele.addEventListener("change", clearValidity);
+    $ele.addEventListener("keyup", clearValidity);
+  });
+
   // Logic for splitting season/episode and name
-  ["keyup", "change"].forEach((event) =>
-    $getEle("#ep-name").addEventListener(event, (e) =>
-      splitSeasonAndEpisodeCallback(e.currentTarget)
-    )
-  );
+  ["keyup", "change"].forEach((eventType) => {
+    $getEle("#ep-name").addEventListener(eventType, (e) => {
+      const splitInfo = splitSeasonAndName(e.target.value);
+      e.target.setCustomValidity(splitInfo.error);
+    });
+  });
 
   // SRT FILE
   // Always clear the file input on load
@@ -106,7 +109,7 @@ onDomReady(function () {
     $uploadForm.classList.toggle("uploading", true);
 
     const $episodeNameField = $getEle("#ep-name");
-    splitSeasonAndEpisodeCallback($episodeNameField);
+    const uploadInfo = splitSeasonAndName($episodeNameField.value);
 
     const form = e.target;
     let data = new FormData(form);
