@@ -32,7 +32,9 @@
   <h4 >Permanentemente</h4>
   <ul>
   {% for ban in banned_users.permanent %}
-    <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
+    <li class="banlist">
+      <span><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a></span>
+      <span>hasta el {{ ban.until|date('d/M/Y H:i (e)') }}</span>
       <span class='hint--bottom'
         data-hint='Razón: {{ ban.reason }}'
       >[Baneado por <b>{{ ban.by.username }}</b>]</span>

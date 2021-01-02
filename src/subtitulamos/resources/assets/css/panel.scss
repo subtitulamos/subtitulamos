@@ -15,20 +15,12 @@ table {
     padding: var(--spacing-xs);
     padding-bottom: var(--spacing-s);
     text-align: left;
-
-    &:nth-of-type(2) {
-      width: 150px;
-    }
   }
 
   td {
     font-size: 0.9rem;
     padding: var(--spacing-xs);
     text-align: left;
-
-    &:nth-of-type(2) {
-      width: 150px;
-    }
 
     a {
       color: var(--color-blue-a);
@@ -54,9 +46,11 @@ ul {
       display: flex;
       align-items: center;
       padding: var(--spacing-xs);
+      flex-wrap: wrap;
 
       span {
         margin-left: var(--spacing-xxs);
+        line-height: 1.3rem;
       }
 
       a {
