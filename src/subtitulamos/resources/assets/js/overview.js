@@ -22,14 +22,19 @@ function loadOverview() {
 function listRenderer($list, data) {
   $list.innerHTML = "";
 
-  if (data) {
+  if (data.length > 0) {
     data.forEach((ep, idx) => {
       let $li = document.createElement("li");
-      $li.innerHTML += `<div><a href="/episodes/${ep.id}/${ep.slug}">${ep.name}</a></div>`;
+      $li.innerHTML += `<div><a href="/episodes/${ep.id}/${ep.slug}">${ep.full_name}</a></div>`;
+      $li.innerHTML += `<span class="text language small">${ep.lang} - ${ep.version}</span>`;
       const timeAgo = timeago().format(ep.time, "es");
       $li.innerHTML += `<div class="time-ago text tiny">${timeAgo}</div>`;
       $list.appendChild($li);
     });
+  } else {
+    let $li = document.createElement("li");
+    $li.innerHTML += "<div>No hay nada aqui en el momento</div>";
+    $list.appendChild($li);
   }
 }
 
