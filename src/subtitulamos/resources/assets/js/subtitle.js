@@ -154,7 +154,8 @@ Subtitle.prototype.loadSequences = function () {
         this.state.jumpToUrlSequence();
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      console.error(err);
       Toasts.error.fire("Ha ocurrido un error al cargar el subtítulo");
     });
 };
