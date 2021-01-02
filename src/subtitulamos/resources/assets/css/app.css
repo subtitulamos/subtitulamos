@@ -504,7 +504,7 @@ footer > #footer-content {
 .role-mod,
 .role-mod:hover,
 .role-mod:active {
-  color: var(--color-blue-b) !important;
+  color: var(--color-blue-a) !important;
 }
 
 @media all and (max-width: 830px) {
