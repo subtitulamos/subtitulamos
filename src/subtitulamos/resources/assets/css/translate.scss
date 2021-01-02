@@ -352,9 +352,28 @@
 
       .closed {
         height: calc(100% - var(--spacing-xs) * 2);
+        width: calc(40ch + 5px);
+      }
+
+      .open-by-other {
+        position: relative;
+
+        .fa-pen-square {
+          height: 20px;
+          width: 20px;
+          position: absolute;
+          top: calc(50% - 10px);
+          right: 12px;
+          font-size: 1.3rem;
+          color: var(--color-blue-b);
+          animation: breathing 4s ease-out infinite;
+          display: grid;
+          place-items: center;
+        }
       }
 
       .past,
+      .open-by-other,
       .translatable {
         padding: 0;
         display: flex;

@@ -110,12 +110,13 @@ Vue.component("sequence", {
               :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <div :class="{
                   'editing': editing,
+                  'open-by-other': openByOther,
                   'past': history,
                   'translatable': !history && !openByOther}">
                   <div class="closed" v-if="!editing && id">{{ text }}</div>
                   <div class="closed" v-if="!editing && !id">- Sin traducir -</div>
 
-                  <i class="fa fa-pencil-square-o open-other" aria-hidden="true" v-if='openByOther'></i>
+                  <i class="fas fa-pen-square" aria-hidden="true" v-if='openByOther'></i>
 
                   <textarea rows="2" v-model="editingText" v-if="editing" @keyup.ctrl="keyboardActions" autocomplete="off"></textarea>
 
