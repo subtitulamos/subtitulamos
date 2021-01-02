@@ -48,6 +48,7 @@
     var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var isBanned = false;
   </script>
   {{ assets.js('comment_list') }}
 {% endblock %}
