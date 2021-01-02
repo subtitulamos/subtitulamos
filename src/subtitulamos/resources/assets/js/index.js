@@ -34,7 +34,7 @@ const getTimeDiff = (time) => {
 const INITIAL_CARD_LOAD_SIZE = 12;
 const SUBSEQUENT_LOAD_SIZE = 6;
 const START_PRELOADING_WHEN_N_CARDS_AWAY = 6;
-let curTab = "completed";
+let curTab = "uploads"; // Default tab
 let subsByTab = {};
 
 function loadTabData(target, startIdx, count) {
