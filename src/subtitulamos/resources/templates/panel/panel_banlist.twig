@@ -48,12 +48,14 @@
   <h4 >Baneos pasados</h4>
   <ul>
   {% for ban in banned_users.old %}
-    <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> fue baneado hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
+    <li class="banlist">
+      <span><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a></span>
+      <span>fue baneado hasta el {{ ban.until|date('d/M/Y H:i (e)') }}</span>
       <span class='hint--bottom'
         data-hint='Razón: {{ ban.reason }}'
       >[Baneado por <b>{{ ban.by.username }}</b>]</span>
       {% if ban.lifter %}
-      &nbsp;-&nbsp;[Desbaneado por <b>{{ ban.lifter.username }}</b>]
+      &nbsp;-&nbsp;[Desbaneado por&nbsp;<b>{{ ban.lifter.username }}</b>]
       {% endif %}
     </li>
   {% else %}
