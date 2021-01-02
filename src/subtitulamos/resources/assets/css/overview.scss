@@ -1,5 +1,10 @@
 @import "comment.scss";
 
+.content {
+  max-width: calc(1600px - var(--content-padding-x) * 2);
+  margin: 0 auto;
+}
+
 #overview-grid {
   grid-template-columns: repeat(3, 1fr);
   grid-gap: var(--spacing-m);
@@ -92,12 +97,23 @@
     }
   }
 
-  #last-uploads {
-    border-right: none;
-  }
-
   #last-comments {
-    grid-column: 2/4;
-    border-right: none;
+    grid-column: span 2;
+  }
+}
+
+@media all and (max-width: 1100px) {
+  #overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media all and (max-width: 750px) {
+  #overview-grid {
+    grid-template-columns: repeat(1, 1fr);
+
+    #last-comments {
+      grid-column: span 1;
+    }
   }
 }
