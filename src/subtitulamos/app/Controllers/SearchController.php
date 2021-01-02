@@ -45,7 +45,9 @@ class SearchController
                 'episode_num' => $ep->getNumber(),
                 'time' => $sub->getUploadTime()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                'hide_details' => $hideDetails
+                'version' => $sub->getVersion()->getName(),
+                'hide_details' => $hideDetails,
+                'full_name' => $fullName,
             ];
         }
 
@@ -78,9 +80,11 @@ class SearchController
                 'episode_num' => $ep->getNumber(),
                 'time' => $sub->getEditTime()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'version' => $sub->getVersion()->getName(),
                 'last_edited_by' => $sub->getLastEditedBy() ? $sub->getLastEditedBy()->getUsername() : '',
                 'progress' => floor($sub->getProgress()),
-                'hide_details' => $hideDetails
+                'hide_details' => $hideDetails,
+                'full_name' => $fullName,
             ];
         }
 
@@ -113,7 +117,9 @@ class SearchController
                 'slug' => $slugify->slugify($fullName),
                 'time' => $sub->getCompleteTime()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-                'hide_details' => $hideDetails
+                'version' => $sub->getVersion()->getName(),
+                'hide_details' => $hideDetails,
+                'full_name' => $fullName,
             ];
         }
 
@@ -148,7 +154,8 @@ class SearchController
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
                 'version' => $sub->getVersion()->getName(),
                 'last_edited_by' => $sub->getVersion()->getUser()->getUsername(),
-                'hide_details' => $hideDetails
+                'hide_details' => $hideDetails,
+                'full_name' => $fullName,
             ];
         }
 
@@ -232,8 +239,11 @@ class SearchController
                 'episode_num' => $ep->getNumber(),
                 'time' => $sub->getPause()->getStart()->format(\DateTime::ATOM),
                 'lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
+                'version' => $sub->getVersion()->getName(),
+                'version' => $sub->getVersion()->getName(),
                 'progress' => floor($sub->getProgress()),
-                'hide_details' => $hideDetails
+                'hide_details' => $hideDetails,
+                'full_name' => $fullName,
             ];
         }
 
