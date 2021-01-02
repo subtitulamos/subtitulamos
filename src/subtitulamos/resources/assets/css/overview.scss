@@ -1,3 +1,5 @@
+@import "comment.scss";
+
 #overview-grid {
   grid-template-columns: repeat(3, 1fr);
   row-gap: var(--spacing-xl);

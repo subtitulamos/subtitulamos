@@ -24,11 +24,11 @@
     </div>
     <div id="last-comments" class="grid-cell">
       <h4>Últimos comentários (<span class="count">...</span>)</h4>
-      <div id="category-navigation-list" class="navigation-list no-scroll-bar">
+      <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
         <div class="navigation-item selected" id="last-uploaded" data-comments-type="subtitles">SUBTÍTULOS</div>
         <div class="navigation-item" id="last-edited" data-comments-type="episodes">EPISODIOS</div>
       </div>
-      <div id="comments-container">
+      <div id="comments-container" class="comments-container">
         <comment v-for="comment in comments"
           :key="comment.id"
           :id="comment.id"
