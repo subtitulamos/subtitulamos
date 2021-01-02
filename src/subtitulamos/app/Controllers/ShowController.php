@@ -44,7 +44,7 @@ class ShowController
 
         foreach ($showListByInitial as $inital => $list) {
             usort($list, function ($a, $b) {
-                return strnatcmp($a['show']->getName(), $b['show']->getName());
+                return strnatcasecmp($a['show']->getName(), $b['show']->getName());
             });
         }
 
