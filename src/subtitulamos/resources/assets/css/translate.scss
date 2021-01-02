@@ -357,11 +357,11 @@
     }
 
     .editable-text {
-      width: calc(40ch + 5px + 59px);
+      width: calc(40ch + 8px + 59px);
 
       .closed {
         height: calc(100% - var(--spacing-xs) * 2);
-        width: calc(40ch + 5px);
+        width: calc(40ch + 8px);
       }
 
       .open-by-other {
@@ -396,7 +396,7 @@
           resize: none;
           padding: var(--spacing-xs);
           line-height: 1.4rem;
-          width: calc(40ch + 5px);
+          width: calc(40ch + 8px);
           overflow-y: auto;
           flex-shrink: 0;
           flex-grow: 0;
