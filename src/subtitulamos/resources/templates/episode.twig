@@ -61,9 +61,20 @@
   <div id="languages">
     <div id="languages-header">
     <h4>Versiones</h4>
-    <div id="download-count" class="text tiny">
+    {% set hint = "" %}
+    {% for lang, subs in langs %}
+      {% set total_downloads = 0 %}
+      {% for sub in subs %}
+        {% set total_downloads = total_downloads + sub.downloads %}
+      {% endfor %}
+      {% if hint %}
+        {% set hint = hint ~ "&#10;&#10;" %}
+      {% endif %}
+      {% set hint = hint ~ LANG_NAMES[LANG_LIST[lang]] ~ " - " ~ total_downloads|number_format(0, ',', '.') %}
+    {% endfor %}
+    <div id="download-count" class="text tiny hint--top" data-hint='{{hint|raw}}' >
       <i class="fas fa-arrow-alt-circle-down"></i>
-      <span id="count" class="text bold">{{ downloads|number_format(0, '.', ' ') }}</span>
+      <span id="count" class="text bold">{{ downloads|number_format(0, ',', ' ') }}</span>
       <span >descargas</span>
     </div>
     </div>
