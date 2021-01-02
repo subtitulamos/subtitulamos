@@ -5,11 +5,6 @@ import timeago from "timeago.js";
 Vue.component("comment", {
   template: `
   <article class="comment" :class="{'comment-pinned': pinned}">
-    <div v-if="isMod || isTT"class="by-special-user-icon" :class="userTypeClass">
-      <i v-if="isMod" class="fas fa-gem"></i>
-      <i v-else-if="isTT" class="fas fa-hand-sparkles"></i>
-    </div>
-
     <div class="comment-body">
       <section class="comment-info">
         <a :href="'/users/' + user.id">
@@ -27,7 +22,7 @@ Vue.component("comment", {
         </span>
       </section>
 
-      <section class="comment-content">
+      <section class="comment-content" :class="userTypeClass">
         <p v-if="!editing" v-html="formattedText"></p>
         <div class="open-comment" v-else>
           <label class="input-auto-sizer stacked" :data-value="text">
