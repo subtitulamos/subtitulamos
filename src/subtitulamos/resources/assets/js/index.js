@@ -106,7 +106,7 @@ function getVisibleCardIndexes() {
 function updateNavigationArrowsVisibility(target) {
   let [smallestVisibleIdx, highestVisibleIdx] = getVisibleCardIndexes();
 
-  const isFirstCardVisible = smallestVisibleIdx === 0;
+  const isFirstCardVisible = smallestVisibleIdx === 0 || smallestVisibleIdx === Infinity;
   const isLastCardVisible =
     highestVisibleIdx === subsByTab[target].maxCardIdx - 1 && subsByTab[target].endFound;
   $getEle("#category-container").classList.toggle("first-page", isFirstCardVisible);
