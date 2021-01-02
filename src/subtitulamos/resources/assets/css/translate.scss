@@ -253,10 +253,10 @@
 
       &.locked {
         background-color: var(--color-baby-green);
-        color: var(--color-green);
+        color: var(--color-green-darker);
 
         * {
-          color: var(--color-green);
+          color: var(--color-green-darker);
         }
       }
     }
@@ -366,7 +366,7 @@
           right: 12px;
           font-size: 1.3rem;
           color: var(--color-blue-b);
-          animation: breathing 4s ease-out infinite;
+          animation: breathing 3s ease-out infinite;
           display: grid;
           place-items: center;
         }
