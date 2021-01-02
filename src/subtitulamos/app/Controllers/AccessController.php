@@ -77,31 +77,31 @@ class AccessController
         $body = $request->getParsedBody();
         $username = $body['username'] ?? '';
         $password = $body['password'] ?? '';
-        $password_confirmation = $body['password_confirmation'] ?? '';
+        $password_confirmation = $body['password-confirmation'] ?? '';
         $email = $body['email'] ?? '';
         $terms = ($body['terms'] ?? false) == 'true';
 
         $errors = [];
         if (!$terms) {
-            $errors[] = ['terms' => 'Debes aceptar los términos y condiciones'];
+            $errors[] = ['terms', 'Debes aceptar los términos y condiciones'];
         }
 
         if (!v::alnum('_')->noWhitespace()->length(3, 24)->validate($username)) {
-            $errors[] = ['username' => 'El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos'];
+            $errors[] = ['username', 'El nombre de usuario debe tener entre 3 y 24 caracteres y solo puede contener letras, números y guiones bajos'];
         } elseif ($em->getRepository('App:User')->findByUsername($username) != null) {
-            $errors[] = ['username' => 'El nombre de usuario ya está en uso'];
+            $errors[] = ['username', 'El nombre de usuario ya está en uso'];
         }
 
         if (!v::email()->validate($email)) {
-            $errors[] = ['email' => 'El correo electrónico no tiene un formato válido'];
+            $errors[] = ['email', 'El correo electrónico no tiene un formato válido'];
         } elseif ($em->getRepository('App:User')->findByEmail($email) != null) {
-            $errors[] = ['email' => 'El correo electrónico ya está en uso'];
+            $errors[] = ['email', 'El correo electrónico ya está en uso'];
         }
 
         if (!v::length(8, 80)->validate($password)) {
-            $errors[] = ['password' => 'La contraseña debe tener 8 caracteres como mínimo'];
+            $errors[] = ['password', 'La contraseña debe tener 8 caracteres como mínimo'];
         } elseif ($password != $password_confirmation) {
-            $errors[] = ['password_confirmation' => 'Las contraseñas no coinciden'];
+            $errors[] = ['password_confirmation', 'Las contraseñas no coinciden'];
         }
 
         if (!empty($errors)) {

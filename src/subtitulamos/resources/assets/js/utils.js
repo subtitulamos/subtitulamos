@@ -60,6 +60,8 @@ export function easyFetch(url, baseOpts) {
     if (!opts.headers["Content-Type"]) {
       opts.headers["Content-Type"] = "application/json";
     }
+  } else if (method === "POST" && baseOpts.body) {
+    opts.body = baseOpts.body; // Copy reference to body, if present
   } else if ((method === "GET" || !method) && opts.params) {
     url += "?" + new URLSearchParams(opts.params).toString();
   }
