@@ -5,14 +5,18 @@ import "./vue/comment.js";
 
 const $overview = $getById("overview-grid");
 if ($overview) {
+  loadOverview();
+  setInterval(() => {
+    loadOverview();
+  }, 60000);
+}
+
+function loadOverview() {
   loadOverviewGridCell("paused", 10);
   loadOverviewGridCell("last-modified", 10);
   loadOverviewGridCell("last-uploads", 10);
   loadOverviewGridCell("last-completed", 10);
   loadComments("subtitles", 1);
-  setInterval(() => {
-    loadComments(comments.page);
-  }, 60000);
 }
 
 function listRenderer($list, data) {
