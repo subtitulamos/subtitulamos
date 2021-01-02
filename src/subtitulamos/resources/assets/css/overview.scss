@@ -9,6 +9,24 @@
     height: calc(100% - var(--spacing-m) * 2);
     background-color: var(--color-offwhite);
     border-radius: var(--standard-border-radius);
+    position: relative;
+
+    .reload {
+      position: absolute;
+      right: var(--spacing-m);
+      top: var(--spacing-m);
+      color: var(--color-gray-c);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--color-gray-d);
+      }
+
+      &:active {
+        color: var(--color-gray-b);
+        animation: spin 0.3s linear;
+      }
+    }
 
     ul {
       list-style: none;

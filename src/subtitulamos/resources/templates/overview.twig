@@ -3,12 +3,14 @@
   <div id="overview-grid" class="grid">
     <div id="paused" class="grid-cell w-box-shadow" data-search-path="paused">
       <h4>Pausadas (<span class="count">...</span>)</h4>
+      <div class="reload" data-reload="paused"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <ul>Cargando...</ul>
     </div>
-    <div id="last-modified" class="grid-cell w-box-shadow" data-search-path="modified">
+    <div id="modified" class="grid-cell w-box-shadow" data-search-path="modified">
       <h4>Últimas modificaciones (<span class="count">...</span>)</h4>
+      <div class="reload" data-reload="modified"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <ul>Cargando...</ul>
-      <div class="pages" data-target-id="last-modified">
+      <div class="pages" data-target="modified">
         <button class="page" data-page="1">1</button>
         <button class="page" data-page="2">2</button>
         <button class="page" data-page="3">3</button>
@@ -16,14 +18,17 @@
     </div>
     <div id="last-uploads" class="grid-cell w-box-shadow" data-search-path="uploads">
       <h4>Últimas subidas (<span class="count">...</span>)</h4>
+      <div class="reload" data-reload="uploads"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <ul>Cargando...</ul>
     </div>
     <div id="last-completed" class="grid-cell w-box-shadow" data-search-path="completed">
       <h4>Últimas traducciones (<span class="count">...</span>)</h4>
+      <div class="reload" data-reload="completed"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <ul>Cargando...</ul>
     </div>
     <div id="last-comments" class="grid-cell w-box-shadow">
       <h4>Últimos comentários (<span class="count">...</span>)</h4>
+      <div class="reload" data-reload="comments"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
         <div class="navigation-item selected" id="last-uploaded" data-comments-type="subtitles">SUBTÍTULOS</div>
         <div class="navigation-item" id="last-edited" data-comments-type="episodes">EPISODIOS</div>

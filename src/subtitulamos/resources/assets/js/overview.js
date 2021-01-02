@@ -8,20 +8,38 @@ let selectedPage = {
   modified: "1",
   uploads: "1",
   completed: "1",
+  comments: "1",
 };
 
 onDomReady(() => {
   const $pages = $getAllEle("[data-page]");
   $pages.forEach(($button) => {
     $button.addEventListener("click", () => {
-      const targetId = $button.closest(".pages").dataset.targetId;
-      loadOverviewGridCell(targetId, 10, $button.dataset.page);
+      const target = $button.closest(".pages").dataset.target;
+      loadOverviewGridCell(target, 10, $button.dataset.page);
+    });
+  });
+
+  const $reloadButtons = $getAllEle("[data-reload]");
+  $reloadButtons.forEach(($button) => {
+    $button.addEventListener("click", () => {
+      const target = $button.dataset.reload;
+      if (target === "comments") {
+        loadComments(selectedPage.comments);
+      } else {
+        loadOverviewGridCell(target, 10, selectedPage[target]);
+      }
     });
   });
 
   const $overview = $getById("overview-grid");
   if ($overview) {
-    loadOverview();
+    loadOverviewGridCell("paused", 10, selectedPage.paused);
+    loadOverviewGridCell("modified", 10, selectedPage.modified);
+    loadOverviewGridCell("uploads", 10, selectedPage.uploads);
+    loadOverviewGridCell("completed", 10, selectedPage.completed);
+    loadComments(selectedPage.comments);
+
     setInterval(() => {
       loadOverview();
     }, 60000);
@@ -35,14 +53,6 @@ function setSelectedPage(searchPath, pageNumber) {
   });
 
   selectedPage[searchPath] = pageNumber;
-}
-
-function loadOverview() {
-  loadOverviewGridCell("paused", 10, selectedPage.paused);
-  loadOverviewGridCell("last-modified", 10, selectedPage.modified);
-  loadOverviewGridCell("last-uploads", 10, selectedPage.uploads);
-  loadOverviewGridCell("last-completed", 10, selectedPage.completed);
-  loadComments(1);
 }
 
 function listRenderer($list, data) {
@@ -64,8 +74,8 @@ function listRenderer($list, data) {
   }
 }
 
-function loadOverviewGridCell(targetId, count, page) {
-  const $targetContainer = $getById(targetId);
+function loadOverviewGridCell(target, count, page) {
+  const $targetContainer = $getEle(`[data-search-path="${target}"]`);
   const $list = $targetContainer.querySelector("ul");
   const $count = $targetContainer.querySelector(".count");
 
