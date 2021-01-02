@@ -194,9 +194,10 @@ $getAllEle(".radio").forEach((checkbox) => {
   checkbox.addEventListener("click", invertRadio);
 });
 
-$getAllEle(".global-alert").forEach((alert) => {
-  alert.addEventListener("click", () => {
-    alert.classList.toggle("dismissing", true);
-    setTimeout(() => alert.remove(), 450);
+$getAllEle(".global-alert .close-alert").forEach(($button) => {
+  const $alert = $button.closest(".global-alert");
+  $button.addEventListener("click", () => {
+    $alert.classList.toggle("dismissing", true);
+    setTimeout(() => $alert.remove(), 450);
   });
 });
