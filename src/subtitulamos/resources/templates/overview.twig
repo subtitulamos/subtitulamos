@@ -1,54 +1,64 @@
 <div class="content" id="overview">
   <h1>Visión general</h1>
   <div id="overview-grid" class="grid">
-    <div id="paused" class="grid-cell w-box-shadow" data-search-path="paused">
-      <h4>Pausadas (<span class="count">...</span>)</h4>
+    <div id="paused" class="grid-cell collapsed w-box-shadow" data-search-path="paused">
+      <h4 class="grid-cell-title">Pausadas (<span class="count text bold">...</span>)</h4>
       <div class="reload" data-reload="paused"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-      <ul>Cargando...</ul>
+      <div class="grid-content">
+        <ul>Cargando...</ul>
+      </div>
     </div>
-    <div id="modified" class="grid-cell w-box-shadow" data-search-path="modified">
-      <h4>Últimas modificaciones (<span class="count">...</span>)</h4>
+    <div id="modified" class="grid-cell collapsed w-box-shadow" data-search-path="modified">
+      <h4 class="grid-cell-title">Últimas modificaciones (<span class="count text bold">...</span>)</h4>
       <div class="reload" data-reload="modified"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-      <ul>Cargando...</ul>
-      <div class="pages" data-target="modified">
-        <button class="page" data-page="1">1</button>
-        <button class="page" data-page="2">2</button>
-        <button class="page" data-page="3">3</button>
+      <div class="grid-content">
+        <ul>Cargando...</ul>
+        <div class="pages" data-target="modified">
+          <button class="page" data-page="1">1</button>
+          <button class="page" data-page="2">2</button>
+          <button class="page" data-page="3">3</button>
+        </div>
       </div>
     </div>
-    <div id="last-uploads" class="grid-cell w-box-shadow" data-search-path="uploads">
-      <h4>Últimas subidas (<span class="count">...</span>)</h4>
+    <div id="last-uploads" class="grid-cell collapsed w-box-shadow" data-search-path="uploads">
+      <h4 class="grid-cell-title">Últimas subidas (<span class="count text bold">...</span>)</h4>
       <div class="reload" data-reload="uploads"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-      <ul>Cargando...</ul>
-    </div>
-    <div id="last-completed" class="grid-cell w-box-shadow" data-search-path="completed">
-      <h4>Últimas traducciones (<span class="count">...</span>)</h4>
-      <div class="reload" data-reload="completed"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-      <ul>Cargando...</ul>
-    </div>
-    <div id="last-comments" class="grid-cell w-box-shadow">
-      <h4>Últimos comentários (<span class="count">...</span>)</h4>
-      <div class="reload" data-reload="comments"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-      <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
-        <div class="navigation-item selected" id="last-uploaded" data-comments-type="subtitles">SUBTÍTULOS</div>
-        <div class="navigation-item" id="last-edited" data-comments-type="episodes">EPISODIOS</div>
+      <div class="grid-content">
+        <ul>Cargando...</ul>
       </div>
-      <div id="comments-container" class="comments-container">
-        <comment v-for="comment in comments"
-          :key="comment.id"
-          :id="comment.id"
-          :user="comment.user"
-          :base-text="comment.text"
-          :episode="comment.episode"
-          :subtitle="comment.subtitle"
-          :published-at="comment.published_at"
-          :edited-at="comment.edited_at"
-          :pinned="comment.pinned"
-          @remove="remove"
-          @pin="pin"
-          @save="save"
-        >
-        </comment>
+    </div>
+    <div id="last-completed" class="grid-cell collapsed w-box-shadow" data-search-path="completed">
+      <h4 class="grid-cell-title">Últimas traducciones (<span class="count text bold">...</span>)</h4>
+      <div class="reload" data-reload="completed"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
+      <div class="grid-content">
+        <ul>Cargando...</ul>
+      </div>
+    </div>
+    <div id="last-comments" class="grid-cell collapsed w-box-shadow">
+      <h4 class="grid-cell-title">Últimos comentários (<span class="count text bold">...</span>)</h4>
+      <div class="grid-content">
+        <div class="reload" data-reload="comments"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
+        <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
+          <div class="navigation-item selected" id="last-uploaded" data-comments-type="subtitles">SUBTÍTULOS</div>
+          <div class="navigation-item" id="last-edited" data-comments-type="episodes">EPISODIOS</div>
+        </div>
+        <div id="comments-container" class="comments-container">
+          <comment v-for="comment in comments"
+            :key="comment.id"
+            :id="comment.id"
+            :user="comment.user"
+            :base-text="comment.text"
+            :episode="comment.episode"
+            :subtitle="comment.subtitle"
+            :published-at="comment.published_at"
+            :edited-at="comment.edited_at"
+            :pinned="comment.pinned"
+            @remove="remove"
+            @pin="pin"
+            @save="save"
+          >
+          </comment>
+        </div>
       </div>
     </div>
   </div>

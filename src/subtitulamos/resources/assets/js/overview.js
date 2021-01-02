@@ -41,9 +41,22 @@ onDomReady(() => {
     loadComments(selectedPage.comments);
 
     setInterval(() => {
-      loadOverview();
+      loadOverviewGridCell("paused", 10, selectedPage.paused);
+      loadOverviewGridCell("modified", 10, selectedPage.modified);
+      loadOverviewGridCell("uploads", 10, selectedPage.uploads);
+      loadOverviewGridCell("completed", 10, selectedPage.completed);
+      loadComments(selectedPage.comments);
     }, 60000);
   }
+
+  $getAllEle(".grid-cell-title").forEach(($cellTitle) => {
+    const $cell = $cellTitle.closest(".grid-cell");
+
+    $cellTitle.addEventListener("click", () => {
+      $cell.classList.toggle("collapsed");
+      $cell.querySelector(".grid-content").classList.toggle("expanded");
+    });
+  });
 });
 
 function setSelectedPage(searchPath, pageNumber) {
