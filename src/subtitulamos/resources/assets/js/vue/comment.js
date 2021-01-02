@@ -15,10 +15,10 @@ Vue.component("comment", {
         </a>
         <span class="comment-date text tiny">{{ date }} <span v-if="editedAt && publishedAt != editedAtDate">· Editado {{lastEditDate}}</span></span>
         <span class='comment-episode' v-if="episode">
-          <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
+          <a class="text small bold" :href="'/episodes/'+ episode.id">@{{ episode.name }}</a>
         </span>
         <span class='comment-episode' v-if="subtitle">
-          <a :href="'/subtitles/'+ subtitle.id + '/translate'">{{ subtitle.name }}</a>
+          <a class="text small bold" :href="'/subtitles/'+ subtitle.id + '/translate'">@{{ subtitle.name }}</a>
         </span>
       </section>
 
