@@ -3,7 +3,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
-import { $getEle, onDomReady } from "./utils";
+import { $getEle, crossBrowserFormValidityReport, onDomReady } from "./utils";
 import "../css/upload.scss";
 import "../css/rules.scss";
 
@@ -102,8 +102,12 @@ onDomReady(function () {
     }
   });
 
-  $uploadForm.addEventListener("submit", function (e) {
+  $uploadForm.querySelector("[type=submit]").addEventListener("click", function (e) {
     e.preventDefault(); // Don't submit the form
+    if (!$uploadForm.checkValidity()) {
+      crossBrowserFormValidityReport($uploadForm);
+      return;
+    }
 
     $getEle("#uploading-overlay").classList.toggle("hidden", false);
     $uploadForm.classList.toggle("uploading", true);
@@ -148,9 +152,9 @@ onDomReady(function () {
             .then((data) => {
               data.forEach(function (e, idx, arr) {
                 document.getElementsByName(e[0])[0].setCustomValidity(e[1]);
-                // Force submit again to trigger the custom validation
-                form.querySelector("button").click();
               });
+
+              form.reportValidity();
             })
             .catch(reportUnknownError);
         } else {

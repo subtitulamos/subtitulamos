@@ -208,26 +208,26 @@
     <h3>Registro</h3>
     <div id='register-error'></div>
     <form id="register-form" action="/register" method="POST">
-      <div class="form-field text small" fieldname="Nombre de usuario">
+      <div class="form-field text small validated" fieldname="Nombre de usuario">
         <input type="text" name="username" required autocomplete="off">
         <i class="fas fa-user"></i>
       </div>
-      <div class="form-field text small" fieldname="Contraseña">
+      <div class="form-field text small validated" fieldname="Contraseña">
         <input type="password" name="password" required autocomplete="off">
         <i class="fas fa-key"></i>
       </div>
-      <div class="form-field text small" fieldname="Confirmar contraseña">
+      <div class="form-field text small validated" fieldname="Confirmar contraseña">
         <input type="password" name="password-confirmation" required autocomplete="off">
         <i class="fas fa-key"></i>
       </div>
-      <div class="form-field text small" fieldname="Correo electrónico">
+      <div class="form-field text small validated" fieldname="Correo electrónico">
         <input type="email" name="email" required>
-        <i class="fas fa-key"></i>
+        <i class="fas fa-envelope"></i>
       </div>
       <div class="checkbox-field">
         <div class="checkbox">
           <i class="fas fa-check"></i>
-          <input type='checkbox' name="terms">
+          <input type='checkbox' name="terms" required>
         </div>
         Acepto las reglas y las condiciones generales de uso del sitio web
       </div>

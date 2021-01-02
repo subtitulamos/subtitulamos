@@ -14,6 +14,7 @@ import {
   invertCheckbox,
   $getById,
   invertRadio,
+  crossBrowserFormValidityReport,
 } from "./utils";
 
 function doLogin(e) {
@@ -58,7 +59,11 @@ function doLogin(e) {
 
 function doRegister(e) {
   e.preventDefault();
-  const form = e.target;
+  const form = this.parentElement;
+  if (!form.checkValidity()) {
+    crossBrowserFormValidityReport(form);
+    return;
+  }
 
   // Mark button as loading
   const $regButton = document.getElementById("register-button");
@@ -86,22 +91,19 @@ function doRegister(e) {
         .then((cleanErrList) => {
           let validitySet = 0;
           cleanErrList.forEach(function (e, idx, arr) {
-            console.log();
             const $target = form.querySelector(`[name='${e[0]}']`);
             if ($target) {
               $target.setCustomValidity(e[1]);
-              ++validitySet;
-            } else {
-              console.error("BAD ERROR", form, $target, e); // FIXME: Drop this logic (shouldnt be necessary)
             }
+            ++validitySet;
           });
 
           if (!validitySet) {
-            throw "Couldn't set any validity message, but reg failed anwyay";
+            return; // FIXME
+            throw "Couldn't set any validity message, but reg failed!";
           }
 
-          // Force submit again to trigger the custom validation
-          form.querySelector("[type=submit]").click();
+          crossBrowserFormValidityReport(form);
         })
         .catch((e) => {
           console.error(e);
@@ -124,10 +126,38 @@ function showRegisterForm() {
   showOverlayFromTpl("tpl-register");
 
   const $registerForm = document.getElementById("register-form");
-  $registerForm.addEventListener("submit", doRegister);
+  $registerForm.querySelector("#register-button").addEventListener("click", doRegister);
 
   $getAllEle(".checkbox").forEach((checkbox) => {
     checkbox.addEventListener("click", invertCheckbox);
+  });
+
+  const clearValidity = (e) => e.target.setCustomValidity(""); // Reset error, user might've fixed it
+  const validityChecker = (e) => {
+    clearValidity(e);
+    if (e.key == "Enter") {
+      $registerForm.querySelector("[type=submit]").click();
+    }
+  };
+  $registerForm.querySelectorAll("input, select").forEach(($ele) => {
+    $ele.addEventListener("change", clearValidity);
+    $ele.addEventListener("keydown", validityChecker);
+  });
+
+  const checkPwdValidity = () => {
+    let err = "";
+    const $pwdConfirm = $registerForm.querySelector("[name=password-confirmation]");
+    const $pwd = $registerForm.querySelector("[name=password]");
+    if ($pwdConfirm.value && $pwdConfirm.value != $pwd.value) {
+      err = "Las contraseñas no coinciden";
+    }
+
+    $pwdConfirm.setCustomValidity(err);
+  };
+  $registerForm.querySelectorAll("[name^=password]").forEach(($ele) => {
+    $ele.removeEventListener("keydown", validityChecker); // Make sure we don't use the base clear validity
+    $ele.addEventListener("keyup", checkPwdValidity);
+    $ele.addEventListener("blur", checkPwdValidity);
   });
 }
 

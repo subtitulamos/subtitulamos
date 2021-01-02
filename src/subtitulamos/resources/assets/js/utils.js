@@ -131,3 +131,19 @@ export function isElementInViewport(el) {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
+
+const isFirefox = navigator.userAgent.indexOf("Firefox");
+let runningFormValidityTimeout;
+export function crossBrowserFormValidityReport($formEle) {
+  if (isFirefox) {
+    // So Firefox is fun. As of v84, if you doubleclick the report validation event while validation is visible
+    // it will consistently hide the validation errors FOREVER. Running validation on a delay fixes this, so...
+    if (runningFormValidityTimeout) {
+      clearTimeout(runningFormValidityTimeout);
+    }
+
+    runningFormValidityTimeout = setTimeout($formEle.reportValidity.bind($formEle), 200);
+  } else {
+    $formEle.reportValidity();
+  }
+}
