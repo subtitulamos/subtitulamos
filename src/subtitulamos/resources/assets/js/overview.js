@@ -16,7 +16,7 @@ onDomReady(() => {
   $pages.forEach(($button) => {
     $button.addEventListener("click", () => {
       const target = $button.closest(".pages").dataset.target;
-      loadOverviewGridCell(target, 10, $button.dataset.page);
+      loadOverviewGridCell(target, 5, $button.dataset.page);
     });
   });
 
@@ -27,24 +27,24 @@ onDomReady(() => {
       if (target === "comments") {
         loadComments(selectedPage.comments);
       } else {
-        loadOverviewGridCell(target, 10, selectedPage[target]);
+        loadOverviewGridCell(target, 5, selectedPage[target]);
       }
     });
   });
 
   const $overview = $getById("overview-grid");
   if ($overview) {
-    loadOverviewGridCell("paused", 10, selectedPage.paused);
-    loadOverviewGridCell("modified", 10, selectedPage.modified);
-    loadOverviewGridCell("uploads", 10, selectedPage.uploads);
-    loadOverviewGridCell("completed", 10, selectedPage.completed);
+    loadOverviewGridCell("paused", 5, selectedPage.paused);
+    loadOverviewGridCell("modified", 5, selectedPage.modified);
+    loadOverviewGridCell("uploads", 5, selectedPage.uploads);
+    loadOverviewGridCell("completed", 5, selectedPage.completed);
     loadComments(selectedPage.comments);
 
     setInterval(() => {
-      loadOverviewGridCell("paused", 10, selectedPage.paused);
-      loadOverviewGridCell("modified", 10, selectedPage.modified);
-      loadOverviewGridCell("uploads", 10, selectedPage.uploads);
-      loadOverviewGridCell("completed", 10, selectedPage.completed);
+      loadOverviewGridCell("paused", 5, selectedPage.paused);
+      loadOverviewGridCell("modified", 5, selectedPage.modified);
+      loadOverviewGridCell("uploads", 5, selectedPage.uploads);
+      loadOverviewGridCell("completed", 5, selectedPage.completed);
       loadComments(selectedPage.comments);
     }, 60000);
   }
