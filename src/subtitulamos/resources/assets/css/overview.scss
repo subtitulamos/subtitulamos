@@ -37,7 +37,6 @@
       list-style: none;
       padding: 0;
       margin: 0;
-      margin-bottom: var(--spacing-xl);
 
       li {
         cursor: default;
@@ -55,6 +54,7 @@
         }
       }
     }
+
     .pages {
       flex: 1;
       margin: 0 var(--spacing-xs);
@@ -105,6 +105,7 @@
 @media all and (max-width: 1100px) {
   #overview-grid {
     grid-template-columns: repeat(2, 1fr);
+    grid-gap: var(--spacing-s);
   }
 }
 
@@ -114,6 +115,39 @@
 
     #last-comments {
       grid-column: span 1;
+    }
+
+    .grid-cell {
+      .grid-cell-title {
+        cursor: pointer;
+        transition: margin 0.45s ease, padding-bottom 0.45s ease;
+        margin-bottom: var(--spacing-s);
+      }
+
+      &.collapsed {
+        padding: 0;
+        height: 100%;
+
+        .grid-cell-title {
+          transition: margin 0.45s ease, padding-bottom 0.45s ease;
+          padding: var(--spacing-m);
+          margin: 0;
+        }
+      }
+
+      .grid-content {
+        max-height: 0px;
+        overflow: hidden;
+        margin: 0;
+        transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+        padding: 0 var(--spacing-m);
+
+        &.expanded {
+          padding: 0;
+          max-height: 9999px;
+          transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+        }
+      }
     }
   }
 }
