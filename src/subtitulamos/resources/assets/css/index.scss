@@ -90,14 +90,14 @@
     margin-top: -20px;
     width: calc(100% - var(--navigation-chevron-width) * 2);
     margin: 0 auto;
+  }
 
-    #the-latest {
-      position: absolute;
-      top: -12px;
-      left: 15px;
-      width: 100%;
-      color: var(--color-gray-c);
-    }
+  #the-latest {
+    width: calc(100% - var(--navigation-chevron-width) * 2 - var(--spacing-s));
+    color: var(--color-gray-c);
+    margin: 0 auto;
+    padding-left: var(--spacing-s);
+    margin-bottom: -20px;
   }
 
   #category-container {
