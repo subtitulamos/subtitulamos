@@ -57,7 +57,7 @@ class UserController
         }
 
         usort($uploadedEpisodes, function ($a, $b) {
-            return strnatcmp($a['full_name'], $b['full_name']);
+            return strnatcasecmp($a['full_name'], $b['full_name']);
         });
 
         return Utils::jsonResponse($response, $uploadedEpisodes)->withStatus(200);
@@ -92,7 +92,7 @@ class UserController
         }
 
         usort($colaboratedEpisodes, function ($a, $b) {
-            return strnatcmp($a['full_name'], $b['full_name']);
+            return strnatcasecmp($a['full_name'], $b['full_name']);
         });
 
         return Utils::jsonResponse($response, $colaboratedEpisodes)->withStatus(200);
