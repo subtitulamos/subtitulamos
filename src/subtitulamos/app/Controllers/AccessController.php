@@ -79,7 +79,7 @@ class AccessController
         $password = $body['password'] ?? '';
         $password_confirmation = $body['password-confirmation'] ?? '';
         $email = $body['email'] ?? '';
-        $terms = ($body['terms'] ?? false) == 'true';
+        $terms = ($body['terms'] ?? false) == 'on';
 
         $errors = [];
         if (!$terms) {
