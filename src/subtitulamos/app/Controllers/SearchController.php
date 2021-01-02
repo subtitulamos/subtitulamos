@@ -22,7 +22,7 @@ class SearchController
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $resultCount = min((int)($params['count'] ?? 5), 15);
         $from = max((int)($params['from'] ?? 0), 0);
 
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 0 ORDER BY s.uploadTime DESC')
@@ -57,7 +57,7 @@ class SearchController
     public function listRecentChanged(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $resultCount = min((int)($params['count'] ?? 5), 15);
         $from = max((int)($params['from'] ?? 0), 0);
 
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.editTime IS NOT NULL ORDER BY s.editTime DESC')
@@ -94,7 +94,7 @@ class SearchController
     public function listRecentCompleted(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $resultCount = min((int)($params['count'] ?? 5), 15);
         $from = max((int)($params['from'] ?? 0), 0);
 
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 0 AND s.progress = 100 AND s.pause IS NULL AND s.completeTime IS NOT NULL ORDER BY s.completeTime DESC')
@@ -129,7 +129,7 @@ class SearchController
     public function listRecentResyncs(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $resultCount = min((int)($params['count'] ?? 5), 15);
         $from = max((int)($params['from'] ?? 0), 0);
 
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.directUpload = 1 AND s.resync = 1 ORDER BY s.uploadTime DESC')
@@ -217,7 +217,7 @@ class SearchController
     public function listPaused(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
-        $resultCount = min((int)($params['count'] ?? 5), 12);
+        $resultCount = min((int)($params['count'] ?? 5), 15);
         $from = max((int)($params['from'] ?? 0), 0);
 
         $subs = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e JOIN s.pause p WHERE s.pause IS NOT NULL ORDER BY p.start ASC')

@@ -31,9 +31,9 @@ const getTimeDiff = (time) => {
   return [diff, unit];
 };
 
-const INITIAL_CARD_LOAD_SIZE = 12;
-const SUBSEQUENT_LOAD_SIZE = 6;
-const START_PRELOADING_WHEN_N_CARDS_AWAY = 6;
+const INITIAL_CARD_LOAD_SIZE = 15;
+const SUBSEQUENT_LOAD_SIZE = 7;
+const START_PRELOADING_WHEN_N_CARDS_AWAY = 7;
 let curTab = "uploads"; // Default tab
 let subsByTab = {};
 
@@ -49,6 +49,7 @@ function loadTabData(target, startIdx, count) {
   subsByTab[target].maxCardIdx += count;
   addEpisodes(target, startIdx, count);
 
+  let loadSucceeded = false;
   easyFetch("/search/" + target, {
     params: {
       from: startIdx,
@@ -60,7 +61,7 @@ function loadTabData(target, startIdx, count) {
       if (data.length < count) {
         // Got less data than we requested - we've reached the end
         if (!subsByTab[target].endFound) {
-          subsByTab[target].maxCardIdx = startIdx + data.length;
+          subsByTab[target].maxCardIdx = startIdx + data.length - 1;
         }
 
         subsByTab[target].endFound = true;
@@ -86,9 +87,25 @@ function loadTabData(target, startIdx, count) {
         $card.querySelector(".metadata").classList.toggle("hidden", false);
         $card.querySelector(".loading").classList.toggle("hidden", true);
       });
+
+      loadSucceeded = true;
     })
     .finally(() => {
       subsByTab[target].loading = false;
+
+      if (loadSucceeded) {
+        // If highest card is still visible (and we didn't change tabs!), continue loading
+        if (target == curTab) {
+          const [_, highestVisibleIdx] = getVisibleCardIndexes();
+          if (
+            subsByTab[target].maxCardIdx > 0 &&
+            highestVisibleIdx > subsByTab[target].maxCardIdx - START_PRELOADING_WHEN_N_CARDS_AWAY &&
+            !subsByTab[target].endFound
+          ) {
+            loadTab(target, /* loadMore */ true);
+          }
+        }
+      }
     });
 }
 
@@ -108,7 +125,7 @@ function updateNavigationArrowsVisibility(target) {
 
   const isFirstCardVisible = smallestVisibleIdx === 0 || smallestVisibleIdx === Infinity;
   const isLastCardVisible =
-    highestVisibleIdx === subsByTab[target].maxCardIdx - 1 && subsByTab[target].endFound;
+    highestVisibleIdx === subsByTab[target].maxCardIdx && subsByTab[target].endFound;
   $getEle("#category-container").classList.toggle("first-page", isFirstCardVisible);
   $getEle("#category-container").classList.toggle("last-page", isLastCardVisible);
 }
@@ -135,7 +152,6 @@ let observer = new IntersectionObserver(
     }
   },
   {
-    root: $subtitleCardsWrap,
     rootMargin: "0px",
     threshold: 0.9,
   }
@@ -157,7 +173,7 @@ function loadTab(target, loadMore) {
   if (!subsByTab[target]) {
     subsByTab[target] = {
       $episodes: [],
-      maxCardIdx: 0,
+      maxCardIdx: -1,
       endFound: false,
       loading: false,
       scrollPos: 0,
