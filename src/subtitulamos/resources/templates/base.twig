@@ -204,5 +204,35 @@
       <button id='login-button' type="submit" class="text light">Iniciar sesión</button>
     </form>
   </template>
+  <template id='tpl-register'>
+    <h3>Registro</h3>
+    <div id='register-error'></div>
+    <form id="register-form" action="/register" method="POST">
+      <div class="form-field text small" fieldname="Nombre de usuario">
+        <input type="text" name="username" required autocomplete="off">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="form-field text small" fieldname="Contraseña">
+        <input type="password" name="password" required autocomplete="off">
+        <i class="fas fa-key"></i>
+      </div>
+      <div class="form-field text small" fieldname="Confirmar contraseña">
+        <input type="password" name="password-confirmation" required autocomplete="off">
+        <i class="fas fa-key"></i>
+      </div>
+      <div class="form-field text small" fieldname="Correo electrónico">
+        <input type="email" name="email" required>
+        <i class="fas fa-key"></i>
+      </div>
+      <div class="checkbox-field">
+        <div class="checkbox">
+          <i class="fas fa-check"></i>
+          <input type='checkbox' name="terms">
+        </div>
+        Acepto las reglas y las condiciones generales de uso del sitio web
+      </div>
+      <button id='register-button' type="submit" class="text light">Registrarme</button>
+    </form>
+  </template>
   {% block scripts %}{% endblock %}
 </body>

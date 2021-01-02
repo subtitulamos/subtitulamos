@@ -34,7 +34,6 @@ function doLogin(e) {
     rawBody: {
       username: username,
       password: pwd,
-      // remember: document.getElementById("login_remember_me").checked, // FIXME: This should exist?
     },
   })
     .then(function () {
@@ -57,8 +56,9 @@ function doLogin(e) {
     });
 }
 
-function register(e) {
+function doRegister(e) {
   e.preventDefault();
+  const form = e.target;
 
   // Mark button as loading
   const $regButton = document.getElementById("register-button");
@@ -70,19 +70,13 @@ function register(e) {
     .forEach(($ele) => $ele.classList.toggle("is-danger"));
   document.querySelectorAll("#register-form [data-reg-error]").forEach(($ele) => $ele.remove());
 
-  // Login the user via ajax
+  // Register via AJAX
   easyFetch("/register", {
     method: "post",
-    rawBody: {
-      username: document.getElementById("reg_username").value,
-      password: document.getElementById("reg_password").value,
-      password_confirmation: document.getElementById("reg_password_confirmation").value,
-      email: document.getElementById("reg_email").value,
-      terms: document.getElementById("reg_terms").checked,
-    },
+    body: new FormData(form), // Urlencoded form values
   })
     .then(function () {
-      window.location.reload(true);
+      window.location.reload();
     })
     .catch((err) => {
       $regButton.classList.toggle("is-loading", false);
@@ -90,19 +84,27 @@ function register(e) {
       err.response
         .json()
         .then((cleanErrList) => {
-          cleanErrList.forEach((curErr) => {
-            const field = Object.keys(curErr)[0];
-            const $field = document.getElementById("reg_" + field);
-            $field.classList.toggle("is-danger", true);
-
-            const $error = document.createElement("p");
-            $error.classList.add("help", "is-danger");
-            $error.dataset["regError"] = "";
-            $error.innerHTML = curErr[field];
-            $field.parentNode.parentNode.appendChild($error);
+          let validitySet = 0;
+          cleanErrList.forEach(function (e, idx, arr) {
+            console.log();
+            const $target = form.querySelector(`[name='${e[0]}']`);
+            if ($target) {
+              $target.setCustomValidity(e[1]);
+              ++validitySet;
+            } else {
+              console.error("BAD ERROR", form, $target, e); // FIXME: Drop this logic (shouldnt be necessary)
+            }
           });
+
+          if (!validitySet) {
+            throw "Couldn't set any validity message, but reg failed anwyay";
+          }
+
+          // Force submit again to trigger the custom validation
+          form.querySelector("[type=submit]").click();
         })
-        .catch(() => {
+        .catch((e) => {
+          console.error(e);
           alert(
             "Error desconocido al intentar completar el registro. Por favor, inténtalo de nuevo."
           );
@@ -118,10 +120,26 @@ function showLoginForm() {
   setTimeout(() => document.getElementById("username").focus(), 500);
 }
 
+function showRegisterForm() {
+  showOverlayFromTpl("tpl-register");
+
+  const $registerForm = document.getElementById("register-form");
+  $registerForm.addEventListener("submit", doRegister);
+
+  $getAllEle(".checkbox").forEach((checkbox) => {
+    checkbox.addEventListener("click", invertCheckbox);
+  });
+}
+
 onDomReady(function () {
   const $loginBtn = document.getElementById("login");
   if ($loginBtn) {
     $loginBtn.addEventListener("click", showLoginForm);
+  }
+
+  const $registerBtn = document.getElementById("register");
+  if ($registerBtn) {
+    $registerBtn.addEventListener("click", showRegisterForm);
   }
 
   // Set up overlay logic
@@ -129,10 +147,6 @@ onDomReady(function () {
   const $overlayFade = document.getElementById("overlay-fade");
   $overlayClose.addEventListener("click", closeOverlay);
   $overlayFade.addEventListener("click", closeOverlay);
-
-  // if ($registerForm) {
-  //   $registerForm.addEventListener("submit", register);
-  // }
 });
 
 const $ctrlPanel = document.getElementById("control-panel");
