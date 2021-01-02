@@ -75,7 +75,7 @@ Vue.component("hammertarget", {
               this.latest = 0;
 
               Toasts.success.fire(
-                "Poof! Las contribuciones de&nbsp;<b>" +
+                "¡Puf! Las contribuciones de&nbsp;<b>" +
                   this.username +
                   "</b>&nbsp;han sido eliminadas"
               );
