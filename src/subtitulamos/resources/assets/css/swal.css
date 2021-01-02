@@ -13,9 +13,10 @@
   resize: vertical;
 }
 
-.swal2-title {
+.swal2-title,
+.swal2-title * {
   font-weight: 500 !important;
-  font-size: 1.3rem !important;
+  font-size: 1.1rem !important;
 }
 
 .swal2-actions button {
@@ -24,6 +25,10 @@
   font-size: 1rem !important;
   padding: var(--standard-padding) !important;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.swal2-icon {
+  transform: scale(0.8) !important;
 }
 
 .swal2-actions button:enabled {
