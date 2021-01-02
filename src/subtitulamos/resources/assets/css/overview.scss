@@ -10,22 +10,6 @@
     background-color: var(--color-offwhite);
     border-radius: var(--standard-border-radius);
 
-    // &:nth-child(1) {
-    //   border-radius: var(--standard-border-radius) 0 0 0;
-    // }
-
-    // &:nth-child(3) {
-    //   border-radius: 0 var(--standard-border-radius) 0 0;
-    // }
-
-    // &:nth-child(4) {
-    //   border-radius: 0 0 0 var(--standard-border-radius);
-    // }
-
-    // &:nth-child(5) {
-    //   border-radius: 0 0 var(--standard-border-radius) 0;
-    // }
-
     ul {
       list-style: none;
       padding: 0;
@@ -37,6 +21,7 @@
         border-bottom: 1px solid var(--color-gray-divisions-lighter);
         padding: var(--spacing-xs);
         line-height: 1.3rem;
+        animation: fade_in 0.5s ease-in;
 
         &:last-of-type {
           border-bottom: 0px;
