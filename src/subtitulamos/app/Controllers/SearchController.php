@@ -226,7 +226,7 @@ class SearchController
 
             $epList[] = [
                 'id' => $ep->getId(),
-                'name' => $fullName,
+                'name' => $ep->getName(),
                 'slug' => $slugify->slugify($fullName),
                 'season' => $ep->getSeason(),
                 'episode_num' => $ep->getNumber(),
