@@ -194,10 +194,13 @@ let comments = new Vue({
 });
 
 function loadComments(commentType, page) {
+  const $commentsContainer = $getById("last-comments");
   easyFetch(`/comments/${commentType}/load?page=${page}`)
-    .then((reply) => reply.json())
-    .then((reply) => {
-      comments.comments = reply;
+    .then((data) => data.json())
+    .then((data) => {
+      comments.comments = data;
+      const $count = $commentsContainer.querySelector(".count");
+      $count.innerHTML = data.length;
     })
     .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
