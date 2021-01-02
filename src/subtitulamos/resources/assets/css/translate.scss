@@ -258,6 +258,10 @@
         * {
           color: var(--color-green-darker);
         }
+
+        .time div::before {
+          color: var(--color-green-darker) !important;
+        }
       }
     }
 
@@ -295,13 +299,14 @@
       & > div {
         display: grid;
         grid-template-rows: repeat(2, 1fr);
-        grid-gap: 4px;
+        grid-gap: 8px;
+        margin-top: 12px;
 
-        input,
-        div {
-          width: calc(120px - 4px);
+        div,
+        input {
+          width: 120px;
           text-align: center;
-          padding: 2px;
+          padding: 0px;
           height: 20px;
           display: grid;
           place-items: center;
@@ -312,10 +317,10 @@
         div {
           &::before {
             position: absolute;
-            top: -8px;
+            top: -11px;
             left: 8px;
             font-size: 0.7rem;
-            color: var(--color-gray-c);
+            opacity: 0.5;
           }
 
           &:first-of-type::before {
