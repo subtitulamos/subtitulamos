@@ -1,12 +1,16 @@
 .swal2-container * {
-  font-size: 1rem;
-  background-color: var(--color-offwhite) !important;
+  font-size: 1rem !important;
   color: var(--color-black) !important;
 }
 
 .swal2-popup {
   border-radius: var(--standard-border-radius) !important;
+  background-color: var(--color-offwhite) !important;
   font-family: "Rubik", sans-serif;
+}
+
+.swal2-popup textarea {
+  resize: vertical;
 }
 
 .swal2-title {
@@ -15,17 +19,20 @@
 }
 
 .swal2-actions button {
-  border: 1px solid var(--color-blue-b) !important;
-  font-weight: 400 !important;
-  font-size: 1rem !important;
-  padding: var(--standard-padding) !important;
   appearance: none;
   outline: none;
+  font-size: 1rem !important;
+  padding: var(--standard-padding) !important;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.swal2-actions button:enabled {
+  border: 1px solid var(--color-blue-b) !important;
+  font-weight: 400 !important;
   border-radius: var(--standard-border-radius) !important;
 }
 
-.swal2-actions button:active {
+.swal2-actions button:enabled:active {
   background-color: var(--color-blue-a) !important;
   color: var(--color-offwhite) !important;
   border: 1px solid !important;
