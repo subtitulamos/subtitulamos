@@ -15,7 +15,6 @@ import {
   $getById,
   invertRadio,
 } from "./utils";
-import "./overview";
 
 function doLogin(e) {
   e.preventDefault();

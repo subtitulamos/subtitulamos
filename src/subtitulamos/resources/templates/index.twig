@@ -61,6 +61,7 @@
 
 {% block scripts %}
   {% if auth.has_role('ROLE_MOD') or auth.has_role('ROLE_TT') %}
+  {{ assets.js('overview') }}
   <script type="text/javascript">
     var userId = {{ auth.user ? auth.user.id : 0 }};
     var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};

@@ -10,6 +10,7 @@ module.exports = (env, argv) => {
       search: "./resources/assets/js/search.js",
       episode: "./resources/assets/js/episode.js",
       index: "./resources/assets/js/index.js",
+      overview: "./resources/assets/js/overview.js",
       app: "./resources/assets/js/app.js",
       hammer: "./resources/assets/js/hammer.js",
       rules: "./resources/assets/js/rules.js",
