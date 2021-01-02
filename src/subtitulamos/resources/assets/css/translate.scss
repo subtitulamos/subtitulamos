@@ -206,7 +206,9 @@
     }
 
     .grid-row {
-      height: calc(3rem + var(--spacing-xs) * 2);
+      height: auto;
+      min-height: calc(3rem + var(--spacing-xs) * 2);
+      height: auto;
       display: grid;
       border-top: 1px solid var(--color-gray-divisions);
       grid-template-columns: repeat(6, max-content);
@@ -349,7 +351,8 @@
         white-space: pre-wrap;
         word-wrap: break-word;
         width: 41ch;
-        height: 2.8rem;
+        min-height: 2.8rem;
+        height: auto;
       }
     }
 
@@ -413,6 +416,11 @@
             background: var(--color-gray-b);
             border: none;
           }
+        }
+
+        .closed {
+          min-height: 2.8rem;
+          height: auto;
         }
 
         .line-status {
