@@ -18,7 +18,7 @@ Vue.component("comment", {
             {{ user.username }}
           </span>
         </a>
-        <span class="comment-date text tiny">{{ date }} <span v-if="publishedAt != editedAtDate">· Editado {{lastEditDate}}</span></span>
+        <span class="comment-date text tiny">{{ date }} <span v-if="editedAt && publishedAt != editedAtDate">· Editado {{lastEditDate}}</span></span>
         <span class='comment-episode' v-if="episode">
           <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
         </span>

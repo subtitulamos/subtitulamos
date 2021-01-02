@@ -240,6 +240,7 @@
       username: "{{ auth.user.username }}",
       roles: [{% for role in auth.user.roles %}"{{ role }}",{% endfor %}]
     };
+    var userId = me.id;
     var wsAuthToken = "{{ wstok }}";
     var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};
 
