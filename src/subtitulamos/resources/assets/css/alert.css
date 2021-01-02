@@ -47,6 +47,13 @@
   animation: dismissing 0.5s ease-out;
 }
 
+.global-alert .close-alert i {
+  margin-right: 0;
+  font-size: 1rem;
+  color: var(--color-black);
+  flex-shrink: 0;
+}
+
 @keyframes appearing {
   from {
     height: 0px;
