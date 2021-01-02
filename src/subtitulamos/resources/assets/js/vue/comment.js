@@ -18,7 +18,7 @@ Vue.component("comment", {
             {{ user.username }}
           </span>
         </a>
-        <span class="comment-date text tiny">{{ date }}</span>
+        <span class="comment-date text tiny">{{ date }} <span v-if="publishedAt != editedAtDate">· Editado {{lastEditDate}}</span></span>
         <span class='comment-episode' v-if="episode">
           <a :href="'/episodes/'+ episode.id">{{ episode.name }}</a>
         </span>
@@ -61,6 +61,7 @@ Vue.component("comment", {
     "episode",
     "subtitle",
     "published-at",
+    "edited-at",
     "type",
     "pinned",
     "create-sequence-jumps",
@@ -71,6 +72,7 @@ Vue.component("comment", {
       isRecentMessage: false,
       editing: false,
       text: this.baseText,
+      editedAtDate: this.editedAt,
     };
   },
   computed: {
@@ -122,8 +124,9 @@ Vue.component("comment", {
   methods: {
     updateDate: function () {
       this.date = timeago().format(this.publishedAt, "es");
+      this.lastEditDate = timeago().format(this.editedAtDate, "es");
 
-      // And update this (to force recalculation of computed props)
+      // And update isRecentMessage (to force recalculation of computed props)
       const secsSincePublish = (new Date().getTime() - new Date(this.publishedAt).getTime()) / 1000;
       this.isRecentMessage = secsSincePublish < MAX_USER_EDIT_SECONDS;
     },
@@ -149,6 +152,7 @@ Vue.component("comment", {
 
     save: function () {
       this.editing = false;
+      this.editedAtDate = new Date().toISOString();
       this.$emit("save", this.id, this.text);
     },
   },

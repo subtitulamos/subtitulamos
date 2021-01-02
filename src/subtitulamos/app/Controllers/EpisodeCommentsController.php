@@ -116,6 +116,7 @@ class EpisodeCommentsController
         }
 
         $comment->setText($text);
+        $comment->setEditTime(new \DateTime());
 
         $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario de episodio editado ([[episode:%d]])', $comment->getEpisode()->getId()));
         $em->persist($event);

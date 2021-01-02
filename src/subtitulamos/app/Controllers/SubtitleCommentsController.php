@@ -123,6 +123,8 @@ class SubtitleCommentsController
         }
 
         $comment->setText($text);
+        $comment->setEditTime(new \DateTime());
+
         $event = new EventLog($auth->getUser(), new \DateTime(), sprintf('Comentario editado en el subtítulo [[subtitle:%d]]', $comment->getSubtitle()->getId()));
         $em->persist($event);
         $em->flush();
