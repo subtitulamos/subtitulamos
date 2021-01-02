@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Entities\EventLog;
+use App\Entities\Favorite;
 use App\Entities\Show;
 use App\Services\Auth;
 
@@ -152,5 +153,38 @@ class EpisodeController
         }
 
         return $response->withHeader('Location', $urlHelper->pathFor('episode', ['id' => $epId]));
+    }
+
+    public function favorite($epId, $request, ResponseInterface $response, EntityManager $em, Auth $auth)
+    {
+        $ep = $em->getRepository('App:Episode')->find($epId);
+        if (!$ep) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        // Make sure no fav exists already with these properties
+        $fav = $em->getRepository('App:Favorite')->findOneBy(['user' => $auth->getUser(), 'episode' => $epId]);
+        if ($fav) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
+        $fav = new Favorite($auth->getUser(), $ep);
+        $em->persist($fav);
+        $em->flush();
+
+        return $response->withStatus(200);
+    }
+
+    public function unfavorite($epId, $request, ResponseInterface $response, EntityManager $em, Auth $auth)
+    {
+        $fav = $em->getRepository('App:Favorite')->findOneBy(['user' => $auth->getUser(), 'episode' => $epId]);
+        if (!$fav) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $em->remove($fav);
+        $em->flush();
+
+        return $response->withStatus(200);
     }
 }

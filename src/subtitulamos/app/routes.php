@@ -54,6 +54,8 @@ function addRoutes(&$app)
     $app->post('/subtitles/{subId:[0-9]+}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']); // "Access" managed at the controller level
 
     $app->post('/episodes/{epId:[0-9]+}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRole('ROLE_MOD'));
+    $app->post('/episodes/{epId:[0-9]+}/favorite', ['\App\Controllers\EpisodeController', 'favorite'])->add($needsRole('ROLE_USER'));
+    $app->post('/episodes/{epId:[0-9]+}/unfavorite', ['\App\Controllers\EpisodeController', 'unfavorite'])->add($needsRole('ROLE_USER'));
 
     $app->get('/episodes/{epId:[0-9]+}/resync', ['\App\Controllers\UploadResyncController', 'view'])->add($needsRole('ROLE_USER'));
     $app->post('/episodes/{epId:[0-9]+}/resync', ['\App\Controllers\UploadResyncController', 'do'])->add($needsRole('ROLE_USER'));
