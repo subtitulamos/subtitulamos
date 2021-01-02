@@ -202,9 +202,23 @@ ul {
     background-color: transparent;
     max-width: unset;
     padding-top: 0;
+    min-width: unset;
 
     .form-field {
       border-radius: 0;
+    }
+  }
+}
+
+@media all and (max-width: 700px) {
+  .alert-card {
+    .card-footer {
+      grid-template-columns: 1fr !important;
+      width: 100% !important;
+
+      button {
+        margin-top: var(--spacing-xs) !important;
+      }
     }
   }
 }
