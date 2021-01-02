@@ -1,22 +1,48 @@
-import { $getAllEle, $getById, easyFetch } from "./utils";
+import { $getAllEle, $getById, $getEle, easyFetch, onDomReady } from "./utils";
 import timeago from "timeago.js";
 import Vue from "vue";
 import "./vue/comment.js";
 
-const $overview = $getById("overview-grid");
-if ($overview) {
-  loadOverview();
-  setInterval(() => {
+let selectedPage = {
+  paused: "1",
+  modified: "1",
+  uploads: "1",
+  completed: "1",
+};
+
+onDomReady(() => {
+  const $pages = $getAllEle("[data-page]");
+  $pages.forEach(($button) => {
+    $button.addEventListener("click", () => {
+      const targetId = $button.closest(".pages").dataset.targetId;
+      loadOverviewGridCell(targetId, 10, $button.dataset.page);
+    });
+  });
+
+  const $overview = $getById("overview-grid");
+  if ($overview) {
     loadOverview();
-  }, 60000);
+    setInterval(() => {
+      loadOverview();
+    }, 60000);
+  }
+});
+
+function setSelectedPage(searchPath, pageNumber) {
+  const $pages = $getAllEle(`[data-search-path="${searchPath}"] .page`);
+  $pages.forEach(($page) => {
+    $page.classList.toggle("selected", $page.dataset.page === pageNumber);
+  });
+
+  selectedPage[searchPath] = pageNumber;
 }
 
 function loadOverview() {
-  loadOverviewGridCell("paused", 10);
-  loadOverviewGridCell("last-modified", 10);
-  loadOverviewGridCell("last-uploads", 10);
-  loadOverviewGridCell("last-completed", 10);
-  loadComments("subtitles", 1);
+  loadOverviewGridCell("paused", 10, selectedPage.paused);
+  loadOverviewGridCell("last-modified", 10, selectedPage.modified);
+  loadOverviewGridCell("last-uploads", 10, selectedPage.uploads);
+  loadOverviewGridCell("last-completed", 10, selectedPage.completed);
+  loadComments(1);
 }
 
 function listRenderer($list, data) {
@@ -25,7 +51,7 @@ function listRenderer($list, data) {
   if (data.length > 0) {
     data.forEach((ep, idx) => {
       let $li = document.createElement("li");
-      $li.innerHTML += `<div><a href="/episodes/${ep.id}/${ep.slug}">${ep.full_name}</a></div>`;
+      $li.innerHTML += `<div><a class="text blue-a bold" href="/episodes/${ep.id}/${ep.slug}">${ep.full_name}</a></div>`;
       $li.innerHTML += `<span class="text language small">${ep.lang} - ${ep.version}</span>`;
       const timeAgo = timeago().format(ep.time, "es");
       $li.innerHTML += `<div class="time-ago text tiny">${timeAgo}</div>`;
@@ -38,16 +64,17 @@ function listRenderer($list, data) {
   }
 }
 
-function loadOverviewGridCell(targetId, count, page = 1) {
+function loadOverviewGridCell(targetId, count, page) {
   const $targetContainer = $getById(targetId);
   const $list = $targetContainer.querySelector("ul");
   const $count = $targetContainer.querySelector(".count");
 
   const searchPath = $targetContainer.dataset.searchPath;
+  setSelectedPage(searchPath, page);
 
   easyFetch("/search/" + searchPath, {
     params: {
-      from: (page - 1) * count,
+      from: (parseInt(page) - 1) * count,
       count,
     },
   })
@@ -58,21 +85,8 @@ function loadOverviewGridCell(targetId, count, page = 1) {
     });
 }
 
-const $pages = $getAllEle(".page");
-$pages.forEach(($button) => {
-  $button.addEventListener("click", () => {
-    const targetId = $button.closest(".pages").dataset.targetId;
-
-    $pages.forEach(($page) => $page.classList.toggle("selected", false));
-    $button.classList.toggle("selected", true);
-
-    loadOverviewGridCell(targetId, 10, $button.dataset.page);
-  });
-});
-
 const $commentTypes = $getAllEle("[data-comments-type]");
 $commentTypes.forEach(($button) => {
-  console.log("here");
   $button.addEventListener("click", () => {
     const commentsType = $button.dataset.commentsType;
     $commentTypes.forEach(($page) => $page.classList.toggle("selected", false));
@@ -198,8 +212,9 @@ let comments = new Vue({
   },
 });
 
-function loadComments(commentType, page) {
+function loadComments(page) {
   const $commentsContainer = $getById("last-comments");
+  const commentType = $getEle(".selected[data-comments-type]").dataset.commentsType;
   easyFetch(`/comments/${commentType}/load?page=${page}`)
     .then((data) => data.json())
     .then((data) => {

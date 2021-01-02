@@ -2,11 +2,29 @@
 
 #overview-grid {
   grid-template-columns: repeat(3, 1fr);
-  row-gap: var(--spacing-xl);
+  grid-gap: var(--spacing-m);
 
   .grid-cell {
-    border-right: 1px solid var(--color-gray-divisions);
-    padding: var(--spacing-xxs) var(--spacing-s);
+    padding: var(--spacing-m);
+    height: calc(100% - var(--spacing-m) * 2);
+    background-color: var(--color-offwhite);
+    border-radius: var(--standard-border-radius);
+
+    // &:nth-child(1) {
+    //   border-radius: var(--standard-border-radius) 0 0 0;
+    // }
+
+    // &:nth-child(3) {
+    //   border-radius: 0 var(--standard-border-radius) 0 0;
+    // }
+
+    // &:nth-child(4) {
+    //   border-radius: 0 0 0 var(--standard-border-radius);
+    // }
+
+    // &:nth-child(5) {
+    //   border-radius: 0 0 var(--standard-border-radius) 0;
+    // }
 
     ul {
       list-style: none;
@@ -16,8 +34,9 @@
 
       li {
         cursor: default;
-        border-bottom: 1px solid var(--color-gray-divisions);
+        border-bottom: 1px solid var(--color-gray-divisions-lighter);
         padding: var(--spacing-xs);
+        line-height: 1.3rem;
 
         &:last-of-type {
           border-bottom: 0px;
