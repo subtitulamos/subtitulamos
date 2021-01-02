@@ -269,7 +269,7 @@
     }
 
     .number {
-      width: 40px;
+      width: 4ch;
       font-family: "Rubik", sans-serif;
       font-weight: 500 !important;
       justify-content: center;
@@ -280,7 +280,7 @@
     }
 
     .user {
-      width: 100px;
+      width: 14ch;
       justify-content: center;
 
       a {
@@ -291,7 +291,7 @@
     }
 
     .time {
-      width: 130px;
+      width: 13ch;
       padding: 0;
       justify-content: center;
 
@@ -307,7 +307,7 @@
 
         div,
         input {
-          width: 120px;
+          width: 100%;
           text-align: center;
           padding: 0px;
           height: 20px;
@@ -321,7 +321,7 @@
           &::before {
             position: absolute;
             top: -11px;
-            left: 8px;
+            left: 0px;
             font-size: 0.7rem;
             opacity: 0.5;
           }
