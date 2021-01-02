@@ -17,7 +17,7 @@
   {% for ban in banned_users.temporary %}
     <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a>
       <span >hasta el {{ ban.until|date('d/M/Y H:i (e)') }}</span>
-      <span
+      <span  class='hint--bottom'
         data-hint='Razón: {{ ban.reason }}'
       > Baneado por <b>{{ ban.by.username }}</b> </span>
       <span class='actions'>
@@ -33,7 +33,7 @@
   <ul>
   {% for ban in banned_users.permanent %}
     <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
-      <span
+      <span class='hint--bottom'
         data-hint='Razón: {{ ban.reason }}'
       >[Baneado por <b>{{ ban.by.username }}</b>]</span>
       <span class='actions'>
@@ -42,6 +42,22 @@
     </li>
   {% else %}
     <li>Parece que no hay usuarios baneados permanentemente.</li>
+  {% endfor %}
+  </ul>
+
+  <h4 >Baneos pasados</h4>
+  <ul>
+  {% for ban in banned_users.old %}
+    <li class="banlist"><a href='/users/{{ ban.target.id }}'>{{ ban.target.username }}</a> fue baneado hasta el {{ ban.until|date('d/M/Y H:i (e)') }}
+      <span class='hint--bottom'
+        data-hint='Razón: {{ ban.reason }}'
+      >[Baneado por <b>{{ ban.by.username }}</b>]</span>
+      {% if ban.lifter %}
+      &nbsp;-&nbsp;[Desbaneado por <b>{{ ban.lifter.username }}</b>]
+      {% endif %}
+    </li>
+  {% else %}
+    <li>Parece que todos han sido buenos y nadie ha sido baneado.</li>
   {% endfor %}
   </ul>
 {% endblock %}
