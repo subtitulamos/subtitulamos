@@ -176,19 +176,6 @@
   <div id="translation-comments" class="comments-container ">
     <h4>Comentarios de traducción</h4>
 
-    <comment v-for="comment in comments"
-        :key="comment.id"
-        :id="comment.id"
-        :user="comment.user"
-        :base-text="comment.text"
-        :published-at="comment.published_at"
-        :edited-at="comment.edited_at"
-        :pinned="comment.pinned"
-        @remove="remove"
-        @pin="pin"
-        @save="save"
-      >
-    </comment>
     <div class="no-comments" v-if="comments.length == 0">Nadie ha dejado su comentario aún.</div>
 
     {% if not auth.user.ban %}
@@ -227,6 +214,20 @@
       {% endverbatim %}
     </div>
     {% endif %}
+
+    <comment v-for="comment in comments"
+        :key="comment.id"
+        :id="comment.id"
+        :user="comment.user"
+        :base-text="comment.text"
+        :published-at="comment.published_at"
+        :edited-at="comment.edited_at"
+        :pinned="comment.pinned"
+        @remove="remove"
+        @pin="pin"
+        @save="save"
+      >
+    </comment>
   </div>
 </div>
 {% endblock %}
