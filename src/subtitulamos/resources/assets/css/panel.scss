@@ -53,6 +53,7 @@ ul {
     &.banlist {
       display: flex;
       align-items: center;
+      padding: var(--spacing-xs);
 
       span {
         margin-left: var(--spacing-xxs);
