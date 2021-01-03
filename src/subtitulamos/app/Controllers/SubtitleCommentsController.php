@@ -100,7 +100,7 @@ class SubtitleCommentsController
 
     public function edit($cId, $request, $response, EntityManager $em, Auth $auth)
     {
-        $comment = $em->getRepository('App:EpisodeComment')->find($cId);
+        $comment = $em->getRepository('App:SubtitleComment')->find($cId);
         if (!$comment) {
             throw new \Slim\Exception\HttpNotFoundException($request);
         }

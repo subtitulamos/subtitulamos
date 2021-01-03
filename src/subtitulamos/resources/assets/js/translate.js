@@ -883,7 +883,7 @@ window.translation = new Vue({
     },
 
     save: function (id, text) {
-      easyFetch("/episodes/" + epId + "/comments/" + id + "/edit", {
+      easyFetch("/subtitles/" + subID + "/translate/comments/" + id + "/edit", {
         method: "POST",
         rawBody: {
           text,

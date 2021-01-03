@@ -40,6 +40,7 @@ function addRoutes(&$app)
     $app->get('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'list'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{subId:[0-9]+}/translate/comments', ['\App\Controllers\SubtitleCommentsController', 'create'])->add($needsRole('ROLE_USER'));
     $app->delete('/subtitles/{subId:[0-9]+}/translate/comments/{cId:[0-9]+}', ['\App\Controllers\SubtitleCommentsController', 'delete'])->add($needsRole('ROLE_USER'));
+    $app->post('/subtitles/{subId:[0-9]+}/translate/comments/{cId:[0-9]+}/edit', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{subId:[0-9]+}/translate/comments/{cId:[0-9]+}/pin', ['\App\Controllers\SubtitleCommentsController', 'togglePin'])->add($needsRole('ROLE_MOD'));
     /*
     $app->put('/subtitles/{subId}/translate/comments/{cId}', ['\App\Controllers\SubtitleCommentsController', 'edit'])->add($needsRole('ROLE_USER'));
