@@ -422,3 +422,53 @@
     }
   }
 }
+
+@media all and (max-width: 800px) {
+  #episode-buttons {
+    width: 100%;
+    margin-top: var(--spacing-xs);
+  }
+}
+
+@media all and (max-width: 450px) {
+  #episode-buttons {
+    .episode-button {
+      display: block;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      margin-bottom: var(--spacing-xxs);
+    }
+  }
+
+  .language-container {
+    padding: var(--spacing-s) !important;
+    margin-bottom: var(--spacing-xs) !important;
+
+    .collapser-button {
+      top: var(--spacing-s) !important;
+      right: var(--spacing-s) !important;
+    }
+
+    .language-content {
+      &.expanded {
+        margin-bottom: 0 !important;
+      }
+
+      .version-info {
+        display: block !important;
+
+        .progress-bar-container {
+          margin: 0 !important;
+          margin-top: var(--spacing-s) !important;
+          width: 100%;
+        }
+
+        .ellipsis-wrapper {
+          margin-left: auto !important;
+        }
+      }
+    }
+  }
+}
