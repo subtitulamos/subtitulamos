@@ -1,0 +1,20 @@
+<html>
+<head>
+</head>
+<body>
+    <h1>Error {{exception.code}}</h1>
+    Algo ha ido mal
+
+    {% if show_details %}
+        <h3>Detalles</h3>
+        <b>Mensaje de error</b>: {{exception.message}}<br/>
+        <b>Fichero</b>: {{exception.file}}<br/>
+        <b>Línea</b>: {{exception.line}}<br/>
+
+        <h3>Traza</h3>
+        <code>
+            {{exception.getTraceAsString()|replace({"\n": "<br>"})|raw}}
+        </code>
+    {% endif %}
+</body>
+</html>

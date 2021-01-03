@@ -5,6 +5,7 @@
  * @copyright 2020 subtitulamos.tv
  */
 
+use App\Services\AppErrorRenderer;
 use App\Services\AssetManager;
 use App\Services\Auth;
 use App\Services\Langs;
@@ -97,5 +98,8 @@ require '../app/routes.php';
 addRoutes($app);
 
 // Error middleware must always be the LAST middleware to be added
-$app->addErrorMiddleware(DEBUG, true, true);
+$errorMiddleware = $app->addErrorMiddleware(DEBUG, true, true);
+
+$errorHandler = $errorMiddleware->getDefaultErrorHandler();
+$errorHandler->registerErrorRenderer('text/html', AppErrorRenderer::class);
 $app->run();
