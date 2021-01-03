@@ -21,6 +21,7 @@ module.exports = (env, argv) => {
       user: "./resources/assets/js/user.js",
       panel: "./resources/assets/js/panel/adminlte.js",
       panel_alerts: "./resources/assets/js/panel/alerts.js",
+      overview: "./resources/assets/js/overview.js",
       // Vendor JS package
       vendor: ["vue", "timeago.js"],
 

@@ -5,9 +5,6 @@
 {% block css %}{{ assets.css('index') }}{% endblock %}
 
 {% block content %}
-  {% if auth.has_role('ROLE_MOD') or auth.has_role('ROLE_TT') %}
-  {% include "overview.twig" %}
-  {% else %}
   <div class='content limited-width'>
     <div id="large-splash">
       <svg id="logo" viewBox="0 0 720 720">
@@ -53,22 +50,8 @@
   </div>
 
   {% include "card.twig" %}
-
-  {% endif %}
 {% endblock %}
 
 {% block scripts %}
-  {% if auth.has_role('ROLE_MOD') or auth.has_role('ROLE_TT') %}
-  {{ assets.js('overview') }}
-  <script type="text/javascript">
-    var userId = {{ auth.user ? auth.user.id : 0 }};
-    var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};
-    var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-    var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-    var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
-    var isBanned = false;
-  </script>
-  {% else %}
   {{ assets.js('index') }}
-  {% endif %}
 {% endblock %}
