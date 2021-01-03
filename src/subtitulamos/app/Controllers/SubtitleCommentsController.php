@@ -17,7 +17,6 @@ use App\Services\Utils;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
-use Slim\Views\Twig;
 
 class SubtitleCommentsController
 {
@@ -89,14 +88,6 @@ class SubtitleCommentsController
         }
 
         return Utils::jsonResponse($response, $comments);
-    }
-
-    public function viewAll($response, EntityManager $em, Twig $twig)
-    {
-        return $twig->render($response, 'comment_list.twig', [
-            'comment_type_name' => 'traducciones',
-            'comment_type' => 'subtitles'
-        ]);
     }
 
     public function edit($cId, $request, $response, EntityManager $em, Translation $translation, Auth $auth)
