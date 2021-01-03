@@ -29,7 +29,7 @@
         <i class="fas fa-pencil-alt"></i>
         {% endif %}
         <h3 class="blue-a">{{ episode.name }}</h3>
-        <div class="blue-b text small">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
+        <div class="blue-b text small" id="episode-numbers">({{ episode.season }}x{{ "%02d"|format(episode.number) }})</div>
       </div>
       <div id="episode-buttons" class="text tiny">
         <a class="episode-button" href='/episodes/{{ episode.id }}/resync' class="text tiny blue-a">

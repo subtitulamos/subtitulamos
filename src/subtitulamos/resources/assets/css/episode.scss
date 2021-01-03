@@ -70,7 +70,7 @@
       cursor: pointer;
 
       i {
-        margin-right: var(--spacing-xxs);
+        margin-right: var(--spacing-xs);
         font-size: 0.9rem;
         color: var(--color-blue-c);
       }
@@ -106,13 +106,21 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-s);
+    flex-wrap: wrap;
 
     #episode-name {
       margin-right: var(--spacing-m);
       margin-bottom: 0;
+      flex: 1;
+
+      #episode-numbers {
+        flex-shrink: 0;
+      }
     }
 
     #episode-buttons {
+      flex-shrink: 0;
+
       .episode-button {
         border: 1px solid var(--color-blue-a);
         padding: 0.5rem 1rem;
