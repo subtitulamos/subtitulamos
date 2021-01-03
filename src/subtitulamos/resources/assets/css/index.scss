@@ -74,6 +74,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            flex-shrink: 0;
 
             i {
               font-size: 1.2rem;
@@ -242,12 +243,14 @@
     #large-splash {
       #main-action-container {
         #search {
-          width: calc(100% - 6px - 10px);
+          width: 100%;
+          box-sizing: border-box;
           margin-left: auto;
           margin-right: auto;
+          flex: 1;
 
           input {
-            padding-left: 4px;
+            padding-left: 8px !important;
           }
         }
       }
