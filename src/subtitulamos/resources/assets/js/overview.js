@@ -8,6 +8,7 @@ let selectedPage = {
   modified: 1,
   uploads: 1,
   completed: 1,
+  resyncs: 1,
 };
 const contentPerPage = 5;
 
@@ -69,10 +70,11 @@ onDomReady(() => {
 });
 
 function loadOverviewData() {
-  loadOverviewGridCell("paused", contentPerPage);
-  loadOverviewGridCell("modified", contentPerPage);
   loadOverviewGridCell("uploads", contentPerPage);
+  loadOverviewGridCell("modified", contentPerPage);
   loadOverviewGridCell("completed", contentPerPage);
+  loadOverviewGridCell("resyncs", contentPerPage);
+  loadOverviewGridCell("paused", contentPerPage);
   loadComments(contentPerPage);
 }
 
