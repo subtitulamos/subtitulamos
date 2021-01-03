@@ -45,7 +45,7 @@ class AccessController
         $body = $request->getParsedBody();
         $username = $body['username'] ?? '';
         $password = $body['password'] ?? '';
-        $remember = ($body['remember'] ?? '') == 'true';
+        $remember = true;
 
         if (!$username || !$password) {
             return $response->withStatus(400);
