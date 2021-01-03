@@ -239,7 +239,7 @@ let comments = new Vue({
   },
   computed: {
     nextPageInvisible: function () {
-      return this.comments.length % contentPerPage;
+      return !this.comments.length || this.comments.length % contentPerPage;
     },
   },
 });
