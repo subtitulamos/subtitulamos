@@ -98,7 +98,7 @@ class SubtitleCommentsController
         ]);
     }
 
-    public function edit($cId, $request, $response, EntityManager $em, Auth $auth)
+    public function edit($cId, $request, $response, EntityManager $em, Translation $translation, Auth $auth)
     {
         $comment = $em->getRepository('App:SubtitleComment')->find($cId);
         if (!$comment) {
@@ -129,6 +129,7 @@ class SubtitleCommentsController
         $em->persist($event);
         $em->flush();
 
+        $translation->broadcastEditComment($comment);
         return $response->withStatus(200);
     }
 

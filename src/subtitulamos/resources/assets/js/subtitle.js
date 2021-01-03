@@ -72,6 +72,10 @@ Subtitle.prototype.wsMessage = function (event) {
         this.setCommentPin(data.id, data.pinned);
         break;
 
+      case "com-edit":
+        this.editComment(data.id, data.time, data.text);
+        break;
+
       case "uinfo":
         this.users[data.id] = {
           username: data.username,
@@ -378,6 +382,20 @@ Subtitle.prototype.setCommentPin = function (id, pinned) {
 
   if (idx != -1) {
     this.state.comments[idx].pinned = pinned;
+    this.sortComments();
+  }
+};
+
+Subtitle.prototype.editComment = function (id, time, text) {
+  let idx = this.state.comments.findIndex((c) => {
+    return c.id == id;
+  });
+
+  if (idx != -1) {
+    const c = this.state.comments[idx];
+    c.text = text;
+    c.edited_at = time;
+
     this.sortComments();
   }
 };

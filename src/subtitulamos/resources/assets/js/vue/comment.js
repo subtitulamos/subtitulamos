@@ -8,7 +8,6 @@ Vue.component("comment", {
       <section class="comment-info">
         <a :href="'/users/' + user.id">
           <span class="comment-creator text small bold" :class="userTypeClass">
-
             {{ user.username }}
           </span>
         </a>
