@@ -38,17 +38,19 @@ $getEle(".translate-subtitle").addEventListener("click", function () {
   });
 });
 
-$getEle("#episode-name").addEventListener("click", () => {
-  showOverlayFromTpl("episode-properties");
-});
-
-$getEle("#show-name").addEventListener("click", () => {
-  showOverlayFromTpl("show-properties");
-
-  $getAllEle(".checkbox").forEach((checkbox) => {
-    checkbox.addEventListener("click", invertCheckbox);
+if (canEditProperties) {
+  $getEle("#episode-name").addEventListener("click", () => {
+    showOverlayFromTpl("episode-properties");
   });
-});
+
+  $getEle("#show-name").addEventListener("click", () => {
+    showOverlayFromTpl("show-properties");
+
+    $getAllEle(".checkbox").forEach((checkbox) => {
+      checkbox.addEventListener("click", invertCheckbox);
+    });
+  });
+}
 
 $getAllEle(".subtitle-properties-button").forEach((button) => {
   button.addEventListener("click", (e) => {
