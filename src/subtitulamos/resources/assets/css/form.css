@@ -222,3 +222,16 @@ form button:active {
   grid-gap: var(--spacing-xs);
   place-items: self-start;
 }
+
+.form-error:not(:empty) {
+  padding: var(--spacing-xs);
+  border-radius: var(--standard-border-radius);
+  margin: var(--spacing-xs) 0;
+  animation: appearing 0.2s ease-in;
+  overflow: hidden;
+  border: 1px solid var(--color-red);
+  background-color: var(--color-baby-red);
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+}
