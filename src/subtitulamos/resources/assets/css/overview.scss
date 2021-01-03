@@ -90,6 +90,7 @@
         justify-content: center;
         border: 1px solid transparent;
         font-size: 0.9rem;
+        word-break: keep-all !important;
 
         &:hover {
           color: var(--color-blue-b);
