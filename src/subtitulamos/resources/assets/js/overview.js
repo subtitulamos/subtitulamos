@@ -29,6 +29,10 @@ onDomReady(() => {
         selectedPage[target] = Number(pageData);
       }
 
+      if (selectedPage[target] === 1) {
+        $pagesWrap.querySelector("[data-page='next'").classList.toggle("invisible", false);
+      }
+
       $pagesWrap
         .querySelector(".page-group")
         .classList.toggle("invisible", selectedPage[target] <= 1);
@@ -109,6 +113,9 @@ function loadOverviewGridCell(target, count, page) {
     .then((res) => res.json())
     .then((data) => {
       listRenderer($list, data);
+      if (data.length < count) {
+        $targetContainer.querySelector("[data-page='next'").classList.toggle("invisible", true);
+      }
     });
 }
 
