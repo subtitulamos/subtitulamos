@@ -473,6 +473,59 @@ class TranslationController
         return $response->withStatus(200);
     }
 
+    public function addSequence($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
+    {
+        $sub = $em->getRepository('App:Subtitle')->find($id);
+        if (!$sub) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        if (!$sub->isOriginal()) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
+        $body = $request->getParsedBody();
+        $seqNum = $body['num'] ?? 0;
+        if (!$seqNum) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
+        $nStartTime = $body['tstart'] ?? 0;
+        $nEndTime = $body['tend'] ?? 0;
+
+        if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
+            return $response->withStatus(400);
+        }
+
+        // Move ALL the sequences in ALL the versions
+        foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+            foreach ($targetSub->getSequences() as $seq) {
+                if ($seq->getNumber() >= $seqNum) {
+                    $seq->setNumber($seq->getNumber() + 1);
+                }
+            }
+        }
+
+        // Generate a copy of this sequence, we don't edit the original
+        $nseq = new Sequence();
+        $nseq->setSubtitle($sub);
+        $nseq->setNumber($seqNum);
+        $nseq->setRevision(0);
+        $nseq->setAuthor($auth->getUser());
+        $nseq->setStartTime($nStartTime);
+        $nseq->setEndTime($nEndTime);
+        $nseq->setText('');
+        $nseq->setLocked(false);
+        $nseq->setVerified(false);
+
+        $em->persist($nseq);
+        $em->flush();
+
+        $translation->broadcastSeqCreation($nseq);
+        $response->getBody()->write((string)$nseq->getId());
+        return $response->withStatus(200);
+    }
+
     /**
      * Handles the creation of a new translation for a given sequence
      */
