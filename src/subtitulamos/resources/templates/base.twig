@@ -32,7 +32,7 @@
     <div id="overlay" class="overlay-wrap hidden">
       <div class="overlay-container w-box-shadow bounce-in">
         <button id="overlay-close" type="button" class="close-button">
-          <i class="fas fa-times"></i>
+          <i class="fas fa-times" aria-hidden="true"></i>
         </button>
         <div id="overlay-content">
 
@@ -52,13 +52,12 @@
             </div>
           </a>
           <div id="control-panel-search" class="search-bar-container">
-            <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true"></i></button>
+            <button id="search-subtitles" title="Buscar"  class="text small"><i id="search_subtitles" class="fa fa-search" aria-hidden="true" aria-hidden="true"></i></button>
             <input id="search-input" data-search-bar-target='panel-search-results' type="text" class="text tiny" placeholder="Busca una serie... Ej.: Westworld" autocomplete="off" />
             <ul class="search-results w-box-shadow hidden" id='panel-search-results'></ul>
           </div>
           <button class="control-panel-button search" id='search-icon'>
-            <i class="fa fa-search"></i>
-          </button>
+            <i class="fa fa-search" aria-hidden="true"></i>
           </button>
           {% if auth.has_role('ROLE_MOD') %}
             <a class="control-panel-button" page="/overview" href='/overview'>
@@ -66,53 +65,53 @@
               <span class="text small">Visión general</span>
             </a>
             <a class="control-panel-button" page="/panel" href='/panel/alerts'>
-              <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-users-cog"></i>
+              <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-users-cog" aria-hidden="true"></i>
               <span class="text small">Panel de moderador</span>
             </a>
             <div class="control-panel-sub-section">
               <a class="control-panel-button" href='/panel/alerts'>
-                <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-bell"></i>
+                <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-bell" aria-hidden="true"></i>
                 <span>Alertas</span>
               </a>
               <a class="control-panel-button" href='/panel/logs'>
-                <i class="fas fa-clipboard-list"></i>
+                <i class="fas fa-clipboard-list" aria-hidden="true"></i>
                 <span>Log de eventos</span>
               </a>
               <a class="control-panel-button" href='/panel/userlist'>
-                <i class="fas fa-user-friends"></i>
+                <i class="fas fa-user-friends" aria-hidden="true"></i>
                 <span>Listado de usuarios</span>
               </a>
               <a class="control-panel-button" href='/panel/banlist'>
-                <i class="fas fa-user-slash"></i>
+                <i class="fas fa-user-slash" aria-hidden="true"></i>
                 <span>Usuarios baneados</span>
               </a>
             </div>
           {% endif %}
           <a class="control-panel-button" page="/shows" href='/shows'>
-            <i class="fas fa-list-ul"></i>
+            <i class="fas fa-list-ul" aria-hidden="true"></i>
             <span class="text small">Índice de series</span>
           </a>
           <a class="control-panel-button" page="/upload" href='/upload'>
-            <i class="fas fa-file-import"></i>
+            <i class="fas fa-file-import" aria-hidden="true"></i>
             <span class="text small">Subir subtítulo</span>
           </a>
         </div>
         <div id="control-panel-bottom-section" class="control-panel-section">
           <button class="control-panel-button" id="control-panel-minimize-toggle">
-            <i class="fas fa-chevron-circle-left"></i>
-            <i class="fas fa-chevron-circle-right"></i>
+            <i class="fas fa-chevron-circle-left" aria-hidden="true"></i>
+            <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
             <span class="text small">Minimizar</span>
           </button>
           <a class="control-panel-button" page="/me" href='/me'>
-            <i class="fas fa-user-circle"></i>
+            <i class="fas fa-user-circle" aria-hidden="true"></i>
             <span class="text small">Mi perfil</span>
           </a>
           <a class="control-panel-button" page="/rules" href='/rules'>
-            <i class="fas fa-book"></i>
+            <i class="fas fa-book" aria-hidden="true"></i>
             <span class="text small">Normas</span>
           </a>
           <a class="control-panel-button" href='/logout?return-path={{current_url()}}'>
-            <i class="fas fa-power-off"></i>
+            <i class="fas fa-power-off" aria-hidden="true"></i>
             <span class="text small">Cerrar sesión</span>
           </a>
         </div>
@@ -131,7 +130,7 @@
           <button class="text tiny spaced" id="shows-index"><a href="/shows">ÍNDICE DE SERIES</a></button>
           <button class="text tiny spaced" id="register">REGISTRO</button>
           <button class="text tiny spaced" id="login">INICIAR SESIÓN</button>
-          <button id="homepage-menu-button"><i class="fas fa-bars"></i></button>
+          <button id="homepage-menu-button"><i class="fas fa-bars" aria-hidden="true"></i></button>
         </nav>
       </header>
     {% endif %}
@@ -156,12 +155,12 @@
               <a class="text light" href="/shows">Índice de series</a>
             </nav>
             <nav class="social-networks">
-              <a class="text light" href="https://foro.subtitulamos.tv/" title="Foro" target="_blank"><i class="fab fa-forumbee"></i></a>
-              <a class="text light" href="https://www.facebook.com/subtitulamos.tv" title="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-              <a class="text light" href="https://twitter.com/subtitulamostv" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-              <a class="text light" href="https://t.me/subtitulamostv" title="Telegram" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-              <a class="text light" href="https://github.com/subtitulamos/subtitulamos" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-              <a class="text light" href="/rss" title="RSS" target="_blank"><i class="fas fa-rss"></i></a>
+              <a class="text light" href="https://foro.subtitulamos.tv/" title="Foro" target="_blank"><i class="fab fa-forumbee" aria-hidden="true"></i></a>
+              <a class="text light" href="https://www.facebook.com/subtitulamos.tv" title="Facebook" target="_blank"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+              <a class="text light" href="https://twitter.com/subtitulamostv" title="Twitter" target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+              <a class="text light" href="https://t.me/subtitulamostv" title="Telegram" target="_blank"><i class="fab fa-telegram-plane" aria-hidden="true"></i></a>
+              <a class="text light" href="https://github.com/subtitulamos/subtitulamos" title="GitHub" target="_blank"><i class="fab fa-github" aria-hidden="true"></i></a>
+              <a class="text light" href="/rss" title="RSS" target="_blank"><i class="fas fa-rss" aria-hidden="true"></i></a>
             </nav>
           </div>
         </div>
@@ -194,11 +193,11 @@
       <form id="login-form">
         <div class="form-field text small" fieldname="Nombre de usuario">
           <input type="text" id="username" required autocomplete="username">
-          <i class="fas fa-user"></i>
+          <i class="fas fa-user" aria-hidden="true"></i>
         </div>
         <div class="form-field text small" fieldname="Contraseña">
           <input type="password" id="password" required autocomplete="current-password">
-          <i class="fas fa-key"></i>
+          <i class="fas fa-key" aria-hidden="true"></i>
         </div>
         <div class="form-error" id='login-error'></div>
         <button id='login-button' type="submit" class="text light">Iniciar sesión</button>
@@ -211,23 +210,23 @@
       <form id="register-form" action="/register" method="POST">
         <div class="form-field text small validated" fieldname="Nombre de usuario">
           <input type="text" name="username" required autocomplete="off">
-          <i class="fas fa-user"></i>
+          <i class="fas fa-user" aria-hidden="true"></i>
         </div>
         <div class="form-field text small validated" fieldname="Contraseña">
           <input type="password" name="password" required autocomplete="off">
-          <i class="fas fa-key"></i>
+          <i class="fas fa-key" aria-hidden="true"></i>
         </div>
         <div class="form-field text small validated" fieldname="Confirmar contraseña">
           <input type="password" name="password-confirmation" required autocomplete="off">
-          <i class="fas fa-key"></i>
+          <i class="fas fa-key" aria-hidden="true"></i>
         </div>
         <div class="form-field text small validated" fieldname="Correo electrónico">
           <input type="email" name="email" required>
-          <i class="fas fa-envelope"></i>
+          <i class="fas fa-envelope" aria-hidden="true"></i>
         </div>
         <div id="register-checkbox" class="checkbox-field">
           <div class="checkbox">
-            <i class="fas fa-check"></i>
+            <i class="fas fa-check" aria-hidden="true"></i>
             <input type='checkbox' name="terms" required>
           </div>
           Acepto las reglas y las condiciones generales de uso del sitio web
