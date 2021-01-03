@@ -37,6 +37,7 @@
       border: 1px solid transparent;
       font-size: 0.9rem;
       margin-right: var(--spacing-xxs);
+      word-break: keep-all !important;
 
       &:hover {
         border: 1px solid var(--color-blue-b);
