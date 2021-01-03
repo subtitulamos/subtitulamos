@@ -80,6 +80,8 @@
   --spacing-s: 0.9375rem;
   --spacing-xs: 0.625rem;
   --spacing-xxs: 0.312rem;
+  --header-padding-x: 30px;
+  --header-padding-y: 25px;
 }
 
 /* Prevent a white border by the bottom */
@@ -248,10 +250,8 @@ h4 {
 }
 
 header {
-  --padding-x: 50px;
-  --padding-y: 25px;
-  width: calc(100% - var(--padding-x) * 2);
-  padding: var(--padding-y) var(--padding-x);
+  width: calc(100% - var(--header-padding-x) * 2);
+  padding: var(--header-padding-y) var(--header-padding-x);
   background-color: var(--color-bg);
   display: flex;
   align-items: center;
@@ -288,10 +288,6 @@ header {
   color: var(--color-blue-a);
 }
 
-#homepage-menu-button {
-  display: none;
-}
-
 #login {
   background-color: var(--color-blue-a);
   border-radius: 25px;
@@ -321,14 +317,14 @@ header {
   justify-content: space-between;
 }
 
-#page-container.control-panel-is-open {
+#page-container.logged-in.control-panel-is-open {
   padding-left: calc(var(--control-panel-open-width) + var(--control-panel-padding-x) * 2);
   width: 100%;
   box-sizing: border-box;
   transition: 0s ease all;
 }
 
-#page-container.control-panel-is-closed {
+#page-container.logged-in.control-panel-is-closed {
   padding-left: calc(var(--control-panel-closed-width) + var(--control-panel-padding-x) * 2);
   width: 100%;
   box-sizing: border-box;
@@ -527,29 +523,22 @@ footer > #footer-content {
   margin-top: var(--spacing-m);
 }
 
-@media all and (max-width: 830px) {
+@media all and (max-width: 800px) {
+  /* see control_panel.css media as well */
   header {
-    --padding-x: 25px;
+    --header-padding-x: 25px;
   }
 
   #top-links {
-    grid-template-columns: 1fr 30px;
+    grid-template-columns: 1fr 5rem;
     justify-items: initial;
-  }
-
-  #homepage-menu-button {
-    display: block;
-    font-size: 1.2rem;
-    text-align: center;
-    width: 100%;
-    padding: 0;
   }
 
   #register {
     border: 1px solid var(--color-blue-a);
     border-radius: 25px;
     padding: var(--standard-padding);
-    margin-right: 20px;
+    margin-right: 0px;
   }
 
   #register:hover {
@@ -572,6 +561,8 @@ footer > #footer-content {
 @media all and (max-width: 567px) {
   :root {
     --footer-padding-y: 50px;
+    --header-padding-y: 15px;
+    --header-padding-x: 15px;
   }
 
   .content {
@@ -581,11 +572,6 @@ footer > #footer-content {
 
   #top-links {
     width: 100%;
-  }
-
-  header {
-    --padding-y: 15px;
-    --padding-x: 15px;
   }
 
   header #header-logo-wrap {
