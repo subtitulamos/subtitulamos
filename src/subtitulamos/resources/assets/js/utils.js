@@ -85,6 +85,11 @@ function getOverlayNode() {
 
 export function showOverlayFromTpl(tplId) {
   const $template = document.getElementById(tplId);
+  if (!$template) {
+    console.error("Template with ID", tplId, "doesn't exist");
+    return;
+  }
+
   const $node = document.importNode($template.content, true);
 
   const $overlay = getOverlayNode();

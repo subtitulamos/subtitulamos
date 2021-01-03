@@ -324,6 +324,7 @@
     var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var canEditProperties = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var isBanned = {{ auth.user ? (auth.user.ban ? 'true' : 'false') : false }};
   </script>
   {{ assets.js('episode') }}
