@@ -6,6 +6,7 @@
 import { $getAllEle, $getById, $getEle, easyFetch, onDomReady } from "./utils";
 import timeago from "timeago.js";
 import Vue from "vue";
+import "./vue/comment.js";
 import "../css/overview.scss";
 
 let selectedPage = {
