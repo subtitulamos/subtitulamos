@@ -192,6 +192,23 @@ class Translation
     }
 
     /**
+     * Broadcasts comment being edited
+     *
+     * @param \App\Entities\SubtitleComment $c
+     * @return void
+     */
+    public function broadcastEditComment(SubtitleComment $c)
+    {
+        $sub = $c->getSubtitle();
+        $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
+            'type' => 'com-edit',
+            'id' => $c->getId(),
+            'time' => $c->getEditTime()->format(\DateTime::ATOM),
+            'text' => $c->getText()
+        ]));
+    }
+
+    /**
      * Broadcasts comment being pinned/unpinned
      *
      * @param \App\Entities\SubtitleComment $c
