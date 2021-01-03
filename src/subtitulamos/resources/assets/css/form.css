@@ -13,16 +13,11 @@
 }
 
 .form-field {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row-reverse;
   border-bottom: 1px solid var(--color-gray-divisions);
   margin-bottom: var(--spacing-xs);
   background-color: var(--color-offwhite);
   border-radius: 0.2rem;
   position: relative;
-  padding-left: 15px;
-  padding-top: 20px;
 }
 
 .form-field::before {
@@ -38,14 +33,16 @@
   color: var(--color-gray-c);
   flex-shrink: 0;
   width: 20px;
-  height: 20px;
+  min-height: 1.5rem;
+  line-height: 1.5rem;
   display: grid;
   place-items: center;
   text-align: center;
   position: relative;
   flex-shrink: 0;
-  margin-top: calc(var(--standard-padding-y) + 0.75rem - 10px);
-  /* regular margin + half the height of the input - half height of icon */
+  position: absolute;
+  top: calc(var(--standard-padding-y) + 15px);
+  left: var(--spacing-s);
 }
 
 .form-field input:focus + i,
@@ -60,12 +57,16 @@
 .form-field textarea {
   flex: 1;
   color: var(--color-gray-a);
-  max-width: calc(
-    100% - var(--standard-padding-x) * 2 - 20px
-  ); /* whole width - margin - icon size */
   width: 100%;
-  margin: var(--standard-padding);
+  box-sizing: border-box;
   min-height: 1.5rem;
+  line-height: 1.5rem;
+  position: relative;
+  padding-top: calc(var(--standard-padding-y) + 15px);
+  padding-bottom: var(--standard-padding-y);
+  padding-right: calc(var(--standard-padding-x) + 15px);
+  padding-left: calc(var(--spacing-s) * 2 + 20px);
+  text-overflow: ellipsis;
 }
 
 .form-field textarea {
@@ -136,6 +137,7 @@
 .form-field > .dropdown {
   position: absolute;
   right: 15px;
+  left: unset;
 }
 
 .form-field input::placeholder,
