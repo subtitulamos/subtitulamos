@@ -32,17 +32,14 @@ function splitSeasonAndName(val) {
 
 onDomReady(function () {
   const $uploadForm = document.getElementById("upload-form");
-  let $newShow;
+  let $newShow = $getEle("#new-show");
   document.getElementById("show-id").addEventListener("change", function () {
-    if (this.value == "NEW") {
-      if (!$newShow) {
-        $newShow = $getEle("#new-show");
-        $newShow.closest(".form-field").classList.toggle("hidden", false);
-        $newShow.focus();
-      }
-    } else if ($newShow) {
-      $newShow.closest(".form-field").classList.toggle("hidden", true);
-      $newShow = null;
+    const isNewShow = this.value == "NEW";
+    $newShow.parentElement.classList.toggle("hidden", !isNewShow);
+    if (isNewShow) {
+      $newShow.focus();
+    } else {
+      $newShow.value = "";
     }
   });
 
@@ -53,7 +50,12 @@ onDomReady(function () {
       e.target.setCustomValidity(""); // Reset error, user might've fixed it
     };
     $ele.addEventListener("change", clearValidity);
-    $ele.addEventListener("keyup", clearValidity);
+    $ele.addEventListener("keyup", (e) => {
+      clearValidity(e);
+      if (e.key == "Enter") {
+        $uploadForm.querySelector("[type=submit]").click();
+      }
+    });
   });
 
   // Logic for splitting season/episode and name
@@ -115,8 +117,7 @@ onDomReady(function () {
     const $episodeNameField = $getEle("#ep-name");
     const uploadInfo = splitSeasonAndName($episodeNameField.value);
 
-    const form = e.target;
-    let data = new FormData(form);
+    let data = new FormData($uploadForm);
 
     data.delete("name");
     data.append("title", uploadInfo.name);
@@ -154,7 +155,7 @@ onDomReady(function () {
                 document.getElementsByName(e[0])[0].setCustomValidity(e[1]);
               });
 
-              form.reportValidity();
+              $uploadForm.reportValidity();
             })
             .catch(reportUnknownError);
         } else {
