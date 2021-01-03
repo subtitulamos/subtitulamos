@@ -73,7 +73,7 @@ function loadOverviewData() {
   loadOverviewGridCell("modified", contentPerPage);
   loadOverviewGridCell("uploads", contentPerPage);
   loadOverviewGridCell("completed", contentPerPage);
-  loadComments(contentPerPage, true);
+  loadComments(contentPerPage);
 }
 
 function listRenderer($list, data) {
@@ -121,10 +121,11 @@ let comments = new Vue({
     comments: [],
     page: 1,
     commentType: "subtitles",
+    loading: false,
   },
   methods: {
-    refresh: function (hardRefresh = false) {
-      loadComments(contentPerPage, hardRefresh);
+    refresh: function () {
+      loadComments(contentPerPage);
     },
 
     remove: function (id) {
@@ -244,10 +245,8 @@ let comments = new Vue({
   },
 });
 
-function loadComments(count, hardRefresh = false) {
-  if (hardRefresh) {
-    comments.comments = [];
-  }
+function loadComments(count) {
+  comments.loading = true;
   easyFetch(`/comments/${comments.commentType}/load`, {
     params: {
       from: (comments.page - 1) * count,
@@ -260,5 +259,6 @@ function loadComments(count, hardRefresh = false) {
     })
     .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
-    });
+    })
+    .finally(() => (comments.loading = false));
 }

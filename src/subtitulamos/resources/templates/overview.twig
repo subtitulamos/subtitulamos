@@ -62,13 +62,14 @@
       <div class="grid-content">
         <div id="comments-container" class="comments-container">
           <div @click="refresh(true)" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-          <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
+          <div id="comments-navigation-list" class="navigation-list no-scroll-bar">
             <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}' id="last-uploaded">SUBTÍTULOS</div>
             <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}' id="last-edited">EPISODIOS</div>
           </div>
           <div id="comments-spacer">
-            <div id="comment-list">
-              <div v-if="comments.length == 0">No hay nada aqui en el momento</div>
+            <div class="no-comments" v-if="this.loading">Cargando...</div>
+            <div class="no-comments" v-else-if="this.length == 0">No hay nada aqui en el momento</div>
+            <div v-else id="comment-list">
               <comment v-for="comment in comments"
                 :key="comment.id"
                 :id="comment.id"
