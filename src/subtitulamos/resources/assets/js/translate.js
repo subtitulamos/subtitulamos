@@ -90,7 +90,7 @@ Vue.component("sequence", {
             'history': history,
             'untranslated':!editing && !id,
           }">
-            <div class="number"><span v-if="!history"><span class='seq-num-clickable' @click="seqNumClick">{{ number }}</span></span></div>
+            <div class="number"><a v-if="!history" class='seq-num-clickable' @click="seqNumClick">{{ number }}</a></div>
             <div class="user"><a :href="'/users/' + author" tabindex="-1">{{ authorName }}</a></div>
             <div class="time" @click="openSequence">
                 <div v-if="!editing || !canEditTimes">

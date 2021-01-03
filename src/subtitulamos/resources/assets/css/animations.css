@@ -87,3 +87,10 @@
     opacity: 1;
   }
 }
+
+@keyframes animate_highlight {
+  0%,
+  50% {
+    background: var(--color-blue-d);
+  }
+}
