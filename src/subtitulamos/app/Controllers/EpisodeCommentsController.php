@@ -15,7 +15,6 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
-use Slim\Views\Twig;
 
 class EpisodeCommentsController
 {
@@ -83,14 +82,6 @@ class EpisodeCommentsController
         }
 
         return Utils::jsonResponse($response, $comments);
-    }
-
-    public function viewAll($response, Twig $twig)
-    {
-        return $twig->render($response, 'comment_list.twig', [
-            'comment_type_name' => 'episodios',
-            'comment_type' => 'episodes'
-        ]);
     }
 
     public function edit($cId, $request, $response, EntityManager $em, Auth $auth)
