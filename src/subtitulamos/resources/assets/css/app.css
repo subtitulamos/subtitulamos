@@ -582,3 +582,11 @@ footer > #footer-content {
     display: none;
   }
 }
+
+.disclaimer-row {
+  margin-top: 42px;
+}
+
+.disclaimer-row a {
+  font-weight: bold;
+}
