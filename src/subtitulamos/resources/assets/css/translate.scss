@@ -260,6 +260,14 @@
         border-top: 2px solid var(--color-gray-divisions);
       }
 
+      &.untranslated {
+        .editable-text {
+          .closed {
+            font-style: italic;
+          }
+        }
+      }
+
       &.locked {
         background-color: var(--color-baby-green);
         color: var(--color-green-darker);
