@@ -1,6 +1,6 @@
 /**
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
- * @copyright 2020 subtitulamos.tv
+ * @copyright 2021 subtitulamos.tv
  */
 
 INSERT INTO `subtitles` (`id`, `version_id`, `lang`, `direct_upload`, `upload_time`, `progress`, `pause_id`, `edit_time`, `complete_time`, `downloads`, `resync`, `last_edited_by`) VALUES
