@@ -12,25 +12,16 @@
   {% endfor %}
 
   <h1>Logs</h1>
-  <table>
-    <thead>
-      <th>Fecha</th>
-      <th>Usuario</th>
-      <th>Evento</th>
-    </thead>
-
-    <tbody>
-
+  <div class="grid">
+    <div class="text bold">Fecha</div>
+    <div class="text bold">Usuario</div>
+    <div class="text bold">Evento</div>
     {% for event in logs %}
-    <tr>
-      <td>{{event.date|date("D, d M Y, H:i:s")}}</td>
-      <td>{{event.user.username}}</td>
-      <td>{{event.data|raw}}</td>
-    </tr>
+      <div>{{event.date|date("D, d M Y, H:i:s")}}</div>
+      <div>{{event.user.username}}</div>
+      <div>{{event.data|raw}}</div>
     {% endfor %}
-
-    </tbody>
-  </table>
+  </div>
 {% endblock %}
 
 {% block scripts %}
