@@ -340,7 +340,7 @@ Subtitle.prototype.addSeq = function (
     locked: false,
     verified: false,
     secondary_text: originalText,
-    text: isOriginalSub ? originalText : null,
+    text: isOriginalSub ? originalText : "",
   };
 
   if (number > maxSeqNum) {
