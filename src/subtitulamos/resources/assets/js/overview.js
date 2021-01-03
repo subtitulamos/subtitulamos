@@ -73,7 +73,7 @@ function loadOverviewData() {
   loadOverviewGridCell("modified", contentPerPage);
   loadOverviewGridCell("uploads", contentPerPage);
   loadOverviewGridCell("completed", contentPerPage);
-  loadComments(contentPerPage);
+  loadComments(contentPerPage, true);
 }
 
 function listRenderer($list, data) {
@@ -123,8 +123,8 @@ let comments = new Vue({
     commentType: "subtitles",
   },
   methods: {
-    refresh: function () {
-      loadComments(contentPerPage);
+    refresh: function (hardRefresh = false) {
+      loadComments(contentPerPage, hardRefresh);
     },
 
     remove: function (id) {
@@ -244,11 +244,13 @@ let comments = new Vue({
   },
 });
 
-function loadComments(count, page) {
-  comments.comments = [];
+function loadComments(count, hardRefresh = false) {
+  if (hardRefresh) {
+    comments.comments = [];
+  }
   easyFetch(`/comments/${comments.commentType}/load`, {
     params: {
-      from: (page || comments.page - 1) * count,
+      from: (comments.page - 1) * count,
       count,
     },
   })

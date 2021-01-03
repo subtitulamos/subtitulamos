@@ -61,7 +61,7 @@
       <h4 class="grid-cell-title">Últimos comentarios</h4>
       <div class="grid-content">
         <div id="comments-container" class="comments-container">
-          <div @click="refresh" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
+          <div @click="refresh(true)" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
           <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
             <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}' id="last-uploaded">SUBTÍTULOS</div>
             <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}' id="last-edited">EPISODIOS</div>
