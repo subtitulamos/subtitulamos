@@ -1,7 +1,12 @@
+/**
+ * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
+ * @copyright 2020 subtitulamos.tv
+ */
+
 import { $getAllEle, $getById, $getEle, easyFetch, onDomReady } from "./utils";
 import timeago from "timeago.js";
 import Vue from "vue";
-import "./vue/comment.js";
+import "../css/overview.scss";
 
 let selectedPage = {
   paused: 1,
