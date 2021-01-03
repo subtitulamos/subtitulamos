@@ -35,14 +35,7 @@
       }
     }
 
-    #comments-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .grid-content,
-    #comments-spacer {
+    .grid-content {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -122,6 +115,27 @@
 
   #last-comments {
     grid-column: span 2;
+  }
+
+  #comments-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    #comments-navigation-list {
+      margin-bottom: var(--spacing-s);
+    }
+
+    #comments-spacer {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+
+      .no-comments {
+        padding-left: var(--spacing-s);
+      }
+    }
   }
 }
 
