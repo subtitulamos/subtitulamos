@@ -1,6 +1,5 @@
 import Vue from "vue";
 import timeago from "timeago.js";
-//TODO: Turn into a .vue file
 
 Vue.component("comment", {
   template: `
@@ -13,7 +12,7 @@ Vue.component("comment", {
             {{ user.username }}
           </span>
         </a>
-        <span class="comment-date text tiny">{{ date }} <span v-if="editedAt && publishedAt != editedAtDate">· Editado {{lastEditDate}}</span></span>
+        <span class="comment-date text tiny">{{ date }} <span v-if="editedAtDate && publishedAt != editedAtDate">· Editado {{lastEditDate}}</span></span>
         <span class='comment-episode' v-if="episode">
           <a class="text small bold" :href="'/episodes/'+ episode.id">@{{ episode.name }}</a>
         </span>
