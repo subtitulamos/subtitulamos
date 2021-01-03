@@ -194,6 +194,7 @@
 }
 #control-panel.open #control-panel-logo-wrap #logo-text {
   display: unset;
+  word-break: keep-all !important;
 }
 
 #control-panel .control-panel-button.search {
