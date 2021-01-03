@@ -169,6 +169,15 @@ Subtitle.prototype.loadComments = function () {
     .then((res) => res.json())
     .then((reply) => {
       this.state.comments = reply;
+
+      for (const comment of reply) {
+        if (!this.users[comment.user.id]) {
+          this.users[comment.user.id] = {
+            username: comment.user.username,
+            roles: comment.user.roles,
+          };
+        }
+      }
     })
     .catch(function () {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
@@ -395,8 +404,6 @@ Subtitle.prototype.editComment = function (id, time, text) {
     const c = this.state.comments[idx];
     c.text = text;
     c.edited_at = time;
-
-    this.sortComments();
   }
 };
 
