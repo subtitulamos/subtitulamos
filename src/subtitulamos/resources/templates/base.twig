@@ -59,9 +59,6 @@
           <button class="control-panel-button search" id='search-icon'>
             <i class="fa fa-search"></i>
           </button>
-          <button class="control-panel-button">
-            <i class="fas fa-bookmark"></i>
-            <span class="text small">Guardados</span>
           </button>
           {% if auth.has_role('ROLE_MOD') %}
             <a class="control-panel-button" page="/overview" href='/overview'>
