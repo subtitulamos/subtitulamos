@@ -4,22 +4,40 @@ import Vue from "vue";
 import "./vue/comment.js";
 
 let selectedPage = {
-  paused: "1",
-  modified: "1",
-  uploads: "1",
-  completed: "1",
-  comments: "1",
+  paused: 1,
+  modified: 1,
+  uploads: 1,
+  completed: 1,
+  comments: 1,
 };
 
 onDomReady(() => {
+  // Page navigation
   const $pages = $getAllEle("[data-page]");
   $pages.forEach(($button) => {
     $button.addEventListener("click", () => {
-      const target = $button.closest(".pages").dataset.target;
-      loadOverviewGridCell(target, 5, $button.dataset.page);
+      const $pagesWrap = $button.closest(".pages");
+      const target = $pagesWrap.dataset.target;
+      const pageData = $button.dataset.page;
+      const currentPage = selectedPage[target];
+
+      if (pageData == "previous") {
+        selectedPage[target] = Math.max(1, currentPage - 1);
+      } else if (pageData == "next") {
+        selectedPage[target] = currentPage + 1;
+      } else {
+        selectedPage[target] = Number(pageData);
+      }
+
+      $pagesWrap
+        .querySelector(".page-group")
+        .classList.toggle("invisible", selectedPage[target] <= 1);
+
+      loadOverviewGridCell(target, 5, selectedPage[target]);
     });
   });
 
+  // Reload data on clicking the refresh button
   const $reloadButtons = $getAllEle("[data-reload]");
   $reloadButtons.forEach(($button) => {
     $button.addEventListener("click", () => {
@@ -32,23 +50,14 @@ onDomReady(() => {
     });
   });
 
+  // Initial data load and automatic refresh
   const $overview = $getById("overview-grid");
   if ($overview) {
-    loadOverviewGridCell("paused", 5, selectedPage.paused);
-    loadOverviewGridCell("modified", 5, selectedPage.modified);
-    loadOverviewGridCell("uploads", 5, selectedPage.uploads);
-    loadOverviewGridCell("completed", 5, selectedPage.completed);
-    loadComments(selectedPage.comments);
-
-    setInterval(() => {
-      loadOverviewGridCell("paused", 5, selectedPage.paused);
-      loadOverviewGridCell("modified", 5, selectedPage.modified);
-      loadOverviewGridCell("uploads", 5, selectedPage.uploads);
-      loadOverviewGridCell("completed", 5, selectedPage.completed);
-      loadComments(selectedPage.comments);
-    }, 60000);
+    loadOverviewData();
+    setInterval(loadOverviewData, 60000);
   }
 
+  // Expanding overview cards on mobile
   $getAllEle(".grid-cell-title").forEach(($cellTitle) => {
     const $cell = $cellTitle.closest(".grid-cell");
 
@@ -59,13 +68,12 @@ onDomReady(() => {
   });
 });
 
-function setSelectedPage(searchPath, pageNumber) {
-  const $pages = $getAllEle(`[data-search-path="${searchPath}"] .page`);
-  $pages.forEach(($page) => {
-    $page.classList.toggle("selected", $page.dataset.page === pageNumber);
-  });
-
-  selectedPage[searchPath] = pageNumber;
+function loadOverviewData() {
+  loadOverviewGridCell("paused", 5, selectedPage.paused);
+  loadOverviewGridCell("modified", 5, selectedPage.modified);
+  loadOverviewGridCell("uploads", 5, selectedPage.uploads);
+  loadOverviewGridCell("completed", 5, selectedPage.completed);
+  loadComments(selectedPage.comments);
 }
 
 function listRenderer($list, data) {
@@ -90,21 +98,17 @@ function listRenderer($list, data) {
 function loadOverviewGridCell(target, count, page) {
   const $targetContainer = $getEle(`[data-search-path="${target}"]`);
   const $list = $targetContainer.querySelector("ul");
-  const $count = $targetContainer.querySelector(".count");
 
   const searchPath = $targetContainer.dataset.searchPath;
-  setSelectedPage(searchPath, page);
-
   easyFetch("/search/" + searchPath, {
     params: {
-      from: (parseInt(page) - 1) * count,
+      from: (page - 1) * count,
       count,
     },
   })
     .then((res) => res.json())
     .then((data) => {
       listRenderer($list, data);
-      $count.innerHTML = data.length;
     });
 }
 
@@ -242,8 +246,6 @@ function loadComments(page) {
     .then((data) => data.json())
     .then((data) => {
       comments.comments = data;
-      const $count = $commentsContainer.querySelector(".count");
-      $count.innerHTML = data.length;
     })
     .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");

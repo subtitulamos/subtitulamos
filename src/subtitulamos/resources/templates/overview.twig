@@ -2,40 +2,63 @@
   <h1>Visión general</h1>
   <div id="overview-grid" class="grid">
     <div id="paused" class="grid-cell collapsed w-box-shadow" data-search-path="paused">
-      <h4 class="grid-cell-title">Pausadas (<span class="count text bold">...</span>)</h4>
+      <h4 class="grid-cell-title">Pausadas</h4>
       <div class="reload" data-reload="paused"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <div class="grid-content">
         <ul>Cargando...</ul>
+        <div class="pages" data-target="paused">
+          <div class="page-group invisible">
+            <button class="page" data-page="1">1</button>
+            <button class="page" data-page="previous"><i class="fas fa-chevron-left"></i></button>
+          </div>
+          <button class="page" data-page="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
       </div>
     </div>
     <div id="modified" class="grid-cell collapsed w-box-shadow" data-search-path="modified">
-      <h4 class="grid-cell-title">Últimas modificaciones (<span class="count text bold">...</span>)</h4>
+      <h4 class="grid-cell-title">Últimas modificaciones</h4>
       <div class="reload" data-reload="modified"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <div class="grid-content">
         <ul>Cargando...</ul>
         <div class="pages" data-target="modified">
-          <button class="page" data-page="1">1</button>
-          <button class="page" data-page="2">2</button>
-          <button class="page" data-page="3">3</button>
+          <div class="page-group invisible">
+            <button class="page" data-page="1">1</button>
+            <button class="page" data-page="previous"><i class="fas fa-chevron-left"></i></button>
+          </div>
+          <button class="page" data-page="next"><i class="fas fa-chevron-right"></i></button>
         </div>
       </div>
     </div>
     <div id="last-uploads" class="grid-cell collapsed w-box-shadow" data-search-path="uploads">
-      <h4 class="grid-cell-title">Últimas subidas (<span class="count text bold">...</span>)</h4>
+      <h4 class="grid-cell-title">Últimas subidas</h4>
       <div class="reload" data-reload="uploads"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <div class="grid-content">
         <ul>Cargando...</ul>
+        <div class="pages" data-target="uploads">
+          <div class="page-group invisible">
+            <button class="page" data-page="1">1</button>
+            <button class="page" data-page="previous"><i class="fas fa-chevron-left"></i></button>
+          </div>
+          <button class="page" data-page="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
       </div>
     </div>
     <div id="last-completed" class="grid-cell collapsed w-box-shadow" data-search-path="completed">
-      <h4 class="grid-cell-title">Últimas traducciones (<span class="count text bold">...</span>)</h4>
+      <h4 class="grid-cell-title">Últimas traducciones</h4>
       <div class="reload" data-reload="completed"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
       <div class="grid-content">
         <ul>Cargando...</ul>
+        <div class="pages" data-target="completed">
+          <div class="page-group invisible">
+            <button class="page" data-page="1">1</button>
+            <button class="page" data-page="previous"><i class="fas fa-chevron-left"></i></button>
+          </div>
+          <button class="page" data-page="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
       </div>
     </div>
     <div id="last-comments" class="grid-cell collapsed w-box-shadow">
-      <h4 class="grid-cell-title">Últimos comentarios (<span class="count text bold">...</span>)</h4>
+      <h4 class="grid-cell-title">Últimos comentarios</h4>
       <div class="grid-content">
         <div class="reload" data-reload="comments"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
         <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
