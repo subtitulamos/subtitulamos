@@ -53,6 +53,7 @@ function addRoutes(&$app)
     $app->post('/subtitles/{subId:[0-9]+}/hammer', ['\App\Controllers\SubtitleController', 'doHammer'])->add($needsRole('ROLE_MOD'));
     $app->post('/subtitles/{subId:[0-9]+}/properties', ['\App\Controllers\SubtitleController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
     $app->post('/subtitles/{subId:[0-9]+}/alert', ['\App\Controllers\AlertController', 'subtitleAlert']); // "Access" managed at the controller level
+    $app->get('/subtitles/{id:[0-9]+}/download', ['\App\Controllers\DownloadController', 'download']);
 
     $app->post('/episodes/{epId:[0-9]+}/edit', ['\App\Controllers\EpisodeController', 'saveEdit'])->add($needsRole('ROLE_MOD'));
     $app->post('/episodes/{epId:[0-9]+}/favorite', ['\App\Controllers\EpisodeController', 'favorite'])->add($needsRole('ROLE_USER'));
@@ -71,7 +72,6 @@ function addRoutes(&$app)
     $app->get('/shows', ['\App\Controllers\ShowController', 'viewAll'])->setName('showlist');
     $app->get('/shows/{showId:[0-9]+}[/season/{season:[0-9]+}]', ['\App\Controllers\ShowController', 'view'])->setName('show');
     $app->post('/shows/{showId:[0-9]+}/properties', ['\App\Controllers\ShowController', 'saveProperties'])->add($needsRole('ROLE_MOD'));
-    $app->get('/subtitles/{id:[0-9]+}/download', ['\App\Controllers\DownloadController', 'download']);
 
     $app->get('/comments/episodes', ['\App\Controllers\EpisodeCommentsController', 'viewAll'])->add($needsRole('ROLE_TT'));
     $app->get('/comments/episodes/load', ['\App\Controllers\EpisodeCommentsController', 'listAll'])->add($needsRole('ROLE_TT'));
@@ -98,7 +98,6 @@ function addRoutes(&$app)
     $app->get('/disclaimer', ['\App\Controllers\TermsController', 'viewDisclaimer']);
     $app->get('/rss', ['\App\Controllers\RSSController', 'viewFeed']);
 
-    $app->get('/panel', ['\App\Controllers\Panel\PanelIndexController', 'view'])->add($needsRole('ROLE_MOD'));
     $app->get('/panel/userlist', ['\App\Controllers\Panel\PanelUserlistController', 'view'])->setName('userlist')->add($needsRole('ROLE_MOD'));
     $app->get('/panel/alerts', ['\App\Controllers\Panel\PanelAlertsController', 'view'])->setName('alerts')->add($needsRole('ROLE_MOD'));
     $app->post('/panel/alerts', ['\App\Controllers\Panel\PanelAlertsController', 'saveComment'])->add($needsRole('ROLE_MOD'));
