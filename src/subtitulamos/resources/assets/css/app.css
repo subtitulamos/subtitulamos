@@ -468,17 +468,26 @@ footer > #footer-content {
   left: 0;
 }
 
-.overlay-content {
+.overlay-container {
+  position: relative;
+  background-color: var(--color-bg);
   z-index: 2;
-}
-
-#overlay-content {
+  border-radius: var(--standard-border-radius);
+  max-width: 100%;
+  box-sizing: border-box;
   padding: var(--spacing-xl);
 }
 
-.overlay-content .close-button {
-  right: 15px;
-  top: 12px;
+.overlay-container .close-button {
+  right: var(--spacing-xs);
+  top: var(--spacing-xs);
+  z-index: 3;
+}
+
+.overlay-container .form-wrap {
+  min-width: 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
 }
 
 .close-button {

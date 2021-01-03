@@ -30,14 +30,12 @@
   <div id="base" class="{{ auth.user is null ? 'w-header' }}">
     {# Background fade pan that displays when the login/reg area is open #}
     <div id="overlay" class="overlay-wrap hidden">
-      <div class="overlay-content bounce-in">
-        <div class="form-wrap w-box-shadow">
-          <button id="overlay-close" type="button" class="close-button">
-            <i class="fas fa-times"></i>
-          </button>
-          <div id="overlay-content">
+      <div class="overlay-container w-box-shadow bounce-in">
+        <button id="overlay-close" type="button" class="close-button">
+          <i class="fas fa-times"></i>
+        </button>
+        <div id="overlay-content">
 
-          </div>
         </div>
       </div>
       <div id="overlay-fade" class="fade-pan"></div>
