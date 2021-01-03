@@ -191,9 +191,9 @@ onDomReady(function () {
 
 const $ctrlPanel = document.getElementById("control-panel");
 const $pageContainer = $getById("page-container");
+const PERSIST_LEFT_PANEL_OPEN = window.innerWidth > 800; // For smaller widths, it's a bad UX (hamburger menu)
 if ($ctrlPanel) {
-  let openStatus = localStorage.getItem("menu-open") === "true";
-
+  let openStatus = PERSIST_LEFT_PANEL_OPEN ? localStorage.getItem("menu-open") === "true" : false;
   $ctrlPanel.classList.toggle("opening", !openStatus);
 
   const updateDomWithStatus = () => {
@@ -217,7 +217,7 @@ if ($ctrlPanel) {
     $pageContainer.classList.toggle("opening", true);
     $ctrlPanel.classList.toggle("opening", true);
     openStatus = !openStatus;
-    if (save) {
+    if (save && PERSIST_LEFT_PANEL_OPEN) {
       localStorage.setItem("menu-open", openStatus);
     }
     updateDomWithStatus();
