@@ -99,6 +99,14 @@ class Subtitle
     }
 
     /**
+     * Whether the subtitle is original or not
+     */
+    public function isOriginal()
+    {
+        return $this->directUpload && !$this->resync;
+    }
+
+    /**
      * Get id
      *
      * @return integer
