@@ -189,7 +189,7 @@
   font-weight: 900;
 }
 
-.form-wrap form button {
+form button {
   width: 100%;
   padding: var(--standard-padding);
   border-radius: var(--standard-border-radius);
@@ -200,11 +200,11 @@
   color: var(--color-offwhite);
 }
 
-.form-wrap form button:hover {
+form button:hover {
   background-color: var(--color-blue-a);
 }
 
-.form-wrap form button:active {
+form button:active {
   background-color: var(--color-blue-b);
 }
 
