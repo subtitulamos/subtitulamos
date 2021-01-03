@@ -214,9 +214,11 @@ if ($ctrlPanel) {
   };
 
   updateDomWithStatus(); // Update on load, make sure local prefs are respected
-  $getEle("#control-panel-minimize-toggle").addEventListener("click", () =>
-    togglePanelStatus(true /* save status */)
-  );
+  $getAllEle(".control-panel-minimize-toggle").forEach(($toggle) => {
+    $toggle.addEventListener("click", () => {
+      togglePanelStatus(true /* save status */);
+    });
+  });
 
   $getEle("#search-icon").addEventListener("click", () => {
     if (!openStatus) {

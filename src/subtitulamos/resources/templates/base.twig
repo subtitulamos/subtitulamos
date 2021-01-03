@@ -99,7 +99,7 @@
           </a>
         </div>
         <div id="control-panel-bottom-section" class="control-panel-section">
-          <button class="control-panel-button" id="control-panel-minimize-toggle">
+          <button class="control-panel-button control-panel-minimize-toggle">
             <i class="fas fa-chevron-circle-left" aria-hidden="true"></i>
             <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
             <span class="text small">Minimizar</span>
@@ -137,6 +137,9 @@
       </header>
     {% endif %}
     <div id="page-container">
+      <button class="control-panel-minimize-toggle w-box-shadow">
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+      </button>
       {% block content %}{% endblock %}
 
       <footer id="footer">
