@@ -163,13 +163,23 @@ function showRegisterForm() {
 
 onDomReady(function () {
   const $loginBtn = document.getElementById("login");
+  const $loginBtnControlPanel = document.getElementById("login-cp");
   if ($loginBtn) {
     $loginBtn.addEventListener("click", showLoginForm);
   }
 
-  const $registerBtn = document.getElementById("register");
+  if ($loginBtnControlPanel) {
+    $loginBtnControlPanel.addEventListener("click", showLoginForm);
+  }
+
+  const $registerBtnControlPanel = document.getElementById("register");
+  const $registerBtn = document.getElementById("register-cp");
   if ($registerBtn) {
     $registerBtn.addEventListener("click", showRegisterForm);
+  }
+
+  if ($registerBtnControlPanel) {
+    $registerBtnControlPanel.addEventListener("click", showRegisterForm);
   }
 
   // Set up overlay logic

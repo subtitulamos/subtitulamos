@@ -20,10 +20,14 @@
   transition: 0.3s ease width;
   overflow-x: hidden;
   overflow-y: scroll;
-  display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex-shrink: 0;
+  display: none;
+}
+
+#control-panel.logged-in {
+  display: flex;
 }
 
 #control-panel.opening {
@@ -168,6 +172,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   display: none;
+  font-size: 0.9rem;
 }
 
 #control-panel.open .control-panel-button > span {
@@ -240,29 +245,36 @@
   color: var(--color-blue-d);
 }
 
-#page-container .control-panel-minimize-toggle {
+#page-container .overlaying-button {
   display: none;
 }
 
-@media all and (max-width: 700px) {
+@media all and (max-width: 800px) {
   /* Begining of handling expanding/collapsing side panel */
+  #control-panel {
+    display: flex !important;
+    z-index: 4;
+    --control-panel-padding-x: 25px;
+  }
+
   #control-panel:not(.open) {
     visibility: hidden;
   }
 
-  #page-container .control-panel-minimize-toggle {
-    background-color: var(--color-blue-a);
-    color: var(--color-offwhite) !important;
-    height: 2.7rem;
-    width: 2.7rem;
-    font-size: 1.2rem;
+  #page-container .overlaying-button {
+    font-size: 1.6rem;
     border-radius: 50%;
     display: grid;
     place-items: center;
     position: fixed;
-    bottom: var(--spacing-s);
-    left: var(--spacing-s);
     color: var(--color-blue-a);
+    z-index: 2;
+    height: 41px;
+  }
+
+  #page-container .control-panel-minimize-toggle {
+    top: var(--header-padding-y);
+    right: var(--header-padding-x);
   }
 
   #page-container.control-panel-is-open .control-panel-minimize-toggle > .fa-chevron-right {
@@ -291,5 +303,26 @@
 
   #page-container.control-panel-is-open {
     display: none;
+  }
+
+  .control-panel-button {
+    margin-bottom: var(--spacing-m) !important;
+  }
+
+  .control-panel-button > i {
+    font-size: 1.4rem !important;
+  }
+
+  .control-panel-button > span {
+    font-size: 1.1rem !important;
+    margin-left: var(--spacing-s) !important;
+  }
+
+  .control-panel-sub-section .control-panel-button > span {
+    font-size: 1rem !important;
+  }
+
+  .control-panel-sub-section .control-panel-button > i {
+    font-size: 1rem !important;
   }
 }
