@@ -8,8 +8,8 @@ let selectedPage = {
   modified: 1,
   uploads: 1,
   completed: 1,
-  comments: 1,
 };
+const contentPerPage = 5;
 
 onDomReady(() => {
   // Page navigation
@@ -37,7 +37,7 @@ onDomReady(() => {
         .querySelector(".page-group")
         .classList.toggle("invisible", selectedPage[target] <= 1);
 
-      loadOverviewGridCell(target, 5, selectedPage[target]);
+      loadOverviewGridCell(target, contentPerPage);
     });
   });
 
@@ -46,11 +46,7 @@ onDomReady(() => {
   $reloadButtons.forEach(($button) => {
     $button.addEventListener("click", () => {
       const target = $button.dataset.reload;
-      if (target === "comments") {
-        loadComments(selectedPage.comments);
-      } else {
-        loadOverviewGridCell(target, 5, selectedPage[target]);
-      }
+      loadOverviewGridCell(target, contentPerPage);
     });
   });
 
@@ -73,11 +69,11 @@ onDomReady(() => {
 });
 
 function loadOverviewData() {
-  loadOverviewGridCell("paused", 5, selectedPage.paused);
-  loadOverviewGridCell("modified", 5, selectedPage.modified);
-  loadOverviewGridCell("uploads", 5, selectedPage.uploads);
-  loadOverviewGridCell("completed", 5, selectedPage.completed);
-  loadComments(selectedPage.comments);
+  loadOverviewGridCell("paused", contentPerPage);
+  loadOverviewGridCell("modified", contentPerPage);
+  loadOverviewGridCell("uploads", contentPerPage);
+  loadOverviewGridCell("completed", contentPerPage);
+  loadComments(contentPerPage);
 }
 
 function listRenderer($list, data) {
@@ -99,14 +95,14 @@ function listRenderer($list, data) {
   }
 }
 
-function loadOverviewGridCell(target, count, page) {
+function loadOverviewGridCell(target, count) {
   const $targetContainer = $getEle(`[data-search-path="${target}"]`);
   const $list = $targetContainer.querySelector("ul");
 
   const searchPath = $targetContainer.dataset.searchPath;
   easyFetch("/search/" + searchPath, {
     params: {
-      from: (page - 1) * count,
+      from: (selectedPage[target] - 1) * count,
       count,
     },
   })
@@ -119,26 +115,16 @@ function loadOverviewGridCell(target, count, page) {
     });
 }
 
-const $commentTypes = $getAllEle("[data-comments-type]");
-$commentTypes.forEach(($button) => {
-  $button.addEventListener("click", () => {
-    const commentsType = $button.dataset.commentsType;
-    $commentTypes.forEach(($page) => $page.classList.toggle("selected", false));
-    $button.classList.toggle("selected", true);
-
-    loadComments(commentsType, 1);
-  });
-});
-
 let comments = new Vue({
   el: "#comments-container",
   data: {
     comments: [],
     page: 1,
+    commentType: "subtitles",
   },
   methods: {
     refresh: function () {
-      loadComments(this.page);
+      loadComments(contentPerPage);
     },
 
     remove: function (id) {
@@ -162,7 +148,7 @@ let comments = new Vue({
         method: "DELETE",
       })
         .then(() => {
-          loadComments();
+          this.refresh();
         })
         .catch(() => {
           Toast.fire({
@@ -173,7 +159,7 @@ let comments = new Vue({
             // Insert the comment right back where it was
             this.comments.splice(targetCommentIdx, 0, targetComment);
           } else {
-            loadComments(this.page);
+            this.refresh();
           }
         });
     },
@@ -197,11 +183,11 @@ let comments = new Vue({
         method: "POST",
       })
         .then(() => {
-          loadComments();
+          this.refresh();
         })
         .catch(() => {
           Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
-          loadComments();
+          this.refresh();
         });
     },
 
@@ -230,26 +216,42 @@ let comments = new Vue({
       });
     },
 
+    setCommentType: function (type) {
+      this.commentType = type;
+      this.page = 1;
+      this.refresh();
+    },
+
+    firstPage: function () {
+      this.page = 1;
+      this.refresh();
+    },
+
     nextPage: function () {
       this.page++;
-      loadComments(this.page);
-
-      document.getElementById("comments").scrollIntoView();
+      this.refresh();
     },
 
     prevPage: function () {
       this.page--;
-      loadComments(this.page);
-
-      document.getElementById("comments").scrollIntoView();
+      this.refresh();
+    },
+  },
+  computed: {
+    nextPageInvisible: function () {
+      return this.comments.length % contentPerPage;
     },
   },
 });
 
-function loadComments(page) {
-  const $commentsContainer = $getById("last-comments");
-  const commentType = $getEle(".selected[data-comments-type]").dataset.commentsType;
-  easyFetch(`/comments/${commentType}/load?page=${page}`)
+function loadComments(count, page) {
+  comments.comments = [];
+  easyFetch(`/comments/${comments.commentType}/load`, {
+    params: {
+      from: (page || comments.page - 1) * count,
+      count,
+    },
+  })
     .then((data) => data.json())
     .then((data) => {
       comments.comments = data;
