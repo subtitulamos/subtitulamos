@@ -2,7 +2,7 @@
 
 .content {
   #letter-container {
-    --letter-size: 55px;
+    --letter-size: 3.5rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, var(--letter-size));
     grid-gap: 15px;
