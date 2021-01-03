@@ -113,10 +113,6 @@
     }
   }
 
-  #last-comments {
-    grid-column: span 2;
-  }
-
   #comments-container {
     flex: 1;
     display: flex;
@@ -131,14 +127,6 @@
       flex-direction: column;
       justify-content: space-between;
       flex: 1;
-    }
-  }
-}
-
-@media all and (min-width: 1100px) {
-  #overview-grid {
-    .grid-cell:nth-child(4) {
-      height: fit-content;
     }
   }
 }
