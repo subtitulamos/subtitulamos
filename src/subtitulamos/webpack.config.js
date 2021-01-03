@@ -16,18 +16,20 @@ module.exports = (env, argv) => {
       rules: "./resources/assets/js/rules.js",
       upload: "./resources/assets/js/upload.js",
       translate: "./resources/assets/js/translate.js",
-      generic_error: "./resources/assets/js/generic_error.js",
       user: "./resources/assets/js/user.js",
       panel: "./resources/assets/js/panel/adminlte.js",
       panel_alerts: "./resources/assets/js/panel/alerts.js",
       overview: "./resources/assets/js/overview.js",
+      shows_list: "./resources/assets/js/shows_list.js",
+
       // Vendor JS package
       vendor: ["vue", "timeago.js"],
 
       // These pages don't have JS, but need to exist to create the corresponding CSS files
-      shows_list: "./resources/assets/js/shows_list.js",
       restricted: "./resources/assets/js/restricted.js",
       panel_base: "./resources/assets/js/panel/base.js",
+      generic_error: "./resources/assets/js/generic_error.js",
+      disclaimer: "./resources/assets/js/disclaimer.js",
     },
     output: {
       filename: "js/[name].[contenthash].bundle.js",
