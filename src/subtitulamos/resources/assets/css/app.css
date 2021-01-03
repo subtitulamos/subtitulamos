@@ -110,7 +110,7 @@ body {
 
 button {
   cursor: pointer;
-  width: fit-content;
+  width: max-content;
 }
 
 button,
