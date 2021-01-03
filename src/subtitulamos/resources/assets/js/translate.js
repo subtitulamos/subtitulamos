@@ -1034,7 +1034,7 @@ window.translation = new Vue({
 
       this.curPage = targetPage;
       this.highlightedSequence = seqn;
-      window.location.hash = "#seqn-" + seqn;
+      window.location.hash = "#" + seqn;
 
       const isFirstSequence =
         Math.ceil(seqn / SEQS_PER_PAGE) != Math.ceil((seqn - 1) / SEQS_PER_PAGE);
