@@ -64,6 +64,10 @@
             <span class="text small">Guardados</span>
           </button>
           {% if auth.has_role('ROLE_MOD') %}
+            <a class="control-panel-button" page="/overview" href='/overview'>
+              <i class="fas fa-street-view" style="font-size: 1.2rem;" aria-hidden="true"></i>
+              <span class="text small">Visión general</span>
+            </a>
             <a class="control-panel-button" page="/panel" href='/panel/alerts'>
               <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-users-cog"></i>
               <span class="text small">Panel de moderador</span>
