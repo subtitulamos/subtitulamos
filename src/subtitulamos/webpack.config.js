@@ -18,6 +18,7 @@ module.exports = (env, argv) => {
       upload_resync: "./resources/assets/js/upload_resync.js",
       translate: "./resources/assets/js/translate.js",
       comment_list: "./resources/assets/js/comment_list.js",
+      generic_error: "./resources/assets/js/generic_error.js",
       user: "./resources/assets/js/user.js",
       panel: "./resources/assets/js/panel/adminlte.js",
       panel_alerts: "./resources/assets/js/panel/alerts.js",

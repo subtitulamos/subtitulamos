@@ -1,20 +1,47 @@
+{% import 'macros/assets.twig' as assets %}
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    {{ assets.css('generic_error') }}
 </head>
 <body>
-    <h1>Error {{exception.code}}</h1>
-    Algo ha ido mal
-
-    {% if show_details %}
+    {% if not show_details %}
+    <div class="content limited-width">
+        <div class="error"><i class="fas fa-frown" aria-hidden="true"></i></div>
+        <div class="error-title">Error {{exception.code}}</div>
+        <div class="error-message">Haz clic en el botón de abajo para volver a la página principal.</div>
+        <div>
+            <a href="/">Volver a la página principal</a>
+        </div>
+        <div id="small-logo-wrap">
+            <svg id="logo-miniature" height="25" viewBox="0 0 720 720">
+            <path d="M500,480C373.919,603.693,144.292,621.974,115.091,623.822A359,359,0,0,1,0,360C0,161.178,161.178,0,360,0A358.39,358.39,0,0,1,576.516,72.38C594.276,124.682,651.193,331.67,500,480ZM456,236H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,236Zm0,104H172a32,32,0,0,0,0,64H456A32,32,0,0,0,456,340ZM564,504c101.048-137.763,87.982-313.7,81.9-362.757a359.955,359.955,0,0,1-24.222,465.966L664,688l-94.3-35.364A358.341,358.341,0,0,1,360,720a362.772,362.772,0,0,1-54.959-4.17C340.3,698.95,471.256,630.442,564,504Z"/>
+            </svg>
+            <span id="logo-text" class="text bold">subtitulamos.tv</span>
+        </div>
+    </div>
+    {% else %}
+    <div class="error-details">
         <h3>Detalles</h3>
-        <b>Mensaje de error</b>: {{exception.message}}<br/>
-        <b>Fichero</b>: {{exception.file}}<br/>
-        <b>Línea</b>: {{exception.line}}<br/>
 
-        <h3>Traza</h3>
+        <h4>Mensaje de error</h4>
+        {{exception.message}}
+
+        <h4>Fichero</h4>
+        {{exception.file}}
+
+        <h4>Línea</h4>
+        {{exception.line}}
+
+        <h4>Traza</h4>
         <code>
             {{exception.getTraceAsString()|replace({"\n": "<br>"})|raw}}
         </code>
+    </div>
     {% endif %}
 </body>
 </html>

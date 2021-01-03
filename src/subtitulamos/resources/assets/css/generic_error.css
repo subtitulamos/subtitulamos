@@ -1,0 +1,69 @@
+@import "app.css";
+
+h4 {
+  margin-bottom: var(--spacing-xxs);
+  margin-top: var(--spacing-s);
+}
+
+.content {
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  max-width: 600px;
+  flex-wrap: wrap;
+}
+
+.error {
+  color: var(--color-blue-b);
+  font-size: 9rem;
+  margin-bottom: var(--spacing-l);
+}
+
+.error-title {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: var(--spacing-s);
+}
+
+a {
+  display: block;
+  padding: var(--spacing-s);
+  border-radius: var(--standard-border-radius);
+  margin-top: var(--spacing-xxl);
+  background-color: var(--color-blue-b);
+  color: var(--color-offwhite);
+}
+
+a:hover {
+  background-color: var(--color-blue-a);
+  color: var(--color-offwhite) !important;
+}
+
+#small-logo-wrap {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-m);
+}
+
+#small-logo-wrap #logo-miniature {
+  fill-rule: evenodd;
+  fill: var(--color-blue-a);
+  flex-shrink: 0;
+}
+
+#small-logo-wrap #logo-text {
+  font-size: 1.2rem;
+  color: var(--color-blue-a);
+  letter-spacing: -0.5px;
+  margin-left: 10px;
+}
+
+.error-details {
+  background-color: white;
+  padding: var(--standard-padding);
+}
