@@ -133,6 +133,10 @@ a {
   text-decoration: none !important;
 }
 
+b {
+  font-weight: 500;
+}
+
 p,
 h1,
 h2,
