@@ -308,14 +308,14 @@ Vue.component("sequence", {
     },
 
     canSave: function () {
-      return (
+      return !!(
         !this.history &&
         this.lineCounters.length > 0 &&
         this.lineCounters.length <= 2 &&
         this.lineCounters[0] > 0 &&
         this.lineCounters[0] <= 40 &&
         (!this.lineCounters[1] || this.lineCounters[1] <= 40) &&
-        this.parsedStartTime &&
+        Number.isInteger(this.parsedStartTime) &&
         this.parsedEndTime &&
         this.parsedStartTime < this.parsedEndTime
       );
@@ -910,6 +910,29 @@ window.translation = new Vue({
           bus.$emit("open-" + s.number);
         }
       });
+    },
+
+    addSequenceAtLocation: function (num) {
+      const maxSeqNum = this.sequences.length;
+      const newSeqNum = Math.min(maxSeqNum + 1, num);
+      const prevSeq = this.sequences.find((seq) => seq.number == num - 1);
+      const nextSeq = this.sequences.find((seq) => seq.number == num + 1);
+      const newTstart = prevSeq ? prevSeq.tend : 0;
+      const newTend = nextSeq ? nextSeq.tstart : prevSeq ? prevSeq.tend : 0;
+
+      easyFetch("/subtitles/" + subID + "/translate/newseq", {
+        method: "POST",
+        rawBody: {
+          num: newSeqNum,
+          tstart: newTstart,
+          tend: newTend,
+        },
+      })
+        .then((res) => res.text())
+        .catch((_) => {
+          Toasts.error.fire("Ha ocurrido un error interno al intentar crear la secuencia");
+          this.saving = false;
+        });
     },
 
     closePage: function (ev, skipModifiedCheck) {

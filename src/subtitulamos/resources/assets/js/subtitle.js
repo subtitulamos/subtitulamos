@@ -39,6 +39,27 @@ Subtitle.prototype.wsMessage = function (event) {
         this.openSeq(data.num, data.user, data.openLockID);
         break;
 
+      case "seq-add-original":
+        this.addSeq(
+          data.original_id,
+          data.original_user,
+          data.num,
+          data.original_text,
+          data.tstart,
+          data.tend
+        );
+        break;
+
+      case "seq-change-original":
+        this.changeSeqOriginal(
+          data.original_id,
+          data.num,
+          data.original_text,
+          data.original_tstart,
+          data.original_tend
+        );
+        break;
+
       case "seq-close":
         this.closeSeq(data.num);
         break;
@@ -277,6 +298,66 @@ Subtitle.prototype.deleteSeq = function (seqID, status) {
       });
     }
   });
+};
+
+Subtitle.prototype.changeSeqOriginal = function (
+  originalId,
+  number,
+  originalText,
+  originalTStart,
+  originalTEnd
+) {
+  const seqHereIdx = this.findSeqIdxByNum(number);
+  if (seqHereIdx < 0) {
+    console.log("Could not match original sequence change to sequence here");
+    return;
+  }
+
+  const seqHere = this.state.sequences[seqHereIdx];
+  seqHere.secondary_text = originalText;
+  if (!seqHere.id) {
+    seqHere.tstart = originalTStart;
+    seqHere.tend = originalTEnd;
+  }
+
+  console.log(seqHere.secondary_text);
+};
+
+Subtitle.prototype.addSeq = function (
+  originalId,
+  originalUser,
+  number,
+  originalText,
+  tStart,
+  tEnd
+) {
+  const maxSeqNum = this.state.sequences.length;
+  const newSeq = {
+    id: isOriginalSub ? originalId : null,
+    number: number,
+    author: isOriginalSub ? originalUser : null,
+    openInfo: null,
+    tstart: tStart,
+    tend: tEnd,
+    locked: false,
+    verified: false,
+    secondary_text: originalText,
+    text: isOriginalSub ? originalText : null,
+  };
+
+  if (number > maxSeqNum) {
+    this.state.sequences.push(newSeq);
+  } else {
+    this.state.sequences = this.state.sequences.map((seq) => {
+      if (seq.number >= number) {
+        ++seq.number;
+      }
+
+      return seq;
+    });
+
+    this.state.sequences.splice(number - 1, 0, newSeq);
+  }
 };
 
 Subtitle.prototype.changeSeq = function (

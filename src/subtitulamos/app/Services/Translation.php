@@ -125,6 +125,46 @@ class Translation
             'ntstart' => (int) $seq->getStartTime(),
             'ntend' => (int) $seq->getEndTime()
         ]));
+
+        if ($sub->isOriginal()) {
+            foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+                if ($targetSub == $sub) {
+                    continue;
+                }
+
+                $this->redis->publish($this->getPubSubChanName($targetSub), \json_encode([
+                    'type' => 'seq-change-original',
+                    'num' => $seq->getNumber(),
+                    'original_id' => $seq->getId(),
+                    'original_text' => $seq->getText(),
+                    'original_tstart' => (int) $seq->getStartTime(),
+                    'original_tend' => (int) $seq->getEndTime()
+                ]));
+            }
+        };
+    }
+
+    /**
+     * Broadcasts to pub/sub channel the creation of a sequence on a sub
+     *
+     * @param \App\Entities\Sequence $seq
+     * @return void
+     */
+    public function broadcastSeqCreation(Sequence $seq)
+    {
+        $sub = $seq->getSubtitle();
+
+        foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+            $this->redis->publish($this->getPubSubChanName($targetSub), \json_encode([
+                'type' => 'seq-add-original',
+                'num' => $seq->getNumber(),
+                'original_user' => $seq->getAuthor()->getId(),
+                'original_id' => $seq->getId(),
+                'original_text' => $seq->getText(),
+                'tstart' => (int) $seq->getStartTime(),
+                'tend' => (int) $seq->getEndTime()
+            ]));
+        }
     }
 
     /**
