@@ -276,7 +276,7 @@ header {
   margin-right: 15px;
 }
 
-#header-logo-wrap #logo-text {
+#header-logo-wrap .logo-text {
   font-size: 1.8rem;
   color: var(--color-blue-a);
   letter-spacing: -1px;
@@ -566,7 +566,7 @@ footer > #footer-content {
     height: 35px;
   }
 
-  #logo-text {
+  .logo-text {
     font-size: 1.6rem !important;
   }
 }
