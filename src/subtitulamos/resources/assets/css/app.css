@@ -14,6 +14,7 @@
   -webkit-tap-highlight-color: transparent;
   scrollbar-width: thin;
   scrollbar-color: var(--color-gray-c) var(--color-gray-e);
+  word-break: break-word;
 }
 
 /* width */

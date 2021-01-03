@@ -1,4 +1,4 @@
-@import 'app.css';
+@import "app.css";
 
 #comment_content {
   padding-top: 40px;
@@ -66,7 +66,6 @@ a {
   font-size: 14px;
 
   overflow: auto;
-  overflow-wrap: break-word;
 }
 
 .comment-refresh {
