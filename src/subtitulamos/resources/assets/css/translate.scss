@@ -204,6 +204,12 @@
       height: 40px !important;
       align-items: baseline;
 
+      .number {
+        * {
+          color: var(--color-black);
+        }
+      }
+
       span {
         font-weight: bold !important;
         text-align: center;
@@ -254,11 +260,6 @@
         border-top: 2px solid var(--color-gray-divisions);
       }
 
-      &.untranslated {
-        background-color: var(--color-blue-d);
-        color: var(--color-blue-a);
-      }
-
       &.locked {
         background-color: var(--color-baby-green);
         color: var(--color-green-darker);
@@ -295,6 +296,7 @@
       justify-content: center;
 
       * {
+        color: var(--color-blue-a);
         font-weight: 500 !important;
       }
 
