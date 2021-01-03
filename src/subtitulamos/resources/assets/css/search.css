@@ -23,6 +23,7 @@
   padding: var(--spacing-s);
   transition: all 0.4s ease;
   overflow: hidden;
+  text-align: left;
 }
 
 .search-results li.selected {
