@@ -15,6 +15,8 @@
     background-color: var(--color-offwhite);
     border-radius: var(--standard-border-radius);
     position: relative;
+    display: flex;
+    flex-direction: column;
 
     .reload {
       position: absolute;
@@ -31,6 +33,13 @@
         color: var(--color-gray-b);
         animation: spin 0.3s linear;
       }
+    }
+
+    .grid-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
     }
 
     ul {
@@ -56,13 +65,20 @@
     }
 
     .pages {
-      flex: 1;
-      margin: 0 var(--spacing-xs);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(1.8rem, max-content));
-      place-items: center;
-      justify-content: center;
-      grid-gap: var(--spacing-xxs);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .page-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .page:first-child {
+          margin-right: var(--spacing-xxs);
+        }
+      }
 
       .page {
         color: var(--color-gray-c);
@@ -80,7 +96,7 @@
           border: 1px solid var(--color-blue-b);
         }
 
-        &.selected {
+        &:active {
           background-color: var(--color-blue-b);
           color: var(--color-offwhite) !important;
         }
