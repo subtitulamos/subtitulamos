@@ -67,8 +67,8 @@
             <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}' id="last-edited">EPISODIOS</div>
           </div>
           <div id="comments-spacer">
-            <div class="no-comments" v-if="this.loading">Cargando...</div>
-            <div class="no-comments" v-else-if="this.length == 0">No hay nada aqui en el momento</div>
+            <div class="no-comments" v-if="this.firstLoad">Cargando...</div>
+            <div class="no-comments" v-else-if="comments.length == 0">No hay nada aqui en el momento</div>
             <div v-else id="comment-list">
               <comment v-for="comment in comments"
                 :key="comment.id"

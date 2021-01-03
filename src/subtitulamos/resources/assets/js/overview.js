@@ -98,7 +98,6 @@ function listRenderer($list, data) {
 function loadOverviewGridCell(target, count) {
   const $targetContainer = $getEle(`[data-search-path="${target}"]`);
   const $list = $targetContainer.querySelector("ul");
-  $list.innerHTML = "Cargando...";
 
   const searchPath = $targetContainer.dataset.searchPath;
   easyFetch("/search/" + searchPath, {
@@ -122,7 +121,7 @@ let comments = new Vue({
     comments: [],
     page: 1,
     commentType: "subtitles",
-    loading: false,
+    firstLoad: true,
   },
   methods: {
     refresh: function () {
@@ -247,7 +246,6 @@ let comments = new Vue({
 });
 
 function loadComments(count) {
-  comments.loading = true;
   easyFetch(`/comments/${comments.commentType}/load`, {
     params: {
       from: (comments.page - 1) * count,
@@ -261,5 +259,9 @@ function loadComments(count) {
     .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
     })
-    .finally(() => (comments.loading = false));
+    .finally(() => {
+      if (comments.firstLoad) {
+        comments.firstLoad = false;
+      }
+    });
 }
