@@ -6,7 +6,9 @@ Vue.component("comment", {
   <article class="comment" :class="{'comment-pinned': pinned}">
     <div class="comment-body">
       <section class="comment-info">
-        <a :href="'/users/' + user.id">
+        <a class="username" :href="'/users/' + user.id">
+          <i v-if="isMod" class="fas fa-gem" :class="userTypeClass"></i>
+          <i v-else-if="isTT" class="fas fa-hand-sparkles" :class="userTypeClass"></i>
           <span class="comment-creator text small bold" :class="userTypeClass">
             {{ user.username }}
           </span>
@@ -20,7 +22,7 @@ Vue.component("comment", {
         </span>
       </section>
 
-      <section class="comment-content" :class="userTypeClass">
+      <section class="comment-content">
         <p v-if="!editing" v-html="formattedText"></p>
         <div class="open-comment" v-else>
           <label class="input-auto-sizer stacked" :data-value="text">

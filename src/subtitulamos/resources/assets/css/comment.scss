@@ -7,7 +7,7 @@
     padding: var(--spacing-m);
     border-bottom: 1px solid var(--color-gray-divisions);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     animation: fade_in 0.5s ease-in;
 
     &:last-of-type {
@@ -23,12 +23,6 @@
       background-color: var(--color-gray-e);
     }
 
-    .by-special-user-icon {
-      width: 20px;
-      flex-shrink: 0;
-      margin-right: var(--spacing-xs);
-    }
-
     .comment-body {
       flex: 1;
 
@@ -42,6 +36,16 @@
         .comment-date {
           color: var(--color-gray-c);
           margin-right: var(--spacing-xxs);
+        }
+
+        .username {
+          display: flex;
+          align-items: center;
+
+          i {
+            margin-right: var(--spacing-xxs);
+            font-size: 0.8rem;
+          }
         }
       }
 
