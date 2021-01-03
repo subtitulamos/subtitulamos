@@ -534,24 +534,6 @@ footer > #footer-content {
   }
 
   #top-links {
-    grid-template-columns: 1fr 5rem;
-    justify-items: initial;
-  }
-
-  #register {
-    border: 1px solid var(--color-blue-a);
-    border-radius: 25px;
-    padding: var(--standard-padding);
-    margin-right: 0px;
-  }
-
-  #register:hover {
-    background-color: var(--color-blue-a);
-    color: var(--color-offwhite);
-  }
-
-  #shows-index,
-  #login {
     display: none;
   }
 }
@@ -577,9 +559,15 @@ footer > #footer-content {
   #top-links {
     width: 100%;
   }
+}
 
-  header #header-logo-wrap {
-    display: none;
+@media all and (max-width: 380px) {
+  #header-logo-wrap svg {
+    height: 35px;
+  }
+
+  #logo-text {
+    font-size: 1.6rem !important;
   }
 }
 
