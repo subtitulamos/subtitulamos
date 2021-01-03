@@ -19,7 +19,7 @@
     transition: transform 0.3s ease;
 
     &:hover {
-      transform: translateY(-15px);
+      transform: translateY(calc(0px - var(--spacing-xs)));
     }
 
     a {
