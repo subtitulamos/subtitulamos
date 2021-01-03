@@ -93,10 +93,12 @@
               <i class="fas fa-envelope-open-text"></i>
               Abrir todo
             </button>
-            <button type="button" @click="openUntranslatedPage" class="tool">
-              <i class="fas fa-envelope-open"></i>
-              Abrir <i>sin traducir</i>
-            </button>
+            {% if not sub.original %}
+              <button type="button" @click="openUntranslatedPage" class="tool">
+                <i class="fas fa-envelope-open"></i>
+                Abrir <i>sin traducir</i>
+              </button>
+            {% endif %}
             <button type="button" @click="closePage" class="tool">
               <i class="fas fa-envelope"></i>
               Cerrar todo
@@ -128,8 +130,12 @@
           <div class="number"><span>#</span></div>
           <div class="user"><span>Autor</span></div>
           <div class="time"><span>Tiempos</span></div>
-          <div class="text"><span>Idioma secundario</span></div>
-          <div class="editable-text"><span>Traducción al {{ sub_lang }}</span></div>
+          {% if not sub.original %}
+            <div class="text"><span>Idioma secundario</span></div>
+            <div class="editable-text"><span>Traducción al {{ sub_lang }}</span></div>
+          {% else %}
+            <div class="text"><span>Original en {{ sub_lang }}</span></div>
+          {% endif %}
           <div class="actions"></div>
         </div>
         {% verbatim %}
@@ -245,6 +251,7 @@
 {% block scripts %}
   <script type="text/javascript">
     var subID = {{ sub.id }};
+    var isOriginalSub = {{ sub.original ? 'true' : 'false' }};
     var availSecondaryLangs = {{ avail_secondary_langs|raw }};
     var me = {
       id: {{ auth.user.id }},

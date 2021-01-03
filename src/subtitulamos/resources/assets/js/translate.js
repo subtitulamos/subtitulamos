@@ -103,7 +103,7 @@ Vue.component("sequence", {
                   <div><input type='text' v-model='editingTimeEnd' :tabindex="this.parsedEndTime != this.tend ? '0' : '-1'" :class="{'edited': this.parsedEndTime != this.tend}"></div>
                 </div>
             </div>
-            <div class="text">
+            <div class="text" v-if="!isOriginalSub">
               <div>{{ secondaryText }}</div>
             </div>
             <div class="editable-text" @click="openSequence"
@@ -356,6 +356,9 @@ Vue.component("sequence", {
       }
 
       return 0;
+    },
+    isOriginalSub() {
+      return isOriginalSub;
     },
   },
 
