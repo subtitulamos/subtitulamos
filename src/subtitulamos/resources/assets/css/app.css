@@ -362,10 +362,12 @@ footer {
 
 footer > #footer-content {
   max-width: calc(var(--max-width) - 20%);
-  display: flex;
-  align-items: center;
+  display: grid;
+  place-items: center;
   margin: 0 auto;
   padding: 0 10%;
+  grid-gap: 5%;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 #in-memory-of {
@@ -374,7 +376,6 @@ footer > #footer-content {
   height: 153px;
   position: relative;
   text-align: center;
-  margin-right: 120px;
 }
 
 #in-memory-of-content {
@@ -562,13 +563,9 @@ footer > #footer-content {
   }
 }
 
-@media all and (max-width: 700px) {
+@media all and (max-width: 750px) {
   footer > #footer-content {
-    flex-direction: column;
-  }
-
-  #in-memory-of {
-    margin: 0 auto 60px auto;
+    grid-template-columns: 1fr;
   }
 }
 
