@@ -98,6 +98,7 @@ function listRenderer($list, data) {
 function loadOverviewGridCell(target, count) {
   const $targetContainer = $getEle(`[data-search-path="${target}"]`);
   const $list = $targetContainer.querySelector("ul");
+  $list.innerHTML = "Cargando...";
 
   const searchPath = $targetContainer.dataset.searchPath;
   easyFetch("/search/" + searchPath, {
