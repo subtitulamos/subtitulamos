@@ -41,7 +41,7 @@ if (DEBUG) {
 }
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', null, false);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', new \Doctrine\Common\Cache\ArrayCache(), false);
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => $_ENV['MARIADB_DATABASE'],

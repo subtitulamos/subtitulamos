@@ -33,16 +33,19 @@ if (!DEBUG) {
 }
 
 $builder->addDefinitions([
-    \Doctrine\ORM\EntityManager::class => function (ContainerInterface $c) use ($entityManager) {
+    \Doctrine\ORM\EntityManager::class => function (ContainerInterface $c) {
+        global $entityManager;
         return $entityManager;
     },
-    \App\Services\Auth::class => function (ContainerInterface $c) use ($entityManager) {
+    \App\Services\Auth::class => function (ContainerInterface $c) {
+        global $entityManager;
         return new Auth($entityManager);
     },
     \App\Services\AssetManager::class => function (ContainerInterface $c) {
         return new AssetManager();
     },
-    \App\Services\Translation::class => function (ContainerInterface $c) use ($entityManager) {
+    \App\Services\Translation::class => function (ContainerInterface $c) {
+        global $entityManager;
         return new Translation($entityManager);
     },
     \Cocur\Slugify\SlugifyInterface::class => function (ContainerInterface $c) {
