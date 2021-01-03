@@ -1,4 +1,3 @@
-@import "animations.css";
 @import "app.css";
 @import "episode.scss";
 @import "comment.scss";
@@ -227,8 +226,8 @@
         height: 100%;
         display: grid;
         align-items: center;
-        cursor: default;
         font-family: "Courier Prime", monospace;
+        cursor: default;
       }
 
       * {
@@ -266,6 +265,21 @@
           color: var(--color-green-darker) !important;
         }
       }
+
+      &.highlighted {
+        animation: animate_highlight 5s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 6px;
+          background-color: var(--color-blue-b);
+          top: 0px;
+          left: -6px;
+        }
+      }
     }
 
     .number {
@@ -276,6 +290,10 @@
 
       * {
         font-weight: 500 !important;
+      }
+
+      .seq-num-clickable {
+        cursor: pointer;
       }
     }
 
