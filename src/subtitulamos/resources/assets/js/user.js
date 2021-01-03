@@ -171,4 +171,21 @@ onDomReady(() => {
       $spoiler.classList.toggle("expanded");
     });
   }
+
+  const $settingsForm = $getEle("#settings-form");
+  const checkPwdValidity = () => {
+    let err = "";
+    const $pwdConfirm = $settingsForm.querySelector("[name=password-confirmation]");
+    const $pwd = $settingsForm.querySelector("[name=password-new]");
+    if ($pwdConfirm.value && $pwdConfirm.value != $pwd.value) {
+      err = "Las contraseñas no coinciden";
+    }
+
+    $pwdConfirm.setCustomValidity(err);
+  };
+
+  $settingsForm.querySelectorAll("[name^=password]").forEach(($ele) => {
+    $ele.addEventListener("keyup", checkPwdValidity);
+    $ele.addEventListener("blur", checkPwdValidity);
+  });
 });

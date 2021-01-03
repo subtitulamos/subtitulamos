@@ -117,13 +117,13 @@ class UserController
     {
         $user = $auth->getUser();
         $body = $request->getParsedBody();
-        $oldpass = $body['oldpwd'] ?? '';
-        $password = $body['newpwd'] ?? '';
+        $oldpass = $body['password-old'] ?? '';
+        $password = $body['password-new'] ?? '';
 
         if (!$user->checkPassword($oldpass)) {
             $auth->addFlash('error', 'La contraseña antigua no es correcta');
         } elseif ($password != '') {
-            $password_confirmation = $body['pwdconfirm'] ?? '';
+            $password_confirmation = $body['password-confirmation'] ?? '';
 
             // TODO: Unify this into a single validation/encryption point with reg
             if (!v::length(8, 80)->validate($password)) {
