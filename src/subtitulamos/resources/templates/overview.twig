@@ -60,27 +60,38 @@
     <div id="last-comments" class="grid-cell collapsed w-box-shadow">
       <h4 class="grid-cell-title">Últimos comentarios</h4>
       <div class="grid-content">
-        <div class="reload" data-reload="comments"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
-        <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
-          <div class="navigation-item selected" id="last-uploaded" data-comments-type="subtitles">SUBTÍTULOS</div>
-          <div class="navigation-item" id="last-edited" data-comments-type="episodes">EPISODIOS</div>
-        </div>
         <div id="comments-container" class="comments-container">
-          <comment v-for="comment in comments"
-            :key="comment.id"
-            :id="comment.id"
-            :user="comment.user"
-            :base-text="comment.text"
-            :episode="comment.episode"
-            :subtitle="comment.subtitle"
-            :published-at="comment.published_at"
-            :edited-at="comment.edited_at"
-            :pinned="comment.pinned"
-            @remove="remove"
-            @pin="pin"
-            @save="save"
-          >
-          </comment>
+          <div @click="refresh" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
+          <div id="overview-navigation-list" class="navigation-list no-scroll-bar">
+            <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}' id="last-uploaded">SUBTÍTULOS</div>
+            <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}' id="last-edited">EPISODIOS</div>
+          </div>
+          <div id="comments-spacer">
+            <div id="comment-list">
+              <comment v-for="comment in comments"
+                :key="comment.id"
+                :id="comment.id"
+                :user="comment.user"
+                :base-text="comment.text"
+                :episode="comment.episode"
+                :subtitle="comment.subtitle"
+                :published-at="comment.published_at"
+                :edited-at="comment.edited_at"
+                :pinned="comment.pinned"
+                @remove="remove"
+                @pin="pin"
+                @save="save"
+              >
+              </comment>
+            </div>
+            <div class="pages">
+              <div class="page-group" :class='{"invisible": page <= 1}'>
+                <button @click='firstPage' class="page">1</button>
+                <button class="page" @click='prevPage'><i class="fas fa-chevron-left"></i></button>
+              </div>
+              <button class="page" @click='nextPage' :class='{"invisible": nextPageInvisible}'><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

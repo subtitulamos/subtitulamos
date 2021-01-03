@@ -62,12 +62,13 @@ class EpisodeCommentsController
 
     public function listAll($request, $response, EntityManager $em)
     {
-        $resultsPerPage = 20;
-        $body = $request->getParsedBody();
-        $page = max(1, (int)($body['page'] ?? 1));
+        $params = $request->getQueryParams();
+        $resultsPerPage = max(1, (int)($params['count'] ?? 20));
+        $from = max((int)($params['from'] ?? 0), 0);
+
         $commentQuery = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.softDeleted = 0  ORDER BY ec.id DESC')
             ->setMaxResults($resultsPerPage)
-            ->setFirstResult(($page - 1) * $resultsPerPage)
+            ->setFirstResult($from)
             ->getResult();
 
         $comments = [];
