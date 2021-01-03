@@ -195,14 +195,15 @@
   flex-shrink: 0;
 }
 
-#control-panel #control-panel-logo-wrap #logo-text {
+#control-panel #control-panel-logo-wrap .logo-text {
   font-size: 1.4rem;
   color: var(--color-offwhite);
   letter-spacing: -0.5px;
   margin-left: 10px;
   display: none;
 }
-#control-panel.open #control-panel-logo-wrap #logo-text {
+
+#control-panel.open #control-panel-logo-wrap .logo-text {
   display: unset;
   word-break: keep-all !important;
 }
@@ -329,5 +330,13 @@
 
   .control-panel-sub-section .control-panel-button > i {
     font-size: 1rem !important;
+  }
+
+  #control-panel #control-panel-logo-wrap .logo-text {
+    font-size: 1.6rem !important;
+  }
+
+  #control-panel #search-input {
+    font-size: 0.9rem !important;
   }
 }
