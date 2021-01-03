@@ -309,7 +309,7 @@ Subtitle.prototype.changeSeqOriginal = function (
 ) {
   const seqHereIdx = this.findSeqIdxByNum(number);
   if (seqHereIdx < 0) {
-    console.log("Could not match original sequence change to sequence here");
+    console.error("Could not match original sequence change to sequence here");
     return;
   }
 
@@ -319,8 +319,6 @@ Subtitle.prototype.changeSeqOriginal = function (
     seqHere.tstart = originalTStart;
     seqHere.tend = originalTEnd;
   }
-
-  console.log(seqHere.secondary_text);
 };
 
 Subtitle.prototype.addSeq = function (
