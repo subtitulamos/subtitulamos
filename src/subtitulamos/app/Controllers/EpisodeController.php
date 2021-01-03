@@ -118,6 +118,10 @@ class EpisodeController
         $epName = trim(strip_tags(($body['name'] ?? '')));
         $save = false;
 
+        if(strlen($epName) > 100) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
         if ($season != $ep->getSeason() || $epNumber != $ep->getNumber()) {
             // Let's make sure that an episode with this number doesn't already exist, too
             $e = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :showid AND e.season = :season AND e.number = :num')
