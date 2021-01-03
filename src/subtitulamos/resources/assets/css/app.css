@@ -523,6 +523,10 @@ footer > #footer-content {
   color: var(--color-blue-a) !important;
 }
 
+#register-checkbox {
+  margin-top: var(--spacing-m);
+}
+
 @media all and (max-width: 830px) {
   header {
     --padding-x: 25px;
