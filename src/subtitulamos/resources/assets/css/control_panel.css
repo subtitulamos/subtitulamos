@@ -225,7 +225,7 @@
 }
 
 #control-panel #control-panel-search {
-  --padding-x: 10px;
+  --padding-x: 12px;
   flex-shrink: 0;
   margin: 2rem 0;
   padding: 0 var(--padding-x);
@@ -245,6 +245,7 @@
 #control-panel #control-panel-search button {
   flex-shrink: 0;
   color: var(--color-blue-d);
+  margin-right: var(--spacing-xxs);
 }
 
 #control-panel #control-panel-search > input::placeholder {
@@ -322,10 +323,6 @@
 
   #control-panel #control-panel-logo-wrap {
     justify-content: center;
-  }
-
-  #control-panel #control-panel-search {
-    padding: 0px 6px;
   }
 
   .control-panel-button {
