@@ -116,16 +116,17 @@
                   {% if can_download %}
                   <a href="/subtitles/{{ sub.id }}/download">
                   {% endif %}
-                    <div class="download-button
-                      {% if not can_download %}unavailable{% endif %}">
+                    <div class="download-button {% if not can_download %}unavailable{% endif %}">
                       <i class="far fa-arrow-alt-circle-down"></i>
                     </div>
                   {% if can_download %}
                   </a>
                   {% endif %}
                   <a href="/subtitles/{{ sub.id }}/translate">
-                    <div class="edit-button">
-                      <i class="fas fa-pencil-alt"></i>
+                    <div class="edit-button-wrap">
+                      <div class="edit-button">
+                        <i class="fas fa-pencil-alt"></i>
+                      </div>
                     </div>
                   </a>
                 </div>

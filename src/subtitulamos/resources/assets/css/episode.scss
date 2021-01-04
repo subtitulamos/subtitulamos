@@ -233,33 +233,40 @@
           display: flex;
           align-items: center;
           margin-top: var(--spacing-s);
-          flex-shrink: 0;
 
           .version-buttons {
-            display: flex;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(2, 2rem);
+            column-gap: 8px;
 
-            a:hover {
-              * {
-                transition: all 0.3s ease;
-              }
+            a {
+              display: grid;
+              height: 2rem;
+              width: 2rem;
+              place-items: center;
+              flex-shrink: 0;
 
-              &:not(.unavailable) * {
-                color: var(--color-blue-b) !important;
-              }
+              &:hover {
+                * {
+                  transition: all 0.3s ease;
+                }
 
-              .edit-button {
-                border-color: var(--color-blue-b);
+                &:not(.unavailable) * {
+                  color: var(--color-blue-b) !important;
+                }
+
+                .edit-button {
+                  border-color: var(--color-blue-b);
+                }
               }
             }
 
             .download-button {
               color: var(--color-gray-c);
-              font-size: 1.8rem;
-              height: 1.8rem;
-              width: 1.8rem;
+              font-size: 2rem;
+              height: 2rem;
+              width: 2rem;
               padding: 0;
-              margin-right: var(--spacing-xs);
               margin-top: -3px;
 
               &.unavailable {
@@ -267,20 +274,28 @@
               }
             }
 
-            .edit-button {
-              color: var(--color-gray-c);
-              font-size: 1.1rem;
-              position: relative;
-              border: 3px solid var(--color-gray-c);
-              height: 1.3rem;
-              width: 1.3rem;
-              border-radius: 50%;
+            .edit-button-wrap {
+              height: 2rem;
+              width: 2rem;
+              display: grid;
+              place-items: center;
 
-              i {
-                position: absolute;
-                top: -2px;
-                right: -2px;
-                text-shadow: 0px -3px var(--color-offwhite), 0px 3px var(--color-offwhite);
+              .edit-button {
+                color: var(--color-gray-c);
+                position: relative;
+                border: 3px solid var(--color-gray-c);
+                box-sizing: border-box;
+                height: 1.9rem;
+                width: 1.9rem;
+                border-radius: 50%;
+
+                i {
+                  font-size: 1.25rem;
+                  position: absolute;
+                  top: -2px;
+                  right: -2px;
+                  text-shadow: 0px -3px var(--color-offwhite), 0px 3px var(--color-offwhite);
+                }
               }
             }
           }
