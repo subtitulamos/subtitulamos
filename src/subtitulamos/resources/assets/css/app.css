@@ -117,6 +117,7 @@ body {
 button {
   cursor: pointer;
   width: max-content;
+  padding: 0;
 }
 
 button,
