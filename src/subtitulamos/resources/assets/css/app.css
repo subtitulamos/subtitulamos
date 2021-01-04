@@ -565,8 +565,9 @@ footer > #footer-content {
 }
 
 @media all and (max-width: 380px) {
-  #header-logo-wrap svg {
-    height: 35px;
+  #header-logo-wrap svg,
+  .overlaying-button {
+    height: 35px !important;
   }
 
   .logo-text {
