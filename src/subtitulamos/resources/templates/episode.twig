@@ -41,16 +41,16 @@
       </div>
     </div>
     <div id="season-line">
-      <span class="text bold spaced-wide">TEMPORADA</span>
-      <div id="season-choices">
+      <span class="text bold spaced-wide choices-title">TEMPORADA</span>
+      <div id="season-choices" class="choices no-scroll-bar">
         {% for season in season_data %}
           <a href="{{season.url}}" class="choice {% if episode.season == season.number %}selected{% endif %}">{{season.number}}</a>
         {% endfor %}
       </div>
     </div>
     <div id="episode-line">
-      <span class="text bold spaced-wide">EPISODIO</span>
-      <div id="episode-choices">
+      <span class="text bold spaced-wide choices-title">EPISODIO</span>
+      <div id="episode-choices" class="choices no-scroll-bar">
         {% for season_ep in season_data[episode.season].episodes %}
           <a href="{{season_ep.url}}" class="choice {% if episode.number == season_ep.number %}selected{% endif %}">{{season_ep.number}}</a>
         {% endfor %}
