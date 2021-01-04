@@ -17,7 +17,6 @@
 
   .grid-cell {
     padding: var(--spacing-m);
-    height: calc(100% - var(--spacing-m) * 2);
     background-color: var(--color-offwhite);
     border-radius: var(--standard-border-radius);
     position: relative;
@@ -162,7 +161,6 @@
 
       &.collapsed {
         padding: 0;
-        height: 100%;
 
         .grid-cell-title {
           transition: margin 0.45s ease, padding-bottom 0.45s ease;
