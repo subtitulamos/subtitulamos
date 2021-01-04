@@ -126,6 +126,7 @@ textarea {
   background: transparent;
   border: none;
   appearance: none;
+  -webkit-appearance: none;
   outline: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
