@@ -22,6 +22,7 @@ $getEle(".translate-subtitle").addEventListener("click", function () {
 
   $getAllEle(".dropdown-field").forEach((dropdown) => {
     dropdown.addEventListener("click", invertDropdown);
+    dropdown.addEventListener("blur", (e) => invertDropdown(e, false));
   });
 
   const $translateToLangField = $getEle("#translate-to-lang");

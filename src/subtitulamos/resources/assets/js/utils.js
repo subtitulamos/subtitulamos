@@ -109,12 +109,12 @@ export function closeOverlay(e) {
   $overlay.classList.add("hidden");
 }
 
-export function invertDropdown(e) {
+export function invertDropdown(e, setArrowDown) {
   e.stopPropagation();
-  const $dropdown = e.currentTarget.querySelector(".dropdown");
-  const $isArrowDown = $dropdown.classList.contains("fa-chevron-down");
-  $dropdown.classList.toggle("fa-chevron-down", !$isArrowDown);
-  $dropdown.classList.toggle("fa-chevron-up", $isArrowDown);
+  const $dropdown = e.currentTarget.closest(".dropdown-field").querySelector(".dropdown");
+  setArrowDown = setArrowDown || $dropdown.classList.contains("fa-chevron-down");
+  $dropdown.classList.toggle("fa-chevron-down", !setArrowDown);
+  $dropdown.classList.toggle("fa-chevron-up", setArrowDown);
 }
 
 export function invertCheckbox(e) {

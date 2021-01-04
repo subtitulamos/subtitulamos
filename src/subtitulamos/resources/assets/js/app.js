@@ -238,8 +238,9 @@ if ($ctrlPanel) {
   });
 }
 
-$getAllEle(".dropdown-field").forEach((dropdown) => {
+$getAllEle(".dropdown-field select").forEach((dropdown) => {
   dropdown.addEventListener("click", invertDropdown);
+  dropdown.addEventListener("blur", (e) => invertDropdown(e, false));
 });
 
 $getAllEle(".checkbox").forEach((checkbox) => {
