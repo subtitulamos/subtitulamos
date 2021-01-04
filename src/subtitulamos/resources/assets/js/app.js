@@ -230,6 +230,10 @@ if ($ctrlPanel) {
     });
   });
 
+  $getEle("#control-panel-fade-pan").addEventListener("click", () => {
+    togglePanelStatus(true /* save status */);
+  });
+
   $getEle("#search-icon").addEventListener("click", () => {
     if (!openStatus) {
       togglePanelStatus(false /* dont save status */);

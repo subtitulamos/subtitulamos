@@ -36,11 +36,11 @@
 }
 
 #control-panel.opening {
-  transition: 0.3s ease width, 0.2s ease visibility !important;
+  transition: 0.3s ease width, 0.2s ease opacity, 0.2s ease visibility !important;
 }
 
 #control-panel.open {
-  transition: 0s ease width, 0s ease visibility;
+  transition: 0s ease width;
   width: var(--control-panel-open-width);
 }
 
@@ -265,6 +265,7 @@
 
   #control-panel:not(.open) {
     visibility: hidden;
+    opacity: 0;
   }
 
   #page-container .overlaying-button {
@@ -290,11 +291,34 @@
   #page-container .control-panel-minimize-toggle > .fa-chevron-right {
     display: unset;
   }
-  /* End */
+
+  #control-panel #control-panel-fade-pan {
+    position: fixed;
+    width: 10%;
+    height: 100%;
+    z-index: 0;
+    background-color: var(--color-black);
+    animation: 0.4s ease fade_in;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  #control-panel.open #control-panel-fade-pan {
+    opacity: 0.5;
+    visibility: visible;
+    transition: 2.4s ease opacity !important;
+  }
+
+  #control-panel.open {
+    width: calc(90% - var(--control-panel-padding-x) * 2);
+  }
 
   #page-container {
     padding-left: 0px !important;
   }
+  /* End */
 
   #control-panel #control-panel-logo-wrap {
     justify-content: center;
@@ -304,25 +328,12 @@
     padding: 0px 6px;
   }
 
-  #control-panel.open {
-    width: calc(100% - var(--control-panel-padding-x) * 2);
-  }
-
-  #page-container.control-panel-is-open {
-    display: none;
-  }
-
   .control-panel-button {
     margin-bottom: var(--spacing-m) !important;
   }
 
-  .control-panel-button > i {
-    font-size: 1.4rem !important;
-  }
-
   .control-panel-button > span {
-    font-size: 1.1rem !important;
-    margin-left: var(--spacing-s) !important;
+    font-size: 1rem !important;
   }
 
   .control-panel-sub-section .control-panel-button > span {
