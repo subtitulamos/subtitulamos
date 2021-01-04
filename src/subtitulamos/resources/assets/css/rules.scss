@@ -124,6 +124,7 @@ ol {
       .line-number,
       .detail {
         color: var(--color-gray-c);
+        word-break: keep-all;
       }
 
       .line-number {
