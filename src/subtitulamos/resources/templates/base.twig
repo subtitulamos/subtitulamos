@@ -147,9 +147,7 @@
     </header>
     {% endif %}
     <div id="page-container" class="{% if auth.user is not null %}logged-in{% endif %}">
-      <button class="overlaying-button control-panel-minimize-toggle">
-        <i class="fas fa-bars" aria-hidden="true"></i>
-      </button>
+      <i class="overlaying-button control-panel-minimize-toggle fas fa-bars" aria-hidden="true"></i>
       {% block content %}{% endblock %}
 
       <footer id="footer">

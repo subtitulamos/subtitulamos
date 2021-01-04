@@ -279,8 +279,9 @@
   }
 
   #page-container .control-panel-minimize-toggle {
-    top: var(--header-padding-y);
-    right: var(--header-padding-x);
+    padding: var(--header-padding-y) var(--header-padding-x);
+    top: 0px;
+    right: 0px;
   }
 
   #page-container.control-panel-is-open .control-panel-minimize-toggle > .fa-chevron-right {
