@@ -45,12 +45,12 @@ class SessionMiddleware
                 $response = $handler->handle($request);
                 $response = FigResponseCookies::set($response, SetCookie::create('remember')->withPath('/')->withValue($newToken)->rememberForever());
             }
-        } else {
-            if (!empty($_SESSION['uid'])) {
-                // Load up existing session
-                $auth->loadUser($_SESSION['uid']);
-            }
+        } elseif (!empty($_SESSION['uid'])) {
+            // Load up existing session
+            $auth->loadUser($_SESSION['uid']);
+        }
 
+        if (!isset($response)) {
             $response = $handler->handle($request);
         }
 
