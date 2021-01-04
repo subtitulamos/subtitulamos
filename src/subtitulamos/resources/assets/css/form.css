@@ -177,7 +177,6 @@
   font-variant: normal;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  z-index: 20;
   position: absolute;
   right: -6px;
   bottom: -6px;
