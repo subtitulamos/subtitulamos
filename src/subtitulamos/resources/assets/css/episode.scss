@@ -455,14 +455,6 @@
   }
 
   .language-container {
-    padding: var(--spacing-s) !important;
-    margin-bottom: var(--spacing-xs) !important;
-
-    .collapser-button {
-      top: var(--spacing-s) !important;
-      right: var(--spacing-s) !important;
-    }
-
     .language-content {
       &.expanded {
         margin-bottom: 0 !important;
@@ -478,6 +470,7 @@
         }
 
         .ellipsis-wrapper {
+          margin-top: var(--spacing-xs) !important;
           margin-left: auto !important;
         }
       }

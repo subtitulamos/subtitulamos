@@ -72,7 +72,7 @@
       {% endif %}
       {% set hint = hint ~ LANG_NAMES[LANG_LIST[lang]] ~ " - " ~ total_downloads|number_format(0, ',', '.') %}
     {% endfor %}
-    <div id="download-count" class="text tiny hint--top" data-hint='{{hint|raw}}' >
+    <div id="download-count" class="text tiny hint--left" data-hint='{{hint|raw}}' >
       <i class="fas fa-arrow-alt-circle-down"></i>
       <span id="count" class="text bold">{{ downloads|number_format(0, ',', ' ') }}</span>
       <span >descargas</span>
