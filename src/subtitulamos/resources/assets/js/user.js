@@ -60,6 +60,12 @@ if ($banButton) {
   });
 }
 
+function setSeeMoreVisibility($targetList) {
+  $targetList.parentElement
+    .querySelector(".spoiler-name")
+    .classList.toggle("hidden", $targetList.offsetHeight < 480);
+}
+
 const $epTemplate = $getById("subtitle-card");
 function addEpisodes(target, startIdx, count) {
   let $subtitleCardsWrap;
@@ -99,6 +105,7 @@ const loadList = (target, msgs) => {
       const count = data.length;
       subsByTab[target].loading = true;
       addEpisodes(target, 0, count);
+      const $targetList = $getById(`${target}-list`);
 
       $getEle(`#${target}-count`).innerHTML = count;
       if (count > 0) {
@@ -115,8 +122,9 @@ const loadList = (target, msgs) => {
           $card.querySelector(".loading").classList.toggle("hidden", true);
         }
       } else {
-        $getEle(`#${target}-list`).innerHTML = msgs.noResults;
+        $targetList.innerHTML = msgs.noResults;
       }
+      setSeeMoreVisibility($targetList);
     })
     .catch((err) => {
       console.log(err, target);
@@ -149,7 +157,10 @@ onDomReady(() => {
       $getAllEle("." + $toggleTargetsClass).forEach((element) =>
         element.classList.toggle("hidden", true)
       );
-      $getById($enableElementId).classList.toggle("hidden", false);
+
+      const $spoilerWrapper = $getById($enableElementId);
+      $spoilerWrapper.classList.toggle("hidden", false);
+      setSeeMoreVisibility($spoilerWrapper.querySelector(".spoiler-content"));
     });
   });
 
@@ -184,8 +195,10 @@ onDomReady(() => {
     $pwdConfirm.setCustomValidity(err);
   };
 
-  $settingsForm.querySelectorAll("[name^=password]").forEach(($ele) => {
-    $ele.addEventListener("keyup", checkPwdValidity);
-    $ele.addEventListener("blur", checkPwdValidity);
-  });
+  if ($settingsForm) {
+    $settingsForm.querySelectorAll("[name^=password]").forEach(($ele) => {
+      $ele.addEventListener("keyup", checkPwdValidity);
+      $ele.addEventListener("blur", checkPwdValidity);
+    });
+  }
 });

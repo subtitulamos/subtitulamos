@@ -91,7 +91,11 @@
         justify-content: center;
         overflow: hidden;
         transition: max-height 2s cubic-bezier(0, 1, 0, 1);
-        max-height: calc(var(--card-height) * 2.5);
+        max-height: 480px;
+
+        .subtitle-card {
+          margin-bottom: 0 !important;
+        }
 
         &.expanded {
           max-height: 99999px;
@@ -102,9 +106,8 @@
 
     @media all and (max-width: 770px) {
       .subtitle-cards-wrap {
-        display: flex !important;
-        grid-template-columns: unset;
-        grid-gap: unset;
+        grid-template-columns: repeat(1, 1fr) !important;
+        grid-gap: var(--spacing-xs) !important;
       }
     }
   }
