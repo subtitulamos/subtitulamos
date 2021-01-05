@@ -171,6 +171,7 @@ a:active {
 .disabled * {
   background-color: var(--color-gray-e) !important;
   color: var(--color-gray-c) !important;
+  -webkit-text-fill-color: var(--color-gray-c) !important;
   opacity: 1;
   pointer-events: none;
 }

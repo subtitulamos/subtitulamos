@@ -32,6 +32,12 @@
   position: absolute;
   top: 8px;
   left: 15px;
+  z-index: 1;
+}
+
+.form-field.disabled::before {
+  color: var(--color-gray-c) !important;
+  -webkit-text-fill-color: var(--color-gray-c) !important;
 }
 
 .form-field i {
