@@ -211,7 +211,7 @@
       }
 
       span {
-        font-weight: bold !important;
+        font-weight: 500 !important;
         text-align: center;
       }
     }
@@ -219,7 +219,6 @@
     .grid-row {
       height: auto;
       min-height: calc(3rem + var(--spacing-xs) * 2);
-      height: auto;
       display: grid;
       border-top: 1px solid var(--color-gray-divisions);
       grid-template-columns: repeat(6, max-content);
@@ -238,7 +237,6 @@
         height: 100%;
         display: grid;
         align-items: center;
-        font-family: "Courier Prime", monospace;
         cursor: default;
       }
 
@@ -292,14 +290,13 @@
           width: 6px;
           background-color: var(--color-blue-b);
           top: 0px;
-          left: -6px;
+          left: 0px;
         }
       }
     }
 
     .number {
-      width: 4ch;
-      font-family: "Rubik", sans-serif;
+      width: 60px;
       font-weight: 500 !important;
       justify-content: center;
 
@@ -314,7 +311,7 @@
     }
 
     .user {
-      width: 14ch;
+      width: 170px;
       justify-content: center;
 
       a {
@@ -324,7 +321,7 @@
     }
 
     .time {
-      width: 13ch;
+      width: 125px;
       padding: 0;
       justify-content: center;
 
@@ -340,7 +337,7 @@
 
         div,
         input {
-          width: 100%;
+          width: 105px;
           text-align: center;
           padding: 0px;
           height: 20px;
@@ -375,25 +372,25 @@
     }
 
     .text {
-      width: 41ch;
+      width: 305px;
       margin: 0;
 
       div {
         line-height: 1.4rem;
         text-align: left;
         white-space: pre-wrap;
-        width: 41ch;
+        width: 305px;
         min-height: 2.8rem;
         height: auto;
       }
     }
 
     .editable-text {
-      width: calc(40ch + 8px + 59px);
+      width: calc(295px + 8px + 59px);
 
       .closed {
         height: calc(100% - var(--spacing-xs) * 2);
-        width: calc(40ch + 8px);
+        width: calc(295px + 8px);
       }
 
       .open-by-other {
@@ -428,7 +425,7 @@
           resize: none;
           padding: var(--spacing-xs);
           line-height: 1.4rem;
-          width: calc(40ch + 8px);
+          width: calc(295px + 8px);
           overflow-y: auto;
           flex-shrink: 0;
           flex-grow: 0;
@@ -494,7 +491,8 @@
     }
 
     .actions {
-      width: 27px;
+      width: 37px;
+      justify-content: center;
 
       .warning {
         animation: shake 0.25s linear infinite;
