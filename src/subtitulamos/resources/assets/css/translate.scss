@@ -203,6 +203,7 @@
       display: grid;
       height: 40px !important;
       align-items: baseline;
+      min-height: unset !important;
 
       .number {
         * {
