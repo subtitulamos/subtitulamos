@@ -69,7 +69,6 @@
   flex: 1;
   color: var(--color-gray-a);
   width: 100%;
-  box-sizing: border-box;
   min-height: 1.5rem;
   line-height: 1.5rem;
   position: relative;
@@ -243,5 +242,4 @@ form button:active {
   background-color: var(--color-baby-red);
   font-size: 0.9rem;
   width: 100%;
-  box-sizing: border-box;
 }

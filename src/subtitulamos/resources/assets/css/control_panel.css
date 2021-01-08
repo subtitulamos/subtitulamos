@@ -3,18 +3,12 @@
  * @copyright 2021 subtitulamos.tv
  */
 
-#base {
-  --control-panel-closed-width: 30px;
-  --control-panel-open-width: 210px;
-  --control-panel-padding-x: 15px;
-}
-
 #control-panel {
   --control-panel-padding-y: 25px;
   background-color: var(--color-blue-a);
   color: var(--color-offwhite);
-  height: calc(100% - var(--control-panel-padding-y) * 2);
-  max-height: calc(100vh - var(--control-panel-padding-y) * 2);
+  height: 100%;
+  max-height: 100vh;
   padding: var(--control-panel-padding-y) var(--control-panel-padding-x);
   position: fixed;
   top: 0px;
@@ -74,7 +68,7 @@
 
 #control-panel.open .control-panel-sub-section {
   padding-left: var(--spacing-xs) !important;
-  width: calc(100% - var(--spacing-xs)) !important;
+  width: 100% !important;
 }
 
 #control-panel .control-panel-sub-section .control-panel-button.selected::before {
@@ -149,7 +143,7 @@
 #control-panel .control-panel-button > i {
   flex-shrink: 0;
   font-size: 1.1rem;
-  width: var(--control-panel-closed-width);
+  width: calc(var(--control-panel-padding-x) * 2);
   text-align: center;
 }
 
@@ -310,7 +304,7 @@
   }
 
   #control-panel.open {
-    width: calc(90% - var(--control-panel-padding-x) * 2);
+    width: 90%;
   }
 
   #page-container {

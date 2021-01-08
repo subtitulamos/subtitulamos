@@ -19,6 +19,12 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-gray-c) var(--color-gray-e);
   word-break: break-word;
+  box-sizing: border-box;
+}
+
+*::after,
+*::before {
+  box-sizing: border-box;
 }
 
 /* width */
@@ -86,6 +92,9 @@
   --spacing-xxs: 0.312rem;
   --header-padding-x: 30px;
   --header-padding-y: 25px;
+  --control-panel-closed-width: 60px;
+  --control-panel-open-width: 240px;
+  --control-panel-padding-x: 15px;
 }
 
 /* Prevent a white border by the bottom */
@@ -258,7 +267,7 @@ h4 {
 }
 
 header {
-  width: calc(100% - var(--header-padding-x) * 2);
+  width: 100%;
   padding: var(--header-padding-y) var(--header-padding-x);
   background-color: var(--color-bg);
   display: flex;
@@ -326,16 +335,14 @@ header {
 }
 
 #page-container.logged-in.control-panel-is-open {
-  padding-left: calc(var(--control-panel-open-width) + var(--control-panel-padding-x) * 2);
+  padding-left: var(--control-panel-open-width);
   width: 100%;
-  box-sizing: border-box;
   transition: 0s ease all;
 }
 
 #page-container.logged-in.control-panel-is-closed {
-  padding-left: calc(var(--control-panel-closed-width) + var(--control-panel-padding-x) * 2);
+  padding-left: var(--control-panel-closed-width);
   width: 100%;
-  box-sizing: border-box;
   transition: 0s ease all;
 }
 
@@ -346,7 +353,7 @@ header {
 .content {
   --content-padding-top: 40px;
   --content-padding-x: 40px;
-  width: calc(100% - var(--content-padding-x) * 2);
+  width: 100%;
   padding: var(--content-padding-top) var(--content-padding-x) var(--footer-padding-y)
     var(--content-padding-x);
   margin: 0 auto;
@@ -355,7 +362,7 @@ header {
 }
 
 .limited-width {
-  max-width: calc(var(--max-width) - var(--content-padding-x) * 2);
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 
@@ -365,7 +372,7 @@ footer {
 }
 
 footer > #footer-content {
-  max-width: calc(var(--max-width) - 20%);
+  max-width: var(--max-width);
   display: grid;
   place-items: center;
   margin: 0 auto;
@@ -489,7 +496,6 @@ footer > #footer-content {
   z-index: 2;
   border-radius: var(--standard-border-radius);
   max-width: 100%;
-  box-sizing: border-box;
   padding: var(--spacing-xl);
 }
 
