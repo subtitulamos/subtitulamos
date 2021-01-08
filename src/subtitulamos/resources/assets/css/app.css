@@ -394,6 +394,14 @@ footer > #footer-content {
   letter-spacing: 1px;
 }
 
+#in-memory-of-content .disclaimer-row {
+  margin-top: 42px;
+}
+
+#in-memory-of-content .disclaimer-row a {
+  font-weight: 500;
+}
+
 #page-links {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -545,12 +553,13 @@ footer > #footer-content {
 @media all and (max-width: 750px) {
   footer > #footer-content {
     grid-template-columns: 1fr;
+    grid-gap: 70px;
   }
 }
 
 @media all and (max-width: 567px) {
   :root {
-    --footer-padding-y: 50px;
+    --footer-padding-y: 70px;
     --header-padding-y: 15px;
     --header-padding-x: 15px;
   }
@@ -574,12 +583,4 @@ footer > #footer-content {
   .logo-text {
     font-size: 1.6rem !important;
   }
-}
-
-.disclaimer-row {
-  margin-top: 42px;
-}
-
-.disclaimer-row a {
-  font-weight: bold;
 }
