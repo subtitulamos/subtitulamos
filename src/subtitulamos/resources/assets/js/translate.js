@@ -106,8 +106,8 @@ Vue.component("sequence", {
             <div class="text" v-if="!isOriginalSub">
               <div>{{ secondaryText }}</div>
             </div>
-            <div class="editable-text" @click="openSequence"
-              :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
+            <div class="editable-text" @click="openSequence">
+              <div :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <div :class="{
                   'editing': editing,
                   'open-by-other': openByOther,
@@ -127,6 +127,7 @@ Vue.component("sequence", {
                       <span class="line-counter" v-if="lineCounters[1]" :class="lineCounters[1] > 40 ? 'counter-error' : (lineCounters[1] > 35 ? 'counter-warning' : '')">{{ lineCounters[1] }}</span>
                   </div>
                 </div>
+              </div>
             </div>
             <div class="actions">
                 <template v-if="!saving">
