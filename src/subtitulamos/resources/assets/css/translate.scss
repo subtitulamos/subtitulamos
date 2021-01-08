@@ -8,8 +8,6 @@
 @import "comment.scss";
 
 #translation {
-  min-width: calc(var(--max-width) - var(--content-padding-x) * 2);
-
   #show-info-header {
     margin-bottom: var(--spacing-xs);
 
@@ -33,9 +31,28 @@
     padding: var(--spacing-xs);
     background-color: var(--color-gray-e);
 
+    .alert-tool-wrapper {
+      padding-left: var(--spacing-xs);
+    }
+
     .main-tools {
       display: flex;
       align-items: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      &::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: var(--color-gray-d);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--color-gray-b);
+        border: 3px solid var(--color-gray-d);
+      }
 
       .tool-group {
         flex-shrink: 0;
@@ -92,13 +109,43 @@
     color: var(--color-gray-a);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    overflow-x: auto;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--color-gray-d);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-gray-b);
+      border: 3px solid var(--color-gray-d);
+    }
 
     .filter {
       display: flex;
       align-items: center;
       margin-right: var(--spacing-xl);
       position: relative;
+      word-break: keep-all;
+      flex-shrink: 0;
+
+      &:last-child {
+        margin-right: 0;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          right: calc(0px - var(--spacing-m));
+          width: var(--spacing-m);
+          height: 100%;
+        }
+      }
 
       input:not([type="checkbox"]),
       select {
@@ -292,6 +339,7 @@
           background-color: var(--color-blue-b);
           top: 0px;
           left: 0px;
+          z-index: 1;
         }
       }
     }
@@ -338,7 +386,7 @@
 
         div,
         input {
-          width: 105px;
+          width: 95px;
           text-align: center;
           padding: 0px;
           height: 20px;
@@ -430,7 +478,7 @@
           overflow-y: auto;
           flex-shrink: 0;
           flex-grow: 0;
-          height: 2.8rem;
+          height: calc(2.8rem + var(--spacing-xs) * 2);
           white-space: pre-wrap;
 
           /* width */
@@ -450,7 +498,6 @@
 
         .closed {
           min-height: 2.8rem;
-          height: auto;
         }
 
         .line-status {
@@ -554,6 +601,153 @@
         .close {
           cursor: pointer;
           color: var(--color-blue-a) !important;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 1200px) {
+  #translation {
+    #sequences {
+      .grid-header {
+        display: none;
+      }
+
+      .grid-row {
+        grid-template-columns: repeat(4, 1fr);
+        height: auto;
+        padding: var(--spacing-xxs) 0px;
+
+        &:nth-child(2n) {
+          &.current:not(.locked) {
+            background-color: var(--color-gray-blue);
+          }
+
+          &.locked {
+            filter: saturate(0.4);
+          }
+        }
+
+        & > div {
+          padding: var(--spacing-xxs) var(--spacing-s);
+          position: relative;
+          align-items: start;
+
+          &::before {
+            position: relative;
+            width: 100%;
+            opacity: 0.5;
+            font-size: 0.7rem;
+            margin-bottom: var(--spacing-xxs);
+          }
+        }
+
+        .number {
+          grid-column: 1/2;
+
+          &::before {
+            content: "#";
+          }
+        }
+
+        .user {
+          grid-column: 2/3;
+
+          &::before {
+            content: "Autor";
+          }
+        }
+
+        .time {
+          grid-column: 3/5;
+
+          &::before {
+            content: "Tiempos";
+          }
+        }
+
+        .text {
+          grid-column: 1/3;
+          border-top: 1px dotted var(--color-gray-divisions);
+
+          &::before {
+            content: "Idioma original";
+          }
+        }
+
+        .editable-text {
+          padding-bottom: 0;
+          grid-column: 3/5;
+          border-top: 1px dotted var(--color-gray-divisions);
+
+          &::before {
+            content: "Traducción";
+          }
+        }
+
+        .actions {
+          grid-column: 1/5;
+          border-top: 1px dotted var(--color-gray-divisions);
+        }
+
+        .time,
+        .user,
+        .number,
+        .text {
+          width: 100%;
+        }
+
+        .number,
+        .user,
+        .time {
+          justify-content: start;
+        }
+
+        .text,
+        .editable-text {
+          min-height: calc(3rem + var(--spacing-s) * 2);
+        }
+
+        .editable-text {
+          width: 100%;
+
+          textarea,
+          .closed {
+            width: calc(100% - 37px);
+          }
+        }
+
+        .actions {
+          height: 45px;
+          width: 100%;
+          grid-template-columns: repeat(auto-fit, 37px);
+          justify-content: end;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 800px) {
+  #translation {
+    #sequences {
+      .grid-row {
+        grid-template-columns: 80px 1fr;
+
+        .number {
+          grid-column: 1/2;
+        }
+        .user {
+          grid-column: 2/3;
+        }
+
+        .time,
+        .text,
+        .editable-text,
+        .actions {
+          grid-column: 1/3;
+          border-top: 1px dotted var(--color-gray-divisions);
         }
       }
     }
