@@ -284,7 +284,6 @@
                 color: var(--color-gray-c);
                 position: relative;
                 border: 3px solid var(--color-gray-c);
-                box-sizing: border-box;
                 height: 1.9rem;
                 width: 1.9rem;
                 border-radius: 50%;
@@ -463,7 +462,6 @@
       display: block;
       text-align: center;
       width: 100%;
-      box-sizing: border-box;
       margin: 0;
       margin-bottom: var(--spacing-xxs);
     }
