@@ -65,18 +65,18 @@
           </a>
           {% endif %}
           {% if auth.has_role('ROLE_MOD') %}
-          <a class="control-panel-button" page="/panel" href='/panel/alerts'>
+          <a class="control-panel-button" page="/panel" href='/panel/logs'>
             <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-users-cog" aria-hidden="true"></i>
             <span>Panel de moderador</span>
           </a>
             <div class="control-panel-sub-section">
-              <a class="control-panel-button" href='/panel/alerts'>
-                <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-bell" aria-hidden="true"></i>
-                <span>Alertas</span>
-              </a>
               <a class="control-panel-button" href='/panel/logs'>
                 <i class="fas fa-clipboard-list" aria-hidden="true"></i>
                 <span>Log de eventos</span>
+              </a>
+              <a class="control-panel-button" href='/panel/alerts'>
+                <i {% if auth.alert_count > 0 %}data-alerts="{{ auth.alert_count }}"{% endif %} class="fas fa-bell" aria-hidden="true"></i>
+                <span>Alertas</span>
               </a>
               <a class="control-panel-button" href='/panel/userlist'>
                 <i class="fas fa-user-friends" aria-hidden="true"></i>
