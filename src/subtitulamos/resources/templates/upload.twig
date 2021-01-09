@@ -36,10 +36,10 @@
           <i class="fas fa-chevron-down dropdown"></i>
           <select id="show-id" name="show-id" required>
             <option value="" disabled selected>Selecciona una serie</option>
+            <option value="NEW">[Nueva serie]</option>
             {% for show in shows %}
               <option value="{{ show.id }}">{{ show.name }}</option>
             {% endfor %}
-            <option value="NEW">[Nueva serie]</option>
           </select>
           <i class="fas fa-film"></i>
         </div>
