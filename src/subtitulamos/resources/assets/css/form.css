@@ -91,7 +91,6 @@
   transition: background-color 5000s ease-in-out 0s !important;
 }
 
-.checkbox,
 .radio {
   width: 16px;
   height: 16px;
@@ -111,18 +110,15 @@
   border-radius: 50%;
 }
 
-.checkbox.checked:not(.disabled),
 .radio.checked:not(.disabled) {
   background-color: var(--color-blue-a);
   border: 2px solid var(--color-blue-a);
 }
 
-.checkbox.checked:not(.disabled) i,
 .radio.checked:not(.disabled) i {
   color: var(--color-offwhite) !important;
 }
 
-.checkbox input::before,
 .radio input::before {
   content: "";
   width: 20px;
@@ -131,11 +127,6 @@
   position: absolute;
   top: -2px;
   left: -2px;
-}
-
-.checkbox:not(.disabled) i {
-  font-size: 0.7rem;
-  color: transparent !important;
 }
 
 .radio:not(.disabled) i {
@@ -224,7 +215,6 @@ form button:active {
   margin-bottom: var(--spacing-xs);
 }
 
-.checkbox-field,
 .radio-option {
   display: grid;
   grid-template-columns: 20px 1fr;
@@ -242,4 +232,38 @@ form button:active {
   background-color: var(--color-baby-red);
   font-size: 0.9rem;
   width: 100%;
+}
+
+input[type="checkbox"] {
+  position: relative;
+  margin-right: var(--spacing-xs);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+input[type="checkbox"]::before {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--standard-border-radius);
+  border: 2px solid var(--color-gray-divisions);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  content: "";
+  background-color: var(--color-offwhite);
+  transition: all 0.2s ease;
+  font-size: 0.7rem;
+}
+
+input[type="checkbox"]:checked:before {
+  border: 2px solid var(--color-blue-a);
+  background-color: var(--color-blue-a);
+  color: var(--color-offwhite);
+  content: "\f00c";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
 }

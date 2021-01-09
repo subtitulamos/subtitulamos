@@ -46,10 +46,6 @@ if (canEditProperties) {
 
   $getEle("#show-name").addEventListener("click", () => {
     showOverlayFromTpl("show-properties");
-
-    $getAllEle(".checkbox").forEach((checkbox) => {
-      checkbox.addEventListener("click", invertCheckbox);
-    });
   });
 }
 
