@@ -91,49 +91,6 @@
   transition: background-color 5000s ease-in-out 0s !important;
 }
 
-.radio {
-  width: 16px;
-  height: 16px;
-  border-radius: var(--standard-border-radius);
-  border: 2px solid var(--color-gray-c);
-  text-align: center;
-  flex-shrink: 0;
-  background-color: var(--color-offwhite);
-  display: grid;
-  place-items: center;
-  grid-template-columns: 16px;
-  grid-template-rows: 16px;
-  position: relative;
-}
-
-.radio {
-  border-radius: 50%;
-}
-
-.radio.checked:not(.disabled) {
-  background-color: var(--color-blue-a);
-  border: 2px solid var(--color-blue-a);
-}
-
-.radio.checked:not(.disabled) i {
-  color: var(--color-offwhite) !important;
-}
-
-.radio input::before {
-  content: "";
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  position: absolute;
-  top: -2px;
-  left: -2px;
-}
-
-.radio:not(.disabled) i {
-  font-size: 6px;
-  color: transparent !important;
-}
-
 .form-field > .dropdown {
   position: absolute;
   right: 15px;
@@ -208,20 +165,6 @@ form button:active {
   background-color: var(--color-blue-b);
 }
 
-.radio-field {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  grid-gap: var(--spacing-m);
-  margin-bottom: var(--spacing-xs);
-}
-
-.radio-option {
-  display: grid;
-  grid-template-columns: 20px 1fr;
-  grid-gap: var(--spacing-xs);
-  place-items: self-start;
-}
-
 .form-error:not(:empty) {
   padding: var(--spacing-xs);
   border-radius: var(--standard-border-radius);
@@ -234,7 +177,8 @@ form button:active {
   width: 100%;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"],
+input[type="radio"] {
   position: relative;
   margin-right: var(--spacing-xs);
   cursor: pointer;
@@ -242,7 +186,8 @@ input[type="checkbox"] {
   height: 20px;
 }
 
-input[type="checkbox"]::before {
+input[type="checkbox"]::before,
+input[type="radio"]::before {
   width: 20px;
   height: 20px;
   border-radius: var(--standard-border-radius);
@@ -256,7 +201,8 @@ input[type="checkbox"]::before {
   font-size: 0.7rem;
 }
 
-input[type="checkbox"]:checked:before {
+input[type="checkbox"]:checked:before,
+input[type="radio"]:checked:before {
   border: 2px solid var(--color-blue-a);
   background-color: var(--color-blue-a);
   color: var(--color-offwhite);
@@ -266,4 +212,27 @@ input[type="checkbox"]:checked:before {
   display: grid;
   place-items: center;
   transition: all 0.2s ease;
+}
+
+input[type="radio"]::before {
+  border-radius: 50% !important;
+  font-size: 0.4rem;
+}
+
+input[type="radio"]:checked:before {
+  content: "\f111";
+}
+
+.radio-field {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-gap: var(--spacing-m);
+  margin-bottom: var(--spacing-xs);
+}
+
+.radio-option {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  grid-gap: var(--spacing-xs);
+  place-items: self-start;
 }

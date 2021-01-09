@@ -11,9 +11,7 @@ import {
   closeOverlay,
   $getAllEle,
   invertDropdown,
-  invertCheckbox,
   $getById,
-  invertRadio,
   crossBrowserFormValidityReport,
 } from "./utils";
 
@@ -241,10 +239,6 @@ if ($ctrlPanel) {
 $getAllEle(".dropdown-field select").forEach((dropdown) => {
   dropdown.addEventListener("click", invertDropdown);
   dropdown.addEventListener("blur", (e) => invertDropdown(e, false));
-});
-
-$getAllEle(".radio").forEach((checkbox) => {
-  checkbox.addEventListener("click", invertRadio);
 });
 
 $getAllEle(".global-alert .close-alert").forEach(($button) => {

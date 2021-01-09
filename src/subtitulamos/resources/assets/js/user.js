@@ -4,15 +4,7 @@
  */
 
 import "../css/user.scss";
-import {
-  $getAllEle,
-  $getEle,
-  $getById,
-  easyFetch,
-  showOverlayFromTpl,
-  onDomReady,
-  invertRadio,
-} from "./utils";
+import { $getAllEle, $getEle, $getById, easyFetch, showOverlayFromTpl, onDomReady } from "./utils";
 
 const $roleChangeForm = $getEle("#reset-user-pwd");
 if ($roleChangeForm) {
@@ -46,15 +38,9 @@ if ($banButton) {
   $banButton.addEventListener("click", () => {
     showOverlayFromTpl("ban-dialog");
 
-    $getAllEle("[data-ban-radio]").forEach((checkbox) => {
-      checkbox.addEventListener("click", invertRadio);
-
-      checkbox.addEventListener("click", () => {
-        console.log(checkbox.querySelector("input").value);
-        $getEle("#detailed-duration").classList.toggle(
-          "hidden",
-          checkbox.querySelector("input").value === "permanent"
-        );
+    $getAllEle("input[type='radio']").forEach((checkbox) => {
+      checkbox.addEventListener("change", () => {
+        $getEle("#detailed-duration").classList.toggle("hidden", checkbox.value === "permanent");
       });
     });
   });
