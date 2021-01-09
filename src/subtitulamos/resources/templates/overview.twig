@@ -84,8 +84,8 @@
         <div id="comments-container" class="comments-container">
           <div @click="refresh(true)" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
           <div id="comments-navigation-list" class="navigation-list no-scroll-bar">
-            <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}' id="last-uploaded">SUBTÍTULOS</div>
-            <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}' id="last-edited">EPISODIOS</div>
+            <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}'>TRADUCCIONES</div>
+            <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}'>EPISODIOS</div>
           </div>
           <div id="comments-spacer">
             <div class="no-comments" v-if="this.firstLoad">Cargando...</div>
