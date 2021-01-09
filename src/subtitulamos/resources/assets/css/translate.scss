@@ -420,8 +420,9 @@
       font-size: 0.9rem;
     }
 
+    --translation-box-width: 325px;
     .text {
-      width: 305px;
+      width: var(--translation-box-width);
       margin: 0;
 
       div {
@@ -435,11 +436,11 @@
     }
 
     .editable-text {
-      width: calc(295px + 8px + 59px);
+      width: calc(var(--translation-box-width) + 8px + 59px);
 
       .closed {
         height: 100%;
-        width: calc(295px + 8px);
+        width: calc(var(--translation-box-width) + 8px);
       }
 
       .open-by-other {
@@ -474,7 +475,7 @@
           resize: none;
           padding: var(--spacing-xs);
           line-height: 1.4rem;
-          width: calc(295px + 8px);
+          width: calc(var(--translation-box-width) + 8px);
           overflow-y: auto;
           flex-shrink: 0;
           flex-grow: 0;
@@ -539,7 +540,7 @@
     }
 
     .actions {
-      width: 37px;
+      width: 48px;
       justify-content: center;
 
       .warning {
@@ -607,7 +608,7 @@
   }
 }
 
-@media all and (max-width: 1200px) {
+@media all and (max-width: 1275px) {
   #translation {
     #sequences {
       .grid-header {
