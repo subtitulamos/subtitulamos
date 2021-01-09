@@ -543,6 +543,9 @@ footer > #footer-content {
 
 #register-checkbox {
   margin-top: var(--spacing-m);
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr;
 }
 
 @media all and (max-width: 800px) {

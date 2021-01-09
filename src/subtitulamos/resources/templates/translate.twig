@@ -56,12 +56,7 @@
         </div>
 
         <div class="filter">
-          <div class="checkbox-field">
-            <div class="checkbox">
-              <i class="fas fa-check"></i>
-              <input type='checkbox' id='untranslated-filter' @change="onChangePage(1)" v-model="filters.onlyUntranslated">
-            </div>
-          </div>
+          <input type='checkbox' id='untranslated-filter' @change="onChangePage(1)" v-model="filters.onlyUntranslated">
           Ver solo secuencias sin traducir
         </div>
       </div>

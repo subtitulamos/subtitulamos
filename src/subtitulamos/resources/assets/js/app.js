@@ -128,10 +128,6 @@ function showRegisterForm() {
   const $registerForm = document.getElementById("register-form");
   $registerForm.querySelector("#register-button").addEventListener("click", doRegister);
 
-  $getAllEle(".checkbox").forEach((checkbox) => {
-    checkbox.addEventListener("click", invertCheckbox);
-  });
-
   const clearValidity = (e) => e.target.setCustomValidity(""); // Reset error, user might've fixed it
   const validityChecker = (e) => {
     clearValidity(e);
@@ -245,10 +241,6 @@ if ($ctrlPanel) {
 $getAllEle(".dropdown-field select").forEach((dropdown) => {
   dropdown.addEventListener("click", invertDropdown);
   dropdown.addEventListener("blur", (e) => invertDropdown(e, false));
-});
-
-$getAllEle(".checkbox").forEach((checkbox) => {
-  checkbox.addEventListener("click", invertCheckbox);
 });
 
 $getAllEle(".radio").forEach((checkbox) => {

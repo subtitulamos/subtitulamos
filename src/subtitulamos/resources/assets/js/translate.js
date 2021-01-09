@@ -1158,7 +1158,3 @@ document.addEventListener("keydown", function (e) {
     e.preventDefault();
   }
 });
-
-$getAllEle(".checkbox").forEach((checkbox) => {
-  checkbox.addEventListener("click", invertCheckbox);
-});
