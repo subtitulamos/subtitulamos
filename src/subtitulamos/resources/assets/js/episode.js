@@ -13,7 +13,6 @@ import {
   $getEle,
   showOverlayFromTpl,
   invertDropdown,
-  invertCheckbox,
 } from "./utils.js";
 
 const lastLangVal = localStorage.getItem("last-selected-translation-lang");
