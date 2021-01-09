@@ -420,7 +420,8 @@ class TranslationController
             return $response->withStatus(400);
         }
 
-        $changed = $text != $seq->getText() || ($canChangeTimes && ($nStartTime != $seq->getStartTime() || $nEndTime != $seq->getEndTime()));
+        $timesChanged = $canChangeTimes && ($nStartTime != $seq->getStartTime() || $nEndTime != $seq->getEndTime());
+        $changed = $text != $seq->getText() || $timesChanged;
         if (!$changed) {
             // Nothing to change here, send the id of this very sequence
             $response->getBody()->write($seq->getId());
@@ -466,9 +467,36 @@ class TranslationController
             $nseq->setEndTime($nEndTime);
         }
         $em->persist($nseq);
+
+        // If this is an original sub, persist any time changes to the translations
+        $sub = $seq->getSubtitle();
+        if ($canChangeTimes && $timesChanged && $sub->isOriginal()) {
+            // Go through every subtitle associated to this original to change it there too
+            foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+                if ($targetSub->isDirectUpload()) {
+                    continue;
+                }
+
+                $targetSeq = $em->createQuery('SELECT sq FROM App:Sequence sq WHERE sq.subtitle = :sub AND sq.number = :num ORDER BY sq.revision DESC')
+                    ->setParameter('sub', $targetSub->getId())
+                    ->setParameter('num', $seq->getNumber())
+                    ->setMaxResults(1)
+                    ->getOneOrNullResult();
+
+                // We'll preserve the target sequence times if it differs in either end time or start time
+                // (which means it has unique times for this translation)
+                if ($targetSeq && $targetSeq->getStartTime() == $seq->getStartTime() && $targetSeq->getEndTime() == $seq->getEndTime()) {
+                    $targetSeq->setStartTime($nStartTime);
+                    $targetSeq->setEndTime($nEndTime);
+                }
+            }
+        }
+
+        // Write to DB
         $em->flush();
 
-        $translation->broadcastSeqChange($nseq);
+        // Broadcast to real time
+        $translation->broadcastSeqChange($nseq, $seq);
         $response->getBody()->write((string)$nseq->getId());
         return $response->withStatus(200);
     }

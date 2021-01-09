@@ -56,7 +56,9 @@ Subtitle.prototype.wsMessage = function (event) {
           data.num,
           data.original_text,
           data.original_tstart,
-          data.original_tend
+          data.original_tend,
+          data.prev_tstart,
+          data.prev_tend
         );
         break;
 
@@ -304,8 +306,10 @@ Subtitle.prototype.changeSeqOriginal = function (
   originalId,
   number,
   originalText,
-  originalTStart,
-  originalTEnd
+  originalStartTime,
+  originalEndTime,
+  prevStartTime,
+  prevEndTime
 ) {
   const seqHereIdx = this.findSeqIdxByNum(number);
   if (seqHereIdx < 0) {
@@ -315,9 +319,13 @@ Subtitle.prototype.changeSeqOriginal = function (
 
   const seqHere = this.state.sequences[seqHereIdx];
   seqHere.secondary_text = originalText;
-  if (!seqHere.id) {
-    seqHere.tstart = originalTStart;
-    seqHere.tend = originalTEnd;
+
+  // Time changes are only "really" propagated if tstart/tend in origin matches this translation's tstart/tend
+  // (any modifications to times made exclusively for this translation aren't propagated)
+  console.log(seqHere.tstart, seqHere.tend, prevStartTime, prevEndTime);
+  if (!seqHere.id || (seqHere.tstart == prevStartTime && seqHere.tend == prevEndTime)) {
+    seqHere.tstart = originalStartTime;
+    seqHere.tend = originalEndTime;
   }
 };
 

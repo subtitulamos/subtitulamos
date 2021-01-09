@@ -113,7 +113,7 @@ class Translation
      * @param \App\Entities\Sequence $seq
      * @return void
      */
-    public function broadcastSeqChange(Sequence $seq)
+    public function broadcastSeqChange(Sequence $seq, ?Sequence $oldSeq = null)
     {
         $sub = $seq->getSubtitle();
         $this->redis->publish($this->getPubSubChanName($sub), \json_encode([
@@ -128,7 +128,7 @@ class Translation
 
         if ($sub->isOriginal()) {
             foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
-                if ($targetSub == $sub) {
+                if ($targetSub->isDirectUpload()) {
                     continue;
                 }
 
@@ -137,8 +137,10 @@ class Translation
                     'num' => $seq->getNumber(),
                     'original_id' => $seq->getId(),
                     'original_text' => $seq->getText(),
-                    'original_tstart' => (int) $seq->getStartTime(),
-                    'original_tend' => (int) $seq->getEndTime()
+                    'original_tstart' => $seq->getStartTime(),
+                    'original_tend' =>  $seq->getEndTime(),
+                    'prev_tstart' => $oldSeq ? $oldSeq->getStartTime() : null,
+                    'prev_tend' => $oldSeq ? $oldSeq->getEndTime() : null,
                 ]));
             }
         };
