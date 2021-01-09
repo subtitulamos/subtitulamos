@@ -16,7 +16,7 @@ let selectedPage = {
   completed: 1,
   resyncs: 1,
 };
-const contentPerPage = 5;
+const CONTENT_PER_PAGE = 5;
 
 onDomReady(() => {
   // Page navigation
@@ -44,7 +44,7 @@ onDomReady(() => {
         .querySelector(".page-group")
         .classList.toggle("invisible", selectedPage[target] <= 1);
 
-      loadOverviewGridCell(target, contentPerPage);
+      loadOverviewGridCell(target, CONTENT_PER_PAGE);
     });
   });
 
@@ -53,7 +53,7 @@ onDomReady(() => {
   $reloadButtons.forEach(($button) => {
     $button.addEventListener("click", () => {
       const target = $button.dataset.reload;
-      loadOverviewGridCell(target, contentPerPage);
+      loadOverviewGridCell(target, CONTENT_PER_PAGE);
     });
   });
 
@@ -76,12 +76,12 @@ onDomReady(() => {
 });
 
 function loadOverviewData() {
-  loadOverviewGridCell("uploads", contentPerPage);
-  loadOverviewGridCell("modified", contentPerPage);
-  loadOverviewGridCell("completed", contentPerPage);
-  loadOverviewGridCell("resyncs", contentPerPage);
-  loadOverviewGridCell("paused", contentPerPage);
-  loadComments(contentPerPage);
+  loadOverviewGridCell("uploads", CONTENT_PER_PAGE);
+  loadOverviewGridCell("modified", CONTENT_PER_PAGE);
+  loadOverviewGridCell("completed", CONTENT_PER_PAGE);
+  loadOverviewGridCell("resyncs", CONTENT_PER_PAGE);
+  loadOverviewGridCell("paused", CONTENT_PER_PAGE);
+  loadComments(CONTENT_PER_PAGE);
 }
 
 function listRenderer($list, data) {
@@ -133,7 +133,7 @@ let comments = new Vue({
   },
   methods: {
     refresh: function () {
-      loadComments(contentPerPage);
+      loadComments(CONTENT_PER_PAGE);
     },
 
     remove: function (id) {
@@ -248,7 +248,7 @@ let comments = new Vue({
   },
   computed: {
     nextPageInvisible: function () {
-      return !this.comments.length || this.comments.length % contentPerPage;
+      return !this.comments.length || this.comments.length % CONTENT_PER_PAGE;
     },
   },
 });
