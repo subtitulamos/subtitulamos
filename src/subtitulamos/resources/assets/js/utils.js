@@ -117,20 +117,6 @@ export function invertDropdown(e, setArrowDown) {
   $dropdown.classList.toggle("fa-chevron-up", setArrowDown);
 }
 
-export function invertCheckbox(e) {
-  const $checkbox = e.currentTarget;
-  $checkbox.classList.toggle("checked");
-}
-
-export function invertRadio(e) {
-  const $radio = e.currentTarget;
-  $radio
-    .closest(".radio-field")
-    .querySelectorAll(".checked")
-    .forEach((radio) => radio.classList.toggle("checked", false));
-  $radio.classList.toggle("checked");
-}
-
 export function isElementInViewport(el) {
   var rect = el.getBoundingClientRect();
 

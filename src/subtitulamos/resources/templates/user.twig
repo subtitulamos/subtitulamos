@@ -156,18 +156,12 @@
         <form action="/users/{{ target_user.id }}/ban" method="POST">
           <div id='time' class="radio-field" >
             <div class="radio-option">
-              <div class="radio" data-ban-radio>
-                <i class="fas fa-circle"></i>
-                <input type='radio' name='duration-type' value='permanent'/>
-              </div>
+              <input type='radio' name='duration-type' value='permanent'/>
               Permanente
             </div>
 
             <div class="radio-option">
-              <div class="radio" data-ban-radio>
-                <i class="fas fa-circle"></i>
-                <input type='radio' name='duration-type' value='temporary'/>
-              </div>
+              <input type='radio' name='duration-type' value='temporary'/>
               Temporal
             </div>
           </div>
