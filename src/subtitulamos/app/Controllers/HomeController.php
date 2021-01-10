@@ -16,8 +16,13 @@ class HomeController
         return $twig->render($response, 'index.twig');
     }
 
-    public function overview($response, Twig $twig)
+    public function overviewSubtitles($response, Twig $twig)
     {
-        return $twig->render($response, 'overview.twig');
+        return $twig->render($response, 'overview/overview_subtitles.twig');
+    }
+
+    public function overviewComments($response, Twig $twig)
+    {
+        return $twig->render($response, 'overview/overview_comments.twig');
     }
 }

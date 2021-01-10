@@ -16,73 +16,63 @@ let selectedPage = {
   completed: 1,
   resyncs: 1,
 };
-const CONTENT_PER_PAGE = 5;
+let selectedTab = "uploads";
+const CONTENT_PER_PAGE = 10;
 
 onDomReady(() => {
   // Page navigation
   const $pages = $getAllEle("[data-page]");
   $pages.forEach(($button) => {
     $button.addEventListener("click", () => {
-      const $pagesWrap = $button.closest(".pages");
-      const target = $pagesWrap.dataset.target;
       const pageData = $button.dataset.page;
-      const currentPage = selectedPage[target];
+      const currentPage = selectedPage[selectedTab];
 
       if (pageData == "previous") {
-        selectedPage[target] = Math.max(1, currentPage - 1);
+        selectedPage[selectedTab] = Math.max(1, currentPage - 1);
       } else if (pageData == "next") {
-        selectedPage[target] = currentPage + 1;
+        selectedPage[selectedTab] = currentPage + 1;
       } else {
-        selectedPage[target] = Number(pageData);
+        selectedPage[selectedTab] = Number(pageData);
       }
 
-      if (selectedPage[target] === 1) {
-        $pagesWrap.querySelector("[data-page='next'").classList.toggle("invisible", false);
+      if (selectedPage[selectedTab] === 1) {
+        $getEle("[data-page='next'").classList.toggle("invisible", false);
       }
+      $getEle(".page-group").classList.toggle("invisible", selectedPage[selectedTab] <= 1);
 
-      $pagesWrap
-        .querySelector(".page-group")
-        .classList.toggle("invisible", selectedPage[target] <= 1);
-
-      loadOverviewGridCell(target, CONTENT_PER_PAGE);
+      loadTab(selectedTab, CONTENT_PER_PAGE);
     });
   });
 
   // Reload data on clicking the refresh button
-  const $reloadButtons = $getAllEle("[data-reload]");
-  $reloadButtons.forEach(($button) => {
-    $button.addEventListener("click", () => {
-      const target = $button.dataset.reload;
-      loadOverviewGridCell(target, CONTENT_PER_PAGE);
+  const $reloadButton = $getById("reload-search-content");
+  if ($reloadButton) {
+    $reloadButton.addEventListener("click", () => {
+      loadTab(selectedTab, CONTENT_PER_PAGE);
     });
-  });
-
-  // Initial data load and automatic refresh
-  const $overview = $getById("overview-grid");
-  if ($overview) {
-    loadOverviewData();
-    setInterval(loadOverviewData, 60000);
   }
 
-  // Expanding overview cards on mobile
-  $getAllEle(".grid-cell-title").forEach(($cellTitle) => {
-    const $cell = $cellTitle.closest(".grid-cell");
+  // Initial data load and automatic refresh
+  const $subtitlesSearchContent = $getById("search-content");
+  const $commentsContainer = $getById("comments-container");
+  if ($subtitlesSearchContent) {
+    loadTab(selectedTab, CONTENT_PER_PAGE);
+    setInterval(() => loadTab(selectedTab, CONTENT_PER_PAGE), 60000);
+  } else if ($commentsContainer) {
+    loadComments(CONTENT_PER_PAGE);
+    setInterval(() => loadComments(CONTENT_PER_PAGE), 60000);
+  }
 
-    $cellTitle.addEventListener("click", () => {
-      $cell.classList.toggle("collapsed");
-      $cell.querySelector(".grid-content").classList.toggle("expanded");
+  // Changing subtitles tab
+  $getAllEle("[data-search]").forEach(($tab) => {
+    $tab.addEventListener("click", () => {
+      $tab.parentElement.querySelector(".selected").classList.toggle("selected", false);
+      $tab.classList.toggle("selected", true);
+      selectedTab = $tab.dataset.search;
+      loadTab(selectedTab, CONTENT_PER_PAGE);
     });
   });
 });
-
-function loadOverviewData() {
-  loadOverviewGridCell("uploads", CONTENT_PER_PAGE);
-  loadOverviewGridCell("modified", CONTENT_PER_PAGE);
-  loadOverviewGridCell("completed", CONTENT_PER_PAGE);
-  loadOverviewGridCell("resyncs", CONTENT_PER_PAGE);
-  loadOverviewGridCell("paused", CONTENT_PER_PAGE);
-  loadComments(CONTENT_PER_PAGE);
-}
 
 function listRenderer($list, data) {
   $list.innerHTML = "";
@@ -90,6 +80,7 @@ function listRenderer($list, data) {
   if (data.length > 0) {
     data.forEach((ep, idx) => {
       let $li = document.createElement("li");
+      $li.classList.toggle("w-box-shadow", true);
       $li.innerHTML += `<div><a class="text blue-a bold" href="/episodes/${ep.id}/${ep.slug}">${ep.full_name}</a></div>`;
       $li.innerHTML += `<span class="text language small">${ep.lang} - ${ep.version}</span>`;
       const timeAgo = timeago().format(ep.time, "es");
@@ -103,23 +94,23 @@ function listRenderer($list, data) {
   }
 }
 
-function loadOverviewGridCell(target, count) {
-  const $targetContainer = $getEle(`[data-search-path="${target}"]`);
-  const $list = $targetContainer.querySelector("ul");
+function loadTab(selectedTab, count) {
+  const $subtitlesSearchContent = $getEle("#search-content");
+  const $list = $subtitlesSearchContent.querySelector("ul");
 
-  const searchPath = $targetContainer.dataset.searchPath;
-  easyFetch("/search/" + searchPath, {
+  easyFetch("/search/" + selectedTab, {
     params: {
-      from: (selectedPage[target] - 1) * count,
+      from: (selectedPage[selectedTab] - 1) * count,
       count,
     },
   })
     .then((res) => res.json())
     .then((data) => {
       listRenderer($list, data);
-      if (data.length < count) {
-        $targetContainer.querySelector("[data-page='next'").classList.toggle("invisible", true);
-      }
+      $subtitlesSearchContent
+        .querySelector("[data-page='next'")
+        .classList.toggle("invisible", data.length < count);
+      $getEle(".page-group").classList.toggle("invisible", selectedPage[selectedTab] <= 1);
     });
 }
 
