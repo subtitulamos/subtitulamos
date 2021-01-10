@@ -153,8 +153,8 @@ Vue.component("sequence", {
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                 </template>
             </div>
-            <button v-if="isOriginalSub" class="add-sequence" @click="window.translation.addSequenceAtLocation(number)">
-              <i class="fas fa-plus-circle" aria-hidden="true"></i>
+            <button v-if="isOriginalSub && !history" class="add-sequence" @click="window.translation.addSequenceAtLocation(number)">
+              <i class="fas fa-plus" aria-hidden="true"></i>
             </button>
           </div>
         `,
