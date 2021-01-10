@@ -23,6 +23,16 @@
     position: sticky;
     top: -1px;
     z-index: 2;
+
+    &::before {
+      position: absolute;
+      width: var(--content-padding-x);
+      height: 100%;
+      background-color: var(--color-bg);
+      content: "";
+      top: 0px;
+      right: calc(0px - var(--content-padding-x));
+    }
   }
 
   #translation-tools {
@@ -30,6 +40,7 @@
     justify-content: space-between;
     padding: var(--spacing-xs);
     background-color: var(--color-gray-e);
+    position: relative;
 
     .alert-tool-wrapper {
       padding-left: var(--spacing-xs);
