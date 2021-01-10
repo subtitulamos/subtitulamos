@@ -11,7 +11,7 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 import "../css/translate.scss";
-import { easyFetch, isElementInViewport } from "./utils.js";
+import { $getById, $getEle, easyFetch, isElementInViewport, onDomReady } from "./utils.js";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
@@ -1157,4 +1157,20 @@ document.addEventListener("keydown", function (e) {
     translation.goTo();
     e.preventDefault();
   }
+});
+
+onDomReady(() => {
+  const $translationContainer = $getById("translation");
+  const $responsivessToggle = $getById("toggle-responsiveness");
+
+  const responsivenessStatus = localStorage.getItem("translate-responsiveness") === "true";
+
+  $translationContainer.classList.toggle("responsive", responsivenessStatus);
+  $responsivessToggle.checked = !responsivenessStatus;
+
+  $responsivessToggle.addEventListener("click", () => {
+    const toggleStatus = $responsivessToggle.checked;
+    $translationContainer.classList.toggle("responsive", !toggleStatus);
+    localStorage.setItem("translate-responsiveness", !toggleStatus);
+  });
 });

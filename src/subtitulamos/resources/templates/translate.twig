@@ -34,9 +34,13 @@
     Conexión con el servidor de traducción perdida. Reestableciendo...
   </div>
 
+  <div id="toggle-responsiveness-wrapper">
+    <input type="checkbox" name="toggle-responsiveness" id="toggle-responsiveness">
+    Ver esta página como en el ordenador
+  </div>
+
   <div id="translation-details" :class="{'disabled': !loaded}">
     <div id="translation-header">
-
     {% verbatim %}
       <div id='filters'>
         <div class="filter">
