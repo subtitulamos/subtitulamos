@@ -84,7 +84,14 @@ function listRenderer($list, data) {
       $li.innerHTML += `<div><a class="text blue-a bold" href="/episodes/${ep.id}/${ep.slug}">${ep.full_name}</a></div>`;
       $li.innerHTML += `<span class="text language small">${ep.lang} - ${ep.version}</span>`;
       const timeAgo = timeago().format(ep.time, "es");
-      $li.innerHTML += `<div class="time-ago text tiny">${timeAgo}</div>`;
+      let rowDetail = timeAgo;
+      if (ep.last_edited_by) {
+        rowDetail += ` · <b>${ep.last_edited_by}</b>`;
+      }
+      if (ep.progress) {
+        rowDetail += ` · ${ep.progress}%`;
+      }
+      $li.innerHTML += `<div class="time-ago text tiny">${rowDetail}</div>`;
       $list.appendChild($li);
     });
   } else {
@@ -114,135 +121,137 @@ function loadTab(selectedTab, count) {
     });
 }
 
-let comments = new Vue({
-  el: "#comments-container",
-  data: {
-    comments: [],
-    page: 1,
-    commentType: "subtitles",
-    firstLoad: true,
-  },
-  methods: {
-    refresh: function () {
-      loadComments(CONTENT_PER_PAGE);
+if ($getById("comments-container")) {
+  var comments = new Vue({
+    el: "#comments-container",
+    data: {
+      comments: [],
+      page: 1,
+      commentType: "subtitles",
+      firstLoad: true,
     },
+    methods: {
+      refresh: function () {
+        loadComments(CONTENT_PER_PAGE);
+      },
 
-    remove: function (id) {
-      const targetCommentIdx = this.comments.findIndex((comment) => comment.id === id);
-      if (targetCommentIdx < 0) {
-        Toast.fire({
-          type: "error",
-          title: "Ha ocurrido un extraño error al borrar el comentario",
-        });
-        return;
-      }
-
-      const targetComment = this.comments[targetCommentIdx];
-      this.comments.splice(targetCommentIdx, 1);
-
-      const isEpisode = typeof targetComment.episode !== "undefined";
-      const deleteUrl = isEpisode
-        ? `/episodes/${targetComment.episode.id}/comments/${id}`
-        : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}`;
-      easyFetch(deleteUrl, {
-        method: "DELETE",
-      })
-        .then(() => {
-          this.refresh();
-        })
-        .catch(() => {
+      remove: function (id) {
+        const targetCommentIdx = this.comments.findIndex((comment) => comment.id === id);
+        if (targetCommentIdx < 0) {
           Toast.fire({
             type: "error",
-            title: "Ha ocurrido un error al borrar el comentario",
+            title: "Ha ocurrido un extraño error al borrar el comentario",
           });
-          if (typeof targetCommentIdx !== "undefined") {
-            // Insert the comment right back where it was
-            this.comments.splice(targetCommentIdx, 0, targetComment);
-          } else {
-            this.refresh();
-          }
-        });
-    },
+          return;
+        }
 
-    pin: function (id) {
-      const targetComment = this.comments.find((comment) => comment.id === id);
-      if (!targetComment) {
-        Toast.fire({
-          type: "error",
-          title: "Ha ocurrido un extraño error al fijar el comentario",
-        });
-        return;
-      }
+        const targetComment = this.comments[targetCommentIdx];
+        this.comments.splice(targetCommentIdx, 1);
 
-      const isEpisode = typeof targetComment.episode !== "undefined";
-      const pinUrl = isEpisode
-        ? `/episodes/${targetComment.episode.id}/comments/${id}/pin`
-        : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/pin`;
-
-      easyFetch(pinUrl, {
-        method: "POST",
-      })
-        .then(() => {
-          this.refresh();
+        const isEpisode = typeof targetComment.episode !== "undefined";
+        const deleteUrl = isEpisode
+          ? `/episodes/${targetComment.episode.id}/comments/${id}`
+          : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}`;
+        easyFetch(deleteUrl, {
+          method: "DELETE",
         })
-        .catch(() => {
-          Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
-          this.refresh();
+          .then(() => {
+            this.refresh();
+          })
+          .catch(() => {
+            Toast.fire({
+              type: "error",
+              title: "Ha ocurrido un error al borrar el comentario",
+            });
+            if (typeof targetCommentIdx !== "undefined") {
+              // Insert the comment right back where it was
+              this.comments.splice(targetCommentIdx, 0, targetComment);
+            } else {
+              this.refresh();
+            }
+          });
+      },
+
+      pin: function (id) {
+        const targetComment = this.comments.find((comment) => comment.id === id);
+        if (!targetComment) {
+          Toast.fire({
+            type: "error",
+            title: "Ha ocurrido un extraño error al fijar el comentario",
+          });
+          return;
+        }
+
+        const isEpisode = typeof targetComment.episode !== "undefined";
+        const pinUrl = isEpisode
+          ? `/episodes/${targetComment.episode.id}/comments/${id}/pin`
+          : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/pin`;
+
+        easyFetch(pinUrl, {
+          method: "POST",
+        })
+          .then(() => {
+            this.refresh();
+          })
+          .catch(() => {
+            Toasts.error.fire("Ha ocurrido un error al intentar fijar el comentario");
+            this.refresh();
+          });
+      },
+
+      save: function (id, text) {
+        const targetComment = this.comments.find((comment) => comment.id === id);
+        if (!targetComment) {
+          Toast.fire({
+            type: "error",
+            title: "Ha ocurrido un extraño error al editar el comentario",
+          });
+          return;
+        }
+
+        const isEpisode = typeof targetComment.episode !== "undefined";
+        const editUrl = isEpisode
+          ? `/episodes/${targetComment.episode.id}/comments/${id}/edit`
+          : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/edit`;
+
+        easyFetch(editUrl, {
+          method: "POST",
+          rawBody: {
+            text,
+          },
+        }).catch(() => {
+          Toasts.error.fire("Ha ocurrido un error al intentar editar el comentario");
         });
-    },
+      },
 
-    save: function (id, text) {
-      const targetComment = this.comments.find((comment) => comment.id === id);
-      if (!targetComment) {
-        Toast.fire({
-          type: "error",
-          title: "Ha ocurrido un extraño error al editar el comentario",
-        });
-        return;
-      }
+      setCommentType: function (type) {
+        this.commentType = type;
+        this.page = 1;
+        this.refresh();
+      },
 
-      const isEpisode = typeof targetComment.episode !== "undefined";
-      const editUrl = isEpisode
-        ? `/episodes/${targetComment.episode.id}/comments/${id}/edit`
-        : `/subtitles/${targetComment.subtitle.id}/translate/comments/${id}/edit`;
+      firstPage: function () {
+        this.page = 1;
+        this.refresh();
+      },
 
-      easyFetch(editUrl, {
-        method: "POST",
-        rawBody: {
-          text,
-        },
-      }).catch(() => {
-        Toasts.error.fire("Ha ocurrido un error al intentar editar el comentario");
-      });
-    },
+      nextPage: function () {
+        this.page++;
+        this.refresh();
+      },
 
-    setCommentType: function (type) {
-      this.commentType = type;
-      this.page = 1;
-      this.refresh();
+      prevPage: function () {
+        this.page--;
+        this.refresh();
+      },
     },
-
-    firstPage: function () {
-      this.page = 1;
-      this.refresh();
+    computed: {
+      nextPageInvisible: function () {
+        return !this.comments.length || this.comments.length % CONTENT_PER_PAGE;
+      },
     },
-
-    nextPage: function () {
-      this.page++;
-      this.refresh();
-    },
-
-    prevPage: function () {
-      this.page--;
-      this.refresh();
-    },
-  },
-  computed: {
-    nextPageInvisible: function () {
-      return !this.comments.length || this.comments.length % CONTENT_PER_PAGE;
-    },
-  },
-});
+  });
+}
 
 function loadComments(count) {
   easyFetch(`/comments/${comments.commentType}/load`, {

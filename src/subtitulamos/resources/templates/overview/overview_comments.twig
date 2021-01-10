@@ -1,7 +1,7 @@
 {% extends "overview/overview.twig" %}
 
 {% block overview_content %}
-<h1>Comentarios</h1>
+<h1>Comentarios - Visión General</h1>
 <div id="comments-container" class="comments-container">
   <div id="comments-navigation-list" class="navigation-list no-scroll-bar">
     <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}'>TRADUCCIONES</div>
@@ -11,7 +11,7 @@
   <div @click="refresh" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i> Refrescar</div>
 
   <div class="no-comments" v-if="this.firstLoad">Cargando...</div>
-  <div class="no-comments" v-else-if="comments.length == 0">No hay nada aqui en el momento</div>
+  <div class="no-comments" v-else-if="comments.length == 0">No hay nada aquí ahora mismo</div>
   <div v-else id="comment-list">
     <comment v-for="comment in comments"
       :key="comment.id"
