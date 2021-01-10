@@ -1166,10 +1166,11 @@ onDomReady(() => {
   const $translationContainer = $getById("translation");
   const $responsivessToggle = $getById("toggle-responsiveness");
 
-  const responsivenessStatus = localStorage.getItem("translate-responsiveness") === "true";
+  const responsivenessStatus = localStorage.getItem("translate-responsiveness");
+  const isResponsive = responsivenessStatus !== null ? responsivenessStatus === "true" : true;
 
-  $translationContainer.classList.toggle("responsive", responsivenessStatus);
-  $responsivessToggle.checked = !responsivenessStatus;
+  $translationContainer.classList.toggle("responsive", isResponsive);
+  $responsivessToggle.checked = !isResponsive;
 
   $responsivessToggle.addEventListener("click", () => {
     const toggleStatus = $responsivessToggle.checked;
