@@ -21,8 +21,8 @@
 
   #translation-header {
     position: sticky;
-    top: 0px;
-    z-index: 1;
+    top: -1px;
+    z-index: 2;
   }
 
   #translation-tools {
@@ -40,6 +40,7 @@
       align-items: center;
       overflow-x: auto;
       overflow-y: hidden;
+      flex: 1;
 
       &::-webkit-scrollbar {
         height: 10px;
@@ -784,28 +785,38 @@
 }
 
 @media all and (max-width: 800px) {
-  #translation.responsive {
-    #sequences {
-      .grid-row {
-        grid-template-columns: 80px 1fr;
-
-        .number {
-          grid-column: 1/2;
+  #translation {
+    #translation-tools {
+      .main-tools {
+        button span {
+          display: none;
         }
-        .user {
-          grid-column: 2/3;
-        }
+      }
+    }
 
-        .time,
-        .text,
-        .editable-text,
-        .actions {
-          grid-column: 1/3;
-          border-top: 1px dotted var(--color-gray-divisions);
-        }
+    &.responsive {
+      #sequences {
+        .grid-row {
+          grid-template-columns: 80px 1fr;
 
-        .fake-text + .editable-text {
-          grid-column: 1/3;
+          .number {
+            grid-column: 1/2;
+          }
+          .user {
+            grid-column: 2/3;
+          }
+
+          .time,
+          .text,
+          .editable-text,
+          .actions {
+            grid-column: 1/3;
+            border-top: 1px dotted var(--color-gray-divisions);
+          }
+
+          .fake-text + .editable-text {
+            grid-column: 1/3;
+          }
         }
       }
     }

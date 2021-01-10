@@ -71,45 +71,45 @@
           <div class="tool-group">
             <button type="button" @click="lockPage(true)" class="tool lock-tool" v-if="hasAdvancedTools">
               <i class="fas fa-lock"></i>
-              Bloquear todo
+              <span>Bloquear todo</span>
             </button>
             <button type="button" @click="lockPage(false)" class="tool lock-tool" v-if="hasAdvancedTools">
               <i class="fas fa-unlock"></i>
-              Desbloquear todo
+              <span>Desbloquear todo</span>
             </button>
           </div>
           <div class="tool-group">
             <button type="button" @click="goTo" class='tool hint--bottom' data-hint="Ctrl+G">
               <i class="fas fa-angle-double-right"></i>
-              Ir a secuencia
+              <span>Ir a secuencia</span>
             </button>
           </div>
           <div class="tool-group">
             <button type="button" @click="openPage" class="tool">
               <i class="fas fa-envelope-open-text"></i>
-              Abrir todo
+              <span>Abrir todo</span>
             </button>
             {% if not sub.original %}
               <button type="button" @click="openUntranslatedPage" class="tool">
                 <i class="fas fa-envelope-open"></i>
-                Abrir <i>sin traducir</i>
+                <span>Abrir <i>sin traducir</i></span>
               </button>
             {% endif %}
             <button type="button" @click="closePage" class="tool">
               <i class="fas fa-envelope"></i>
-              Cerrar todo
+              <span>Cerrar todo</span>
             </button>
           </div>
           <div class="tool-group">
             <button type="button" @click="fixPage" class="tool">
               <i class="fas fa-align-left"></i>
-              Alinear todo
+              <span>Alinear todo</span>
             </button>
           </div>
           <div class="tool-group">
             <button type="button" @click="savePage" class='tool hint--bottom' data-hint="Ctrl+Shift+S">
               <i class="fas fa-save"></i>
-              Guardar todo
+              <span>Guardar todo</span>
             </button>
           </div>
         </div>
