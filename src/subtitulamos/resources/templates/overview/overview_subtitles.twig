@@ -1,0 +1,27 @@
+{% extends "overview/overview.twig" %}
+
+{% block overview_content %}
+<h1>Subtítulos</h1>
+<div class="navigation-list no-scroll-bar">
+  <div class="navigation-item selected" data-search="uploads">SUBIDAS</div>
+  <div class="navigation-item" data-search="modified">EDICIONES</div>
+  <div class="navigation-item" data-search="completed">TRADUCCIONES</div>
+  <div class="navigation-item" data-search="resyncs">RESINCRONIZACIONES</div>
+  <div class="navigation-item" data-search="paused">PAUSADAS</div>
+</div>
+<div id="search-content">
+  <div class="reload" id="reload-search-content"><i class="fas fa-sync-alt" aria-hidden="true"></i> Refrescar</div>
+
+  <ul>Cargando...</ul>
+
+  <div class="pages">
+    <div class="page-group invisible">
+      <button class="page" data-page="1"><i class="fas fa-step-backward"></i></button>
+      <button class="page" data-page="previous"><i class="fas fa-chevron-left"></i></button>
+    </div>
+    <div class="page-group">
+      <button class="page" data-page="next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</div>
+{% endblock %}

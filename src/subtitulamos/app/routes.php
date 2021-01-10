@@ -17,7 +17,8 @@ function addRoutes(&$app)
 
     // People
     $app->get('/', ['\App\Controllers\HomeController', 'view']);
-    $app->get('/overview', ['\App\Controllers\HomeController', 'overview'])->add($needsRole('ROLE_TT'));
+    $app->get('/overview', ['\App\Controllers\HomeController', 'overviewSubtitles'])->add($needsRole('ROLE_TT'));
+    $app->get('/overview/comments', ['\App\Controllers\HomeController', 'overviewComments'])->add($needsRole('ROLE_TT'));
     $app->get('/upload', ['\App\Controllers\UploadController', 'view'])->add($needsRole('ROLE_USER'));
     $app->post('/upload', ['\App\Controllers\UploadController', 'do'])->add($needsRole('ROLE_USER'));
 

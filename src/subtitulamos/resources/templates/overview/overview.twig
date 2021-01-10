@@ -1,0 +1,24 @@
+{% extends "base.twig" %}
+{% import 'macros/assets.twig' as assets %}
+
+{% block title %}Visión general{% endblock %}
+{% block css %}{{ assets.css('overview') }}{% endblock %}
+
+{% block content %}
+<div class="content limited-width">
+  {% block overview_content %}
+  {% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    var userId = {{ auth.user ? auth.user.id : 0 }};
+    var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};
+    var canDeleteComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var canEditComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
+    var isBanned = false;
+  </script>
+  {{ assets.js('overview') }}
+{% endblock %}
