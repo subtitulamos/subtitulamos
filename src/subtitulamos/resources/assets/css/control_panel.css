@@ -190,7 +190,6 @@
 #control-panel #control-panel-logo-wrap .logo-text {
   font-size: 1.4rem;
   color: var(--color-offwhite);
-  letter-spacing: -0.5px;
   margin-left: 10px;
   display: none;
 }
