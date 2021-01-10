@@ -608,8 +608,18 @@
   }
 }
 
+#toggle-responsiveness-wrapper {
+  display: none;
+}
+
 @media all and (max-width: 1275px) {
-  #translation {
+  #toggle-responsiveness-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    margin-bottom: var(--spacing-s);
+  }
+
+  #translation.responsive {
     #sequences {
       .grid-header {
         display: none;
@@ -731,7 +741,7 @@
 }
 
 @media all and (max-width: 800px) {
-  #translation {
+  #translation.responsive {
     #sequences {
       .grid-row {
         grid-template-columns: 80px 1fr;
