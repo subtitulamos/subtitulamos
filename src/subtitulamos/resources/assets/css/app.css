@@ -289,10 +289,16 @@ header {
   margin-right: 15px;
 }
 
+/* This class should be used for all the logos (vector excluded) */
+.logo-text {
+  letter-spacing: -0.06rem;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+}
+
 #header-logo-wrap .logo-text {
   font-size: 1.8rem;
   color: var(--color-blue-a);
-  letter-spacing: -1px;
 }
 
 #top-links {
