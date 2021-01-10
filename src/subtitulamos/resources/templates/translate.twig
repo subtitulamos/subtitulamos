@@ -36,7 +36,7 @@
 
   <div id="toggle-responsiveness-wrapper">
     <input type="checkbox" name="toggle-responsiveness" id="toggle-responsiveness">
-    Ver esta página como en el ordenador
+    Ver vista de escritorio
   </div>
 
   <div id="translation-details" :class="{'disabled': !loaded}">
@@ -130,7 +130,8 @@
             <div class="text"><span>Idioma secundario</span></div>
             <div class="editable-text"><span>Traducción al {{ sub_lang }}</span></div>
           {% else %}
-            <div class="text"><span>Original en {{ sub_lang }}</span></div>
+            <div class="text"></div>
+            <div class="editable-text"><span>Original en {{ sub_lang }}</span></div>
           {% endif %}
           <div class="actions"></div>
         </div>
