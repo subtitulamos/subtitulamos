@@ -177,7 +177,7 @@ class SearchController
             $search = Sonic::getSearchClient();
             $newQuery = [];
             foreach ($words as $word) {
-                if (!$word) {
+                if (!$word || mb_strlen($word) == 1) {
                     continue;
                 }
 
@@ -192,7 +192,11 @@ class SearchController
             $newQ = implode(' ', $newQuery);
             $resultList = [];
             if ($newQ) {
-                $showIds = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $newQ, 10);
+                // Query full, original query (top 5)
+                $showIdsOriginal = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $q, 5);
+                $showIdsSuggested = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $newQ, 10);
+                $showIds = array_unique(array_merge($showIdsOriginal, $showIdsSuggested));
+
                 if (count($showIds) > 0) {
                     $shows = $em->createQuery('SELECT s.id, s.name FROM App:Show s WHERE s.id IN (:shows)')
                         ->setParameter('shows', $showIds)
@@ -202,9 +206,14 @@ class SearchController
                         $resultList[] = [
                             'id' => $show['id'],
                             'name' => $show['name'],
+                            'score' => levenshtein($q, $show['name'], /* insert cost */ 2, /* replacement cost */ 1, /* deletion cost */ 3)
                         ];
                     }
                 }
+
+                usort($resultList, function ($a, $b) {
+                    return $a['score'] <=> $b['score'];
+                });
             }
 
             $search->disconnect();
