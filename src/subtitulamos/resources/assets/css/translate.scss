@@ -468,6 +468,10 @@
       width: var(--translation-box-width);
       margin: 0;
 
+      * {
+        font-size: 0.93rem;
+      }
+
       div {
         line-height: 1.4rem;
         text-align: left;
@@ -480,6 +484,10 @@
 
     .editable-text {
       width: calc(var(--translation-box-width) + 8px + 59px);
+
+      * {
+        font-size: 0.93rem;
+      }
 
       .closed {
         height: 100%;
