@@ -190,9 +190,7 @@ Vue.component("sequence", {
   },
 
   mounted: function () {
-    let savedText = sessionStorage.getItem(
-      "sub-" + subID + "-seqtext-" + this.number + "-" + this.id
-    );
+    let savedText = Subtitle.getSavedWorkInSequence(this.number, this.id);
     if (savedText) {
       this.editingText = savedText;
     }
@@ -261,7 +259,7 @@ Vue.component("sequence", {
         }
       }
 
-      sessionStorage.setItem("sub-" + subID + "-seqtext-" + this.number + "-" + this.id, nText);
+      Subtitle.saveWorkInSequence(this.number, this.id, nText);
     },
   },
 

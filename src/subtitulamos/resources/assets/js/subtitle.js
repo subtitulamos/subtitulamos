@@ -7,6 +7,7 @@ import { sprintf } from "sprintf-js";
 import { easyFetch } from "./utils";
 
 function Subtitle(id, state, secondaryLang) {
+  this.maxRenderKey = 0; // Key counter that provides as unique rendering keys for sequences
   this.id = id;
   this.state = state;
   this.state.loaded = false;
@@ -40,7 +41,7 @@ Subtitle.prototype.wsMessage = function (event) {
         break;
 
       case "seq-add-original":
-        this.addSeq(
+        this.addSequenceToSubtitle(
           data.original_id,
           data.original_user,
           data.num,
@@ -51,7 +52,7 @@ Subtitle.prototype.wsMessage = function (event) {
         break;
 
       case "seq-del-original":
-        this.delSeq(data.num);
+        this.deleteSequenceFromSubtitle(data.num);
         break;
 
       case "seq-change-original":
@@ -154,6 +155,7 @@ Subtitle.prototype.loadSequences = function () {
       this.state.loadedOnce = true;
       Object.keys(sequenceList).forEach((k) => {
         let seq = sequenceList[k];
+        seq.render_key = this.maxRenderKey++;
         seq.text = decode(seq.text);
         seq.secondary_text = decode(seq.secondary_text);
 
@@ -326,14 +328,13 @@ Subtitle.prototype.changeSeqOriginal = function (
 
   // Time changes are only "really" propagated if tstart/tend in origin matches this translation's tstart/tend
   // (any modifications to times made exclusively for this translation aren't propagated)
-  console.log(seqHere.tstart, seqHere.tend, prevStartTime, prevEndTime);
   if (!seqHere.id || (seqHere.tstart == prevStartTime && seqHere.tend == prevEndTime)) {
     seqHere.tstart = originalStartTime;
     seqHere.tend = originalEndTime;
   }
 };
 
-Subtitle.prototype.addSeq = function (
+Subtitle.prototype.addSequenceToSubtitle = function (
   originalId,
   originalUser,
   number,
@@ -343,6 +344,7 @@ Subtitle.prototype.addSeq = function (
 ) {
   const maxSeqNum = this.state.sequences.length;
   const newSeq = {
+    render_key: this.maxRenderKey++,
     id: isOriginalSub ? originalId : null,
     number: number,
     author: isOriginalSub ? originalUser : null,
@@ -355,33 +357,53 @@ Subtitle.prototype.addSeq = function (
     text: isOriginalSub ? originalText : "",
   };
 
+  // Migrate all temporary work to the new numbers that we'll assign sequences
+  for (let i = this.state.sequences.length - 1; i >= 0; --i) {
+    const seq = this.state.sequences[i];
+    if (seq.number < newSeq.number) {
+      break; // We don't need to change these
+    }
+  }
+
   if (number > maxSeqNum) {
     this.state.sequences.push(newSeq);
   } else {
-    this.state.sequences = this.state.sequences.map((seq) => {
-      if (seq.number >= number) {
-        ++seq.number;
+    for (let i = this.state.sequences.length - 1; i >= 0; --i) {
+      const seq = this.state.sequences[i];
+      if (seq.number < number) {
+        break; // We don't need to change these
       }
 
-      return seq;
-    });
+      const workInSeq = Subtitle.getSavedWorkInSequence(seq.number, seq.id);
+      if (workInSeq) {
+        Subtitle.saveWorkInSequence(seq.number + 1, seq.id, workInSeq);
+      }
+
+      Subtitle.deleteWorkInSequence(seq.number, seq.id);
+      ++seq.number;
+    }
 
     this.state.sequences.splice(number - 1, 0, newSeq);
   }
 };
 
-Subtitle.prototype.delSeq = function (number) {
-  this.state.sequences = this.state.sequences
-    .filter((seq) => {
-      return seq.number !== number;
-    })
-    .map((seq) => {
-      if (seq.number > number) {
-        --seq.number;
-      }
+Subtitle.prototype.deleteSequenceFromSubtitle = function (number) {
+  // Delete the one sequence
+  this.state.sequences = this.state.sequences.filter((seq) => {
+    return seq.number !== number;
+  });
 
-      return seq;
-    });
+  // Update working status
+  for (let i = number; i < this.state.sequences.length; ++i) {
+    const seq = this.state.sequences[i];
+    const workInSeq = Subtitle.getSavedWorkInSequence(seq.number, seq.id);
+    if (workInSeq) {
+      Subtitle.saveWorkInSequence(seq.number - 1, seq.id, workInSeq);
+    }
+
+    Subtitle.deleteWorkInSequence(seq.number, seq.id);
+    --seq.number;
+  }
 };
 
 Subtitle.prototype.changeSeq = function (
@@ -510,6 +532,18 @@ Subtitle.prototype.editComment = function (id, time, text) {
     c.text = text;
     c.edited_at = time;
   }
+};
+
+Subtitle.saveWorkInSequence = function (seqNum, seqId, text) {
+  sessionStorage.setItem("sub-" + subID + "-seqtext-" + seqNum + "-" + seqId, text);
+};
+
+Subtitle.deleteWorkInSequence = function (seqNum, seqId) {
+  sessionStorage.removeItem("sub-" + subID + "-seqtext-" + seqNum + "-" + seqId);
+};
+
+Subtitle.getSavedWorkInSequence = function (seqNum, seqId) {
+  return sessionStorage.getItem("sub-" + subID + "-seqtext-" + seqNum + "-" + seqId);
 };
 
 module.exports = Subtitle;
