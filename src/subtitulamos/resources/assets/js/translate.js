@@ -153,7 +153,7 @@ Vue.component("sequence", {
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                 </template>
             </div>
-            <button v-if="isOriginalSub && !history" class="add-sequence" @click="window.translation.addSequenceAtLocation(number)">
+            <button v-if="isOriginalSub && !history && canAddSequence" class="add-sequence" @click="window.translation.addSequenceAtLocation(number)">
               <i class="fas fa-plus" aria-hidden="true"></i>
             </button>
           </div>
@@ -267,6 +267,10 @@ Vue.component("sequence", {
   computed: {
     canEditTimes: function () {
       return canEditTimes;
+    },
+
+    canAddSequence: function () {
+      return canAddSequence;
     },
 
     openByOther: function () {
