@@ -547,6 +547,14 @@ class TranslationController
         $nseq->setVerified(false);
 
         $em->persist($nseq);
+
+        // Log it
+        $event = new EventLog(
+            $auth->getUser(),
+            new \DateTime(),
+            sprintf('Secuencia #%d añadida ([[subtitle:%d]])', $nseq->getNumber(), $sub->getId())
+        );
+        $em->persist($event);
         $em->flush();
 
         $translation->broadcastSeqCreation($nseq);
@@ -586,6 +594,14 @@ class TranslationController
                 }
             }
         }
+
+        // Log it
+        $event = new EventLog(
+            $auth->getUser(),
+            new \DateTime(),
+            sprintf('Secuencia %d eliminada ([[subtitle:%d]])', $delSeq->getNumber(), $sub->getId())
+        );
+        $em->persist($event);
         $em->flush();
 
         $translation->broadcastSeqDeletion($delSeq);
