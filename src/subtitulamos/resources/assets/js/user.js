@@ -187,4 +187,12 @@ onDomReady(() => {
       $ele.addEventListener("blur", checkPwdValidity);
     });
   }
+
+  const $preview = $getById("font-family-preview");
+  if ($preview) {
+    $getById("font-family").addEventListener("change", (e) => {
+      $preview.classList = "";
+      $preview.classList.toggle("font-family-" + e.target.value);
+    });
+  }
 });

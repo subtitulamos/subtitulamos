@@ -1,30 +1,54 @@
 {# Included in the scope of user.twig #}
 
 <div id="settings" class="info-group">
-  <div class="form-wrap">
+  <div class="form-wrap" id="password-form">
+    <h4>Datos de usuario</h4>
     <form id="settings-form" action="" method="POST">
       <div class="form-field validated disabled" fieldname="Nombre de usuario">
         <input disabled required value="{{ target_user.username }}" autocomplete="off">
-        <i class="fas fa-user"></i>
+        <i class="fas fa-user" aria-hidden="true"></i>
       </div>
       <div class="form-field validated disabled" fieldname="Correo electrónico">
         <input disabled required value="{{ target_user.email }}" autocomplete="off">
-        <i class="fas fa-envelope"></i>
+        <i class="fas fa-envelope" aria-hidden="true"></i>
       </div>
       <div class="form-field validated" fieldname="Contraseña actual">
         <input required name="password-old" type="password" class="form_input" value="" autocomplete="off">
-        <i class="fas fa-key"></i>
+        <i class="fas fa-key" aria-hidden="true"></i>
       </div>
       <div class="form-field validated" fieldname="Nueva contraseña">
         <input required name="password-new" type="password" class="form_input" value="" autocomplete="off">
-        <i class="fas fa-key"></i>
+        <i class="fas fa-key" aria-hidden="true"></i>
       </div>
       <div class="form-field validated" fieldname="Repetir contraseña">
         <input required name="password-confirmation" type="password" class="form_input" value="" autocomplete="off">
-        <i class="fas fa-key"></i>
+        <i class="fas fa-key" aria-hidden="true"></i>
       </div>
 
-      <button type="submit" class='button button-fat'>Guardar</button>
+      <button type="submit">Cambiar contraseña</button>
+    </form>
+  </div>
+
+
+  <div class="form-wrap" id="font-family-form">
+    <h4>Tabla de traducción</h4>
+    <div id="font-family-preview">
+      <p>But other nights, he would</p>
+      <p>literally sleep under the stars.</p>
+    </div>
+    <form action="" method="POST" id="font-family">
+      <div class="form-field dropdown-field" fieldname="Estilo de letra">
+        <i class="fas fa-chevron-down dropdown"></i>
+        <select name="font-family" id="font-family" value="rubik">
+          <option value="rubik">Rubik (predefinida)</option>
+          <option value="inter">Inter</option>
+          <option value="open-sans">Open Sans</option>
+          <option value="roboto">Roboto</option>
+          <option value="ubuntu">Ubuntu</option>
+        </select>
+        <i class="fas fa-font" aria-hidden="true"></i>
+      </div>
+      <button type="submit">Guardar</button>
     </form>
   </div>
 </div>
