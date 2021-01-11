@@ -11,7 +11,7 @@ import dateformat from "dateformat";
 import accentFold from "./accent_fold.js";
 import balanceText from "./translate/balance_text.js";
 import "../css/translate.scss";
-import { $getById, $getEle, easyFetch, isElementInViewport, onDomReady } from "./utils.js";
+import { $getById, easyFetch, isElementInViewport, onDomReady } from "./utils.js";
 
 function removeWindowHash() {
   // Remove the hash (merely setting .hash to empty leaves the hash AND moves the scroll)
@@ -144,8 +144,8 @@ Vue.component("sequence", {
                         <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock'" v-if="canLock || locked"></i>
                     </template>
 
-                    <template v-if="false && history">
-                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    <template v-if="!editing && canDeleteSequence && !history ">
+                        <i class="delete-sequence fas fa-trash-alt" aria-hidden="true" @click="deleteSequence"></i>
                     </template>
                 </template>
 
@@ -272,6 +272,10 @@ Vue.component("sequence", {
 
     canAddSequence: function () {
       return canAddSequence;
+    },
+
+    canDeleteSequence: function () {
+      return canDeleteSequence;
     },
 
     openByOther: function () {
@@ -405,6 +409,18 @@ Vue.component("sequence", {
           sub.closeSeq(this.number);
           Toasts.error.fire("Ha ocurrido un error desconocido al intentar editar");
         });
+    },
+
+    deleteSequence: function () {
+      Swal.fire({
+        confirmButtonText: "Borrar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        text: `¿Estás seguro(a) de que quieres borrar la sequencia número ${this.number}?`,
+      }).then((isConfirm) => {
+        if (isConfirm.value) alert("AHHHH");
+        else alert("BOOOO");
+      });
     },
 
     keyboardActions: function (e) {
