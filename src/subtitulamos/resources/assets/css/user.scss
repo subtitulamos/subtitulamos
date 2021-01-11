@@ -2,9 +2,9 @@
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
  * @copyright 2021 subtitulamos.tv
  */
-
 @import "app.css";
 @import "card.scss";
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&family=Inter:wght@400;700&family=Open+Sans:wght@400;700&family=Roboto:wght@400;700&family=Ubuntu:wght@400;700&display=swap");
 
 .navigation-list {
   margin-bottom: var(--spacing-l);
@@ -136,5 +136,41 @@
       border-bottom: 1px solid var(--color-gray-c);
       width: 40px;
     }
+  }
+}
+
+#font-family-form {
+  margin-top: var(--spacing-xxl);
+
+  .font-family-rubik * {
+    font-family: "Rubik", sans-serif;
+  }
+
+  .font-family-ubuntu * {
+    font-family: "Ubuntu", sans-serif;
+  }
+
+  .font-family-roboto * {
+    font-family: "Roboto", sans-serif;
+  }
+
+  .font-family-open-sans * {
+    font-family: "Open Sans", sans-serif;
+  }
+
+  .font-family-inter * {
+    font-family: "Inter", sans-serif;
+  }
+
+  .font-family-barlow * {
+    font-family: "Barlow", sans-serif;
+  }
+
+  #font-family-preview {
+    padding: var(--spacing-s) var(--spacing-m);
+    margin-bottom: var(--spacing-m);
+    border-left: 3px solid var(--color-gray-d);
+    font-size: 0.93rem;
+    line-height: 1.4rem;
   }
 }
