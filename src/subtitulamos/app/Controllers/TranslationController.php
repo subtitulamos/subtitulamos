@@ -554,6 +554,44 @@ class TranslationController
         return $response->withStatus(200);
     }
 
+    public function deleteSequence($id, $request, $response, EntityManager $em, Auth $auth, Translation $translation)
+    {
+        $sub = $em->getRepository('App:Subtitle')->find($id);
+        if (!$sub) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        if (!$sub->isOriginal()) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
+        $body = $request->getParsedBody();
+        $seqId = $body['id'] ?? 0;
+        if (!$seqId) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
+        $delSeq = $em->getRepository('App:Sequence')->find($seqId);
+        if ($delSeq->getSubtitle()->getId() != $sub->getId()) {
+            throw new \Slim\Exception\HttpBadRequestException($request);
+        }
+
+        // Move ALL the sequences in ALL the versions, plus delete this sequence in ALL versions
+        foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+            foreach ($targetSub->getSequences() as $seq) {
+                if ($seq->getNumber() == $delSeq->getNumber()) {
+                    $em->remove($seq);
+                } elseif ($seq->getNumber() > $delSeq->getNumber()) {
+                    $seq->setNumber($seq->getNumber() - 1);
+                }
+            }
+        }
+        $em->flush();
+
+        $translation->broadcastSeqDeletion($delSeq);
+        return $response->withStatus(200);
+    }
+
     /**
      * Handles the creation of a new translation for a given sequence
      */

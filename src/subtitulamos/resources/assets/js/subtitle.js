@@ -50,6 +50,10 @@ Subtitle.prototype.wsMessage = function (event) {
         );
         break;
 
+      case "seq-del-original":
+        this.delSeq(data.num);
+        break;
+
       case "seq-change-original":
         this.changeSeqOriginal(
           data.original_id,
@@ -364,6 +368,20 @@ Subtitle.prototype.addSeq = function (
 
     this.state.sequences.splice(number - 1, 0, newSeq);
   }
+};
+
+Subtitle.prototype.delSeq = function (number) {
+  this.state.sequences = this.state.sequences
+    .filter((seq) => {
+      return seq.number !== number;
+    })
+    .map((seq) => {
+      if (seq.number > number) {
+        --seq.number;
+      }
+
+      return seq;
+    });
 };
 
 Subtitle.prototype.changeSeq = function (

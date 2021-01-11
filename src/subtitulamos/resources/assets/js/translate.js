@@ -413,13 +413,22 @@ Vue.component("sequence", {
 
     deleteSequence: function () {
       Swal.fire({
-        confirmButtonText: "Borrar",
-        cancelButtonText: "Cancelar",
+        confirmButtonText: `Sí, borrar secuencia ${this.number}`,
+        cancelButtonText: "No, cancelar",
         showCancelButton: true,
-        text: `¿Estás seguro(a) de que quieres borrar la sequencia número ${this.number}?`,
+        text: `¿Estás seguro de que quieres borrar la sequencia número ${this.number}? Este borrado se aplicará a todas las traducciones, y no se puede deshacer.`,
       }).then((isConfirm) => {
-        if (isConfirm.value) alert("AHHHH");
-        else alert("BOOOO");
+        if (isConfirm.value) {
+          easyFetch("/subtitles/" + subID + "/translate/deleteseq", {
+            method: "POST",
+            rawBody: {
+              id: this.id,
+            },
+          }).catch(() => {
+            sub.closeSeq(this.number);
+            Toasts.error.fire("Ha ocurrido un error al intentar borrar la secuencia");
+          });
+        }
       });
     },
 
