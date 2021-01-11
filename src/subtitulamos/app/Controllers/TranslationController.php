@@ -580,7 +580,7 @@ class TranslationController
         }
 
         $delSeq = $em->getRepository('App:Sequence')->find($seqId);
-        if ($delSeq->getSubtitle()->getId() != $sub->getId()) {
+        if (!$delSeq || $delSeq->getSubtitle()->getId() != $sub->getId()) {
             throw new \Slim\Exception\HttpBadRequestException($request);
         }
 
