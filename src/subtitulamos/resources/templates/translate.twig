@@ -138,7 +138,7 @@
         {% verbatim %}
           <template v-for="seq in pageSequences">
             <sequence v-for="hseq in seq.history"
-              :key="hseq.id"
+              :key="'hist-' + hseq.id"
 
               :id="hseq.id"
               :number="seq.number"
@@ -153,7 +153,7 @@
             ></sequence>
 
             <sequence
-              :key="'main-' + seq.number"
+              :key="'main-' + seq.render_key"
 
               :id="seq.id"
               :number="seq.number"

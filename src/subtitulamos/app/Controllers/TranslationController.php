@@ -525,13 +525,18 @@ class TranslationController
             return $response->withStatus(400);
         }
 
-        // Move ALL the sequences in ALL the versions
+        // Move ALL the sequences and locks in ALL the versions
         foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
             foreach ($targetSub->getSequences() as $seq) {
                 if ($seq->getNumber() >= $seqNum) {
                     $seq->setNumber($seq->getNumber() + 1);
                 }
             }
+
+            $em->createQuery('UPDATE App:OpenLock ol SET ol.sequenceNumber = ol.sequenceNumber + 1 WHERE ol.subtitle = :sub AND ol.sequenceNumber >= :num')
+                ->setParameter('sub', $targetSub->getId())
+                ->setParameter('num', $seqNum)
+                ->execute();
         }
 
         // Generate a copy of this sequence, we don't edit the original
@@ -593,6 +598,18 @@ class TranslationController
                     $seq->setNumber($seq->getNumber() - 1);
                 }
             }
+
+            // Delete the lock
+            $em->createQuery('DELETE FROM App:OpenLock ol WHERE ol.subtitle = :sub AND ol.sequenceNumber = :num')
+                ->setParameter('sub', $targetSub->getId())
+                ->setParameter('num', $delSeq->getNumber())
+                ->execute();
+
+            // Move all the locks in higher sequences
+            $em->createQuery('UPDATE App:OpenLock ol SET ol.sequenceNumber = ol.sequenceNumber - 1 WHERE ol.subtitle = :sub AND ol.sequenceNumber > :num')
+                ->setParameter('sub', $targetSub->getId())
+                ->setParameter('num', $delSeq->getNumber())
+                ->execute();
         }
 
         // Log it
