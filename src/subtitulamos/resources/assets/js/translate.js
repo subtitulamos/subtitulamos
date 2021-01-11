@@ -153,7 +153,8 @@ Vue.component("sequence", {
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                 </template>
             </div>
-            <button v-if="isOriginalSub && !history && canAddSequence" class="add-sequence" @click="window.translation.addSequenceAtLocation(number)">
+            <button v-if="isOriginalSub && !history && canAddSequence" class="add-sequence"
+              @click="window.translation.addSequenceAtLocation(number + 1)">
               <i class="fas fa-plus" aria-hidden="true"></i>
             </button>
           </div>
@@ -937,6 +938,7 @@ window.translation = new Vue({
         },
       })
         .then((res) => res.text())
+        .then(() => this.highlight(newSeqNum))
         .catch((_) => {
           Toasts.error.fire("Ha ocurrido un error interno al intentar crear la secuencia");
           this.saving = false;

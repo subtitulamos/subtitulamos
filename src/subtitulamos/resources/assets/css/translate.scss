@@ -22,7 +22,7 @@
   #translation-header {
     position: sticky;
     top: -1px;
-    z-index: 2;
+    z-index: 3;
 
     &::before {
       position: absolute;
@@ -358,9 +358,9 @@
 
       .add-sequence {
         position: absolute;
-        top: -11px;
+        bottom: -11px;
         left: -11px;
-        z-index: 1;
+        z-index: 2;
         background-color: var(--color-bg);
         width: 20px;
         height: 20px;
