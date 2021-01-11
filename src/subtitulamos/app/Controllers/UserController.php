@@ -22,10 +22,6 @@ class UserController
 {
     private function renderProfile($user, $request, $response, Twig $twig, bool $isSelf)
     {
-        return $twig->render($response, 'user.twig', [
-            'target_user' => $user,
-            'page_type' => $isSelf ? 'me' : 'public'
-        ]);
     }
 
     public function loadUploadList($userId, $request, $response, EntityManager $em, UrlHelper $urlHelper, SlugifyInterface $slugify)
@@ -105,12 +101,18 @@ class UserController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        return $this->renderProfile($user, $request, $response, $twig, false);
+        return $twig->render($response, 'user.twig', [
+            'target_user' => $user,
+            'page_type' => 'public'
+        ]);
     }
 
     public function viewSettings($request, $response, Twig $twig, Auth $auth)
     {
-        return $this->renderProfile($auth->getUser(), $request, $response, $twig, true);
+        return $twig->render($response, 'user.twig', [
+            'target_user' => $auth->getUser(),
+            'page_type' => 'me'
+        ]);
     }
 
     public function saveSettings($request, $response, Auth $auth, UrlHelper $urlHelper, EntityManager $em)
@@ -119,23 +121,35 @@ class UserController
         $body = $request->getParsedBody();
         $oldpass = $body['password-old'] ?? '';
         $password = $body['password-new'] ?? '';
+        $fontFamily = $body['font-family'] ?? '';
 
-        if (!$user->checkPassword($oldpass)) {
-            $auth->addFlash('error', 'La contraseña antigua no es correcta');
-        } elseif ($password != '') {
-            $password_confirmation = $body['password-confirmation'] ?? '';
+        if ($oldpass || $password) {
+            // Saving user settings form
+            if (!$user->checkPassword($oldpass)) {
+                $auth->addFlash('error', 'La contraseña antigua no es correcta');
+            } elseif ($password != '') {
+                $password_confirmation = $body['password-confirmation'] ?? '';
 
-            // TODO: Unify this into a single validation/encryption point with reg
-            if (!v::length(8, 80)->validate($password)) {
-                $auth->addFlash('error', 'La contraseña debe tener 8 caracteres como mínimo');
-            } elseif ($password != $password_confirmation) {
-                $auth->addFlash('error', 'Las contraseñas no coinciden');
-            } else {
-                $auth->addFlash('success', 'Contraseña cambiada correctamente');
-                $user->setPassword($password);
+                // TODO: Unify this into a single validation/encryption point with reg
+                if (!v::length(8, 80)->validate($password)) {
+                    $auth->addFlash('error', 'La contraseña debe tener 8 caracteres como mínimo');
+                } elseif ($password != $password_confirmation) {
+                    $auth->addFlash('error', 'Las contraseñas no coinciden');
+                } else {
+                    $auth->addFlash('success', 'Contraseña cambiada correctamente');
+                    $user->setPassword($password);
 
-                $em->flush();
+                    $em->flush();
+                }
             }
+        } else {
+            // Saving user prefs
+            $prefs = $user->getPrefs();
+            $prefs['translation_font'] = $fontFamily;
+            $user->setPrefs($prefs);
+            $em->flush();
+
+            $auth->addFlash('success', 'Preferencias de traducción actualizadas');
         }
 
         return $response->withHeader('Location', $urlHelper->pathFor('settings'));

@@ -39,12 +39,19 @@
     <form action="" method="POST" id="font-family">
       <div class="form-field dropdown-field" fieldname="Estilo de letra">
         <i class="fas fa-chevron-down dropdown"></i>
-        <select name="font-family" id="font-family" value="rubik">
-          <option value="rubik">Rubik (predefinida)</option>
-          <option value="inter">Inter</option>
-          <option value="open-sans">Open Sans</option>
-          <option value="roboto">Roboto</option>
-          <option value="ubuntu">Ubuntu</option>
+        {% set font_list = [
+          ["rubik", "Rubik (predefinida)"],
+          ["inter", "Inter"],
+          ["open-sans", "Open Sans"],
+          ["roboto", "Roboto"],
+          ["ubuntu", "Ubuntu"],
+        ] %}
+
+        <select name="font-family" id="font-family">
+          {% for font in font_list %}
+            <option value="{{font[0]}}" {% if font[0] == auth.prefs.translation_font %}selected{% endif %}
+              >{{font[1]}}</option>
+          {% endfor %}
         </select>
         <i class="fas fa-font" aria-hidden="true"></i>
       </div>

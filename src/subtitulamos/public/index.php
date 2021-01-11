@@ -70,6 +70,7 @@ $builder->addDefinitions([
         $twigEnv->addGlobal('LANG_NAMES', Langs::LANG_NAMES);
 
         $auth = $c->get('App\Services\Auth');
+        // TODO: Maybe this should be called session, not Auth
         $twigEnv->addGlobal('auth', $auth->getTwigInterface());
         $twigEnv->addFunction(new \Twig\TwigFunction('feature_on', 'feature_on'));
 
