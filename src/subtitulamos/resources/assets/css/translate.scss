@@ -6,6 +6,7 @@
 @import "app.css";
 @import "episode.scss";
 @import "comment.scss";
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&family=Inter:wght@400;700&family=Open+Sans:wght@400;700&family=Roboto:wght@400;700&family=Ubuntu:wght@400;700&display=swap");
 
 #translation {
   #show-info-header {
@@ -258,6 +259,36 @@
   #sequences {
     margin: 0 auto;
 
+    &.font-family-rubik {
+      *:not(i) {
+        font-family: "Rubik", sans-serif;
+      }
+
+      .grid-header span {
+        font-weight: 500;
+      }
+    }
+
+    &.font-family-ubuntu *:not(i) {
+      font-family: "Ubuntu", sans-serif;
+    }
+
+    &.font-family-roboto *:not(i) {
+      font-family: "Roboto", sans-serif;
+    }
+
+    &.font-family-open-sans *:not(i) {
+      font-family: "Open Sans", sans-serif;
+    }
+
+    &.font-family-inter *:not(i) {
+      font-family: "Inter", sans-serif;
+    }
+
+    &.font-family-barlow *:not(i) {
+      font-family: "Barlow", sans-serif;
+    }
+
     .grid-header {
       display: grid;
       height: 40px !important;
@@ -271,8 +302,9 @@
       }
 
       span {
-        font-weight: 500 !important;
+        font-weight: 700;
         text-align: center;
+        font-size: 0.9rem;
       }
     }
 
@@ -380,7 +412,6 @@
 
         i {
           font-size: 0.6rem;
-          margin-left: -1px;
           color: var(--color-gray-b);
         }
       }
