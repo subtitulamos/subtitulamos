@@ -400,10 +400,10 @@ class TranslationController
 
         $seqID = $body['seqID'] ?? 0;
         $text = Translation::cleanText($body['text'] ?? '');
-        $nStartTime = $body['tstart'] ?? 0;
-        $nEndTime = $body['tend'] ?? 0;
+        $nStartTime = isset($body['tstart']) ? max(0, (int)$body['tstart']) : 0;
+        $nEndTime = isset($body['tend']) ? max(0, (int)$body['tend']) : 0;
 
-        if ($nStartTime && $nEndTime && $nStartTime >= $nEndTime) {
+        if ($nEndTime > 0 && $nStartTime >= $nEndTime) {
             return $response->withStatus(400);
         }
 
@@ -420,8 +420,8 @@ class TranslationController
             return $response->withStatus(400);
         }
 
-        $timesChanged = $canChangeTimes && ($nStartTime != $seq->getStartTime() || $nEndTime != $seq->getEndTime());
-        $changed = $text != $seq->getText() || $timesChanged;
+        $timesChanged = $canChangeTimes && $nEndTime > 0 && ($nStartTime != $seq->getStartTime() || $nEndTime != $seq->getEndTime());
+        $changed = $timesChanged || $text != $seq->getText();
         if (!$changed) {
             // Nothing to change here, send the id of this very sequence
             $response->getBody()->write($seq->getId());
@@ -462,7 +462,7 @@ class TranslationController
         $nseq->incRevision();
         $nseq->setText($text);
         $nseq->setAuthor($auth->getUser());
-        if ($canChangeTimes && $nStartTime && $nEndTime) {
+        if ($timesChanged) {
             $nseq->setStartTime($nStartTime);
             $nseq->setEndTime($nEndTime);
         }
