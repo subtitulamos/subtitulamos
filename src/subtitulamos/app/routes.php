@@ -37,6 +37,7 @@ function addRoutes(&$app)
     $app->post('/subtitles/{id:[0-9]+}/translate/save', ['\App\Controllers\TranslationController', 'save'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{id:[0-9]+}/translate/create', ['\App\Controllers\TranslationController', 'create'])->add($needsRole('ROLE_USER'));
     $app->post('/subtitles/{id:[0-9]+}/translate/newseq', ['\App\Controllers\TranslationController', 'addSequence'])->add($needsRole('ROLE_MOD'));
+    $app->post('/subtitles/{id:[0-9]+}/translate/deleteseq', ['\App\Controllers\TranslationController', 'deleteSequence'])->add($needsRole('ROLE_MOD'));
     $app->post('/subtitles/{id:[0-9]+}/translate/lock', ['\App\Controllers\TranslationController', 'lockToggle'])->add($needsRole('ROLE_TT'));
     $app->delete('/subtitles/{id:[0-9]+}/translate/open-lock/{lockId:[0-9]+}', ['\App\Controllers\TranslationController', 'releaseLock'])->add($needsRole('ROLE_TT'));
 

@@ -170,6 +170,24 @@ class Translation
     }
 
     /**
+     * Broadcasts to pub/sub channel the deletion of a sequence on a sub
+     *
+     * @param \App\Entities\Sequence $seq
+     * @return void
+     */
+    public function broadcastSeqDeletion(Sequence $seq)
+    {
+        $sub = $seq->getSubtitle();
+
+        foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+            $this->redis->publish($this->getPubSubChanName($targetSub), \json_encode([
+                'type' => 'seq-del-original',
+                'num' => $seq->getNumber()
+            ]));
+        }
+    }
+
+    /**
      * Broadcasts to pub/sub channel the lock status of a sequence on a sub
      *
      * @param \App\Entities\Sequence $seq
