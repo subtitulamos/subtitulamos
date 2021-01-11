@@ -923,10 +923,10 @@ window.translation = new Vue({
     addSequenceAtLocation: function (num) {
       const maxSeqNum = this.sequences.length;
       const newSeqNum = Math.min(maxSeqNum + 1, num);
-      const prevSeq = this.sequences.find((seq) => seq.number == num - 1);
-      const nextSeq = this.sequences.find((seq) => seq.number == num + 1);
+      const prevSeq = this.sequences.find((seq) => seq.number == newSeqNum - 1);
+      const nextSeq = this.sequences.find((seq) => seq.number == newSeqNum);
       const newTstart = prevSeq ? prevSeq.tend : 0;
-      const newTend = nextSeq ? nextSeq.tstart : prevSeq ? prevSeq.tend : 0;
+      const newTend = nextSeq ? nextSeq.tstart : prevSeq ? prevSeq.tend + 1 : 0;
 
       easyFetch("/subtitles/" + subID + "/translate/newseq", {
         method: "POST",
