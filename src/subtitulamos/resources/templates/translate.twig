@@ -267,6 +267,7 @@
     var canEditComments = me.roles.includes('ROLE_MOD');
     var canPinComments = {{ auth.has_role('ROLE_MOD') ? 'true' : 'false' }};
     var canEditTimes = me.roles.includes('ROLE_MOD');
+    var canAddSequence = me.roles.includes("ROLE_MOD");
     var isBanned = {{ auth.user.ban ? 'true' : 'false' }};
   </script>
   {{ assets.js('translate') }}
