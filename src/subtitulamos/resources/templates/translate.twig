@@ -1,4 +1,5 @@
 {% extends "base.twig" %}
+{% import 'macros/alerts.twig' as alerts %}
 {% import 'macros/assets.twig' as assets %}
 
 {% block title %}Traducir {{ sub.version.episode.fullname }}{% endblock %}
@@ -8,6 +9,9 @@
 
 {% block content %}
 <div id="translation" class="content limited-width">
+  <div :class="{'hidden': loaded || !loadedOnce}">
+  {{ alerts.show('error', "Conexión con el servidor de traducción perdida. Reestableciendo...") }}
+  </div>
   <div id="show-info-header">
     {% set go_back_link = "/episodes/" ~ sub.version.episode.id ~ "/" ~ sub.version.episode.fullName %}
     <a href="/episodes/{{ sub.version.episode.id }}/{{ sub.version.episode.fullName }}">
@@ -28,10 +32,6 @@
         </div>
       </a>
     </div>
-  </div>
-
-  <div id="translation-disabled-warning" :class="{'hidden': loaded || !loadedOnce}">
-    Conexión con el servidor de traducción perdida. Reestableciendo...
   </div>
 
   <div id="toggle-responsiveness-wrapper">
