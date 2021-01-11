@@ -180,7 +180,7 @@ class TranslationController
             'avail_secondary_langs' => json_encode($langs),
             'episode' => $sub->getVersion()->getEpisode(),
             'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
-            'wstok' => $tok
+            'wstok' => $tok,
         ]);
     }
 

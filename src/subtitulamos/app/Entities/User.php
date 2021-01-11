@@ -17,6 +17,17 @@ class User
 {
     const MIN_PASSWORD_LENGTH = 8;
     const MIN_USERNAME_LENGTH = 3;
+
+    /**
+     * List of preferences and their default values. Should be updated any time there's a new preference
+     * Preferences not in this list will be stripped when calling setPrefs.
+     *
+     * These preferences will be applied for logged-out users
+     */
+    public static array $PREFERENCE_LIST = [
+        'translation_font' => DEFAULT_TRANSLATION_FONT
+    ];
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -79,6 +90,11 @@ class User
      * @ORM\JoinColumn(name="ban_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $ban;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $prefs;
 
     /**
      * Get roles. Automatically fills roles of inferior levels if needed
@@ -144,6 +160,36 @@ class User
         $this->pauses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->subComments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->epComments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get the user preferences
+     */
+    public function getPrefs(): ?array
+    {
+        $prefs = $this->prefs ?? [];
+        foreach (self::$PREFERENCE_LIST as $prefName => $prefValue) {
+            if (!isset($prefs[$prefName])) {
+                $prefs[$prefName] = $prefValue;
+            }
+        }
+
+        return $prefs;
+    }
+
+    /**
+     * Set the user preferences
+     */
+    public function setPrefs(?array $prefs)
+    {
+        $filteredPrefs = [];
+        foreach ($prefs as $prefName => $prefVal) {
+            if (isset(self::$PREFERENCE_LIST[$prefName])) {
+                $filteredPrefs[$prefName] = $prefVal;
+            }
+        }
+
+        $this->prefs = $filteredPrefs;
     }
 
     /**

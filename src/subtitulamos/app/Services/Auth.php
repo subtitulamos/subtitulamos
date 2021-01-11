@@ -242,6 +242,18 @@ class Auth
     }
 
     /**
+     * Yield the user preferences. If the user is not logged in, return the set of default preferences
+     */
+    public function getUserPrefs(): array
+    {
+        if ($this->getUser()) {
+            return $this->getUser()->getPrefs();
+        }
+
+        return User::$PREFERENCE_LIST;
+    }
+
+    /**
      * Yield an anonymous class to feed to Twig that determines
      * possible interactions with this class
      *
@@ -273,6 +285,11 @@ class Auth
             public function user()
             {
                 return $this->auth->getUser();
+            }
+
+            public function prefs(): array
+            {
+                return $this->auth->getUserPrefs();
             }
 
             public function flash()
