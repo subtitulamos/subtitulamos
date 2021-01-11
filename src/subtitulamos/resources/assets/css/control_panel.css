@@ -274,19 +274,34 @@
 
   #page-container .overlaying-button {
     font-size: 1.6rem;
-    border-radius: 50%;
     display: grid;
     place-items: center;
     position: fixed;
     color: var(--color-blue-a);
     z-index: 2;
     height: 41px;
+    box-sizing: content-box;
   }
 
   #page-container .control-panel-minimize-toggle {
-    padding: var(--header-padding-y) var(--header-padding-x);
-    top: 0px;
-    right: 0px;
+    top: var(--header-padding-y);
+    right: var(--header-padding-x);
+  }
+
+  #page-container .control-panel-minimize-toggle i {
+    color: var(--color-blue-a);
+    z-index: 1;
+  }
+
+  #page-container .control-panel-minimize-toggle::after {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    box-shadow: 0px 0px 10px 10px var(--color-bg);
+    content: "";
+    z-index: 0;
   }
 
   #page-container.control-panel-is-open .control-panel-minimize-toggle > .fa-chevron-right {
