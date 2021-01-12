@@ -144,7 +144,7 @@ Vue.component("sequence", {
                         <i class="fa" @click="toggleLock(!locked)" :class="locked ? 'fa-lock' : 'fa-unlock'" v-if="canLock || locked"></i>
                     </template>
 
-                    <template v-if="!editing && canDeleteSequence && !history ">
+                    <template v-if="!editing && isOriginalSub && canDeleteSequence && !history">
                         <i class="delete-sequence fas fa-trash-alt" aria-hidden="true" @click="deleteSequence"></i>
                     </template>
                 </template>
