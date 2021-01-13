@@ -123,6 +123,7 @@ class UserController
         $password = $body['password-new'] ?? '';
         $fontFamily = $body['font-family'] ?? '';
         $colorSwatch = $body['color-swatch'] ?? '';
+        $fontThickness = $body['font-thickness'] ?? '';
 
         if ($oldpass || $password) {
             // Saving user settings form
@@ -148,6 +149,7 @@ class UserController
             $prefs = $user->getPrefs();
             $prefs['translation_font'] = $fontFamily;
             $prefs['color_swatch'] = $colorSwatch;
+            $prefs['font_thickness'] = $fontThickness;
             $user->setPrefs($prefs);
             $em->flush();
 

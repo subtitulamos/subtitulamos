@@ -27,7 +27,7 @@
   </title>
 </head>
 <body>
-  <div id="base" class="{{ auth.user is null ? 'w-header' }} {{auth.prefs.color_swatch}}">
+  <div id="base" class="{{ auth.user is null ? 'w-header' }} color-swatch-{{auth.prefs.color_swatch}} font-thickness-{{auth.prefs.font_thickness}}">
     {# Background fade pan that displays when the login/reg area is open #}
     <div id="overlay" class="overlay-wrap hidden">
       <div class="overlay-container w-box-shadow bounce-in">
