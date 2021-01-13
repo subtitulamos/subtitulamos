@@ -32,14 +32,15 @@
   <div class="form-wrap" id="user-preferences-form">
     <form action="" method="POST">
       <h4>Tabla de traducción</h4>
-      <div id="font-family-preview" class="font-family-{{auth.prefs.translation_font}}">
+      <div id="font-family-preview" class="user-preference-preview font-family-{{auth.prefs.translation_font}}">
+        <p class="preview-tag text tiny">Antevisión</p>
         <p>Es el vecino el que elige al alcalde, y es el alcalde</p>
         <p>el que quiere que sean los vecinos el alcalde.</p>
       </div>
       <div class="form-field dropdown-field" fieldname="Estilo de letra">
         <i class="fas fa-chevron-down dropdown"></i>
         {% set font_list = [
-          ["rubik", "Rubik (predefinida)"],
+          ["rubik", "Rubik"],
           ["inter", "Inter"],
           ["open-sans", "Open Sans"],
           ["roboto", "Roboto"],
@@ -57,13 +58,41 @@
 
       <br/>
 
-      <h4>Color de la página</h4>
-      <div id="color-swatch-preview" class="{{auth.prefs.color_swatch}}"></div>
-      <div class="form-field dropdown-field" fieldname="Color">
+      <h4>Grosor de la letra en la página</h4>
+      <div id="font-thickness-preview" class="user-preference-preview font-thickness-{{auth.prefs.font_thickness}}">
+        <p class="preview-tag text tiny">Antevisión</p>
+        <p>Una cosa maravillosa</p>
+      </div>
+      <div class="form-field dropdown-field" fieldname="Grosor">
+        <i class="fas fa-chevron-down dropdown"></i>
+        {% set font_thickness_list = [
+          ["normal", "Normal"],
+          ["thick", "Algo más gruesa"],
+          ["very-thick", "Aún más gruesa"],
+        ] %}
+
+        <select required name="font-thickness" id="font-thickness">
+          {% for font_thickness in font_thickness_list %}
+            <option value="{{font_thickness[0]}}" {% if font_thickness[0] == auth.prefs.font_thickness %}selected{% endif %}
+              >{{font_thickness[1]}}</option>
+          {% endfor %}
+        </select>
+        <i class="fas fa-bold" aria-hidden="true"></i>
+      </div>
+
+      <br/>
+
+      <h4>Tema de la página</h4>
+      <div id="color-swatch-preview" class="color-swatch-{{auth.prefs.color_swatch}}">
+        <div class="color-swatch color-swatch-blue-a"></div>
+        <div class="color-swatch color-swatch-blue-b"></div>
+        <div class="color-swatch color-swatch-blue-c"></div>
+      </div>
+      <div class="form-field dropdown-field" fieldname="Tema">
         <i class="fas fa-chevron-down dropdown"></i>
         {% set color_swatch_list = [
-          ["normal", "Normal"],
-          ["antique-blue", "Azul antiguo"],
+          ["normal", "Indigo"],
+          ["antique-blue", "Retro"],
         ] %}
 
         <select required name="color-swatch" id="color-swatch">

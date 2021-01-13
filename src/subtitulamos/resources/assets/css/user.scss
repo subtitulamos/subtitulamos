@@ -149,36 +149,53 @@
 #user-preferences-form {
   margin-top: var(--spacing-xxl);
 
-  .font-family-rubik * {
-    font-family: "Rubik", sans-serif;
-  }
-
-  .font-family-ubuntu * {
-    font-family: "Ubuntu", sans-serif;
-  }
-
-  .font-family-roboto * {
-    font-family: "Roboto", sans-serif;
-  }
-
-  .font-family-open-sans * {
-    font-family: "Open Sans", sans-serif;
-  }
-
-  .font-family-inter * {
-    font-family: "Inter", sans-serif;
-  }
-
-  .font-family-barlow * {
-    font-family: "Barlow", sans-serif;
-  }
-
-  #font-family-preview {
-    padding: var(--spacing-s) var(--spacing-m);
+  .user-preference-preview {
+    padding: var(--spacing-xs) var(--spacing-m);
     margin-bottom: var(--spacing-m);
     border-left: 3px solid var(--color-gray-d);
     font-size: 0.93rem;
     line-height: 1.4rem;
+
+    .preview-tag {
+      color: var(--color-gray-c);
+    }
+  }
+
+  #color-swatch-preview {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    height: 40px;
+    grid-gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-m);
+
+    .color-swatch {
+      width: 100%;
+      border-radius: 50%;
+      background-color: var(--color-offwhite);
+      border-bottom: 1px solid var(--color-gray-d);
+      display: grid;
+      place-items: center;
+      position: relative;
+
+      &::after {
+        content: "";
+        width: 75%;
+        height: 75%;
+        border-radius: 50%;
+        position: absolute;
+        z-index: 2;
+      }
+
+      &.color-swatch-blue-a::after {
+        background-color: var(--color-blue-a);
+      }
+      &.color-swatch-blue-b::after {
+        background-color: var(--color-blue-b);
+      }
+      &.color-swatch-blue-c::after {
+        background-color: var(--color-blue-c);
+      }
+    }
   }
 }
 

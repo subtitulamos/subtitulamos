@@ -27,6 +27,7 @@ class User
     public static array $PREFERENCE_LIST = [
         'translation_font' => DEFAULT_TRANSLATION_FONT,
         'color_swatch' => 'normal',
+        'font_thickness' => 'normal',
     ];
 
     /**

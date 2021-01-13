@@ -188,11 +188,33 @@ onDomReady(() => {
     });
   }
 
-  const $preview = $getById("font-family-preview");
-  if ($preview) {
+  const $fontFamilyPreview = $getById("font-family-preview");
+  if ($fontFamilyPreview) {
     $getById("font-family").addEventListener("change", (e) => {
-      $preview.classList = "";
-      $preview.classList.toggle("font-family-" + e.target.value);
+      $fontFamilyPreview.classList.value = $fontFamilyPreview.classList.value.replace(
+        new RegExp("font-family-([a-z]|-)*"),
+        "font-family-" + e.target.value
+      );
+    });
+  }
+
+  const $fontThicknessPreview = $getById("font-thickness-preview");
+  if ($fontThicknessPreview) {
+    $getById("font-thickness").addEventListener("change", (e) => {
+      $fontThicknessPreview.classList.value = $fontThicknessPreview.classList.value.replace(
+        new RegExp("font-thickness-([a-z]|-)*"),
+        "font-thickness-" + e.target.value
+      );
+    });
+  }
+
+  const $colorSwatchPreview = $getById("color-swatch-preview");
+  if ($colorSwatchPreview) {
+    $getById("color-swatch").addEventListener("change", (e) => {
+      $colorSwatchPreview.classList.value = $colorSwatchPreview.classList.value.replace(
+        new RegExp("color-swatch-([a-z]|-)*"),
+        "color-swatch-" + e.target.value
+      );
     });
   }
 });

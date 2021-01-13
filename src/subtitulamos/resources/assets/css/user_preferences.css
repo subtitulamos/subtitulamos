@@ -1,0 +1,48 @@
+.color-swatch-normal {
+  --color-blue-a: #607dcd;
+  --color-blue-b: #7e9ae8;
+  --color-blue-c: #a9bfec;
+}
+
+.color-swatch-antique-blue {
+  --color-blue-a: #4e88c1;
+  --color-blue-b: #679dd2;
+  --color-blue-c: #acccec;
+}
+
+/* Workaround to make text more readable. The rgb color is --color-black */
+.font-thickness-normal {
+  text-shadow: rgba(56, 56, 56, 0) 0px 0px 0px;
+}
+
+.font-thickness-thick {
+  text-shadow: rgba(56, 56, 56, 0.25) 0px 0px 0px;
+}
+
+.font-thickness-very-thick {
+  text-shadow: rgba(56, 56, 56, 0.5) 0px 0px 0px;
+}
+
+.font-family-rubik * {
+  font-family: "Rubik", sans-serif;
+}
+
+.font-family-ubuntu * {
+  font-family: "Ubuntu", sans-serif;
+}
+
+.font-family-roboto * {
+  font-family: "Roboto", sans-serif;
+}
+
+.font-family-open-sans * {
+  font-family: "Open Sans", sans-serif;
+}
+
+.font-family-inter * {
+  font-family: "Inter", sans-serif;
+}
+
+.font-family-barlow * {
+  font-family: "Barlow", sans-serif;
+}
