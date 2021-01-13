@@ -6,7 +6,7 @@
 .global-alert {
   padding: var(--spacing-s);
   border-radius: var(--standard-border-radius);
-  margin: var(--spacing-xs) 0;
+  margin-bottom: var(--spacing-m);
   display: flex;
   align-items: center;
   animation: appearing 0.5s ease-in;
@@ -63,18 +63,19 @@
 
 @keyframes appearing {
   from {
-    height: 0px;
     padding: 0 var(--spacing-s);
     color: transparent;
-    margin: 0;
+    margin-bottom: 0;
+    opacity: 0;
   }
 }
 
 @keyframes dismissing {
   to {
-    height: 0px;
     padding: 0 var(--spacing-s);
     color: transparent;
-    margin: 0;
+    margin-bottom: 0px;
+    margin-top: -8px;
+    opacity: 0;
   }
 }
