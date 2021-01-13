@@ -16,6 +16,8 @@
 * {
   font-weight: 400;
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   scrollbar-width: thin;
   scrollbar-color: var(--color-gray-c) var(--color-gray-e);
   word-break: break-word;
@@ -109,6 +111,8 @@ body {
   padding: 0 !important;
   background-color: var(--color-bg);
   color: var(--color-black);
+  /* Workaround to make text more readable. The color is --color-black with 0.5 opacity */
+  text-shadow: rgba(56, 56, 56, 0.5) 0px 0px 0px;
   font-family: "Rubik", sans-serif;
   min-height: 100%;
   height: 100%;
