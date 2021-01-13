@@ -53,7 +53,7 @@
 }
 
 :root {
-  --color-bg: #eeeff8;
+  --color-bg: #ebeef5;
   --color-gray-divisions: #d7d7d7;
   --color-gray-divisions-lighter: #efeeee;
   --color-offwhite: #fdfdfe;
@@ -65,9 +65,9 @@
   --color-gray-d: #d7d8df;
   --color-gray-e: #e3e4ec;
   --color-gray-blue: #f6f7fc;
-  --color-blue-a: #6075cd;
-  --color-blue-b: #7d91e9;
-  --color-blue-c: #a6b4f4;
+  --color-blue-a: #607dcd;
+  --color-blue-b: #7e9ae8;
+  --color-blue-c: #a9bfec;
   --color-blue-d: #e4f0ff;
   --color-green: #60b37d;
   --color-green-darker: #48805b;
