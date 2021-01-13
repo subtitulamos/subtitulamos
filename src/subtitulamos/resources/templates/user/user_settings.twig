@@ -29,14 +29,13 @@
     </form>
   </div>
 
-
-  <div class="form-wrap" id="font-family-form">
-    <h4>Tabla de traducción</h4>
-    <div id="font-family-preview" class="font-family-{{auth.prefs.translation_font}}">
-      <p>Es el vecino el que elige al alcalde, y es el alcalde</p>
-      <p>el que quiere que sean los vecinos el alcalde.</p>
-    </div>
-    <form action="" method="POST" id="font-family">
+  <div class="form-wrap" id="user-preferences-form">
+    <form action="" method="POST">
+      <h4>Tabla de traducción</h4>
+      <div id="font-family-preview" class="font-family-{{auth.prefs.translation_font}}">
+        <p>Es el vecino el que elige al alcalde, y es el alcalde</p>
+        <p>el que quiere que sean los vecinos el alcalde.</p>
+      </div>
       <div class="form-field dropdown-field" fieldname="Estilo de letra">
         <i class="fas fa-chevron-down dropdown"></i>
         {% set font_list = [
@@ -47,7 +46,7 @@
           ["ubuntu", "Ubuntu"],
         ] %}
 
-        <select name="font-family" id="font-family">
+        <select required name="font-family" id="font-family">
           {% for font in font_list %}
             <option value="{{font[0]}}" {% if font[0] == auth.prefs.translation_font %}selected{% endif %}
               >{{font[1]}}</option>
@@ -55,6 +54,27 @@
         </select>
         <i class="fas fa-font" aria-hidden="true"></i>
       </div>
+
+      <br/>
+
+      <h4>Color de la página</h4>
+      <div id="color-swatch-preview" class="{{auth.prefs.color_swatch}}"></div>
+      <div class="form-field dropdown-field" fieldname="Color">
+        <i class="fas fa-chevron-down dropdown"></i>
+        {% set color_swatch_list = [
+          ["normal", "Normal"],
+          ["antique-blue", "Azul antíguo"],
+        ] %}
+
+        <select required name="color-swatch" id="color-swatch">
+          {% for color_swatch in color_swatch_list %}
+            <option value="{{color_swatch[0]}}" {% if color_swatch[0] == auth.prefs.color_swatch %}selected{% endif %}
+              >{{color_swatch[1]}}</option>
+          {% endfor %}
+        </select>
+        <i class="fas fa-palette" aria-hidden="true"></i>
+      </div>
+
       <button type="submit">Guardar</button>
     </form>
   </div>
