@@ -99,6 +99,12 @@
   --control-panel-padding-x: 15px;
 }
 
+.antique-blue {
+  --color-blue-a: #4e88c1;
+  --color-blue-b: #679dd2;
+  --color-blue-c: #acccec;
+}
+
 /* Prevent a white border by the bottom */
 html {
   background-color: var(--color-bg);

@@ -25,7 +25,8 @@ class User
      * These preferences will be applied for logged-out users
      */
     public static array $PREFERENCE_LIST = [
-        'translation_font' => DEFAULT_TRANSLATION_FONT
+        'translation_font' => DEFAULT_TRANSLATION_FONT,
+        'color_swatch' => 'normal',
     ];
 
     /**

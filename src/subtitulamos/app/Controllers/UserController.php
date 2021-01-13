@@ -122,6 +122,7 @@ class UserController
         $oldpass = $body['password-old'] ?? '';
         $password = $body['password-new'] ?? '';
         $fontFamily = $body['font-family'] ?? '';
+        $colorSwatch = $body['color-swatch'] ?? '';
 
         if ($oldpass || $password) {
             // Saving user settings form
@@ -146,6 +147,7 @@ class UserController
             // Saving user prefs
             $prefs = $user->getPrefs();
             $prefs['translation_font'] = $fontFamily;
+            $prefs['color_swatch'] = $colorSwatch;
             $user->setPrefs($prefs);
             $em->flush();
 
