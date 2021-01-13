@@ -6,6 +6,10 @@
 @import "app.css";
 @import "comment.scss";
 
+h1 {
+  margin-bottom: var(--spacing-xxs);
+}
+
 ul {
   list-style: none;
   padding: 0;
