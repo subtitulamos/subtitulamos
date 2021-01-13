@@ -23,26 +23,26 @@
   text-shadow: rgba(56, 56, 56, 0.5) 0px 0px 0px;
 }
 
-.font-family-rubik * {
+.font-family-rubik *:not(i) {
   font-family: "Rubik", sans-serif;
 }
 
-.font-family-ubuntu * {
+.font-family-ubuntu *:not(i) {
   font-family: "Ubuntu", sans-serif;
 }
 
-.font-family-roboto * {
+.font-family-roboto *:not(i) {
   font-family: "Roboto", sans-serif;
 }
 
-.font-family-open-sans * {
+.font-family-open-sans *:not(i) {
   font-family: "Open Sans", sans-serif;
 }
 
-.font-family-inter * {
+.font-family-inter *:not(i) {
   font-family: "Inter", sans-serif;
 }
 
-.font-family-barlow * {
+.font-family-barlow *:not(i) {
   font-family: "Barlow", sans-serif;
 }

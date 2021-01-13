@@ -269,26 +269,6 @@
       }
     }
 
-    &.font-family-ubuntu *:not(i) {
-      font-family: "Ubuntu", sans-serif;
-    }
-
-    &.font-family-roboto *:not(i) {
-      font-family: "Roboto", sans-serif;
-    }
-
-    &.font-family-open-sans *:not(i) {
-      font-family: "Open Sans", sans-serif;
-    }
-
-    &.font-family-inter *:not(i) {
-      font-family: "Inter", sans-serif;
-    }
-
-    &.font-family-barlow *:not(i) {
-      font-family: "Barlow", sans-serif;
-    }
-
     .grid-header {
       display: grid;
       height: 40px !important;
