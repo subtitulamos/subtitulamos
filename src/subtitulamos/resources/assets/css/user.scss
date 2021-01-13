@@ -16,6 +16,13 @@
 
 #settings {
   padding-top: var(--spacing-m);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: var(--spacing-xxl);
+
+  .form-wrap {
+    max-width: 400px;
+  }
 }
 
 #info {
@@ -175,7 +182,8 @@
   }
 }
 
-.form-wrap {
-  max-width: 400px;
-  margin-left: 0;
+@media all and (max-width: 1000px) {
+  #settings {
+    grid-template-columns: 1fr;
+  }
 }
