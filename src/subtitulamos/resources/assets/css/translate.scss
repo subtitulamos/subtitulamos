@@ -258,6 +258,7 @@
 
   #sequences {
     margin: 0 auto;
+    overflow-x: auto;
 
     &.font-family-rubik {
       *:not(i) {
