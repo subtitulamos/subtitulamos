@@ -263,6 +263,8 @@
   #sequences {
     margin: 0 auto;
     overflow-x: auto;
+    overflow-y: hidden;
+    padding-left: 11px;
 
     &.font-family-rubik {
       *:not(i) {
@@ -418,7 +420,7 @@
     }
 
     .user {
-      width: 170px;
+      width: 159px;
       justify-content: center;
 
       a {
@@ -708,6 +710,7 @@
 
           &.locked {
             filter: saturate(0.4);
+            z-index: 1;
           }
         }
 
