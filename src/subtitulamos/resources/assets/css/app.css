@@ -130,6 +130,11 @@ button {
   padding: 0;
 }
 
+.thin-button {
+  height: auto !important;
+  padding: var(--spacing-xs) var(--spacing-s) !important;
+}
+
 button,
 input,
 select,
