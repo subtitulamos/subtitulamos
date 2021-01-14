@@ -164,9 +164,8 @@ ul {
 
     .card-footer {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, max-content);
       column-gap: var(--spacing-xs);
-      width: 500px;
 
       button:first-of-type {
         color: var(--color-blue-a);
