@@ -456,6 +456,7 @@ footer > #footer-content {
   cursor: pointer;
   color: var(--color-gray-c);
   position: relative;
+  width: max-content;
   flex-shrink: 0;
 }
 
