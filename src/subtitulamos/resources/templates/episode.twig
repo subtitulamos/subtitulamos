@@ -114,7 +114,7 @@
               <div class="version-info">
                 <div class="version-buttons">
                   {% if can_download %}
-                  <a href="/subtitles/{{ sub.id }}/download">
+                  <a rel="nofollow" href="/subtitles/{{ sub.id }}/download">
                   {% endif %}
                     <div class="download-button {% if not can_download %}unavailable{% endif %}">
                       <i class="far fa-arrow-alt-circle-down"></i>
@@ -122,7 +122,7 @@
                   {% if can_download %}
                   </a>
                   {% endif %}
-                  <a href="/subtitles/{{ sub.id }}/translate">
+                  <a rel="nofollow" href="/subtitles/{{ sub.id }}/translate">
                     <div class="edit-button-wrap">
                       <div class="edit-button">
                         <i class="fas fa-pencil-alt"></i>
@@ -144,7 +144,7 @@
                          (En revisión)
                         {% endif %}
                       </span>
-                      <a href="/users/{{ sub.version.user.id }}" class="uploader_name text tiny bold blue-a">
+                      <a rel="nofollow" href="/users/{{ sub.version.user.id }}" class="uploader_name text tiny bold blue-a">
                         <i class="fas fa-file-import"></i>
                         {{ sub.version.user.username }}
                       </a>
