@@ -99,7 +99,7 @@
   }
 
   #the-latest {
-    width: calc(100% - var(--navigation-chevron-width) * 2 - var(--spacing-s));
+    width: calc(100% - var(--navigation-chevron-width) * 2);
     color: var(--color-gray-c);
     margin: 0 auto;
     padding-left: var(--spacing-s);
