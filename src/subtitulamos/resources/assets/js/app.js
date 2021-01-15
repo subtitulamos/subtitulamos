@@ -97,7 +97,6 @@ function doRegister(e) {
           });
 
           if (!validitySet) {
-            return; // FIXME
             throw "Couldn't set any validity message, but reg failed!";
           }
 
