@@ -29,8 +29,8 @@ function feature_on($name)
 
 $builder = new \DI\ContainerBuilder();
 if (!DEBUG) {
-    $builder->enableCompilation(__DIR__.'/tmp');
-    $builder->writeProxiesToFile(true, __DIR__.'/tmp/proxies');
+    $builder->enableCompilation(SUBS_TMP_DIR.'/di');
+    $builder->writeProxiesToFile(true, SUBS_TMP_DIR.'/di/proxies');
 }
 
 $builder->addDefinitions([
