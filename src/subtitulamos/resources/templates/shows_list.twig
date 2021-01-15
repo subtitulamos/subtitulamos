@@ -17,7 +17,7 @@
     </div>
 
     {% for letter, shows in shows_by_letter  %}
-    <div class="shows-in-letter hidden" id="{{ letter }}">
+    <div class="shows-in-letter hidden" id="letter-{{ letter }}">
       <ul>
         {% for i in range(0, shows|length - 1) %}
         {% set show = shows[i].show %}
@@ -43,7 +43,7 @@
         <button class="letter" data-letter="{{letter}}">{{ letter|upper }}</button>
       </div>
 
-      <div class="shows-in-letter" id="{{ letter }}">
+      <div class="shows-in-letter" id="showlist-{{ letter }}">
         <ul>
           {% for i in range(0, shows|length - 1) %}
           {% set show = shows[i].show %}

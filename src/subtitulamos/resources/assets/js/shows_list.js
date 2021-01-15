@@ -7,7 +7,7 @@ import "../css/shows_list.scss";
 import { $getEle, $getAllEle } from "./utils.js";
 
 function showListInLetter(letterButton) {
-  const $showsInLetterList = $getEle("#" + letterButton.dataset.letter);
+  const $showsInLetterList = $getEle("#letter-" + letterButton.dataset.letter);
   $showsInLetterList.classList.toggle("hidden", false);
 
   $getAllEle(".letter").forEach((letter) => {
