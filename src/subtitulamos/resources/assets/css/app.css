@@ -128,7 +128,6 @@ button {
   cursor: pointer;
   width: max-content;
   padding: 0;
-  user-select: none;
 }
 
 .thin-button {
@@ -619,7 +618,8 @@ don't show at the same time */
 }
 
 @media all and (max-width: 380px) {
-  #header-logo-wrap svg {
+  #header-logo-wrap svg,
+  .overlaying-button {
     height: 35px !important;
   }
 
