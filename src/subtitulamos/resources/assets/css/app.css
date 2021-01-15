@@ -533,6 +533,7 @@ don't show at the same time */
   right: var(--spacing-xs);
   top: var(--spacing-xs);
   z-index: 3;
+  cursor: pointer;
 }
 
 .overlay-container .form-wrap {
