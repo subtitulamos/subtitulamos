@@ -269,7 +269,11 @@
     margin: var(--spacing-l) auto;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-left: 11px;
+
+    &.can-add-sequences {
+      padding-left: 11px;
+      padding-bottom: 25px;
+    }
 
     &.font-family-rubik {
       *:not(i) {
