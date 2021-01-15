@@ -587,6 +587,10 @@ don't show at the same time */
   #top-links {
     display: none;
   }
+
+  .overlay-container {
+    width: 92%;
+  }
 }
 
 @media all and (max-width: 750px) {
