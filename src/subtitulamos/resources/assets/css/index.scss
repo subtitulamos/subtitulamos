@@ -15,11 +15,14 @@
     justify-content: center;
     padding: 120px 0 150px 0;
     flex-wrap: wrap;
+    $margin-bottom-value: 60px;
+    margin-bottom: -$margin-bottom-value;
 
     #logo {
       height: 190px;
       fill: var(--color-blue-a);
       margin-right: 7%;
+      margin-bottom: $margin-bottom-value;
     }
 
     #logo-name {
@@ -27,6 +30,8 @@
     }
 
     #main-action-container {
+      margin-bottom: $margin-bottom-value;
+
       .social-networks {
         grid-template-columns: repeat(3, 30px);
         margin-bottom: 20px;
@@ -167,17 +172,17 @@
       }
     }
   }
+}
 
-  @media all and (max-width: 800px) {
-    #large-splash {
-      padding-bottom: 80px;
-    }
+@media all and (max-width: 800px) {
+  header {
+    display: none;
   }
-
-  @media all and (max-width: 770px) {
+  .content {
     #large-splash {
       flex-direction: column;
       padding-top: 20px;
+      padding-bottom: 80px;
 
       #logo {
         height: 230px;
@@ -206,8 +211,10 @@
       }
     }
   }
+}
 
-  @media all and (max-width: 567px) {
+@media all and (max-width: 567px) {
+  .content {
     --content-padding-top: 40px;
 
     #large-splash {
@@ -243,8 +250,10 @@
       }
     }
   }
+}
 
-  @media all and (max-width: 500px) {
+@media all and (max-width: 500px) {
+  .content {
     #large-splash {
       #main-action-container {
         #search {
