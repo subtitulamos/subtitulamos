@@ -5,12 +5,15 @@
 
 import { onDomReady, easyFetch, $getById } from "./utils";
 
-function createResultRow(contents) {
+let selectedElementIdx = null;
+
+function createResultRow(contents, index) {
   const $row = document.createElement("li");
+  selectedElementIdx = selectedElementIdx === null ? 0 : selectedElementIdx;
+  $row.classList.toggle("selected", index === selectedElementIdx);
   if (contents instanceof HTMLElement) {
     $row.append(contents);
   } else {
-    $row.classList.add("info");
     $row.innerHTML = contents;
   }
   return $row;
@@ -21,7 +24,6 @@ onDomReady(function () {
   let searchTimerHandle = null;
   let lastSearchedText = "";
   let linkResultList = [];
-  let selectedElementIdx;
 
   function updateSelected($searchBar, offset) {
     const $searchResults = $getById($searchBar.dataset.searchBarTarget);
@@ -78,12 +80,14 @@ onDomReady(function () {
     lastSearchedText = searchQuery;
 
     if (searchQuery === "") {
+      selectedElementIdx = null;
       $searchResults.classList.toggle("hidden", true);
       return;
     } else if (searchQuery.length < 3) {
       $searchResults.innerHTML = "";
       $searchResults.classList.toggle("hidden", false);
       $searchResults.append(createResultRow("Sigue escribiendo..."));
+      selectedElementIdx = null;
       return;
     }
 
@@ -98,16 +102,17 @@ onDomReady(function () {
         $searchResults.classList.toggle("hidden", false);
 
         if (reply.length > 0) {
-          reply.forEach(function (show) {
+          reply.forEach(function (show, index) {
             const showUrl = "/shows/" + show.id;
             let $link = document.createElement("a");
             $link.href = showUrl;
             $link.innerHTML = show.name;
 
-            $searchResults.append(createResultRow($link));
+            $searchResults.append(createResultRow($link, index));
             linkResultList.push(showUrl);
           });
         } else {
+          selectedElementIdx = null;
           $searchResults.append(
             createResultRow("Parece que no tenemos resultados para esta búsqueda")
           );
@@ -161,18 +166,4 @@ onDomReady(function () {
       });
     });
   }
-
-  // let hideTimeoutHandle = null;
-  // $searchBar.addEventListener("focusin", function () {
-  //   clearTimeout(hideTimeoutHandle);
-  //   $searchResults.classList.toggle("hidden", $searchBar.value == "");
-  // });
-  // $searchBar.addEventListener("focusout", function () {
-  //   hideTimeoutHandle = setTimeout(function () {
-  //     $searchResults.classList.toggle("hidden", true);
-  //   }, 500);
-  // });
-  // $searchBar.parentElement.addEventListener("submit", function (e) {
-  //   e.preventDefault(); // Prevent form submit
-  // });
 });
