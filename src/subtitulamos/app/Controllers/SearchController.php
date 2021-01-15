@@ -13,7 +13,7 @@ use App\Services\Sonic;
 use App\Services\Utils;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
-
+use Psonic\Exceptions\CommandFailedException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -193,10 +193,27 @@ class SearchController
             $resultList = [];
             if ($newQ) {
                 // Query full, original query (top 5)
-                $showIdsOriginal = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $q, 5);
-                $showIdsSuggested = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $newQ, 10);
-                $showIds = array_unique(array_merge($showIdsOriginal, $showIdsSuggested));
+                $failed = true;
+                try {
+                    $showIdsOriginal = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $q, 5);
+                } catch (CommandFailedException $e) {
+                    error_log("Search failed (original)! Query: <$q>. Error: ".$e->getMessage());
+                    $showIdsOriginal = [];
+                    $failed = true;
+                }
 
+                try {
+                    $showIdsSuggested = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $newQ, 10);
+                } catch (CommandFailedException $e) {
+                    $showIdsSuggested = [];
+                    error_log("Search failed (suggested)! Query: <$newQ>. Error: ".$e->getMessage());
+                    if ($failed) {
+                        // If the other search also failed, something's probably broken
+                        throw $e;
+                    }
+                }
+
+                $showIds = array_unique(array_merge($showIdsOriginal, $showIdsSuggested));
                 if (count($showIds) > 0) {
                     $shows = $em->createQuery('SELECT s.id, s.name FROM App:Show s WHERE s.id IN (:shows)')
                         ->setParameter('shows', $showIds)
