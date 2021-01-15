@@ -39,13 +39,13 @@ window.onbeforeunload = function (e) {
 // Components and such
 Vue.component("seqlock", {
   template: `
-  <li>
-    <span>
-      <a href='javascript:void(0)' @click='$emit("jump", seqnum)'>#{{ seqnum }}</a>
-      por <a :href="'/users/'+uid">{{ username }}</a>
-      [ {{ niceTime }} ] <span class="close text tiny" @click='release'>Cerrar</span>
+    <span class="seqlock">
+      <button class="hint--top-right hint--bounce hint--rounded" data-hint='Cerrar sequencia' @click='release'>
+        <i class="fas fa-times-circle"></i>
+      </button>
+      <span class="opened-metadata"><span class="timestamp">({{ niceTime }})</span> por <a :href="'/users/'+uid">{{ username }}</a></span>
+      <a class="seq-number" href='javascript:void(0)' @click='$emit("jump", seqnum)'>#{{ seqnum }}</a>
     </span>
-  </li>
     `,
   props: ["id", "seqnum", "uid", "time"],
   methods: {
@@ -73,7 +73,7 @@ Vue.component("seqlock", {
 
     niceTime: function () {
       let d = new Date(this.time);
-      return dateformat(d, "d/mmm HH:MM");
+      return dateformat(d, "dd/mmm HH:MM");
     },
   },
 });

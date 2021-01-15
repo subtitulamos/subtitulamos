@@ -179,9 +179,9 @@
 
     <div id="translation-locks" v-if="canReleaseOpenLock && openLocks.length > 0">
       <h4>Secuencias abiertas</h4>
-      <ul>
+      <div>
         <seqlock v-for="lock in openLocks" :key="lock.seq_number" :id="lock.id" :uid="lock.uid" :seqnum="lock.seq_number" :time="lock.time" @jump="jumpToSequence(lock.seq_number)"></seqlock>
-      </ul>
+      </div>
     </div>
   </div>
 
@@ -226,7 +226,6 @@
       {% endverbatim %}
     </div>
     {% endif %}
-
     <comment v-for="comment in comments"
         :key="comment.edited_at ? comment.id + comment.edited_at : comment.id"
         :id="comment.id"
