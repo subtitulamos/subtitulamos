@@ -44,9 +44,8 @@
   color: var(--color-gray-c);
   flex-shrink: 0;
   width: 20px;
-  min-height: 1.5rem;
-  line-height: 1.5rem;
   display: grid;
+  margin-top: 5px;
   place-items: center;
   text-align: center;
   position: relative;
@@ -131,8 +130,8 @@
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   position: absolute;
-  right: -6px;
-  bottom: -6px;
+  right: -3px;
+  bottom: -4px;
   --size: 0.6rem;
   font-size: var(--size);
   width: var(--size);
