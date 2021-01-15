@@ -1118,6 +1118,7 @@ window.translation = new Vue({
           }
 
           const scrolledY = window.scrollY;
+          document.getElementById("sequences").scrollLeft = 0;
           window.scroll(0, scrolledY - document.getElementById("translation-header").offsetHeight);
         }, 100);
       }
