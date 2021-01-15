@@ -9,13 +9,11 @@ namespace App\Controllers;
 
 use App\Entities\EventLog;
 use App\Services\Auth;
-use App\Services\Langs;
 use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
 class ShowController
@@ -42,8 +40,8 @@ class ShowController
             ];
         }
 
-        foreach ($showListByInitial as $inital => $list) {
-            usort($list, function ($a, $b) {
+        foreach ($showListByInitial as $initial => $list) {
+            usort($showListByInitial[$initial], function ($a, $b) {
                 return strnatcasecmp($a['show']->getName(), $b['show']->getName());
             });
         }
