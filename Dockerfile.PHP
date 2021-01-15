@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM php:7.4.14-fpm-alpine
 WORKDIR /code
 COPY ./src/subtitulamos .
 RUN apk add autoconf g++ libc-dev make gcc git \
