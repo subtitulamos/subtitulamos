@@ -2,6 +2,7 @@
  * This file is covered by the AGPLv3 license, which can be found at the LICENSE file in the root of this project.
  * @copyright 2021 subtitulamos.tv
  */
+@import "animations.css";
 
 #control-panel {
   --control-panel-padding-y: 25px;
@@ -272,36 +273,24 @@
     opacity: 0;
   }
 
-  #page-container .overlaying-button {
-    font-size: 1.6rem;
-    display: grid;
-    place-items: center;
-    position: fixed;
-    color: var(--color-blue-a);
-    z-index: 2;
-    height: 41px;
-    box-sizing: content-box;
-  }
-
   #page-container .control-panel-minimize-toggle {
+    position: fixed;
     top: var(--header-padding-y);
     right: var(--header-padding-x);
-  }
-
-  #page-container .control-panel-minimize-toggle i {
+    display: grid;
+    place-items: center;
+    font-size: 1.4rem;
     color: var(--color-blue-a);
-    z-index: 1;
-  }
-
-  #page-container .control-panel-minimize-toggle::after {
-    position: absolute;
+    z-index: 2;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: var(--standard-border-radius);
     background: var(--color-bg);
-    box-shadow: 0px 0px 10px 10px var(--color-bg);
-    content: "";
-    z-index: 0;
+    border: 1px solid var(--color-gray-d);
+  }
+
+  #page-container .control-panel-minimize-toggle:hover {
+    border: 1px solid var(--color-blue-b);
   }
 
   #page-container.control-panel-is-open .control-panel-minimize-toggle > .fa-chevron-right {
