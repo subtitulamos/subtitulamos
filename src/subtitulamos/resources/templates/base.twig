@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   {% block meta %}{% endblock %}
   {% if ENVIRONMENT_NAME == 'production' %}
-    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    {% include "favicon.twig" %}
   {% else %}
     <link rel="shortcut icon" type="image/png" href="favicon_nonprod.png"/>
     {% set logged_in = true %}

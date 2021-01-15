@@ -1,0 +1,19 @@
+{
+    "name": "Subtitulamos.tv",
+    "short_name": "Subtitulamos.tv",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png?v=lkvlWOG2Qx",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png?v=lkvlWOG2Qx",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ff0000",
+    "background_color": "#ff0000",
+    "display": "standalone"
+}
