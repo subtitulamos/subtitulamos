@@ -620,11 +620,22 @@ don't show at the same time */
 }
 
 @media all and (max-width: 380px) {
-  #header-logo-wrap svg {
-    height: 35px !important;
+  #header-logo-wrap #logo-miniature {
+    height: 35px;
   }
 
-  .logo-text {
-    font-size: 1.6rem !important;
+  #header-logo-wrap .logo-text {
+    font-size: 1.6rem;
+  }
+}
+
+@media all and (max-width: 330px) {
+  #header-logo-wrap #logo-miniature {
+    height: 30px;
+    margin-right: 10px;
+  }
+
+  #header-logo-wrap .logo-text {
+    font-size: 1.5rem;
   }
 }
