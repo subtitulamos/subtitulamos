@@ -5,17 +5,6 @@
 
 @import "app.css";
 
-#disclaimer-content {
-  padding-top: 10px;
-  padding-bottom: 80px; /* Height of the footer + 150 */
-  background-color: #e9e7e7 !important;
-}
-
 #disclaimer {
-  margin: 0 auto;
-  max-width: 1200px;
-}
-
-h3 {
-  text-align: center;
+  line-height: 1.5rem;
 }
