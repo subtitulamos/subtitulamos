@@ -127,7 +127,7 @@ if ($getById("comments-container")) {
     data: {
       comments: [],
       page: 1,
-      commentType: "subtitles",
+      commentType: "episodes",
       firstLoad: true,
     },
     methods: {

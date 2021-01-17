@@ -5,8 +5,8 @@
 <h2>Comentarios</h2>
 <div id="comments-container" class="comments-container">
   <div id="comments-navigation-list" class="navigation-list no-scroll-bar">
-    <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}'>TRADUCCIONES</div>
     <div @click='setCommentType("episodes")' class="navigation-item" :class='{"selected": this.commentType === "episodes"}'>EPISODIOS</div>
+    <div @click='setCommentType("subtitles")' class="navigation-item" :class='{"selected": this.commentType === "subtitles"}'>TRADUCCIONES</div>
   </div>
 
   <div @click="refresh" class="reload"><i class="fas fa-sync-alt" aria-hidden="true"></i> Refrescar</div>
