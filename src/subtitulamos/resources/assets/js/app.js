@@ -186,7 +186,7 @@ const $ctrlPanel = document.getElementById("control-panel");
 const $pageContainer = $getById("page-container");
 const PERSIST_LEFT_PANEL_OPEN = window.innerWidth > 800; // For smaller widths, it's a bad UX (hamburger menu)
 if ($ctrlPanel) {
-  let openStatus = PERSIST_LEFT_PANEL_OPEN ? localStorage.getItem("menu-open") === "true" : false;
+  let openStatus = PERSIST_LEFT_PANEL_OPEN ? localStorage.getItem("menu-open") === "true" : true;
   $ctrlPanel.classList.toggle("opening", !openStatus);
 
   const updateDomWithStatus = () => {
