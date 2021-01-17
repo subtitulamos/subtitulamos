@@ -4,6 +4,7 @@
  */
 
 import "../css/user.scss";
+import timeago from "timeago.js";
 import { $getAllEle, $getEle, $getById, easyFetch, showOverlayFromTpl, onDomReady } from "./utils";
 
 const $roleChangeForm = $getEle("#reset-user-pwd");
@@ -99,6 +100,7 @@ const loadList = (target, msgs) => {
           const ep = data[idx];
 
           const $card = subsByTab[target].$episodes[idx];
+          $card.querySelector(".episode-time-ago").classList.toggle("hidden", true);
           $card.innerHTML = $card.innerHTML.replace("{ep_show}", ep.show);
           $card.innerHTML = $card.innerHTML.replace("{ep_season}", ep.season);
           $card.innerHTML = $card.innerHTML.replace("{ep_num}", ep.episode_number);

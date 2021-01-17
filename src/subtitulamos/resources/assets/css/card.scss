@@ -4,7 +4,7 @@
  */
 
 :root {
-  --card-height: 210px;
+  --card-height: 225px;
   --card-width: 170px;
 }
 
@@ -20,6 +20,7 @@
     height: var(--card-height);
     border-radius: var(--standard-border-radius);
     overflow: hidden;
+    position: relative;
     flex-shrink: 0;
     transition: transform 0.3s ease;
 
@@ -34,6 +35,15 @@
       justify-content: space-between;
     }
 
+    .fresh-news {
+      color: var(--color-red);
+      font-size: 18px;
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      z-index: 1;
+    }
+
     .metadata {
       padding: var(--spacing-s) var(--spacing-m);
       color: var(--color-gray-a);
@@ -41,6 +51,11 @@
       .title {
         color: var(--color-pink);
         margin-bottom: 10px;
+      }
+
+      .episode-time-ago {
+        color: var(--color-gray-c);
+        margin-bottom: 4px;
       }
 
       .title,

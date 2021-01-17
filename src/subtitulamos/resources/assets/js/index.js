@@ -4,6 +4,7 @@
  */
 
 import { dateDiff, easyFetch, $getEle, $getAllEle, $getById } from "./utils.js";
+import timeago from "timeago.js";
 import "../css/index.scss";
 
 const INITIAL_CARD_LOAD_SIZE = 15;
@@ -54,6 +55,12 @@ function loadTabData(target, startIdx, count) {
 
         const i = startIdx + idx;
         const $card = subsByTab[target].$episodes[i];
+        const timeDifference = new Date() - new Date(ep.time);
+        const thresholdToBeNews = 3 * 24 * 60 * 60 * 1000; // 3 days
+        $card
+          .querySelector(".fresh-news")
+          .classList.toggle("hidden", timeDifference > thresholdToBeNews);
+        $card.innerHTML = $card.innerHTML.replace("{ep_timeago}", timeago().format(ep.time, "es"));
         $card.innerHTML = $card.innerHTML.replace("{ep_show}", ep.show);
         $card.innerHTML = $card.innerHTML.replace("{ep_season}", ep.season);
         $card.innerHTML = $card.innerHTML.replace("{ep_num}", ep.episode_num);
