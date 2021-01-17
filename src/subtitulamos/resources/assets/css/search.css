@@ -31,13 +31,15 @@
   text-align: left;
 }
 
-.search-results li.selected {
+.search-results:not(:hover) li.selected,
+.search-results li:hover {
   background-color: var(--color-blue-d);
   padding-left: var(--spacing-m);
   color: var(--color-blue-a);
 }
 
-.search-results li.selected a {
+.search-results:not(:hover) li.selected a,
+.search-results li:hover a {
   font-weight: 500;
 }
 
