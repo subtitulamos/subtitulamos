@@ -184,9 +184,12 @@ onDomReady(function () {
 
 const $ctrlPanel = document.getElementById("control-panel");
 const $pageContainer = $getById("page-container");
-const PERSIST_LEFT_PANEL_OPEN = window.innerWidth > 800; // For smaller widths, it's a bad UX (hamburger menu)
+const isSmallWidthDevice = window.innerWidth > 800;
+const persistLeftPanelOpen = isSmallWidthDevice === true; // For smaller widths, it's a bad UX (hamburger menu)
 if ($ctrlPanel) {
-  let openStatus = PERSIST_LEFT_PANEL_OPEN ? localStorage.getItem("menu-open") === "true" : true;
+  let openStatus = persistLeftPanelOpen
+    ? localStorage.getItem("menu-open") === "true"
+    : isSmallWidthDevice === false; // default to open menu only on Desktop
   $ctrlPanel.classList.toggle("opening", !openStatus);
 
   const updateDomWithStatus = () => {
