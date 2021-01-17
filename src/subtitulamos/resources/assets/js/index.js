@@ -6,31 +6,6 @@
 import { dateDiff, easyFetch, $getEle, $getAllEle, $getById } from "./utils.js";
 import "../css/index.scss";
 
-const getTimeDiff = (time) => {
-  let diff = dateDiff(new Date(time), new Date(Date.now())) / 1000;
-  let unit = "";
-  if (diff >= 60) {
-    diff = Math.floor(diff / 60);
-    if (diff >= 60) {
-      diff = Math.floor(diff / 60);
-      if (diff >= 24) {
-        diff = Math.floor(diff / 24);
-        unit = diff > 1 ? "días" : "día";
-      } else {
-        unit = diff > 1 ? "horas" : "hora";
-      }
-    } else {
-      unit = diff > 1 ? "mins" : "min";
-    }
-  } else {
-    // < 60s, display every 10s
-    diff = Math.floor(diff / 10) * 10;
-    unit = "seg";
-  }
-
-  return [diff, unit];
-};
-
 const INITIAL_CARD_LOAD_SIZE = 15;
 const SUBSEQUENT_LOAD_SIZE = 7;
 const START_PRELOADING_WHEN_N_CARDS_AWAY = 7;
