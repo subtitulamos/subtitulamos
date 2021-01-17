@@ -1178,7 +1178,7 @@ ws.addEventListener("close", (e) => {
 
 // Absorb and block default Ctrl+S / Ctrl+G behaviour
 document.addEventListener("keydown", function (e) {
-  if (e.ctrlKey && e.which == 83) {
+  if (e.ctrlKey && e.key == "s") {
     if (e.shiftKey) {
       translation.savePage();
     }
@@ -1186,7 +1186,7 @@ document.addEventListener("keydown", function (e) {
     e.preventDefault();
   }
 
-  if (e.ctrlKey && !e.altKey && e.which == 71) {
+  if (e.ctrlKey && !e.altKey && e.key == "g") {
     translation.goTo();
     e.preventDefault();
   }

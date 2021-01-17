@@ -136,7 +136,7 @@ onDomReady(function () {
           updateSelected($searchBar, -1);
         }
 
-        if (e.which == 13 && !searchTimerHandle && linkResultList.length > 0) {
+        if (e.key == "Enter" && !searchTimerHandle && linkResultList.length > 0) {
           window.location = linkResultList[selectedElementIdx];
           e.preventDefault();
         }
