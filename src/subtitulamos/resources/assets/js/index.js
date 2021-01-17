@@ -56,7 +56,7 @@ function loadTabData(target, startIdx, count) {
         const i = startIdx + idx;
         const $card = subsByTab[target].$episodes[i];
         const timeDifference = new Date() - new Date(ep.time);
-        const thresholdToBeNews = 3 * 24 * 60 * 60 * 1000; // 3 days
+        const thresholdToBeNews = 7 * 24 * 60 * 60 * 1000; // 7 days
         $card
           .querySelector(".fresh-news")
           .classList.toggle("hidden", timeDifference > thresholdToBeNews);
