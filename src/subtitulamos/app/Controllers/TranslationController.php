@@ -80,11 +80,19 @@ class TranslationController
         $sub->setUploadTime(new \DateTime());
         $sub->setDownloads(0);
 
-        // Autofill sequences
+        // Autofill sequences (based on highest version source)
+        $sequences = [];
+        foreach ($base->getSequences() as $seq) {
+            $num = $seq->getNumber();
+            if (!isset($sequences[$num]) || $sequences[$num]->getRevision() < $seq->getRevision()) {
+                $sequences[$num] = $seq;
+            }
+        }
+
         $modBot = $em->getRepository('App:User')->find(-1);
         $baseSequenceNumbers = [];
         $autofilledSeqCount = 0;
-        foreach ($base->getSequences() as $sequence) {
+        foreach ($sequences as $sequence) {
             if (Translation::containsCreditsText($sequence->getText())) {
                 // Autoblock and replace with our credits
                 $nseq = clone $sequence;
