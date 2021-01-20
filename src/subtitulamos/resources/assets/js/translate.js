@@ -107,7 +107,7 @@ Vue.component("sequence", {
               <div>{{ secondaryText }}</div>
             </div>
             <div class="fake-text" v-else></div>
-            <div class="editable-text" @click="openSequence">
+            <div class="editable-text" @click="openSequence" :data-language="editableLanguage">
               <div :class="{'hint--left hint--bounce hint--rounded': openByOther}" :data-hint="textHint">
                 <div :class="{
                   'editing': editing,
@@ -274,6 +274,10 @@ Vue.component("sequence", {
 
     canDeleteSequence: function () {
       return canDeleteSequence;
+    },
+
+    editableLanguage: function () {
+      return editableLanguage;
     },
 
     openByOther: function () {

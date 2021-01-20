@@ -789,7 +789,7 @@
           border-top: 1px dotted var(--color-gray-divisions);
 
           &::before {
-            content: "Editable";
+            content: attr(data-language);
           }
         }
 

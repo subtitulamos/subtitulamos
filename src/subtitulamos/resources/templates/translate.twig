@@ -257,6 +257,7 @@
     var userId = me.id;
     var wsAuthToken = "{{ wstok }}";
     var MAX_USER_EDIT_SECONDS = {{ constant('MAX_USER_EDIT_SECONDS') }};
+    var editableLanguage = [(isOriginalSub ? "Original en" : "Traducción al"), "{{ sub_lang }}"].join(" ");
 
     // Permissions
     var hasAdvancedTools = me.roles.includes('ROLE_TT');
