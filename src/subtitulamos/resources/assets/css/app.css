@@ -449,8 +449,7 @@ footer > #footer-content {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  overflow-y: visible;
-  position: relative;
+  border-bottom: solid 1px var(--color-gray-divisions);
 }
 
 .navigation-list .navigation-item {
@@ -460,32 +459,14 @@ footer > #footer-content {
   font-size: 0.78rem;
   cursor: pointer;
   color: var(--color-gray-c);
-  position: relative;
   width: max-content;
   flex-shrink: 0;
 }
 
 .navigation-list .navigation-item.selected {
   color: var(--color-blue-a);
-}
-
-/* Workaround so that the selected item blue border and the gray line
-don't show at the same time */
-.navigation-list::before,
-.navigation-list .navigation-item::before {
-  content: "";
-  min-width: min-content;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border-bottom: 1px solid var(--color-gray-divisions);
-}
-
-.navigation-list .navigation-item.selected::before {
   border-bottom: 3px solid var(--color-blue-b);
 }
-/* End of workaround */
 
 .navigation-select {
   padding: var(--standard-padding);
