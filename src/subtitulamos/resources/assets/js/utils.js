@@ -68,7 +68,15 @@ export function easyFetch(url, baseOpts) {
   } else if (method === "POST" && baseOpts.body) {
     opts.body = baseOpts.body; // Copy reference to body, if present
   } else if ((method === "GET" || !method) && opts.params) {
-    url += "?" + new URLSearchParams(opts.params).toString();
+    const urlEncodedParams = Object.keys(opts.params)
+      .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(opts.params[k])}`)
+      .join("&");
+    url += "?" + urlEncodedParams;
+  }
+
+  if (!opts.credentials) {
+    // Not necessary for newer browsers (it's the default), but old browsers require this to manage cookies
+    opts.credentials = "same-origin";
   }
 
   return fetch(url, opts).then(raiseFetchErrors);
