@@ -181,7 +181,13 @@ class SearchController
                     continue;
                 }
 
-                $sugg = $search->suggest(Sonic::SHOW_NAME_COLLECTION, 'default', $word, /* limit */ 1);
+                try {
+                    $sugg = $search->suggest(Sonic::SHOW_NAME_COLLECTION, 'default', $word, /* limit */ 1);
+                } catch (CommandFailedException $e) {
+                    error_log("Suggest failed! Input: <$word>. Error: ".$e->getMessage());
+                    $sugg = [];
+                }
+
                 if (!isset($sugg[0]) || !$sugg[0]) {
                     continue;
                 }
