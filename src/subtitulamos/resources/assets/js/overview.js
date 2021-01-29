@@ -241,13 +241,11 @@ if ($getById("comments-container")) {
       nextPage: function () {
         this.page++;
         this.refresh();
-        scrollToNavigationList;
       },
 
       prevPage: function () {
         this.page--;
         this.refresh();
-        scrollToNavigationList;
       },
     },
     computed: {
@@ -258,6 +256,7 @@ if ($getById("comments-container")) {
   });
 }
 
+let lastLoadedPage = 1;
 function loadComments(count) {
   easyFetch(`/comments/${comments.commentType}/load`, {
     params: {
@@ -268,6 +267,12 @@ function loadComments(count) {
     .then((data) => data.json())
     .then((data) => {
       comments.comments = data;
+    })
+    .then(() => {
+      if (comments.page != lastLoadedPage) {
+        lastLoadedPage = comments.page;
+        scrollToNavigationList();
+      }
     })
     .catch(() => {
       Toasts.error.fire("Ha ocurrido un error tratando de cargar los comentarios");
