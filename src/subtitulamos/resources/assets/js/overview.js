@@ -39,7 +39,12 @@ onDomReady(() => {
         $getEle("[data-page='next'").classList.toggle("invisible", false);
       }
       $getEle(".page-group").classList.toggle("invisible", selectedPage[selectedTab] <= 1);
-
+      // Scroll up to the reload
+      $getEle("#reload-search-content").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
       loadTab(selectedTab, CONTENT_PER_PAGE);
     });
   });
