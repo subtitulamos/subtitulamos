@@ -43,11 +43,7 @@ onDomReady(() => {
       loadTab(selectedTab, CONTENT_PER_PAGE);
 
       // Scroll up after changing pages
-      $getEle(".navigation-list").scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "nearest",
-      });
+      scrollToNavigationList();
     });
   });
 
@@ -245,11 +241,13 @@ if ($getById("comments-container")) {
       nextPage: function () {
         this.page++;
         this.refresh();
+        scrollToNavigationList;
       },
 
       prevPage: function () {
         this.page--;
         this.refresh();
+        scrollToNavigationList;
       },
     },
     computed: {
@@ -279,4 +277,12 @@ function loadComments(count) {
         comments.firstLoad = false;
       }
     });
+}
+
+function scrollToNavigationList() {
+  $getEle(".navigation-list").scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest",
+  });
 }
