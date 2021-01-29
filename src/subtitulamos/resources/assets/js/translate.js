@@ -40,7 +40,7 @@ window.onbeforeunload = function (e) {
 Vue.component("seqlock", {
   template: `
     <span class="seqlock">
-      <button class="hint--top-right hint--bounce hint--rounded" data-hint='Cerrar sequencia' @click='release'>
+      <button class="hint--top-right hint--bounce hint--rounded" data-hint='Cerrar secuencia' @click='release'>
         <i class="fas fa-times-circle"></i>
       </button>
       <span class="opened-metadata"><span class="timestamp">({{ niceTime }})</span> por <a :href="'/users/'+uid">{{ username }}</a></span>
