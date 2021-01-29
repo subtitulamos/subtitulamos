@@ -18,7 +18,7 @@
         <select name="lang" id="lang" class="form_input" required>
           <option value="" disabled>Selecciona un idioma</option>
           {% for lid, lcode in LANG_LIST %}
-            <option value="{{ lcode }}" {% if lang == lcode %}selected{% endif %}>{{ LANG_NAMES[lcode] }}</option>
+            <option value="{{ lcode }}" {% if sub.lang == lid %}selected{% endif %}>{{ LANG_NAMES[lcode] }}</option>
           {% endfor %}
         </select>
         <i class="fas fa-globe"></i>
