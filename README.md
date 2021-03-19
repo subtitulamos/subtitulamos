@@ -51,7 +51,7 @@ The 2nd option might be easier:
 - MariaDB 10.4
 - nginx + php7.4-fpm
 - Redis
-- [Sonic](https://github.com/valeriansaliou/sonic)
+- [MeiliSearch](https://github.com/meilisearch/MeiliSearch)
 
 # Development
 

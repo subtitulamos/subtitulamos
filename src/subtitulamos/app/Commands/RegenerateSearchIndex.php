@@ -7,7 +7,7 @@
 
 namespace App\Commands;
 
-use App\Services\Sonic;
+use App\Services\Meili;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,11 +26,47 @@ class RegenerateSearchIndex extends Command
         global $entityManager;
         $shows = $entityManager->getRepository('App:Show')->findAll();
 
-        $ingest = Sonic::getIngestClient();
-        foreach ($shows as $show) {
-            $ingest->push(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
+        $meili = Meili::getClient();
+
+        // Make sure we clear the shows index, so we start from scratch
+        $indexes = $meili->getAllIndexes();
+        foreach ($indexes as $index) {
+            if ($index->getUid() == 'shows') {
+                $index->delete();
+                break;
+            }
         }
-        $ingest->disconnect();
+
+        $showIndex = $meili->createIndex('shows', ['primaryKey' => 'show_id']);
+        $showIndex->updateSettings([
+            'distinctAttribute' => 'show_id',
+            'rankingRules' => [
+                'typo',
+                'words',
+                'proximity',
+                'attribute',
+                'wordsPosition',
+                'exactness',
+            ],
+            'searchableAttributes' => [
+              'show_name',
+            ],
+            'displayedAttributes' => [
+              'show_id',
+              'show_name',
+            ],
+            'stopWords' => [
+              'the',
+              'a',
+              'an'
+            ]
+          ]);
+
+        $documents = [];
+        foreach ($shows as $show) {
+            $documents[] = Meili::buildDocumentFromShow($show);
+        }
+        $showIndex->addDocuments($documents);
 
         $output->writeln(count($shows)." shows sync'd to search engine");
         return 0;

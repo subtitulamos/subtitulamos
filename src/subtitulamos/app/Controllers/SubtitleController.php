@@ -12,7 +12,7 @@ use App\Entities\Pause;
 
 use App\Services\Auth;
 use App\Services\Langs;
-use App\Services\Sonic;
+use App\Services\Meili;
 use App\Services\Translation;
 use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
@@ -39,9 +39,9 @@ class SubtitleController
             if (count($episode->getVersions()) == 1) { // If this sub was the last of the version
                 if (count($show->getEpisodes()) == 1) { // If this episode was the last of the show
                     // Remove show from search completely
-                    $ingest = Sonic::getIngestClient();
-                    $ingest->pop(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
-                    $ingest->disconnect();
+                    $meili = Meili::getClient();
+                    $index = $meili->index('shows');
+                    $index->deleteDocument($show->getId());
 
                     // Remove from database
                     $em->remove($show);

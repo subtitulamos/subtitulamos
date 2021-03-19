@@ -6,7 +6,7 @@ mkdir -p /tmp/subs/doctrine
 mkdir -p /tmp/subs/twig
 chmod 777 -R /tmp/subs
 
-php composer.phar install # Install dependencies, if needed
+php composer.phar install --no-dev # Install dependencies, if needed. Only prod ones
 
 ./app/console app:twig:clear-cache # Clear the Twig cache
 ./app/console app:static:create-robots-file # Create Robots files

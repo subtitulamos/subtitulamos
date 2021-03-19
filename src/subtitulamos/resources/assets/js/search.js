@@ -102,11 +102,11 @@ onDomReady(function () {
         $searchResults.classList.toggle("hidden", false);
 
         if (reply.length > 0) {
-          reply.forEach(function (show, index) {
-            const showUrl = "/shows/" + show.id;
+          reply.forEach(function (result, index) {
+            const showUrl = "/shows/" + result.show_id;
             let $link = document.createElement("a");
             $link.href = showUrl;
-            $link.innerHTML = show.name;
+            $link.innerHTML = result.show_name;
 
             $searchResults.append(createResultRow($link, index));
             linkResultList.push(showUrl);
@@ -145,7 +145,7 @@ onDomReady(function () {
       if (searchTimerHandle) {
         clearTimeout(searchTimerHandle);
       }
-      searchTimerHandle = setTimeout(() => search($searchBar), 200);
+      searchTimerHandle = setTimeout(() => search($searchBar), 50);
     });
 
     $searchBar.closest(".search-bar-container").addEventListener("click", (e) => {

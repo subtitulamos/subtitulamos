@@ -15,7 +15,7 @@ use App\Entities\Subtitle;
 
 use App\Entities\Version;
 use App\Services\Auth;
-use App\Services\Sonic;
+use App\Services\Meili;
 use App\Services\Srt\SrtParser;
 use App\Services\UrlHelper;
 use App\Services\Utils;
@@ -177,9 +177,9 @@ class UploadController
         if (isset($newShowName)) {
             try {
                 // Add show to search!
-                $ingest = Sonic::getIngestClient();
-                $ingest->push(Sonic::SHOW_NAME_COLLECTION, 'default', $show->getId(), $show->getName());
-                $ingest->disconnect();
+                $meili = Meili::getClient();
+                $index = $meili->index('shows');
+                $index->addDocuments([Meili::buildDocumentFromShow($show)]);
             } catch (\Exception $e) {
                 // Okay, we already added the show, so there's not much we can do
                 // We could remove the show and show the user a failure, but probably not the best idea. Logging error instead

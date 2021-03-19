@@ -29,7 +29,7 @@ define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT_NAME', 'dev'));
 define('DEBUG', in_array(getEnvOrDefault('DEBUG', 'false'), ['true', 'y', 'yes', 'on']));
 define('SITE_URL', getEnvOrDefault('SITE_URL', 'https://www.subtitulamos.tv'));
 define('SUBS_TMP_DIR', getEnvOrDefault('SUBS_TMP_DIR', '/tmp/subs'));
-define('SONIC_PASSWORD', getEnvOrDefault('SONIC_PASSWORD', 'SecretPassword'));
+define('MEILI_MASTER_KEY', getEnvOrDefault('MEILI_MASTER_KEY', 'MeiliMasterKey'));
 define('REDIS_HOST', getEnvOrDefault('REDIS_HOST', 'redis'));
 define('REDIS_PORT', getEnvOrDefault('REDIS_PORT', 6379));
 define('DEFAULT_TRANSLATION_FONT', 'rubik');

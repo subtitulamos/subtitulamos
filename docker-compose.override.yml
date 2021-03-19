@@ -32,8 +32,8 @@ services:
   translate:
     container_name: subs_translate
 
-  sonic:
-    container_name: subs_sonic
+  search:
+    container_name: subs_search
 
   nginx:
     container_name: subs_nginx

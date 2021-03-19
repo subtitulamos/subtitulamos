@@ -9,11 +9,10 @@ namespace App\Controllers;
 
 use App\Services\Auth;
 use App\Services\Langs;
-use App\Services\Sonic;
+use App\Services\Meili;
 use App\Services\Utils;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
-use Psonic\Exceptions\CommandFailedException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -172,74 +171,17 @@ class SearchController
 
         $shows = [];
         if (mb_strlen($q) > 2) {
-            $words = explode(' ', $q);
-
-            $search = Sonic::getSearchClient();
-            $newQuery = [];
-            foreach ($words as $word) {
-                if (!$word || mb_strlen($word) == 1) {
-                    continue;
-                }
-
-                try {
-                    $sugg = $search->suggest(Sonic::SHOW_NAME_COLLECTION, 'default', $word, /* limit */ 1);
-                } catch (CommandFailedException $e) {
-                    error_log("Suggest failed! Input: <$word>. Error: ".$e->getMessage());
-                    $sugg = [];
-                }
-
-                if (!isset($sugg[0]) || !$sugg[0]) {
-                    continue;
-                }
-
-                $newQuery[] = $sugg[0];
-            }
-
-            $newQ = implode(' ', $newQuery);
+            $meili = Meili::getClient();
+            $shows = $meili->index('shows');
+            $hits = $shows->search($q, ['limit' => 5])->getHits();
             $resultList = [];
-            if ($newQ) {
-                // Query full, original query (top 5)
-                $failed = true;
-                try {
-                    $showIdsOriginal = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $q, 5);
-                } catch (CommandFailedException $e) {
-                    error_log("Search failed (original)! Query: <$q>. Error: ".$e->getMessage());
-                    $showIdsOriginal = [];
-                    $failed = true;
-                }
-
-                try {
-                    $showIdsSuggested = $search->query(Sonic::SHOW_NAME_COLLECTION, 'default', $newQ, 10);
-                } catch (CommandFailedException $e) {
-                    $showIdsSuggested = [];
-                    error_log("Search failed (suggested)! Query: <$newQ>. Error: ".$e->getMessage());
-                    if ($failed) {
-                        // If the other search also failed, something's probably broken
-                        throw $e;
-                    }
-                }
-
-                $showIds = array_unique(array_merge($showIdsOriginal, $showIdsSuggested));
-                if (count($showIds) > 0) {
-                    $shows = $em->createQuery('SELECT s.id, s.name FROM App:Show s WHERE s.id IN (:shows)')
-                        ->setParameter('shows', $showIds)
-                        ->getResult();
-
-                    foreach ($shows as $show) {
-                        $resultList[] = [
-                            'id' => $show['id'],
-                            'name' => $show['name'],
-                            'score' => levenshtein($q, $show['name'], /* insert cost */ 2, /* replacement cost */ 1, /* deletion cost */ 3)
-                        ];
-                    }
-                }
-
-                usort($resultList, function ($a, $b) {
-                    return $a['score'] <=> $b['score'];
-                });
+            foreach ($hits as $hit) {
+                // This does nothing as of implementation time, but it prevents accidental attribute leaks in future
+                $resultList[] = [
+                    'show_id' => $hit['show_id'],
+                    'show_name' => $hit['show_name'],
+                ];
             }
-
-            $search->disconnect();
             return Utils::jsonResponse($response, $resultList);
         }
 

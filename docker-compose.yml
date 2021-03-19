@@ -27,9 +27,9 @@ services:
     restart: always
     links:
       - redis
-      - sonic
+      - search
     depends_on:
-      - sonic
+      - search
     volumes:
       - ./.env:/code/.env
       - ./data/phpsess:/tmp/phpsess
@@ -44,12 +44,15 @@ services:
     volumes:
       - ./data/redis:/data
 
-  sonic:
-    image: valeriansaliou/sonic:v1.3.0
+  search:
+    image: getmeili/meilisearch:v0.19.0
     restart: always
     volumes:
-      - ./data/sonic:/var/lib/sonic/store/
-      - ./config/sonic.cfg:/etc/sonic.cfg
+      - ./data/search:/data.ms
+    environment:
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_ENV=${MEILI_ENV}
 
   translate:
     restart: always
