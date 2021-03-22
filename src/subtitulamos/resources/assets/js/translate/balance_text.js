@@ -41,6 +41,12 @@ module.exports = function (originalText, opinionated) {
     return [originalText];
   }
 
+  // Find all separators in the word
+  let wordSeparatorAtLoc = [];
+  for (let i = 0; i < text.length; ++i) {
+    wordSeparatorAtLoc[i] = text[i].match(/[ .,;?!\-¿¡"']/);
+  }
+
   let behind = 0;
   let ahead = text.length;
   let curWordPos = 0;
@@ -56,7 +62,7 @@ module.exports = function (originalText, opinionated) {
     }
 
     // If we find a word separator...
-    if (curChar.match(/[ .,;?!\-¿¡"']/)) {
+    if (wordSeparatorAtLoc[i]) {
       if (ignoreSepUntilNextWord) continue;
 
       let nextChar = i + 1 < text.length ? text[i + 1] : null;
@@ -95,8 +101,10 @@ module.exports = function (originalText, opinionated) {
         continue;
       }
 
-      if (behind >= ahead) {
-        // Begin splitting
+      // We want to split if there's more characters behind than ahead OR if there's no more separators
+      // and not splitting would cause us to break over 40
+      const moreSeparatorsLeft = wordSeparatorAtLoc.some((v, idx) => v && idx > i);
+      if (behind >= ahead || (!moreSeparatorsLeft && behind + ahead > 40)) {
         if (curChar == " ") {
           // Move one back, as the space isn't part of the word!
           --i;
