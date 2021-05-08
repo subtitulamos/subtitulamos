@@ -86,7 +86,7 @@ onDomReady(function () {
     $getEle("#file-name").innerHTML = filename;
     $getEle("#file-upload-container").classList.toggle("has-file", filename !== "");
 
-    const m = filename.match(/^([\w\s]+)\s-?\s*(\d{1,2})x(\d{1,2})\s*-\s*([^.]+)/);
+    const m = filename.match(/^([\w\s']+)\s-?\s*(\d{1,2})x(\d{1,2})\s*-\s*([^.]+)/);
     if (m) {
       const cleanShowName = m[1].trim().toLowerCase();
       const $showIdSelect = $getEle("#show-id");
