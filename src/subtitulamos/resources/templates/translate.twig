@@ -13,7 +13,7 @@
   {{ alerts.show('error', "Conexión con el servidor de traducción perdida. Reestableciendo...") }}
   </div>
   <div id="show-info-header">
-    {% set go_back_link = "/episodes/" ~ sub.version.episode.id ~ "/" ~ sub.version.episode.fullName %}
+    {% set go_back_link = "/episodes/" ~ sub.version.episode.id ~ "/" ~ ep_name_for_link %}
     <a href="/episodes/{{ sub.version.episode.id }}/{{ sub.version.episode.fullName }}">
       <div id="translating-header" class="text small blue-a">
           <i class="fas fa-chevron-left"></i> Traduciendo...

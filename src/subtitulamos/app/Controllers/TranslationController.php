@@ -16,6 +16,7 @@ use App\Services\Langs;
 use App\Services\Translation;
 use App\Services\UrlHelper;
 use App\Services\Utils;
+use Cocur\Slugify\SlugifyInterface;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Validator as v;
@@ -158,7 +159,7 @@ class TranslationController
             ->withHeader('Location', $urlHelper->pathFor('translation', ['id' => $sub->getId()]));
     }
 
-    public function view($id, $request, $response, EntityManager $em, Twig $twig, Auth $auth, Translation $translation)
+    public function view($id, $request, $response, EntityManager $em, Twig $twig, Auth $auth, Translation $translation, SlugifyInterface $slugify)
     {
         $sub = $em->createQuery('SELECT s, v, e FROM App:Subtitle s JOIN s.version v JOIN v.episode e WHERE s.id = :id')
             ->setParameter('id', $id)
@@ -189,6 +190,7 @@ class TranslationController
             'episode' => $sub->getVersion()->getEpisode(),
             'sub_lang' => Langs::getLocalizedName(Langs::getLangCode($sub->getLang())),
             'wstok' => $tok,
+            'ep_name_for_link' => $slugify->slugify($sub->getVersion()->getEpisode()->getFullName())
         ]);
     }
 
