@@ -434,7 +434,7 @@ class TranslationController
         $changed = $timesChanged || $text != $seq->getText();
         if (!$changed) {
             // Nothing to change here, send the id of this very sequence
-            $response->getBody()->write($seq->getId());
+            $response->getBody()->write((string)$seq->getId());
             return $response->withStatus(200);
         }
 
