@@ -452,7 +452,13 @@ Vue.component("sequence", {
       this.saving = true;
 
       // Process text for spaces and proceed to save/create/cancel
-      let ntext = this.editingText.trim().replace(/ +/g, " ");
+      let lines = this.editingText.split("\n");
+      for (let i = 0; i < lines.length; ++i) {
+        // Remove multiple concatenated spaces
+        lines[i] = lines[i].replace(/ +/g, " ").trim();
+      }
+
+      let ntext = lines.join("\n");
       if (!ntext) {
         ntext = " ";
       }
