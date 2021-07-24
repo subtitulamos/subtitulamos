@@ -547,6 +547,9 @@ class TranslationController
                 ->setParameter('sub', $targetSub->getId())
                 ->setParameter('num', $seqNum)
                 ->execute();
+
+            // Recalculate progress
+            $translation->recalculateSubtitleProgress($sub, $targetSub);
         }
 
         // Generate a copy of this sequence, we don't edit the original
@@ -620,6 +623,9 @@ class TranslationController
                 ->setParameter('sub', $targetSub->getId())
                 ->setParameter('num', $delSeq->getNumber())
                 ->execute();
+
+            // Recalculate progress
+            $translation->recalculateSubtitleProgress($sub, $targetSub);
         }
 
         // Log it
