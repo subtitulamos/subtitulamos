@@ -6,6 +6,7 @@ mkdir -p /tmp/subs/doctrine
 mkdir -p /tmp/subs/twig
 chmod 777 -R /tmp/subs
 
+php composer.phar config -g  discard-changes 1 # Discard changes in vendor files
 php composer.phar install --no-dev # Install dependencies, if needed. Only prod ones
 
 ./app/console app:twig:clear-cache # Clear the Twig cache
