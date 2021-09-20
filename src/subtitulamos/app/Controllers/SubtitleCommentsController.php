@@ -36,22 +36,12 @@ class SubtitleCommentsController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $recentCommentsByUser = $em->createQuery('SELECT sc FROM App:SubtitleComment sc WHERE sc.softDeleted = 0 AND sc.user = :user AND sc.publishTime >= :date_p')
+        $recentCommentsByUser = $em->createQuery('SELECT COUNT(sc) as cnt FROM App:SubtitleComment sc WHERE sc.softDeleted = 0 AND sc.user = :user AND sc.publishTime >= :date_p')
             ->setParameter('user', $auth->getUser())
             ->setParameter('date_p', (new \DateTime())->modify("-3 minutes"))
-            ->getResult();
+            ->getOneOrNullResult();
 
-        $countBySubId = [];
-        foreach($recentCommentsByUser as $commentSub) {
-            $subId = $commentSub->getSubtitle()->getId();
-            $countBySubId[$subId] = isset($countBySubId[$subId]) ? $countBySubId[$subId] + 1 : 1;
-            if($countBySubId[$subId] >= 9) {
-                $response->getBody()->write('Estás escribiendo comentarios muy rápido. Por favor, espera unos segundos y vuelve a intentarlo');
-                return $response->withStatus(400);
-            }
-        }
-
-        if(count($countBySubId) > 3 && !isset($countBySubId[$sub->getId()])) {
+        if($recentCommentsByUser["cnt"] > 15) {
             $response->getBody()->write('Estás escribiendo comentarios muy rápido. Por favor, espera unos segundos y vuelve a intentarlo');
             return $response->withStatus(400);
         }

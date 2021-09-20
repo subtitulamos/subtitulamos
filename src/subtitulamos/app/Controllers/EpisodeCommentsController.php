@@ -34,22 +34,12 @@ class EpisodeCommentsController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
-        $recentCommentsByUser = $em->createQuery('SELECT ec FROM App:EpisodeComment ec WHERE ec.softDeleted = 0 AND ec.user = :user AND ec.publishTime >= :date_p')
+        $recentCommentsByUser = $em->createQuery('SELECT COUNT(ec) as cnt FROM App:EpisodeComment ec WHERE ec.softDeleted = 0 AND ec.user = :user AND ec.publishTime >= :date_p')
             ->setParameter('user', $auth->getUser())
             ->setParameter('date_p', (new \DateTime())->modify("-3 minutes"))
-            ->getResult();
+            ->getOneOrNullResult();
 
-        $countByEpId = [];
-        foreach($recentCommentsByUser as $comment) {
-            $epId = $comment->getEpisode()->getId();
-            $countByEpId[$epId] = isset($countByEpId[$epId]) ? $countByEpId[$epId] + 1 : 1;
-            if($countByEpId[$epId] > 4) {
-                $response->getBody()->write('Estás escribiendo comentarios muy rápido. Por favor, espera unos segundos y vuelve a intentarlo');
-                return $response->withStatus(400);
-            }
-        }
-
-        if(count($countByEpId) > 3 && !isset($countByEpId[$ep->getId()])) {
+        if($recentCommentsByUser["cnt"] > 20) {
             $response->getBody()->write('Estás escribiendo comentarios muy rápido. Por favor, espera unos segundos y vuelve a intentarlo');
             return $response->withStatus(400);
         }
