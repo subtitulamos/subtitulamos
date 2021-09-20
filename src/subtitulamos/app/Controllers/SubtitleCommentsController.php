@@ -14,7 +14,6 @@ use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
 use App\Services\Utils;
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Respect\Validation\Validator as v;
 
@@ -35,6 +34,26 @@ class SubtitleCommentsController
 
         if (!$sub) {
             throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $recentCommentsByUser = $em->createQuery('SELECT sc FROM App:SubtitleComment sc WHERE sc.softDeleted = 0 AND sc.user = :user AND sc.publishTime >= :date_p')
+            ->setParameter('user', $auth->getUser())
+            ->setParameter('date_p', (new \DateTime())->modify("-3 minutes"))
+            ->getResult();
+
+        $countBySubId = [];
+        foreach($recentCommentsByUser as $commentSub) {
+            $subId = $commentSub->getSubtitle()->getId();
+            $countBySubId[$subId] = isset($countBySubId[$subId]) ? $countBySubId[$subId] + 1 : 1;
+            if($countBySubId[$subId] >= 9) {
+                $response->getBody()->write('Estás escribiendo comentarios muy rápido. Por favor, espera unos segundos y vuelve a intentarlo');
+                return $response->withStatus(400);
+            }
+        }
+
+        if(count($countBySubId) > 3 && !isset($countBySubId[$sub->getId()])) {
+            $response->getBody()->write('Estás escribiendo comentarios muy rápido. Por favor, espera unos segundos y vuelve a intentarlo');
+            return $response->withStatus(400);
         }
 
         $comment = new SubtitleComment();

@@ -164,9 +164,21 @@ let comments = new Vue({
           this.submittingComment = false;
           loadComments();
         })
-        .catch((e) => {
+        .catch((err) => {
           this.submittingComment = false;
-          Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
+
+          err.response
+            .text()
+            .then((response) => {
+              if (response) {
+                Toasts.error.fire(response);
+              } else {
+                throw new Exception();
+              }
+            })
+            .catch(() => {
+              Toasts.error.fire("Ha ocurrido un error al enviar tu comentario");
+            });
         });
     },
     refresh: function () {
