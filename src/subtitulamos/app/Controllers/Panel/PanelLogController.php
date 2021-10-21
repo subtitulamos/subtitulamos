@@ -10,13 +10,19 @@ namespace App\Controllers\Panel;
 use App\Services\Langs;
 use App\Services\UrlHelper;
 use Doctrine\ORM\EntityManager;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
 class PanelLogController
 {
-    public function view($response, Twig $twig, EntityManager $em, UrlHelper $urlHelper)
+    public function view(ServerRequestInterface $request, ResponseInterface $response, Twig $twig, EntityManager $em, UrlHelper $urlHelper)
     {
-        $logsRes = $em->createQuery('SELECT elog FROM App:EventLog elog ORDER BY elog.date DESC')->getResult();
+        $queryParams = $request->getQueryParams();
+        $showAll = isset($queryParams['all']);
+        $logsRes = $showAll
+            ? $em->createQuery('SELECT elog FROM App:EventLog elog ORDER BY elog.date DESC')->getResult()
+            : $em->createQuery('SELECT elog FROM App:EventLog elog WHERE DATE_DIFF(CURRENT_DATE(), elog.date) < 14 ORDER BY elog.date DESC')->getResult();
 
         $logs = [];
         foreach ($logsRes as $log) {
@@ -72,6 +78,6 @@ class PanelLogController
             ];
         }
 
-        return $twig->render($response, 'panel/panel_logs.twig', ['logs' => $logs]);
+        return $twig->render($response, 'panel/panel_logs.twig', ['logs' => $logs, 'showing_all' => $showAll]);
     }
 }

@@ -11,7 +11,14 @@
     {{ alerts.show('success', success) }}
   {% endfor %}
 
-  <h1>Logs</h1>
+  {% if showing_all %}
+    <h1>Logs</h1>
+    <p><a href='panel/logs'><b>(Ver últimos 14d)</b></a></p>
+  {% else %}
+    <h1>Logs</h1>
+    <p><a href='panel/logs?all'><b>(Ver todo)</b></a></p>
+  {% endif %}
+
   <div class="grid">
     <div class="text bold">Fecha</div>
     <div class="text bold">Usuario</div>
