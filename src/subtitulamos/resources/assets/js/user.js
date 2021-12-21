@@ -122,12 +122,12 @@ const loadList = (target, msgs) => {
 
 onDomReady(() => {
   loadList("upload", {
-    noResults: "El usuario no ha colaborado en ningún capítulo",
-    error: "Ha ocurrido un error al cargar los capítulos en los que ha colaborado",
-  });
-  loadList("collab", {
     noResults: "El usuario no ha subido ningún capítulo",
     error: "Ha ocurrido un error al cargar los capítulos subidos",
+  });
+  loadList("collab", {
+    noResults: "El usuario no ha colaborado en ningún capítulo",
+    error: "Ha ocurrido un error al cargar los capítulos en los que ha colaborado",
   });
 
   $getAllEle(".option").forEach((option) => {
