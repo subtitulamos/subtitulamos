@@ -41,6 +41,7 @@ services:
 
   redis:
     image: redis:6.0-alpine
+    restart: always
     volumes:
       - ./data/redis:/data
 
