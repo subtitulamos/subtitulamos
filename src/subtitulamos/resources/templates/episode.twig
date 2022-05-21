@@ -106,7 +106,7 @@
             {% endif %}
 
             {% set pause_class = sub.pause ? 'paused' : '' %}
-            {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress == 100) %}
+            {% set can_download = auth.has_role('ROLE_TT') or (not sub.pause and sub.progress >= 100) %}
 
             <div class="version-container {% if sub.pause %}paused{% endif %}">
               <p class="text mini">versión</p>

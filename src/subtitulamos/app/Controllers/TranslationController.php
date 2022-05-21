@@ -623,9 +623,6 @@ class TranslationController
                 ->setParameter('sub', $targetSub->getId())
                 ->setParameter('num', $delSeq->getNumber())
                 ->execute();
-
-            // Recalculate progress
-            $translation->recalculateSubtitleProgress($sub, $targetSub);
         }
 
         // Log it
@@ -636,6 +633,11 @@ class TranslationController
         );
         $em->persist($event);
         $em->flush();
+
+        // Recalculate progress after committing the deletions
+        foreach ($sub->getVersion()->getSubtitles() as $targetSub) {
+            $translation->recalculateSubtitleProgress($sub, $targetSub);
+        }
 
         $translation->broadcastSeqDeletion($delSeq);
         return $response->withStatus(200);

@@ -106,7 +106,7 @@ class SubtitleController
         $em->remove($pause);
         $sub->setPause(null);
 
-        if ($sub->getProgress() == 100 && !$sub->getCompleteTime()) {
+        if ($sub->getProgress() >= 100 && !$sub->getCompleteTime()) {
             $sub->setCompleteTime(new \DateTime());
         }
 

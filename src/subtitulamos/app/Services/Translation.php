@@ -338,7 +338,7 @@ class Translation
 
         $oldProgress = $sub->getProgress();
         $sub->setProgress($ourSubSeqCount / $baseSubSeqCount * 100);
-        if ($sub->getProgress() == 100 && !$sub->getPause()) {
+        if ($sub->getProgress() >= 100 && !$sub->getPause()) {
             // We're done! But we'll only update completion time if we were not *already* done
             if ($oldProgress != 100) {
                 $sub->setCompleteTime(new \DateTime());
