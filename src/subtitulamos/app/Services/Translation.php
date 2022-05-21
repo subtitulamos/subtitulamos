@@ -478,6 +478,9 @@ class Translation
                     } elseif ($matches[2] == '...' || $matches[2] == ',' || $matches[2] == '.') {
                         $translatedStr .= $matches[2];
                         $confidence = $confidence ?? (mb_strlen($matches[2]) == 1 ? 100 : 90);
+                    } elseif ($matches[2] == '....') {
+                        $translatedStr .= "...";
+                        $confidence = 85;
                     }
                 }
 
