@@ -109,7 +109,7 @@ class SubtitleCommentsController
         $isMod = $auth->hasRole('ROLE_MOD');
         if (!$isMod) {
             // Regular users can only edit the comment if it's recent enough (do MAX_USER_EDIT_SECONDS + gracetime)
-            $now = new DateTime();
+            $now = new \DateTime();
             if ($now->getTimestamp() - $comment->getPublishTime()->getTimestamp() > MAX_USER_EDIT_SECONDS * 3/2) {
                 return $response->withStatus(403);
             }
