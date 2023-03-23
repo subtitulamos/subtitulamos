@@ -67,6 +67,27 @@ class ShowController
         return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $epRes->getId()]);
     }
 
+    public function viewEpisode($showId, $season, $episode, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, Twig $twig, UrlHelper $urlHelper)
+    {
+        $show = $em->getRepository('App:Show')->find($showId);
+        if (!$show) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $epRes = $em->createQuery('SELECT e FROM App:Episode e WHERE e.show = :id AND e.season = :season AND e.number = :episode')
+            ->setParameter('id', $showId)
+            ->setParameter('season', $season)
+            ->setParameter('episode', $episode)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+
+        if (!$epRes) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $epRes->getId()]);
+    }
+
     public function saveProperties($showId, ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
     {
         $show = $em->getRepository('App:Show')->find($showId);
