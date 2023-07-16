@@ -99,7 +99,7 @@ function listRenderer($list, data) {
     });
   } else {
     let $li = document.createElement("li");
-    $li.innerHTML += "<div>No hay nada aqui en el momento</div>";
+    $li.innerHTML += "<div>No hay nada por aquí ahora mismo</div>";
     $list.appendChild($li);
   }
 }
