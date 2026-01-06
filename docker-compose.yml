@@ -46,7 +46,7 @@ services:
       - ./data/redis:/data
 
   search:
-    image: getmeili/meilisearch:v0.19.0
+    image: getmeili/meilisearch:v1.16
     restart: always
     volumes:
       - ./data/search:/data.ms

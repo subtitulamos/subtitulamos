@@ -18,6 +18,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SearchController
 {
+    var $shows;
+    public function __construct()
+    {
+        $meili = Meili::getClient();
+        $this->shows = $meili->index('shows');
+    }
+
     public function listRecentUploads($request, $response, EntityManager $em, SlugifyInterface $slugify, Auth $auth)
     {
         $params = $request->getQueryParams();
@@ -169,11 +176,8 @@ class SearchController
             return $response->withStatus(400);
         }
 
-        $shows = [];
         if (mb_strlen($q) > 2) {
-            $meili = Meili::getClient();
-            $shows = $meili->index('shows');
-            $hits = $shows->search($q, ['limit' => 5])->getHits();
+            $hits = $this->shows->search($q, ['limit' => 5])->getHits();
             $resultList = [];
             foreach ($hits as $hit) {
                 // This does nothing as of implementation time, but it prevents accidental attribute leaks in future

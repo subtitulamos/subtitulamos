@@ -14,61 +14,62 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RegenerateSearchIndex extends Command
 {
-    protected function configure()
-    {
-        $this->setName('app:search:regenerate-index')
-            ->setDescription('Renegerate the search index for all shows')
-            ->setHelp('Renegerate the search index for all shows');
+  protected function configure()
+  {
+    $this->setName('app:search:regenerate-index')
+      ->setDescription('Renegerate the search index for all shows')
+      ->setHelp('Renegerate the search index for all shows');
+  }
+
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    global $entityManager;
+    $shows = $entityManager->getRepository('App:Show')->findAll();
+
+    $meili = Meili::getClient();
+
+    // Make sure we clear the shows index, so we start from scratch
+    $indexes = $meili->getIndexes();
+    foreach ($indexes as $index) {
+      if ($index->getUid() == 'shows') {
+        $index->delete();
+        break;
+      }
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        global $entityManager;
-        $shows = $entityManager->getRepository('App:Show')->findAll();
+    $meili->createIndex('shows', ['primaryKey' => 'show_id']);
 
-        $meili = Meili::getClient();
+    $showIndex = $meili->index("shows");
+    $showIndex->updateSettings([
+      'distinctAttribute' => 'show_id',
+      'rankingRules' => [
+        'typo',
+        'words',
+        'proximity',
+        'attribute',
+        'exactness',
+      ],
+      'searchableAttributes' => [
+        'show_name',
+      ],
+      'displayedAttributes' => [
+        'show_id',
+        'show_name',
+      ],
+      'stopWords' => [
+        'the',
+        'a',
+        'an'
+      ]
+    ]);
 
-        // Make sure we clear the shows index, so we start from scratch
-        $indexes = $meili->getAllIndexes();
-        foreach ($indexes as $index) {
-            if ($index->getUid() == 'shows') {
-                $index->delete();
-                break;
-            }
-        }
-
-        $showIndex = $meili->createIndex('shows', ['primaryKey' => 'show_id']);
-        $showIndex->updateSettings([
-            'distinctAttribute' => 'show_id',
-            'rankingRules' => [
-                'typo',
-                'words',
-                'proximity',
-                'attribute',
-                'wordsPosition',
-                'exactness',
-            ],
-            'searchableAttributes' => [
-              'show_name',
-            ],
-            'displayedAttributes' => [
-              'show_id',
-              'show_name',
-            ],
-            'stopWords' => [
-              'the',
-              'a',
-              'an'
-            ]
-          ]);
-
-        $documents = [];
-        foreach ($shows as $show) {
-            $documents[] = Meili::buildDocumentFromShow($show);
-        }
-        $showIndex->addDocuments($documents);
-
-        $output->writeln(count($shows)." shows sync'd to search engine");
-        return 0;
+    $documents = [];
+    foreach ($shows as $show) {
+      $documents[] = Meili::buildDocumentFromShow($show);
     }
+    $showIndex->addDocuments($documents);
+
+    $output->writeln(count($shows) . " shows sync'd to search engine");
+    return 0;
+  }
 }
