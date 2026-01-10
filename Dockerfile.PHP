@@ -11,7 +11,10 @@ RUN apk add autoconf g++ libc-dev make gcc git \
 
 # Use our own PHP ini config
 COPY ./config/php.ini "$PHP_INI_DIR/php.ini"
-
 COPY ./config/docker_phpsv_entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+RUN echo 'pm.max_children = 15' >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
+    echo 'pm.max_requests = 200' >> /usr/local/etc/php-fpm.d/zz-docker.conf
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]
