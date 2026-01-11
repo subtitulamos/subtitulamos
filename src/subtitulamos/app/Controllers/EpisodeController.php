@@ -34,11 +34,12 @@ class EpisodeController
         }
 
         // The only correct URL is with a slug (and a right one at that), redirect to the right URI otherwise
+        // We don't redirect if the user somehow landed on /episode/<id>, simply to save service resources atm
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
         $slug = $route->getArgument('slug');
         $properSlug = $slugify->slugify($ep->getFullName());
-        if (empty($slug) || $slug != $properSlug) {
+        if (!empty($slug) && $slug != $properSlug) {
             return $urlHelper->responseWithRedirectToRoute('episode', ['id' => $ep->getId(), 'slug' => $properSlug])->withStatus(301);
         }
 
@@ -118,7 +119,7 @@ class EpisodeController
         $epName = trim(strip_tags(($body['name'] ?? '')));
         $save = false;
 
-        if(strlen($epName) > 100) {
+        if (strlen($epName) > 100) {
             throw new \Slim\Exception\HttpBadRequestException($request);
         }
 
