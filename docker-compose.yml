@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nginx:
-    image: nginx:alpine
+    image: nginx:stable-alpine3.23
     ports:
       - "127.0.0.1:${INTERNAL_NGINX_PORT}:8080"
     restart: always
