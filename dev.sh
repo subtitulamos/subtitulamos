@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-docker-compose up &
+docker compose up &
 P1=$!
 cd src/subtitulamos && npm run dev &
 P2=$!
