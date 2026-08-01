@@ -86,7 +86,7 @@ $builder->addDefinitions([
         global $app;
         return new \App\Services\UrlHelper($app->getRouteCollector()->getRouteParser(), $app->getResponseFactory());
     },
-    \Meilisearch\Client::class => function (ContainerInterface $c) {
+    \MeiliSearch\Client::class => function (ContainerInterface $c) {
         return \App\Services\Meili::getClient();
     }
 ]);
