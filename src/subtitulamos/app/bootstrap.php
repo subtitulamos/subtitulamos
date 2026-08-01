@@ -23,7 +23,7 @@ function getEnvOrDefault($varname, $default)
 // Load env variables from file
 $dotenv = Dotenv\Dotenv::createMutable(__DIR__ . '/..');
 $dotenv->load();
-$dotenv->required(['MARIADB_DATABASE', 'MARIADB_USER', 'MARIADB_PASSWORD', 'MARIADB_HOST']);
+$dotenv->required(['MARIADB_DATABASE', 'MARIADB_USER', 'MARIADB_PASSWORD']);
 
 define('ENVIRONMENT_NAME', getEnvOrDefault('ENVIRONMENT_NAME', 'dev'));
 define('DEBUG', in_array(getEnvOrDefault('DEBUG', 'false'), ['true', 'y', 'yes', 'on']));
