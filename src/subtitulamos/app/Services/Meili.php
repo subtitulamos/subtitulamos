@@ -7,11 +7,13 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Client;
+
 class Meili
 {
-    public static function getClient()
+    public static function getClient(?Client $client)
     {
-        return new \MeiliSearch\Client('http://search:7700', MEILI_MASTER_KEY);
+        return new \MeiliSearch\Client('http://search:7700', MEILI_MASTER_KEY, $client);
     }
 
     public static function buildDocumentFromShow(\App\Entities\Show $show)

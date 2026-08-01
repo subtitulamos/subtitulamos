@@ -11,7 +11,9 @@ use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
 use Cocur\Slugify\Slugify;
-use DI\Container;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Handler\CurlMultiHandler;
+use GuzzleHttp\HandlerStack;
 use Psr\Container\ContainerInterface;
 
 require '../app/bootstrap.php';
@@ -87,7 +89,16 @@ $builder->addDefinitions([
         return new \App\Services\UrlHelper($app->getRouteCollector()->getRouteParser(), $app->getResponseFactory());
     },
     \MeiliSearch\Client::class => function (ContainerInterface $c) {
-        return \App\Services\Meili::getClient();
+        $stack = HandlerStack::create(new CurlMultiHandler());
+        $guzzle = new GuzzleClient([
+            'handler' => $stack,
+            'timeout' => 3.0,
+            'headers' => [
+                'Connection' => 'keep-alive',
+            ],
+        ]);
+
+        return \App\Services\Meili::getClient($guzzle);
     }
 ]);
 
