@@ -5,7 +5,7 @@
  * @copyright 2021 subtitulamos.tv
  */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
@@ -21,7 +21,7 @@ function getEnvOrDefault($varname, $default)
 }
 
 // Load env variables from file
-$dotenv = Dotenv\Dotenv::createMutable(__DIR__.'/..');
+$dotenv = Dotenv\Dotenv::createMutable(__DIR__ . '/..');
 $dotenv->load();
 $dotenv->required(['MARIADB_DATABASE', 'MARIADB_USER', 'MARIADB_PASSWORD', 'MARIADB_HOST']);
 
@@ -42,13 +42,13 @@ if (DEBUG) {
 }
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entities'], DEBUG, SUBS_TMP_DIR.'/doctrine', new \Doctrine\Common\Cache\ArrayCache(), false);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/Entities'], DEBUG, SUBS_TMP_DIR . '/doctrine', new \Doctrine\Common\Cache\ArrayCache(), false);
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => $_ENV['MARIADB_DATABASE'],
     'user' => $_ENV['MARIADB_USER'],
     'password' => $_ENV['MARIADB_PASSWORD'],
-    'host' => $_ENV['MARIADB_HOST'],
+    'host' => getEnvOrDefault('MARIADB_HOST', null),
     'unix_socket' => getEnvOrDefault('MARIADB_SOCKETNAME', null)
 ];
 
