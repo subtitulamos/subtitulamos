@@ -19,9 +19,8 @@ use Psr\Http\Message\ServerRequestInterface;
 class SearchController
 {
     var $shows;
-    public function __construct()
+    public function __construct(\MeiliSearch\Client $meili)
     {
-        $meili = Meili::getClient();
         $this->shows = $meili->index('shows');
     }
 

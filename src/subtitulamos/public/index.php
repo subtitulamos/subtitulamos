@@ -11,6 +11,7 @@ use App\Services\Auth;
 use App\Services\Langs;
 use App\Services\Translation;
 use Cocur\Slugify\Slugify;
+use DI\Container;
 use Psr\Container\ContainerInterface;
 
 require '../app/bootstrap.php';
@@ -23,14 +24,14 @@ session_start();
 
 function feature_on($name)
 {
-    $v = $_ENV[$name.'_ENABLED'] ?? 'false';
+    $v = $_ENV[$name . '_ENABLED'] ?? 'false';
     return $v == 'true' || $v == '1' || $v == 'yes';
 }
 
 $builder = new \DI\ContainerBuilder();
 if (!DEBUG) {
-    $builder->enableCompilation(SUBS_TMP_DIR.'/di');
-    $builder->writeProxiesToFile(true, SUBS_TMP_DIR.'/di/proxies');
+    $builder->enableCompilation(SUBS_TMP_DIR . '/di');
+    $builder->writeProxiesToFile(true, SUBS_TMP_DIR . '/di/proxies');
 }
 
 $builder->addDefinitions([
@@ -53,8 +54,8 @@ $builder->addDefinitions([
         return new Slugify();
     },
     \Slim\Views\Twig::class => function (ContainerInterface $c) {
-        $twig = \Slim\Views\Twig::create(__DIR__.'/../resources/templates', [
-            'cache' => SUBS_TMP_DIR.'/twig',
+        $twig = \Slim\Views\Twig::create(__DIR__ . '/../resources/templates', [
+            'cache' => SUBS_TMP_DIR . '/twig',
             'strict_variables' => $_ENV['TWIG_STRICT'] ?? true,
             'debug' => DEBUG
         ]);
@@ -84,6 +85,9 @@ $builder->addDefinitions([
     \App\Services\UrlHelper::class => function (ContainerInterface $c) {
         global $app;
         return new \App\Services\UrlHelper($app->getRouteCollector()->getRouteParser(), $app->getResponseFactory());
+    },
+    \Meilisearch\Client::class => function (ContainerInterface $c) {
+        return \App\Services\Meili::getClient();
     }
 ]);
 

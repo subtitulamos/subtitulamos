@@ -37,7 +37,7 @@ class UploadController
         ]);
     }
 
-    public function do(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
+    public function do(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth, \MeiliSearch\Client $meili)
     {
         $param = $request->getParsedBody();
 
@@ -177,7 +177,6 @@ class UploadController
         if (isset($newShowName)) {
             try {
                 // Add show to search!
-                $meili = Meili::getClient();
                 $index = $meili->index('shows');
                 $index->addDocuments([Meili::buildDocumentFromShow($show)]);
             } catch (\Exception $e) {

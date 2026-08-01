@@ -21,12 +21,10 @@ class RegenerateSearchIndex extends Command
       ->setHelp('Renegerate the search index for all shows');
   }
 
-  protected function execute(InputInterface $input, OutputInterface $output)
+  protected function execute(InputInterface $input, OutputInterface $output, \MeiliSearch\Client $meili)
   {
     global $entityManager;
     $shows = $entityManager->getRepository('App:Show')->findAll();
-
-    $meili = Meili::getClient();
 
     // Make sure we clear the shows index, so we start from scratch
     $indexes = $meili->getIndexes();
