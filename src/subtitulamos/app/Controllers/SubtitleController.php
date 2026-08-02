@@ -21,7 +21,7 @@ use Slim\Views\Twig;
 
 class SubtitleController
 {
-    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth)
+    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth, \Meilisearch\Client $meili)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
@@ -39,7 +39,6 @@ class SubtitleController
             if (count($episode->getVersions()) == 1) { // If this sub was the last of the version
                 if (count($show->getEpisodes()) == 1) { // If this episode was the last of the show
                     // Remove show from search completely
-                    $meili = Meili::getClient();
                     $index = $meili->index('shows');
                     $index->deleteDocument($show->getId());
 
