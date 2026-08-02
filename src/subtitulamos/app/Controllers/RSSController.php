@@ -35,7 +35,8 @@ class RSSController
             $item->addChild('link', SITE_URL.$urlHelper->pathFor('episode', ['id' => $sub->getVersion()->getEpisode()->getId(), 'slug' => $slugify->slugify($fullName)]));
             $item->addChild('description', Langs::getLocalizedName(Langs::getLangCode($sub->getLang())));
             $item->addChild('pubDate', $sub->getCompleteTime()->format(\DateTime::RSS));
-            $item->addChild('guid', 'sub-done-'.$sub->getId());
+            $guid = $item->addChild('guid', 'sub-done-'.$sub->getId());
+            $guid->addAttribute('isPermaLink', 'false');
         }
 
         $response->getBody()->write($rss->asXML());
