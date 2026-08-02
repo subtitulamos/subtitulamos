@@ -34,6 +34,7 @@ services:
       - ./.env:/code/.env
       - ./data/phpsess:/tmp/phpsess
       - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock
+      - ./zz-override.conf:/usr/local/etc/php-fpm.d/zz-override.conf:ro
     logging:
       options:
         max-size: "400m"
