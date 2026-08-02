@@ -38,6 +38,9 @@ services:
       options:
         max-size: "400m"
         max-file: "3"
+    sysctls:
+      - net.ipv4.tcp_tw_reuse=1
+
 
   redis:
     image: redis:6.0-alpine
