@@ -33,7 +33,7 @@ services:
     volumes:
       - ./.env:/code/.env
       - ./data/phpsess:/tmp/phpsess
-      - /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysqld.sock
+      - /var/run/mysqld:/var/run/mysqld
       - ./zz-override.conf:/usr/local/etc/php-fpm.d/zz-override.conf:ro
     logging:
       options:
