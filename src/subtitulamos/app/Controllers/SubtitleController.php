@@ -21,7 +21,7 @@ use Slim\Views\Twig;
 
 class SubtitleController
 {
-    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth, \Meilisearch\Client $meili)
+    public function delete($subId, $request, $response, EntityManager $em, UrlHelper $urlHelper, Auth $auth, \MeiliSearch\Client $meili)
     {
         $sub = $em->getRepository('App:Subtitle')->find($subId);
         if (!$sub) {
