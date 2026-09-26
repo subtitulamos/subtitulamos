@@ -52,8 +52,10 @@ services:
   search:
     image: getmeili/meilisearch:v1.16
     restart: always
+    network_mode: host
     volumes:
       - ./data/search:/data.ms
+    cpus: 1.0
     environment:
       - MEILI_NO_ANALYTICS=true
       - MEILI_LOG_LEVEL=warn
