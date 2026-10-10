@@ -394,6 +394,10 @@ class TranslationController
             ->getOneOrNullResult();
 
         if ($oLock) {
+            if ($oLock->getUser()->getId() != $auth->getUser()->getId() && !$auth->hasRole('ROLE_TT')) {
+                return $response->withStatus(403);
+            }
+
             $translation->broadcastClose($oLock->getSubtitle(), $seqNum);
 
             $em->remove($oLock);
