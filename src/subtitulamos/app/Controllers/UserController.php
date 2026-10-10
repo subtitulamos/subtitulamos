@@ -224,6 +224,13 @@ class UserController
             throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
+        $roles = $user->getRoles();
+        $isTargetMod = in_array('ROLE_MOD', $roles);
+        $isTargetMe = $user->getId() === $auth->getUser()->getId();
+        if ($isTargetMod || $isTargetMe) {
+            return $response->withHeader('Location', $urlHelper->pathFor('user', ['userId' => $userId]));
+        }
+
         $body = $request->getParsedBody();
         $durationType = $body['duration-type'] ?? '';
         $reason = $body['reason'] ?? '';
@@ -276,6 +283,13 @@ class UserController
         $user = $em->getRepository('App:User')->find($userId);
         if (!$user) {
             throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+
+        $roles = $user->getRoles();
+        $isTargetMod = in_array('ROLE_MOD', $roles);
+        $isTargetMe = $user->getId() === $auth->getUser()->getId();
+        if ($isTargetMod || $isTargetMe) {
+            return $response->withHeader('Location', $urlHelper->pathFor('user', ['userId' => $userId]));
         }
 
         $errors = [];
