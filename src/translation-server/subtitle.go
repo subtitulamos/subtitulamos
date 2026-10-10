@@ -33,7 +33,9 @@ func newSubtitle(subID int) *subtitle {
 		hub: &h,
 	}
 
-	psConn.Subscribe(s.getRedisChannelName())
+	if psConn != nil {
+		psConn.Subscribe(s.getRedisChannelName())
+	}
 	go s.run()
 	return &s
 }
