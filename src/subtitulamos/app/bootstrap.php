@@ -8,7 +8,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\ORMSetup;
 
 function getEnvOrDefault($varname, $default)
 {
@@ -42,7 +42,7 @@ if (DEBUG) {
 }
 
 // Initialize Doctrine's ORM stuff
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/Entities'], DEBUG, SUBS_TMP_DIR . '/doctrine', new \Doctrine\Common\Cache\ArrayCache(), false);
+$config = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entities'], DEBUG, SUBS_TMP_DIR . '/doctrine');
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => $_ENV['MARIADB_DATABASE'],
