@@ -73,7 +73,7 @@ class User
     private $banned;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $roles;
 

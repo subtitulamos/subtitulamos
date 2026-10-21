@@ -42,7 +42,8 @@ if (DEBUG) {
 }
 
 // Initialize Doctrine's ORM stuff
-$config = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entities'], DEBUG, SUBS_TMP_DIR . '/doctrine');
+$cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+$config = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entities'], DEBUG, SUBS_TMP_DIR . '/doctrine', $cache);
 $conn = [
     'driver' => 'pdo_mysql',
     'dbname' => $_ENV['MARIADB_DATABASE'],
